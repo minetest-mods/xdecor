@@ -57,6 +57,7 @@ xdecor.register("painting", {
 	description = "Painting",
 	drawtype = "signlike",
 	paramtype2 = "wallmounted",
+	walkable = false,
 	legacy_wallmounted = true,
 	selection_box = {type = "wallmounted"},
 	tiles = {"xdecor_painting.png"},
