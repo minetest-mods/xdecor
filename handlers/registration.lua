@@ -16,11 +16,11 @@ local default_inventory_formspecs = {
 	"list[context;main;0,0;8,2;]"..
 	"list[current_player;main;0,3;8,4;]",
 
-	["24"]="size[8,8]" ..fancy_gui..
+	["24"]="size[8,8]"..fancy_gui..
 	"list[context;main;0,0;8,3;]"..
 	"list[current_player;main;0,4;8,4;]",
 
-	["32"]="size[8,9]" ..fancy_gui..
+	["32"]="size[8,9]"..fancy_gui..
 	"list[context;main;0,0.3;8,4;]"..
 	"list[current_player;main;0,4.85;8,1;]"..
 	"list[current_player;main;0,6.08;8,3;8]"..
@@ -53,18 +53,6 @@ function xdecor.register(name, def)
 		end
 
 		def.can_dig = def.can_dig or default_can_dig
-		def.on_metadata_inventory_move = def.on_metadata_inventory_move or function(pos, from_list, from_index, to_list, to_index, count, player)
-			minetest.log("action", "%s moves stuff in %s at %s"):format(
-				player:get_player_name(), name, minetest.pos_to_string(pos))
-		end
-		def.on_metadata_inventory_put = def.on_metadata_inventory_put or function(pos, listname, index, stack, player)
-			minetest.log("action", "%s moves stuff to %s at %s"):format(
-				player:get_player_name(), name, minetest.pos_to_string(pos))
-		end
-		def.on_metadata_inventory_take = def.on_metadata_inventory_take or function(pos, listname, index, stack, player)
-			minetest.log("action", "%s takes stuff from %s at %s"):format(
-				player:get_player_name(), name, minetest.pos_to_string(pos))
-		end
 	elseif infotext and not def.on_construct then
 		def.on_construct = function(pos)
 			local meta = minetest.get_meta(pos)
