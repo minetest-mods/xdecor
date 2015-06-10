@@ -35,7 +35,7 @@ minetest.register_craft({
 minetest.register_craft({
 	type = "shapeless",
 	output = "xdecor:candle 2",
-	recipe = {"default:torch", "farming:string"}
+	recipe = {"default:torch"}
 })
 
 minetest.register_craft({
