@@ -56,11 +56,11 @@ minetest.register_craft({
 })
 
 minetest.register_craft({
-	output = "xdecor:chair 2",
+	output = "xdecor:chair",
 	recipe = {
-		{"group:wood", "", ""},
-		{"group:wood", "group:wood", "group:wood"},
-		{"group:wood", "", "group:wood"}
+		{"group:stick", "", ""},
+		{"group:stick", "group:stick", "group:stick"},
+		{"group:stick", "", "group:stick"}
 	}
 })
 
@@ -80,7 +80,7 @@ minetest.register_craft({
 })
 
 minetest.register_craft({
-	output = "xdecor:fence_brass 4",
+	output = "xdecor:fence_brass 2",
 	recipe = {
 		{"xdecor:brass_ingot", "xdecor:brass_ingot", "xdecor:brass_ingot"},
 		{"xdecor:brass_ingot", "xdecor:brass_ingot", "xdecor:brass_ingot"}
@@ -88,7 +88,7 @@ minetest.register_craft({
 })
 
 minetest.register_craft({
-	output = "xdecor:fence_wrought_iron 4",
+	output = "xdecor:fence_wrought_iron 2",
 	recipe = {
 		{"default:iron_lump", "default:iron_lump", "default:iron_lump"},
 		{"default:iron_lump", "default:iron_lump", "default:iron_lump"}
@@ -132,7 +132,7 @@ minetest.register_craft({
 })
 
 minetest.register_craft({
-	output = "xdecor:plant_pot 2",
+	output = "xdecor:plant_pot",
 	recipe = {
 		{"default:clay_lump", "", "default:clay_lump"},
 		{"default:clay_lump", "default:dirt", "default:clay_lump"},
@@ -156,11 +156,11 @@ minetest.register_craft({
 })
 
 minetest.register_craft({
-	output = "xdecor:table 2",
+	output = "xdecor:table",
 	recipe = {
-		{"group:wood", "group:wood", "group:wood"},
-		{"", "group:wood", ""},
-		{"", "group:wood", ""}
+		{"stairs:slab_wood", "stairs:slab_wood", "stairs:slab_wood"},
+		{"", "group:stick", ""},
+		{"", "group:stick", ""}
 	}
 })
 
