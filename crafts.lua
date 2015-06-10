@@ -119,9 +119,6 @@ minetest.register_craft({
 	} })
 
 minetest.register_craft({
-	type = "shapeless", output = "xdecor:skull", recipe = {"bones:bones"} })
-
-minetest.register_craft({
 	output = "xdecor:table",
 	recipe = {
 		{"stairs:slab_wood", "stairs:slab_wood", "stairs:slab_wood"},

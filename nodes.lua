@@ -152,12 +152,6 @@ xdecor.register("rope", {
 	tiles = {"xdecor_rope.png"}, inventory_image = "xdecor_rope_inv.png",
 	drawtype = "plantlike", groups = {dig_immediate=3}, selection_box = rope_sbox })
 
-local skull_sbox = {type="fixed", fixed={-0.3, -0.5, -0.3, 0.3, 0.25, 0.3}}
-xdecor.register("skull", {
-	description = "Skull head", walkable = false, selection_box = skull_sbox,
-	tiles = {"xdecor_skull.png"}, inventory_image = "xdecor_skull.png",
-	drawtype = "torchlike", groups = {dig_immediate=3, attached_node=1} })
-
 xdecor.register("table", {
 	description = "Table", tiles = {"xdecor_wood.png"},
 	groups = {snappy=3}, sounds = default.node_sound_wood_defaults(),
