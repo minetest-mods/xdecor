@@ -19,9 +19,8 @@ xdecor.register("candle", {
 	inventory_image = "xdecor_candle_inv.png", drawtype = "torchlike",
 	paramtype2 = "wallmounted", legacy_wallmounted = true,
 	walkable = false, groups = {dig_immediate=3, attached_node=1},
-	tiles = { 
-		{name="xdecor_candle_floor.png", animation={type="vertical_frames", aspect_w=16, aspect_h=16, length=1.5}},
-		{name="xdecor_candle_wall.png", animation={type="vertical_frames", aspect_w=16, aspect_h=16, length=1.5}} },
+	tiles = { {name="xdecor_candle_floor.png", animation={type="vertical_frames", length=1.5}},
+		{name="xdecor_candle_wall.png", animation={type="vertical_frames", length=1.5}} },
 	selection_box = {type="wallmounted",
 		wall_bottom={-0.25, -0.5, -0.25, 0.25, 0.1, 0.25},
 		wall_side={-0.5, -0.35, -0.15, -0.15, 0.4, 0.15}} })
@@ -33,8 +32,7 @@ xdecor.register("cardboard_box", {
 
 xdecor.register("cauldron", {
 	description = "Cauldron", groups = {snappy=1},
-	tiles = {{name="xdecor_cauldron_top_anim.png", animation={type="vertical_frames", 
-		aspect_w=16, aspect_h=16, length=3.0}}, "xdecor_cauldron_sides.png"} })
+	tiles = {{name="xdecor_cauldron_top_anim.png", animation={type="vertical_frames", length=3.0}}, "xdecor_cauldron_sides.png"} })
 
 xdecor.register("chair", {
 	description = "Chair", tiles = {"xdecor_wood.png"},
@@ -97,7 +95,7 @@ end
 
 xdecor.register("fire", {
 	description = "Fake fire", light_source = 14, walkable = false,
-	tiles = {{name="xdecor_fire_anim.png", animation={type="vertical_frames", aspect_w=16, aspect_h=16, length=1.5}}},
+	tiles = {{name="xdecor_fire_anim.png", animation={type="vertical_frames", length=1.5}}},
 	drawtype = "plantlike", damage_per_second = 2, drop = "",
 	groups = {dig_immediate=3, not_in_creative_inventory=1} })
 
@@ -163,7 +161,7 @@ xdecor.register("tv", {
 	tiles = {"xdecor_television_top.png", "xdecor_television_left.png^[transformR90",
 		"xdecor_television_left.png^[transformFX", "xdecor_television_left.png",
 		"xdecor_television_back.png", {name="xdecor_television_front_animated.png",
-		animation = { type="vertical_frames", aspect_w=16, aspect_h=16, length=80.0}}} })
+		animation = {type="vertical_frames", length=80.0}}} })
 
 xdecor.register("wood_tile", {
 	description = "Wood tile", tiles = {"xdecor_wood_tile.png"},
