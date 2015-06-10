@@ -32,6 +32,11 @@ minetest.register_craft({ output = "xdecor:chair", recipe = {
 minetest.register_craft({ output = "xdecor:coalstone_tile 8", recipe = {
 	{"default:coalblock", "default:stone"},
 	{"default:stone", "default:coalblock"} } })
+	
+minetest.register_craft({ output = "xdecor:empty_shelf", recipe = {
+	{"group:wood", "group:wood", "group:wood"},
+	{"", "", ""},
+	{"group:wood", "group:wood", "group:wood"} } })
 
 minetest.register_craft({ output = "xdecor:fence_wrought_iron 2", recipe = {
 	{"default:iron_lump", "default:iron_lump", "default:iron_lump"},
@@ -56,6 +61,15 @@ minetest.register_craft({ output = "xdecor:rope 2", recipe = {
 	{"farming:string"},
 	{"farming:string"},
 	{"farming:string"} } })
+	
+minetest.register_craft({ output = "xdecor:stone_tile 2", recipe = {
+	{"default:cobble", "default:cobble"},
+	{"default:cobble", "default:cobble"} } })
+	
+	minetest.register_craft({ output = "xdecor:stone_rune 4", recipe = {
+	{"default:stone", "default:stone", "default:stone"},
+	{"default:stone", "", "default:stone"},
+	{"default:stone", "default:stone", "default:stone"} } })
 
 minetest.register_craft({ output = "xdecor:table", recipe = {
 	{"stairs:slab_wood", "stairs:slab_wood", "stairs:slab_wood"},
