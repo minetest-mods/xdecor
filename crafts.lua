@@ -94,7 +94,7 @@ minetest.register_craft({
 	output = "xdecor:multishelf",
 	recipe = {
 		{"group:wood", "group:wood", "group:wood"},
-		{"xdecor:skull", "group:book", "group:vessel"},
+		{"group:vessel", "group:book", "group:vessel"},
 		{"group:wood", "group:wood", "group:wood"}
 	} })
 
