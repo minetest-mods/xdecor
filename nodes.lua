@@ -1,15 +1,15 @@
 xdecor.register("barrel", {
-	description = "Barrel", infotext = "Barrel", inventory = {size=24},
+	description = "Barrel", inventory = {size=24},
 	tiles = {"xdecor_barrel_top.png", "xdecor_barrel_sides.png"},
 	groups = {snappy=3}, sounds = default.node_sound_wood_defaults() })
 
 xdecor.register("cabinet", {
-	description = "Cabinet", infotext = "Cabinet", inventory = {size=24},
+	description = "Cabinet", inventory = {size=24},
 	tiles = {"default_wood.png", "xdecor_cabinet_front.png"},
 	groups = {snappy=3}, sounds = default.node_sound_wood_defaults() })
 
 xdecor.register("cabinet_half", {
-	description = "Cabinet half", infotext = "Cabinet (half)", inventory = {size=8},
+	description = "Half Cabinet", inventory = {size=8},
 	tiles = {"default_wood.png", "xdecor_cabinet_half_front.png"},
 	groups = {snappy=3}, sounds = default.node_sound_wood_defaults(),
 	node_box = {type="fixed", fixed={{-0.5, 0, -0.5, 0.5, 0.5, 0.5}}} })
@@ -26,7 +26,7 @@ xdecor.register("candle", {
 		wall_side={-0.5, -0.35, -0.15, -0.15, 0.4, 0.15}} })
 
 xdecor.register("cardboard_box", {
-	description = "Cardboard box", groups = {snappy=3}, inventory = {size=8},
+	description = "Cardboard Box", groups = {snappy=3}, inventory = {size=8},
 	tiles = {"xdecor_cardbox_top.png", "xdecor_cardbox_top.png", "xdecor_cardbox_sides.png"},
 	node_box = {type="fixed", fixed={{-0.3125, -0.5, -0.3125, 0.3125, 0, 0.3125}}} })
 
@@ -43,10 +43,10 @@ xdecor.register("chair", {
 		{0.1875, -0.5, -0.3125, 0.3125, -0.125, -0.1875}, {-0.3125, -0.125, -0.3125, 0.3125, 0, 0.1875}}} })
 
 xdecor.register("coalstone_tile", {
-	description = "Coalstone tile", tiles = {"xdecor_coalstone_tile.png"},
+	description = "Coalstone Tile", tiles = {"xdecor_coalstone_tile.png"},
 	groups = {snappy=3}, sounds = default.node_sound_stone_defaults() })
 
-local curtaincolors = { {"red", "#ad2323e0:175"} }
+local curtaincolors = { {"red", "#ad2323e0:175"} } -- add more curtains simply here
 for c in ipairs(curtaincolors) do
 local color = curtaincolors[c][1]
 local hue = curtaincolors[c][2]
@@ -85,22 +85,19 @@ xdecor.register("cushion", {
 	groups = {snappy=3}, on_place = minetest.rotate_node,
 	node_box = {type="fixed", fixed={{-0.5, -0.5, -0.5, 0.5, 0, 0.5}}} })
 
-fencematerial = {"brass", "wrought_iron"}
-for _, m in ipairs(fencematerial) do
-xdecor.register("fence_"..m, {
-	description = "Fence ("..m..")", drawtype = "fencelike", tiles = {"xdecor_"..m..".png"},
-	inventory_image = "default_fence_overlay.png^xdecor_"..m..".png^default_fence_overlay.png^[makealpha:255,126,126",
-	groups = {snappy=3}, sounds = default.node_sound_wood_defaults() })
-end
+xdecor.register("fence_wrought_iron", {
+	description = "Wrought Iron Fence", drawtype = "fencelike", tiles = {"default_stone.png^[colorize:#2a2420:180"},
+	inventory_image = "default_fence_overlay.png^default_stone.png^[colorize:#2a2420:160^default_fence_overlay.png^[makealpha:255,126,126",
+	groups = {snappy=3} })
 
 xdecor.register("fire", {
-	description = "Fake fire", light_source = 14, walkable = false,
+	description = "Fake Fire", light_source = 14, walkable = false,
 	tiles = {{name="xdecor_fire_anim.png", animation={type="vertical_frames", length=1.5}}},
 	drawtype = "plantlike", damage_per_second = 2, drop = "",
 	groups = {dig_immediate=3, not_in_creative_inventory=1} })
 
 minetest.register_tool("xdecor:flint_steel", {
-	description = "Flint and steel", stack_max = 1, inventory_image = "xdecor_flint_steel.png",
+	description = "Flint & Steel", stack_max = 1, inventory_image = "xdecor_flint_steel.png",
 	tool_capabilities = {groupcaps={flamable={uses=65, maxlevel=1}}},
 	on_use = function(itemstack, user, pointed_thing)
 		if pointed_thing.type == "node" and minetest.get_node(pointed_thing.above).name == "air" then
@@ -116,7 +113,7 @@ minetest.register_tool("xdecor:flint_steel", {
 flowerstype = {"dandelion_white", "dandelion_yellow", "geranium", "rose", "tulip", "viola"}
 for _, f in ipairs(flowerstype) do
 xdecor.register("potted_"..f, {
-	description = "Potted flowers ("..f..")", walkable = false,
+	description = "Potted Flowers ("..f..")", walkable = false,
 	tiles = {"xdecor_"..f.."_pot.png"}, inventory_image = "xdecor_"..f.."_pot.png",
 	drawtype = "plantlike", groups = {dig_immediate=3}, sounds = default.node_sound_leaves_defaults() })
 
@@ -132,7 +129,7 @@ xdecor.register("painting", {
 	groups = {dig_immediate=3, attached_node=1}, sounds = default.node_sound_wood_defaults() })
 
 xdecor.register("plant_pot", {
-	description = "Plant pot", groups = {snappy=3},
+	description = "Plant Pot", groups = {snappy=3},
 	tiles = {"xdecor_plant_pot_top.png", "xdecor_plant_pot_sides.png"} })
 
 xdecor.register("moonbrick", {
@@ -140,13 +137,13 @@ xdecor.register("moonbrick", {
 	groups = {snappy=3}, sounds = default.node_sound_stone_defaults() })
 
 xdecor.register("multishelf", {
-	description = "Multishelf", infotext = "Multishelf", inventory = {size=24},
+	description = "Multishelf", inventory = {size=24},
 	tiles = {"default_wood.png", "xdecor_multishelf.png"},
 	groups = {snappy=3}, sounds = default.node_sound_wood_defaults() })
 
 local rope_sbox = {type="fixed", fixed={-0.15, -0.5, -0.15, 0.15, 0.5, 0.15}}
 xdecor.register("rope", {
-	description = "Hanging rope", walkable = false, climbable = true,
+	description = "Rope", walkable = false, climbable = true,
 	tiles = {"xdecor_rope.png"}, inventory_image = "xdecor_rope_inv.png",
 	drawtype = "plantlike", groups = {dig_immediate=3}, selection_box = rope_sbox })
 
@@ -158,17 +155,17 @@ xdecor.register("table", {
 
 xdecor.register("tv", {
 	description = "Television", light_source = 11, groups = {snappy=3},
-	tiles = {"xdecor_television_top.png", "xdecor_television_left.png^[transformR90",
+	tiles = {"xdecor_television_left.png^[transformR270", "xdecor_television_left.png^[transformR90",
 		"xdecor_television_left.png^[transformFX", "xdecor_television_left.png",
 		"xdecor_television_back.png", {name="xdecor_television_front_animated.png",
 		animation = {type="vertical_frames", length=80.0}}} })
 
 xdecor.register("wood_tile", {
-	description = "Wood tile", tiles = {"xdecor_wood_tile.png"},
+	description = "Wood Tile", tiles = {"xdecor_wood_tile.png"},
 	groups = {snappy=3}, sounds = default.node_sound_wood_defaults() })
 
 xdecor.register("workbench", {
-	description = "Work table", infotext = "Work bench", inventory = {size=24},
+	description = "Work Bench", inventory = {size=24},
 	groups = {snappy=3}, sounds = default.node_sound_wood_defaults(),
 	tiles = {"xdecor_workbench_top.png", "xdecor_workbench_top.png",
 		"xdecor_workbench_sides.png", "xdecor_workbench_sides.png",
