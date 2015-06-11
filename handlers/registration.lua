@@ -5,7 +5,7 @@ local default_can_dig = function(pos,player)
 	return meta:get_inventory():is_empty("main")
 end
 
-local fancy_gui = default.gui_bg..default.gui_bg_img..default.gui_slots
+fancy_gui = default.gui_bg..default.gui_bg_img..default.gui_slots
 local default_inventory_size = 32
 local default_inventory_formspecs = {
 	["8"]="size[8,6]"..fancy_gui..
