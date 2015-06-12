@@ -78,8 +78,8 @@ end
 xdecor.register("frame", {
 	description = "Item frame", groups = {snappy=3}, on_rotate = screwdriver.disallow,
 	node_box = { type = "fixed", fixed = {-0.5, -0.5, 7/16, 0.5, 0.5, 0.5} },
-	tiles = {"xdecor_wood_tile.png", "xdecor_wood_tile.png", "xdecor_wood_tile.png",
-		"xdecor_wood_tile.png", "xdecor_wood_tile.png", "xdecor_frame.png"}, 
+	tiles = {"xdecor_wood.png", "xdecor_wood.png", "xdecor_wood.png",
+		"xdecor_wood.png", "xdecor_wood.png", "xdecor_frame.png"}, 
 	inventory_image = "xdecor_frame.png",
 	after_place_node = function(pos, placer, itemstack)
 		local meta = minetest.get_meta(pos)

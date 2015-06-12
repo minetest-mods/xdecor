@@ -9,7 +9,7 @@ xdecor.register("workbench", {
 	on_construct = function(pos)
 		local meta = minetest.get_meta(pos)
 		meta:set_string("formspec", "size[8,7;]"..fancy_gui..
-			"label[0,0;Cut your wood tile into...]"..
+			"label[0,0;Cut your wood into...]"..
 			"label[0,1.5;Input]"..
 			"list[current_name;input;0,2;1,1;]"..
 			"image[1,2;1,1;xdecor_saw.png]"..
@@ -53,7 +53,7 @@ xdecor.register("workbench", {
 		else return end
 
 		local inputstack = inv:get_stack("input", 1)
-		if (inputstack:get_name() == "xdecor:wood_tile") then
+		if (inputstack:get_name() == "default:wood") then
 			local give = {}
 			for i = 0, anz-1 do
 				give[i+1] = inv:add_item("output", shape)
@@ -65,8 +65,12 @@ xdecor.register("workbench", {
 	can_dig = function(pos, player)
 		local meta = minetest.get_meta(pos)
 		local inv = meta:get_inventory()
-		return inv:is_empty("src") and inv:is_empty("fuel") 
-			and inv:is_empty("input") and inv:is_empty("output")
+		if not inv:is_empty("input") 
+		 or not inv:is_empty("output")
+		 or not inv:is_empty("fuel") 
+		 or not inv:is_empty("src") then
+			return false end
+		return true
 	end
 })
 
@@ -76,16 +80,16 @@ local function register_wood_cut(name, desc, box, f_groups)
 	f_groups.not_in_creative_inventory = 1
 	xdecor.register(name.."_wood", {
 		description = "Wood "..desc,
-		tiles = {"xdecor_wood_tile.png"}, groups = f_groups,
+		tiles = {"default_wood.png"}, groups = f_groups,
 		sounds = default.node_sound_wood_defaults(),
 		node_box = { type = "fixed", fixed = box } }) end
 
 wood = {}
 wood.datas = {
-	{"microslab", "Microslab", { -0.5, -0.5, -0.5, 0.5, -0.4375, 0.5 }},
-	{"microslab_half", "Half Microslab", { -0.5, -0.5, -0.5, 0.5, -0.4375, 0 }},
-	{"microcube", "Microcube", { -0.5, -0.5, -0.5, 0, 0, 0 }},
-	{"panel", "Panel", { -0.5, -0.5, -0.5, 0.5, 0, 0 }},
+	{"microslab", "Microslab", {-0.5, -0.5, -0.5, 0.5, -0.4375, 0.5}},
+	{"microslab_half", "Half Microslab", {-0.5, -0.5, -0.5, 0.5, -0.4375, 0}},
+	{"microcube", "Microcube", {-0.5, -0.5, -0.5, 0, 0, 0}},
+	{"panel", "Panel", {-0.5, -0.5, -0.5, 0.5, 0, 0}},
 }
 
 for _, item in pairs(wood.datas) do

@@ -47,7 +47,7 @@ xdecor.register("cauldron", {
 		"xdecor_cauldron_sides.png"} })
 
 xdecor.register("chair", {
-	description = "Chair", tiles = {"xdecor_wood_tile.png"},
+	description = "Chair", tiles = {"xdecor_wood.png"},
 	sounds = default.node_sound_wood_defaults(), groups = {snappy=3},
 	node_box = {type="fixed", fixed={
 		{-0.3125, -0.5, 0.1875, -0.1875, 0.5, 0.3125},
@@ -60,11 +60,11 @@ xdecor.register("chair", {
 xdecor.register("chandelier", {
 	description = "Chandelier", drawtype = "plantlike", walkable = false, 
 	inventory_image = "xdecor_chandelier.png", tiles = {"xdecor_chandelier.png"}, 
-	groups = {dig_immediate=3}, light_source = 15 })
+	groups = {dig_immediate=3}, light_source = 14 })
 
 xdecor.register("coalstone_tile", {
 	description = "Coalstone Tile", tiles = {"xdecor_coalstone_tile.png"},
-	groups = {snappy=3}, sounds = default.node_sound_stone_defaults() })
+	groups = {snappy=2}, sounds = default.node_sound_stone_defaults() })
 
 local curtaincolors = {"red"} -- add more curtains simply here
 for _, c in ipairs(curtaincolors) do
@@ -108,9 +108,10 @@ xdecor.register("empty_shelf", {
 	tiles = {"default_wood.png", "xdecor_empty_shelf.png"},
 	groups = {snappy=3}, sounds = default.node_sound_wood_defaults() })
 
+local fence_sbox = {type="fixed", fixed={-1/7, -1/2, -1/7, 1/7, 1/2, 1/7}}
 xdecor.register("fence_wrought_iron", {
-	description = "Wrought Iron Fence", drawtype = "fencelike", 
-	tiles = {"default_stone.png^[colorize:#2a2420:180"}, groups = {snappy=3},
+	description = "Wrought Iron Fence", drawtype = "fencelike", groups = {snappy=2},
+	tiles = {"default_stone.png^[colorize:#2a2420:180"}, selection_box = fence_sbox,
 	inventory_image = "default_fence_overlay.png^default_stone.png^[colorize:#2a2420:160^default_fence_overlay.png^[makealpha:255,126,126" })
 
 xdecor.register("fire", {
@@ -177,11 +178,11 @@ xdecor.register("metal_cabinet", {
 	tiles = {"xdecor_metal_cabinet_sides.png", "xdecor_metal_cabinet_sides.png",
 	"xdecor_metal_cabinet_sides.png", "xdecor_metal_cabinet_sides.png",
 	"xdecor_metal_cabinet_sides.png", "xdecor_metal_cabinet_front.png"},
-	groups = {snappy=2}, infotext = "Metal Cabinet" })
+	groups = {snappy=1}, infotext = "Metal Cabinet" })
 
 xdecor.register("moonbrick", {
 	description = "Moonbrick", tiles = {"xdecor_moonbrick.png"}, 
-	groups = {snappy=3}, sounds = default.node_sound_stone_defaults() })
+	groups = {snappy=2}, sounds = default.node_sound_stone_defaults() })
 
 xdecor.register("multishelf", {
 	description = "Multi Shelf", inventory = {size=24}, infotext = "Multi Shelf",
@@ -210,7 +211,7 @@ xdecor.register("stone_tile", {
 	groups = {snappy=3}, sounds = default.node_sound_stone_defaults() })
 
 xdecor.register("table", {
-	description = "Table", tiles = {"xdecor_wood_tile.png"},
+	description = "Table", tiles = {"xdecor_wood.png"},
 	groups = {snappy=3}, sounds = default.node_sound_wood_defaults(),
 	node_box = {type="fixed", fixed={
 		{-0.5, 0.4, -0.5, 0.5, 0.5, 0.5}, 
@@ -234,4 +235,4 @@ xdecor.register("woodframed_glass", {
 
 xdecor.register("wood_tile", {
 	description = "Wood Tile", tiles = {"xdecor_wood_tile.png"},
-	groups = {snappy=3, wood=1}, sounds = default.node_sound_wood_defaults() })
+	groups = {snappy=2, wood=1}, sounds = default.node_sound_wood_defaults() })
