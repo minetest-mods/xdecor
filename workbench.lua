@@ -9,7 +9,7 @@ xdecor.register("workbench", {
 	on_construct = function(pos)
 		local meta = minetest.get_meta(pos)
 		meta:set_string("formspec", "size[8,7;]"..fancy_gui..
-			"label[0,0;Cut your wood into...]"..
+			"label[0,0;Cut your wood tile into...]"..
 			"label[0,1.5;Input]"..
 			"list[current_name;input;0,2;1,1;]"..
 			"image[1,2;1,1;xdecor_saw.png]"..
@@ -53,7 +53,7 @@ xdecor.register("workbench", {
 		else return end
 
 		local inputstack = inv:get_stack("input", 1)
-		if minetest.get_item_group(inputstack:get_name(), "wood") ~= 0 then
+		if (inputstack:get_name() == "xdecor:wood_tile") then
 			local give = {}
 			for i = 0, anz-1 do
 				give[i+1] = inv:add_item("output", shape)
