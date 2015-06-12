@@ -123,6 +123,11 @@ minetest.register_craft({ output = "xdecor:workbench", recipe = {
 	{"group:wood", "group:wood", "group:wood"},
 	{"default:steel_ingot", "default:steel_ingot", "default:steel_ingot"},
 	{"group:wood", "group:wood", "group:wood"} } })
+	
+minetest.register_craft({ output = "xdecor:woodframed_glass", recipe = {
+	{"group:stick", "group:stick", "group:stick"},
+	{"group:stick", "default:glass", "group:stick"},
+	{"group:stick", "group:stick", "group:stick"} } })
 
 minetest.register_craft({ output = "xdecor:wood_tile 2", recipe = {
 	{"group:wood", "group:wood"},

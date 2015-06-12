@@ -226,6 +226,11 @@ xdecor.register("tv", {
 		"xdecor_television_back.png",
 		{name="xdecor_television_front_animated.png",
 		animation = {type="vertical_frames", length=80.0}}} })
+		
+xdecor.register("woodframed_glass", {
+	description = "Wood Framed Glass", drawtype = "glasslike_framed_optional", 
+	tiles = {"xdecor_framed_glass.png", "xdecor_framed_glass_detail.png"},
+	groups = {snappy=3}, sounds = default.node_sound_glass_defaults() })
 
 xdecor.register("wood_tile", {
 	description = "Wood Tile", tiles = {"xdecor_wood_tile.png"},
