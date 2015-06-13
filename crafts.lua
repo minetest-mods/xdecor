@@ -119,7 +119,7 @@ minetest.register_craft({ output = "xdecor:tv", recipe = {
 	{"default:steel_ingot", "default:glass", "default:steel_ingot"},
 	{"default:steel_ingot", "default:copper_ingot", "default:steel_ingot"} } })
 
-minetest.register_craft({ output = "xdecor:workbench", recipe = {
+minetest.register_craft({ output = "xdecor:worktable", recipe = {
 	{"group:wood", "group:wood", "group:wood"},
 	{"default:steel_ingot", "default:steel_ingot", "default:steel_ingot"},
 	{"group:wood", "group:wood", "group:wood"} } })

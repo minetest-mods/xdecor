@@ -82,12 +82,12 @@ function xdecor.can_dig(pos, player)
 	return true
 end
 
-xdecor.register("workbench", {
-	description = "Work Bench", infotext = "Work Bench",
+xdecor.register("worktable", {
+	description = "Work Table", infotext = "Work Table",
 	sounds = default.node_sound_wood_defaults(), groups = {snappy=3},
-	tiles = {"xdecor_workbench_top.png", "xdecor_workbench_top.png",
-		"xdecor_workbench_sides.png", "xdecor_workbench_sides.png",
-		"xdecor_workbench_front.png", "xdecor_workbench_front.png"},
+	tiles = {"xdecor_worktable_top.png", "xdecor_worktable_top.png",
+		"xdecor_worktable_sides.png", "xdecor_worktable_sides.png",
+		"xdecor_worktable_front.png", "xdecor_worktable_front.png"},
 	on_construct = xdecor.on_construct,
 	on_receive_fields = xdecor.on_receive_fields,
 	can_dig = xdecor.can_dig })
@@ -132,7 +132,7 @@ end
 -- Repair Tool's code by Krock, modified by kilbith
 
 minetest.register_abm({
-	nodenames = {"xdecor:workbench"},
+	nodenames = {"xdecor:worktable"},
 	interval = 5, chance = 1,
 	action = function(pos, node, active_object_count, active_object_count_wider)
 		local meta = minetest.get_meta(pos)
