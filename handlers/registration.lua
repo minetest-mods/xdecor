@@ -35,7 +35,14 @@ end
 function xdecor.register(name, def)
 	def.drawtype = def.drawtype or (def.node_box and "nodebox")
 	def.paramtype = def.paramtype or "light"
-	def.paramtype2 = def.paramtype2 or "facedir"
+	
+	if not (def.drawtype == "glasslike_framed"
+		or def.drawtype == "glasslike_framed_optional"
+		or def.drawtype == "plantlike"
+		or def.drawtype == "signlike"
+		or def.drawtype == "normal") then
+		def.paramtype2 = def.paramtype2 or "facedir"
+	end
 
 	local infotext = def.infotext
 	local inventory = def.inventory

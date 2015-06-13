@@ -63,7 +63,7 @@ xdecor.register("chandelier", {
 	groups = {dig_immediate=3}, light_source = 14 })
 
 xdecor.register("coalstone_tile", {
-	description = "Coalstone Tile", tiles = {"xdecor_coalstone_tile.png"},
+	drawtype = "normal", description = "Coalstone Tile", tiles = {"xdecor_coalstone_tile.png"},
 	groups = {snappy=2}, sounds = default.node_sound_stone_defaults() })
 
 local curtaincolors = {"red"} -- add more curtains simply here
@@ -174,14 +174,14 @@ xdecor.register("plant_pot", {
 	tiles = {"xdecor_plant_pot_top.png", "xdecor_plant_pot_sides.png"} })
 
 xdecor.register("metal_cabinet", {
-	description = "Metal Cabinet", inventory = {size=24},
+	description = "Metal Cabinet", inventory = {size=24}, 
 	tiles = {"xdecor_metal_cabinet_sides.png", "xdecor_metal_cabinet_sides.png",
 	"xdecor_metal_cabinet_sides.png", "xdecor_metal_cabinet_sides.png",
 	"xdecor_metal_cabinet_sides.png", "xdecor_metal_cabinet_front.png"},
 	groups = {snappy=1}, infotext = "Metal Cabinet" })
 
 xdecor.register("moonbrick", {
-	description = "Moonbrick", tiles = {"xdecor_moonbrick.png"}, 
+	drawtype = "normal", description = "Moonbrick", tiles = {"xdecor_moonbrick.png"}, 
 	groups = {snappy=2}, sounds = default.node_sound_stone_defaults() })
 
 xdecor.register("multishelf", {
@@ -203,11 +203,11 @@ xdecor.register("stereo", {
 	"xdecor_stereo_back.png", "xdecor_stereo_front.png"} })
 
 xdecor.register("stone_rune", {
-	description = "Stone Rune", tiles = {"xdecor_stone_rune.png"},
+	description = "Stone Rune", tiles = {"xdecor_stone_rune.png"}, drawtype = "normal",
 	groups = {snappy=3}, sounds = default.node_sound_stone_defaults() })
 
 xdecor.register("stone_tile", {
-	description = "Stone Tile", tiles = {"xdecor_stone_tile.png"},
+	description = "Stone Tile", tiles = {"xdecor_stone_tile.png"}, drawtype = "normal",
 	groups = {snappy=3}, sounds = default.node_sound_stone_defaults() })
 
 xdecor.register("table", {
@@ -229,10 +229,10 @@ xdecor.register("tv", {
 		animation = {type="vertical_frames", length=80.0}}} })
 		
 xdecor.register("woodframed_glass", {
-	description = "Wood Framed Glass", drawtype = "glasslike_framed_optional", 
+	description = "Wood Framed Glass", drawtype = "glasslike_framed", 
 	tiles = {"xdecor_framed_glass.png", "xdecor_framed_glass_detail.png"},
 	groups = {snappy=3}, sounds = default.node_sound_glass_defaults() })
 
 xdecor.register("wood_tile", {
-	description = "Wood Tile", tiles = {"xdecor_wood_tile.png"},
+	description = "Wood Tile", tiles = {"xdecor_wood_tile.png"}, drawtype = "normal",
 	groups = {snappy=2, wood=1}, sounds = default.node_sound_wood_defaults() })

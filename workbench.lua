@@ -1,6 +1,6 @@
 local material = {
 	"cloud", -- only used for the formspec display
-	"wood", "junglewood", "pinewood", "stonebrick", "tree", "pinetree",
+	"wood", "junglewood", "pinewood", "tree", "pinetree",
 	"stone", "sandstone", "desert_stone", "obsidian",
 	"stonebrick", "sandstonebrick", "desert_stonebrick", "obsidianbrick",
 	"copperblock", "bronzeblock", "goldblock", "steelblock", "diamondblock",
