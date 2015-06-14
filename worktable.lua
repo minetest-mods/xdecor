@@ -19,12 +19,13 @@ local def = { -- node name, yield, nodebox shape
 
 local function xconstruct(pos)
 	local meta = minetest.get_meta(pos)
-	local nodebtn = ""
+	local nodebtn = {}
 
 	for i=1, #def do
-		nodebtn = nodebtn..
-		"item_image_button["..(i-1)..",0.5;1,1;xdecor:"..def[i][1].."_cloud;"..def[i][1]..";]"
+		nodebtn[#nodebtn+1] = "item_image_button["..(i-1)..",0.5;1,1;xdecor:"..def[i][1].."_cloud;"..def[i][1]..";]"
 	end
+	nodebtn = table.concat(nodebtn)
+
 	meta:set_string("formspec", "size[8,7;]"..fancy_gui..
 		"label[0,0;Cut your material into...]"..
 		nodebtn..
@@ -56,12 +57,14 @@ local function xfields(pos, formname, fields, sender)
 	local give = {}
 	local anz = 0
 
-	for _, m in ipairs(material) do
-	for _, n in ipairs(def) do
-		if (inputstack:get_name() == "default:"..m) and (outputstack:get_count() < 99) then
-			if fields[n[1]] then
-				anz = n[2]
-				shape = "xdecor:"..n[1].."_"..m
+	for m=1, #material do
+	for n=1, #def do
+		local v = material[m]
+		local w = def[n]
+		if (inputstack:get_name() == "default:"..v) and (outputstack:get_count() < 99) then
+			if fields[w[1]] then
+				anz = w[2]
+				shape = "xdecor:"..w[1].."_"..v
 				for i=0, anz-1 do
 					give[i+1] = inv:add_item("output", shape)
 				end
@@ -116,16 +119,18 @@ local function tnaming(material)
 	else return "default_"..material..".png" end
 end
 
-for _, m in ipairs(material) do
-	local light = lightlvl(m)
-	local sound = stype(m)
-	local tile = tnaming(m)
+for m=1, #material do
+	local v = material[m]
+	local light = lightlvl(v)
+	local sound = stype(v)
+	local tile = tnaming(v)
 
-	for _, n in ipairs(def) do
-	xdecor.register(n[1].."_"..m, {
-		description = n[1], light_source = light, sounds = sound,
+	for n=1, #def do
+	local w = def[n]
+	xdecor.register(w[1].."_"..v, {
+		description = w[1], light_source = light, sounds = sound,
 		tiles = {tile}, groups = {snappy=3, not_in_creative_inventory=1},
-		on_place = minetest.rotate_node, node_box = {type = "fixed", fixed = n[3]} })
+		on_place = minetest.rotate_node, node_box = {type = "fixed", fixed = w[3]} })
 	end
 end
 
