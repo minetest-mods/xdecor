@@ -54,7 +54,7 @@ local function xfields(pos, formname, fields, sender)
 	local inputstack = inv:get_stack("input", 1)
 	local outputstack = inv:get_stack("output", 1)
 	local shape = {}
-	local give = {}
+	local get = {}
 	local anz = 0
 
 	for m=1, #material do
@@ -63,11 +63,11 @@ local function xfields(pos, formname, fields, sender)
 		local w = def[n]
 		if (inputstack:get_name() == "default:"..v) and (outputstack:get_count() < 99) then
 			if fields[w[1]] then
-				anz = w[2]
 				shape = "xdecor:"..w[1].."_"..v
-				for i=0, anz-1 do
-					give[i+1] = inv:add_item("output", shape)
-				end
+				anz = w[2]
+				get = shape.." "..anz
+
+				inv:add_item("output", get)
 				inputstack:take_item()
 				inv:set_stack("input", 1, inputstack)
 			end
