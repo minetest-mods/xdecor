@@ -6,28 +6,28 @@ local material = {
 	"copperblock", "bronzeblock", "goldblock", "steelblock", "diamondblock",
 	"meselamp", "glass", "obsidian_glass" }
 
-local def = {
-	{"nanoslab", "32", {-0.5, -0.5, -0.5, 0, -0.4375, 0}},
+local def = { -- node name, yield, nodebox shape
+	{"nanoslab", "16", {-0.5, -0.5, -0.5, 0, -0.4375, 0}},
 	{"microslab_half", "16", {-0.5, -0.5, -0.5, 0.5, -0.4375, 0}},
 	{"microslab", "8", {-0.5, -0.5, -0.5, 0.5, -0.4375, 0.5}},
 	{"panel", "4", {-0.5, -0.5, -0.5, 0.5, 0, 0}},
 	{"slab", "2", {-0.5, -0.5, -0.5, 0.5, 0, 0.5}},
-	{"outerstair", "2", {{-0.5, -0.5, -0.5, 0.5, 0, 0.5}, {-0.5, 0, 0, 0, 0.5, 0.5}}},
-	{"stair", "2", {{-0.5, -0.5, -0.5, 0.5, 0, 0.5}, {-0.5, 0, 0, 0.5, 0.5, 0.5}}},
-	{"innerstair", "2", {{-0.5, -0.5, -0.5, 0.5, 0, 0.5}, {-0.5, 0, 0, 0.5, 0.5, 0.5}, {-0.5, 0, -0.5, 0, 0.5, 0}}}
+	{"outerstair", "1", {{-0.5, -0.5, -0.5, 0.5, 0, 0.5}, {-0.5, 0, 0, 0, 0.5, 0.5}}},
+	{"stair", "1", {{-0.5, -0.5, -0.5, 0.5, 0, 0.5}, {-0.5, 0, 0, 0.5, 0.5, 0.5}}},
+	{"innerstair", "1", {{-0.5, -0.5, -0.5, 0.5, 0, 0.5}, {-0.5, 0, 0, 0.5, 0.5, 0.5}, {-0.5, 0, -0.5, 0, 0.5, 0}}}
 }
 
-function xdecor.on_construct(pos)
+local function xconstruct(pos)
 	local meta = minetest.get_meta(pos)
-	local nodespec = ""
+	local nodebtn = ""
 
-	for j=1, #def do
-		nodespec = nodespec..
-		"item_image_button["..(j-1)..",0.5;1,1;xdecor:"..def[j][1].."_cloud;"..def[j][1]..";]"
+	for i=1, #def do
+		nodebtn = nodebtn..
+		"item_image_button["..(i-1)..",0.5;1,1;xdecor:"..def[i][1].."_cloud;"..def[i][1]..";]"
 	end
 	meta:set_string("formspec", "size[8,7;]"..fancy_gui..
 		"label[0,0;Cut your material into...]"..
-		nodespec..
+		nodebtn..
 		"label[0,1.5;Input]"..
 		"list[current_name;input;0,2;1,1;]"..
 		"image[1,2;1,1;xdecor_saw.png]"..
@@ -39,7 +39,7 @@ function xdecor.on_construct(pos)
 		"label[6.8,1.5;Hammer]]"..
 		"list[current_name;fuel;7,2;1,1;]"..
 		"list[current_player;main;0,3.25;8,4;]")
-	meta:set_string("infotext", "Work Bench")
+	meta:set_string("infotext", "Work Table")
 	local inv = meta:get_inventory()
 	inv:set_size("output", 1)
 	inv:set_size("input", 1)
@@ -47,7 +47,7 @@ function xdecor.on_construct(pos)
 	inv:set_size("fuel", 1)
 end
 
-function xdecor.on_receive_fields(pos, formname, fields, sender)
+local function xfields(pos, formname, fields, sender)
 	local meta = minetest.get_meta(pos)
 	local inv = meta:get_inventory()
 	local inputstack = inv:get_stack("input", 1)
@@ -73,7 +73,7 @@ function xdecor.on_receive_fields(pos, formname, fields, sender)
 	end
 end
 
-function xdecor.can_dig(pos, player)
+local function xdig(pos, player)
 	local meta = minetest.get_meta(pos)
 	local inv = meta:get_inventory()
 	if not inv:is_empty("input") or not inv:is_empty("output")
@@ -83,14 +83,14 @@ function xdecor.can_dig(pos, player)
 end
 
 xdecor.register("worktable", {
-	description = "Work Table", infotext = "Work Table",
-	sounds = default.node_sound_wood_defaults(), groups = {snappy=3},
+	description = "Work Table", groups = {snappy=3},
+	sounds = default.node_sound_wood_defaults(),
 	tiles = {"xdecor_worktable_top.png", "xdecor_worktable_top.png",
 		"xdecor_worktable_sides.png", "xdecor_worktable_sides.png",
 		"xdecor_worktable_front.png", "xdecor_worktable_front.png"},
-	on_construct = xdecor.on_construct,
-	on_receive_fields = xdecor.on_receive_fields,
-	can_dig = xdecor.can_dig })
+	on_construct = xconstruct,
+	on_receive_fields = xfields,
+	can_dig = xdig })
 
 local function lightlvl(material)
 	if (material == "meselamp") then return 12 else return 0 end
