@@ -8,7 +8,7 @@ local material = {
 
 local def = { -- node name, yield, nodebox shape
 	{"nanoslab", "16", {-0.5, -0.5, -0.5, 0, -0.4375, 0}},
-	{"microslab_half", "16", {-0.5, -0.5, -0.5, 0.5, -0.4375, 0}},
+	{"micropanel", "16", {-0.5, -0.5, -0.5, 0.5, -0.4375, 0}},
 	{"microslab", "8", {-0.5, -0.5, -0.5, 0.5, -0.4375, 0.5}},
 	{"panel", "4", {-0.5, -0.5, -0.5, 0.5, 0, 0}},
 	{"slab", "2", {-0.5, -0.5, -0.5, 0.5, 0, 0.5}},
@@ -61,16 +61,15 @@ local function xfields(pos, formname, fields, sender)
 	for n=1, #def do
 		local v = material[m]
 		local w = def[n]
-		if (inputstack:get_name() == "default:"..v) and (outputstack:get_count() < 99) then
-			if fields[w[1]] then
-				shape = "xdecor:"..w[1].."_"..v
-				anz = w[2]
-				get = shape.." "..anz
+		if (inputstack:get_name() == "default:"..v) and (outputstack:get_count() < 99)
+		 and fields[w[1]] then
+			shape = "xdecor:"..w[1].."_"..v
+			anz = w[2]
+			get = shape.." "..anz
 
-				inv:add_item("output", get)
-				inputstack:take_item()
-				inv:set_stack("input", 1, inputstack)
-			end
+			inv:add_item("output", get)
+			inputstack:take_item()
+			inv:set_stack("input", 1, inputstack)
 		end
 	end
 	end
@@ -128,8 +127,9 @@ for m=1, #material do
 	for n=1, #def do
 	local w = def[n]
 	xdecor.register(w[1].."_"..v, {
-		description = w[1], light_source = light, sounds = sound,
-		tiles = {tile}, groups = {snappy=3, not_in_creative_inventory=1},
+		description = string.sub(string.upper(w[1]), 0, 1)..string.sub(w[1], 2),
+		light_source = light, sounds = sound, tiles = {tile},
+		groups = {snappy=3, not_in_creative_inventory=1},
 		on_place = minetest.rotate_node, node_box = {type = "fixed", fixed = w[3]} })
 	end
 end
