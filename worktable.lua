@@ -22,7 +22,8 @@ local function xconstruct(pos)
 	local nodebtn = {}
 
 	for i=1, #def do
-		nodebtn[#nodebtn+1] = "item_image_button["..(i-1)..",0.5;1,1;xdecor:"..def[i][1].."_cloud;"..def[i][1]..";]"
+		nodebtn[#nodebtn+1] = "item_image_button["..(i-1)..
+			",0.5;1,1;xdecor:"..def[i][1].."_cloud;"..def[i][1]..";]"
 	end
 	nodebtn = table.concat(nodebtn)
 
@@ -53,16 +54,15 @@ local function xfields(pos, formname, fields, sender)
 	local inv = meta:get_inventory()
 	local inputstack = inv:get_stack("input", 1)
 	local outputstack = inv:get_stack("output", 1)
-	local shape = {}
-	local get = {}
+	local shape, get = {}, {}
 	local anz = 0
 
 	for m=1, #material do
 	for n=1, #def do
 		local v = material[m]
 		local w = def[n]
-		if (inputstack:get_name() == "default:"..v) and (outputstack:get_count() < 99)
-		 and fields[w[1]] then
+		if (inputstack:get_name() == "default:"..v)
+		 and (outputstack:get_count() < 99) and fields[w[1]] then
 			shape = "xdecor:"..w[1].."_"..v
 			anz = w[2]
 			get = shape.." "..anz
@@ -79,8 +79,8 @@ local function xdig(pos, player)
 	local meta = minetest.get_meta(pos)
 	local inv = meta:get_inventory()
 	if not inv:is_empty("input") or not inv:is_empty("output")
-		or not inv:is_empty("fuel") or not inv:is_empty("src") then
-			return false end
+	 or not inv:is_empty("fuel") or not inv:is_empty("src") then
+		return false end
 	return true
 end
 
@@ -90,32 +90,30 @@ xdecor.register("worktable", {
 	tiles = {"xdecor_worktable_top.png", "xdecor_worktable_top.png",
 		"xdecor_worktable_sides.png", "xdecor_worktable_sides.png",
 		"xdecor_worktable_front.png", "xdecor_worktable_front.png"},
-	on_construct = xconstruct,
-	on_receive_fields = xfields,
-	can_dig = xdig })
+	on_construct = xconstruct, on_receive_fields = xfields, can_dig = xdig })
 
-local function lightlvl(material)
-	if (material == "meselamp") then return 12 else return 0 end
+local function lightlvl(mat)
+	if (mat == "meselamp") then return 12 else return 0 end
 end
 
-local function stype(material)
-	if string.find(material, "glass") or string.find(material, "lamp") then
+local function stype(mat)
+	if string.find(mat, "glass") or string.find(mat, "lamp") then
 		return default.node_sound_glass_defaults()
-	elseif string.find(material, "wood") or string.find(material, "tree") then
+	elseif string.find(mat, "wood") or string.find(mat, "tree") then
 		return default.node_sound_wood_defaults()
 	else
 		return default.node_sound_stone_defaults()
 	end
 end
 
-local function tnaming(material)
-	if string.find(material, "block") then
-		local newname = string.gsub(material, "(block)", "_%1")
+local function tnaming(mat)
+	if string.find(mat, "block") then
+		local newname = string.gsub(mat, "(block)", "_%1")
 		return "default_"..newname..".png"
-	elseif string.find(material, "brick") then
-		local newname = string.gsub(material, "(brick)", "_%1")
+	elseif string.find(mat, "brick") then
+		local newname = string.gsub(mat, "(brick)", "_%1")
 		return "default_"..newname..".png"
-	else return "default_"..material..".png" end
+	else return "default_"..mat..".png" end
 end
 
 for m=1, #material do
@@ -129,8 +127,9 @@ for m=1, #material do
 	xdecor.register(w[1].."_"..v, {
 		description = string.sub(string.upper(w[1]), 0, 1)..string.sub(w[1], 2),
 		light_source = light, sounds = sound, tiles = {tile},
-		groups = {snappy=3, not_in_creative_inventory=1},
-		on_place = minetest.rotate_node, node_box = {type = "fixed", fixed = w[3]} })
+		groups = {snappy=3, not_in_creative_inventory=1}, 
+		node_box = {type = "fixed", fixed = w[3]},
+		on_place = minetest.rotate_node })
 	end
 end
 
@@ -149,7 +148,6 @@ minetest.register_abm({
 		if (src:is_empty() or wear == 0 or wear == 65535) then return end
 		local fuel = inv:get_stack("fuel", 1)
 		if (fuel:is_empty() or fuel:get_name() ~= "xdecor:hammer") then return end
-
 		if (wear + repair < 0) then src:add_wear(repair + wear)
 		else src:add_wear(repair) end
 
