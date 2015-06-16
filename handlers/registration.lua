@@ -5,22 +5,27 @@ local default_can_dig = function(pos,player)
 	return meta:get_inventory():is_empty("main")
 end
 
-fancy_gui = default.gui_bg..default.gui_bg_img..default.gui_slots
+xdecor.wood = default.node_sound_wood_defaults()
+xdecor.glass = default.node_sound_glass_defaults()
+xdecor.leaves = default.node_sound_leaves_defaults()
+xdecor.stone = default.node_sound_stone_defaults()
+xdecor.fancy_gui = default.gui_bg..default.gui_bg_img..default.gui_slots
+
 local default_inventory_size = 32
 local default_inventory_formspecs = {
-	["8"]="size[8,6]"..fancy_gui..
+	["8"]="size[8,6]"..xdecor.fancy_gui..
 	"list[context;main;0,0;8,1;]"..
 	"list[current_player;main;0,2;8,4;]",
 
-	["16"]="size[8,7]"..fancy_gui..
+	["16"]="size[8,7]"..xdecor.fancy_gui..
 	"list[context;main;0,0;8,2;]"..
 	"list[current_player;main;0,3;8,4;]",
 
-	["24"]="size[8,8]"..fancy_gui..
+	["24"]="size[8,8]"..xdecor.fancy_gui..
 	"list[context;main;0,0;8,3;]"..
 	"list[current_player;main;0,4;8,4;]",
 
-	["32"]="size[8,9]"..fancy_gui..
+	["32"]="size[8,9]"..xdecor.fancy_gui..
 	"list[context;main;0,0.3;8,4;]"..
 	"list[current_player;main;0,4.85;8,1;]"..
 	"list[current_player;main;0,6.08;8,3;8]"..
@@ -35,6 +40,7 @@ end
 function xdecor.register(name, def)
 	def.drawtype = def.drawtype or (def.node_box and "nodebox")
 	def.paramtype = def.paramtype or "light"
+	def.sounds = def.sounds or default.node_sound_defaults()
 	
 	if not (def.drawtype == "glasslike_framed"
 		or def.drawtype == "glasslike_framed_optional"
