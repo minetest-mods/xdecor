@@ -13,36 +13,25 @@ local material = {
 
 local def = { -- Node name, yield, nodebox shape.
 	{ "nanoslab", "16",
-		{-0.5, -0.5, -0.5, 0, -0.4375, 0}
-	},
+		{-0.5, -0.5, -0.5, 0, -0.4375, 0} },
 	{ "micropanel", "16",
-		{-0.5, -0.5, -0.5, 0.5, -0.4375, 0}
-	},
+		{-0.5, -0.5, -0.5, 0.5, -0.4375, 0} },
 	{ "microslab", "8",
-		{-0.5, -0.5, -0.5, 0.5, -0.4375, 0.5}
-	},
+		{-0.5, -0.5, -0.5, 0.5, -0.4375, 0.5} },
 	{ "panel", "4",
-		{-0.5, -0.5, -0.5, 0.5, 0, 0}
-	},
+		{-0.5, -0.5, -0.5, 0.5, 0, 0} },
 	{ "slab", "2",
-		{-0.5, -0.5, -0.5, 0.5, 0, 0.5}
-	},
+		{-0.5, -0.5, -0.5, 0.5, 0, 0.5} },
 	{ "outerstair", "1", {
 		{-0.5, -0.5, -0.5, 0.5, 0, 0.5},
-		{-0.5, 0, 0, 0, 0.5, 0.5}
-		}
-	},
+		{-0.5, 0, 0, 0, 0.5, 0.5} } },
 	{ "stair", "1", {
 		{-0.5, -0.5, -0.5, 0.5, 0, 0.5},
-		{-0.5, 0, 0, 0.5, 0.5, 0.5}
-		}
-	},
+		{-0.5, 0, 0, 0.5, 0.5, 0.5} } },
 	{ "innerstair", "1", {
 		{-0.5, -0.5, -0.5, 0.5, 0, 0.5},
 		{-0.5, 0, 0, 0.5, 0.5, 0.5},
-		{-0.5, 0, -0.5, 0, 0.5, 0}
-		}
-	}
+		{-0.5, 0, -0.5, 0, 0.5, 0} } }
 }
 
 local function xconstruct(pos)
@@ -113,13 +102,14 @@ local function xdig(pos, player)
 	 or not inv:is_empty("fuel") or not inv:is_empty("src") then
 		return false
 	end
+
 	return true
 end
 
 xdecor.register("worktable", {
 	description = "Work Table",
 	groups = {snappy=3},
-	sounds = default.node_sound_wood_defaults(),
+	sounds = xdecor.wood,
 	tiles = {
 		"xdecor_worktable_top.png", "xdecor_worktable_top.png",
 		"xdecor_worktable_sides.png", "xdecor_worktable_sides.png",
@@ -130,7 +120,7 @@ xdecor.register("worktable", {
 	can_dig = xdig
 })
 
-local function lightlvl(mat)
+local function light(mat)
 	if (mat == "meselamp") then
 		return 12
 	else
@@ -138,7 +128,7 @@ local function lightlvl(mat)
 	end
 end
 
-local function stype(mat)
+local function sound(mat)
 	if string.find(mat, "glass") or string.find(mat, "lamp")
 	 or string.find(mat, "ice") then
 		return default.node_sound_glass_defaults()
@@ -149,7 +139,7 @@ local function stype(mat)
 	end
 end
 
-local function tnaming(mat)
+local function name(mat)
 	if string.find(mat, "block") then
 		local newname = string.gsub(mat, "(block)", "_%1")
 		return "default_"..newname..".png"
@@ -163,9 +153,9 @@ end
 
 for m=1, #material do
 	local v = material[m]
-	local light = lightlvl(v)
-	local sound = stype(v)
-	local tile = tnaming(v)
+	local light = light(v)
+	local sound = sound(v)
+	local tile = name(v)
 
 	for n=1, #def do
 		local w = def[n]
@@ -185,7 +175,7 @@ for m=1, #material do
 	end
 end
 
-minetest.register_abm({ -- Repair Tool's code by Krock, modified by kilbith
+minetest.register_abm({ -- Repair Tool's code by Krock, modified by kilbith.
 	nodenames = {"xdecor:worktable"},
 	interval = 5, chance = 1,
 	action = function(pos, node, active_object_count, active_object_count_wider)
