@@ -189,9 +189,9 @@ xdecor.register("fence_wrought_iron", {
 	description = "Wrought Iron Fence",
 	drawtype = "fencelike",
 	groups = {snappy=2},
-	tiles = { "default_stone.png^[colorize:#2a2420:180" },
+	tiles = { "xdecor_wrought_iron.png" },
 	selection_box = fence_sbox,
-	inventory_image = "default_fence_overlay.png^default_stone.png^[colorize:#2a2420:160^default_fence_overlay.png^[makealpha:255,126,126"
+	inventory_image = "default_fence_overlay.png^xdecor_wrought_iron.png^default_fence_overlay.png^[makealpha:255,126,126"
 })
 
 xdecor.register("fire", {
