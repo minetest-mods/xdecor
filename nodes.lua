@@ -1,3 +1,31 @@
+xpanes.register_pane("bamboo_frame", {
+	description = "Bamboo Frame",
+	tiles = {"xdecor_bamboo_frame.png"},
+	drawtype = "airlike",
+	paramtype = "light",
+	sunlight_propagates = true,
+	textures = { "xdecor_bamboo_frame.png", "xdecor_bamboo_frame.png", 
+			"xpanes_space.png" },
+	inventory_image = "xdecor_bamboo_frame.png",
+	wield_image = "xdecor_bamboo_frame.png",
+	groups = {snappy=3, pane=1},
+	recipe = {
+		{"default:papyrus", "default:papyrus", "default:papyrus"},
+		{"default:papyrus", "farming:cotton", "default:papyrus"},
+		{"default:papyrus", "default:papyrus", "default:papyrus"}
+	}
+})
+
+xdecor.register("baricade", {
+	description = "Baricade",
+	drawtype = "plantlike",
+	walkable = false,
+	inventory_image = "xdecor_baricade.png",
+	tiles = {"xdecor_baricade.png"},
+	groups = {snappy=3},
+	damage_per_second = 4
+})
+
 xdecor.register("barrel", {
 	description = "Barrel",
 	inventory = {size=24},
@@ -170,6 +198,20 @@ xdecor.register("cushion", {
 	on_place = minetest.rotate_node,
 	node_box = xdecor.nodebox.slab_y(-0.5, 0.5)
 })
+
+local door_types = {"woodglass", "japanese"}
+
+for _, d in pairs(door_types) do
+	doors.register_door("xdecor:"..d.."_door", {
+		description = string.sub(string.upper(d), 0, 1)..
+				string.sub(d, 2).." Door",
+		inventory_image = "xdecor_"..d.."_door_inv.png",
+		groups = {snappy=3, door=1},
+		tiles_bottom = {"xdecor_"..d.."_door_b.png", "xdecor_brown.png"},
+		tiles_top = {"xdecor_"..d.."_door_a.png", "xdecor_brown.png"},
+		sounds = xdecor.wood,
+	})
+end
 
 xdecor.register("empty_shelf", {
 	description = "Empty Shelf",
@@ -358,6 +400,30 @@ xdecor.register("stone_rune", {
 	sounds = xdecor.stone
 })
 
+xdecor.register("stonepath", {
+	description = "Garden Stone Path",
+	tiles = { "default_stone.png" },
+	groups = { snappy=3 },
+	sounds = xdecor.stone,
+	node_box = {
+		type = "fixed",
+		fixed = {
+			{-0.4375, -0.5, 0.3125, -0.3125, -0.48, 0.4375},
+			{-0.25, -0.5, 0.125, 0, -0.48, 0.375},
+			{0.125, -0.5, 0.125, 0.4375, -0.48, 0.4375},
+			{-0.4375, -0.5, -0.125, -0.25, -0.48, 0.0625},
+			{-0.0625, -0.5, -0.25, 0.25, -0.48, 0.0625},
+			{0.3125, -0.5, -0.25, 0.4375, -0.48, -0.125},
+			{-0.3125, -0.5, -0.375, -0.125, -0.48, -0.1875},
+			{0.125, -0.5, -0.4375, 0.25, -0.48, -0.3125}
+		}
+	},
+	selection_box = {
+		type = "fixed",
+		fixed = { -0.4375, -0.5, -0.4375, 0.4375, -0.4, 0.4375 }
+	}
+})
+
 xdecor.register("stone_tile", {
 	description = "Stone Tile",
 	tiles = {"xdecor_stone_tile.png"},
@@ -376,6 +442,18 @@ xdecor.register("table", {
 		fixed = {
 			{-0.5, 0.4, -0.5, 0.5, 0.5, 0.5},
 			{-0.15, -0.5, -0.15, 0.15, 0.4, 0.15}
+		}
+	}
+})
+
+xdecor.register("tatami", {
+	description = "Tatami",
+	tiles = {"xdecor_tatami.png"},
+	groups = {snappy=3},
+	node_box = {
+		type = "fixed",
+		fixed = {
+			{-0.5, -0.5, -0.5, 0.5, -0.4375, 0.5},
 		}
 	}
 })

@@ -146,6 +146,9 @@ local function name(mat)
 	elseif string.find(mat, "brick") then
 		local newname = string.gsub(mat, "(brick)", "_%1")
 		return "default_"..newname..".png"
+	elseif string.find(mat, "tree") then
+		local newname = string.gsub(mat, "(tree)", "%1_top")
+		return "default_"..newname..".png"
 	else
 		return "default_"..mat..".png"
 	end

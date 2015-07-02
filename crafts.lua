@@ -1,4 +1,13 @@
 minetest.register_craft({ 
+	output = "xdecor:baricade",
+	recipe = {
+		{"group:stick", "default:steel_ingot", "group:stick"},
+		{"", "group:stick", ""},
+		{"group:stick", "", "group:stick"}
+	} 
+})
+
+minetest.register_craft({ 
 	output = "xdecor:candle",
 	recipe = {
 		{"default:torch"}
@@ -138,6 +147,15 @@ minetest.register_craftitem("xdecor:hammer", {
 	description = "Hammer",
 	inventory_image = "xdecor_hammer.png"
 })
+
+minetest.register_craft({
+	output = "xdecor:japanese_door",
+	recipe = {
+		{"group:wood", "group:wood"},
+		{"default:paper", "default:paper"},
+		{"group:wood", "group:wood"}
+	}
+})
 	
 minetest.register_craft({
 	output = "xdecor:lantern",
@@ -145,6 +163,15 @@ minetest.register_craft({
 		{"default:iron_lump"},
 		{"default:torch"},
 		{"default:iron_lump"}
+	}
+})
+
+minetest.register_craft({
+	output = "xdecor:mailbox",
+	recipe = {
+		{"default:steel_ingot", "default:steel_ingot", "default:steel_ingot"},
+		{"dye:red", "default:paper", "dye:red"},
+		{"default:steel_ingot", "default:steel_ingot", "default:steel_ingot"}
 	}
 })
 	
@@ -211,12 +238,28 @@ minetest.register_craft({
 })
 
 minetest.register_craft({
+	output = "xdecor:stonepath 16",
+	recipe = {
+		{"stairs:slab_stone", "", "stairs:slab_stone"},
+		{"", "stairs:slab_stone", ""},
+		{"stairs:slab_stone", "", "stairs:slab_stone"}
+	}
+})
+
+minetest.register_craft({
 	output = "xdecor:table",
 	recipe = {
 		{"stairs:slab_wood", "stairs:slab_wood", "stairs:slab_wood"},
 		{"", "group:stick", ""},
 		{"", "group:stick", ""}
 	}
+})
+
+minetest.register_craft({ 
+	output = "xdecor:tatami",
+	recipe = {
+		{"farming:wheat", "farming:wheat", "farming:wheat"}
+	} 
 })
 
 minetest.register_craft({
@@ -249,6 +292,15 @@ minetest.register_craft({
 minetest.register_craft({
 	output = "xdecor:wood_tile 2",
 	recipe = {
+		{"group:wood", "group:wood"},
+		{"group:wood", "group:wood"}
+	}
+})
+
+minetest.register_craft({
+	output = "xdecor:woodglass_door",
+	recipe = {
+		{"default:glass", "default:glass"},
 		{"group:wood", "group:wood"},
 		{"group:wood", "group:wood"}
 	}
