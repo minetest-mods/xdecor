@@ -135,10 +135,25 @@ minetest.register_craftitem("xdecor:hammer", {
 })
 
 minetest.register_craft({
+	output = "xdecor:hive",
+	recipe = {
+		{"default:paper", "default:paper", "default:paper"},
+		{"default:paper", "", "default:paper"},
+		{"default:paper", "default:paper", "default:paper"}
+	}
+})
+
+minetest.register_craftitem("xdecor:honey", {
+	description = "Honey",
+	inventory_image = "xdecor_honey.png",
+	on_use = minetest.item_eat(2)
+})
+
+minetest.register_craft({
 	output = "xdecor:ivy 2",
 	recipe = {
-		{"group:leaves", "group:stick"},
-		{"group:stick", "group:leaves"}
+		{"group:leaves"},
+		{"group:leaves"}
 	}
 })
 

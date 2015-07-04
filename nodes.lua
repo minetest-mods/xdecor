@@ -318,7 +318,7 @@ for _, f in ipairs(flowerstype) do
 	xdecor.register("potted_"..f, {
 		description = "Potted Flowers ("..f..")",
 		walkable = false,
-		groups = {dig_immediate=3, flammable=3, plant=1},
+		groups = {dig_immediate=3, flammable=3, plant=1, flower=1},
 		tiles = {"xdecor_"..f.."_pot.png"},
 		inventory_image = "xdecor_"..f.."_pot.png",
 		drawtype = "plantlike",
@@ -378,6 +378,22 @@ xdecor.register("multishelf", {
 	tiles = {"default_wood.png", "xdecor_multishelf.png"},
 	groups = {choppy=3, flammable=2},
 	sounds = xdecor.wood
+})
+
+xpanes.register_pane("rust_bar", {
+	description = "Rust Bars",
+	tiles = {"xdecor_rust_bars.png"},
+	drawtype = "airlike",
+	paramtype = "light",
+	sunlight_propagates = true,
+	textures = {"xdecor_rust_bars.png", "xdecor_rust_bars.png", 
+			"xpanes_space.png"},
+	inventory_image = "xdecor_rust_bars.png",
+	wield_image = "xdecor_rust_bars.png",
+	groups = {snappy=2, pane=1},
+	recipe = {
+		{"xpanes:bar", "default:dirt"}
+	}
 })
 
 xdecor.register("stereo", {
