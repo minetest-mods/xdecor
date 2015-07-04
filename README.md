@@ -6,8 +6,7 @@
 
 ### Credits ###
 
-##### Textures : Gambit, VanessaE, kilbith. #####
-##### Code : VanessaE, t4im, kilbith, Krock. #####
+##### Special thanks to Gambit for the textures from PixelBox #####
 
 ![Preview](http://i.imgur.com/q892y2g.png)
 ![Preview2](http://i.imgur.com/4G5gIZs.png)

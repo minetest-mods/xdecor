@@ -4,8 +4,8 @@ xpanes.register_pane("bamboo_frame", {
 	drawtype = "airlike",
 	paramtype = "light",
 	sunlight_propagates = true,
-	textures = { "xdecor_bamboo_frame.png", "xdecor_bamboo_frame.png", 
-			"xpanes_space.png" },
+	textures = {"xdecor_bamboo_frame.png", "xdecor_bamboo_frame.png", 
+			"xpanes_space.png"},
 	inventory_image = "xdecor_bamboo_frame.png",
 	wield_image = "xdecor_bamboo_frame.png",
 	groups = {snappy=3, pane=1, flammable=2},
@@ -30,7 +30,7 @@ xdecor.register("barrel", {
 	description = "Barrel",
 	inventory = {size=24},
 	infotext = "Barrel",
-	tiles = { "xdecor_barrel_top.png", "xdecor_barrel_sides.png" },
+	tiles = {"xdecor_barrel_top.png", "xdecor_barrel_sides.png"},
 	groups = {choppy=3, flammable=2},
 	sounds = xdecor.wood
 })
@@ -90,8 +90,8 @@ xdecor.register("cardboard_box", {
 	inventory = {size=8},
 	infotext = "Cardboard Box",
 	groups = {snappy=3, flammable=3},
-	tiles = { "xdecor_cardbox_top.png", "xdecor_cardbox_top.png", 
-		"xdecor_cardbox_sides.png" },
+	tiles = {"xdecor_cardbox_top.png", "xdecor_cardbox_top.png", 
+		"xdecor_cardbox_sides.png"},
 	node_box = {
 		type = "fixed",
 		fixed = {
@@ -153,7 +153,7 @@ for _, c in ipairs(colors) do
 		description = "Curtain ("..c..")",
 		use_texture_alpha = true,
 		walkable = false,
-		tiles = { "xdecor_curtain.png^[colorize:"..c..":130" },
+		tiles = {"xdecor_curtain.png^[colorize:"..c..":130"},
 		inventory_image = "xdecor_curtain_open.png^[colorize:"..c..":130",
 		wield_image = "xdecor_curtain.png^[colorize:"..c..":130",
 		drawtype = "signlike",
@@ -167,7 +167,7 @@ for _, c in ipairs(colors) do
 	})
 
 	xdecor.register("curtain_open_"..c, {
-		tiles = { "xdecor_curtain_open.png^[colorize:"..c..":130" },
+		tiles = {"xdecor_curtain_open.png^[colorize:"..c..":130"},
 		drawtype = "signlike",
 		paramtype2 = "wallmounted",
 		use_texture_alpha = true,
@@ -217,7 +217,7 @@ xdecor.register("empty_shelf", {
 	description = "Empty Shelf",
 	inventory = {size=24},
 	infotext = "Empty Shelf",
-	tiles = { "default_wood.png", "xdecor_empty_shelf.png" },
+	tiles = {"default_wood.png", "xdecor_empty_shelf.png"},
 	groups = {choppy=3, flammable=2},
 	sounds = xdecor.wood
 })
@@ -231,7 +231,7 @@ xdecor.register("fence_wrought_iron", {
 	description = "Wrought Iron Fence",
 	drawtype = "fencelike",
 	groups = {cracky=2},
-	tiles = { "xdecor_wrought_iron.png" },
+	tiles = {"xdecor_wrought_iron.png"},
 	selection_box = fence_sbox,
 	inventory_image = "default_fence_overlay.png^xdecor_wrought_iron.png^default_fence_overlay.png^[makealpha:255,126,126"
 })
@@ -301,8 +301,8 @@ xdecor.register("lantern", {
 	legacy_wallmounted = true,
 	walkable = false,
 	groups = {dig_immediate=3, attached_node=1},
-	tiles = { "xdecor_lantern_floor.png", "xdecor_lantern_ceiling.png",
-		"xdecor_lantern.png" },
+	tiles = {"xdecor_lantern_floor.png", "xdecor_lantern_ceiling.png",
+		"xdecor_lantern.png"},
 	selection_box = {
 		type = "wallmounted",
 		wall_top = {-0.25, -0.4, -0.25, 0.25, 0.5, 0.25},
@@ -378,23 +378,6 @@ xdecor.register("multishelf", {
 	tiles = {"default_wood.png", "xdecor_multishelf.png"},
 	groups = {choppy=3, flammable=2},
 	sounds = xdecor.wood
-})
-
-local rope_sbox = {
-	type = "fixed",
-	fixed = {-0.15, -0.5, -0.15, 0.15, 0.5, 0.15}
-}
-
-xdecor.register("rope", {
-	description = "Rope",
-	walkable = false,
-	climbable = true,
-	groups = {dig_immediate=3, flammable=2},
-	selection_box = rope_sbox,
-	tiles = {"xdecor_rope.png"},
-	inventory_image = "xdecor_rope_inv.png",
-	wield_image = "xdecor_rope_inv.png",
-	drawtype = "plantlike"
 })
 
 xdecor.register("stereo", {
@@ -490,7 +473,7 @@ xdecor.register("tv", {
 xdecor.register("woodframed_glass", {
 	description = "Wood Framed Glass",
 	drawtype = "glasslike_framed",
-	tiles = { "xdecor_framed_glass.png", "xdecor_framed_glass_detail.png" },
+	tiles = {"xdecor_framed_glass.png", "xdecor_framed_glass_detail.png"},
 	groups = {cracky=3},
 	sounds = xdecor.glass
 })
