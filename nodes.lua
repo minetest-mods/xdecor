@@ -276,6 +276,21 @@ minetest.register_tool("xdecor:flint_steel", {
 	end
 })
 
+xdecor.register("ivy", {
+	description = "Ivy",
+	drawtype = "signlike",
+	walkable = false,
+	climbable = true,
+	groups = {dig_immediate=3, flammable=2, plant=1},
+	paramtype2 = "wallmounted",
+	selection_box = { type="wallmounted" },
+	legacy_wallmounted = true,
+	tiles = {"xdecor_ivy.png"},
+	inventory_image = "xdecor_ivy.png",
+	wield_image = "xdecor_ivy.png",
+	sounds = xdecor.leaves
+})
+
 xdecor.register("lantern", {
 	description = "Lantern",
 	light_source = 12,

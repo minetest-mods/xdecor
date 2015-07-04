@@ -7,6 +7,15 @@ minetest.register_craft({
 	} 
 })
 
+minetest.register_craft({
+	output = "xdecor:barrel",
+	recipe = {
+		{"group:wood", "group:wood", "group:wood"},
+		{"default:iron_lump", "", "default:iron_lump"},
+		{"group:wood", "group:wood", "group:wood"}
+	}
+})
+
 minetest.register_craft({ 
 	output = "xdecor:candle",
 	recipe = {
@@ -25,36 +34,6 @@ minetest.register_craft({
 	output = "xdecor:cushion 2",
 	recipe = {
 		{"wool:red", "wool:red"}
-	}
-})
-
-minetest.register_craft({
-	output = "xdecor:painting",
-	recipe = {
-		{"default:sign_wall", "dye:blue"}
-	}
-})
-
-minetest.register_craft({
-	output = "xdecor:moonbrick",
-	recipe = {
-		{"default:brick", "default:stone"}
-	}
-})
-
-minetest.register_craft({
-	output = "xdecor:flint_steel",
-	recipe = {
-		{"default:obsidian_shard", "default:steel_ingot"}
-	}
-})
-
-minetest.register_craft({
-	output = "xdecor:barrel",
-	recipe = {
-		{"group:wood", "group:wood", "group:wood"},
-		{"default:iron_lump", "", "default:iron_lump"},
-		{"group:wood", "group:wood", "group:wood"}
 	}
 })
 
@@ -127,6 +106,13 @@ minetest.register_craft({
 })
 
 minetest.register_craft({
+	output = "xdecor:flint_steel",
+	recipe = {
+		{"default:obsidian_shard", "default:steel_ingot"}
+	}
+})
+
+minetest.register_craft({
 	output = "xdecor:frame",
 	recipe = {
 		{"group:stick", "group:stick", "group:stick"},
@@ -146,6 +132,14 @@ minetest.register_craft({
 minetest.register_craftitem("xdecor:hammer", {
 	description = "Hammer",
 	inventory_image = "xdecor_hammer.png"
+})
+
+minetest.register_craft({
+	output = "xdecor:ivy 2",
+	recipe = {
+		{"group:leaves", "group:stick"},
+		{"group:stick", "group:leaves"}
+	}
 })
 
 minetest.register_craft({
@@ -185,11 +179,25 @@ minetest.register_craft({
 })
 
 minetest.register_craft({
+	output = "xdecor:moonbrick",
+	recipe = {
+		{"default:brick", "default:stone"}
+	}
+})
+
+minetest.register_craft({
 	output = "xdecor:multishelf",
 	recipe = {
 		{"group:wood", "group:wood", "group:wood"},
 		{"group:vessel", "group:book", "group:vessel"},
 		{"group:wood", "group:wood", "group:wood"}
+	}
+})
+
+minetest.register_craft({
+	output = "xdecor:painting",
+	recipe = {
+		{"default:sign_wall", "dye:blue"}
 	}
 })
 
@@ -203,7 +211,7 @@ minetest.register_craft({
 })
 
 minetest.register_craft({
-	output = "xdecor:rope 2",
+	output = "xdecor:rope",
 	recipe = {
 		{"farming:string"},
 		{"farming:string"},
