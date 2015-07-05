@@ -42,9 +42,9 @@ xdecor.register("hive", {
 	allow_metadata_inventory_put = function(pos, listname, index, stack, player)
 		local meta = minetest.get_meta(pos)
 		local inv = meta:get_inventory()
-		local to_stack = inv:get_stack(listname, index)
 
 		if listname == "honey" then return 0 end
+		return stack:get_count()
 	end,
 })
 

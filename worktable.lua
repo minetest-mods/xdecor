@@ -108,13 +108,18 @@ end
 local function xput(pos, listname, index, stack, player)
 	local meta = minetest.get_meta(pos)
 	local inv = meta:get_inventory()
-	local to_stack = inv:get_stack(listname, index)
 
 	if listname == "output" then
 		return 0
-	else
-		return 99
 	end
+	if listname == "fuel" then
+		if stack:get_name() == "xdecor:hammer" then
+			return stack:get_count()
+		else
+			return 0
+		end
+	end
+	return stack:get_count()
 end
 
 xdecor.register("worktable", {

@@ -98,6 +98,15 @@ minetest.register_craft({
 })
 
 minetest.register_craft({
+	output = "xdecor:enderchest",
+	recipe = {
+		{"", "default:obsidian", ""},
+		{"default:obsidian", "default:chest", "default:obsidian"},
+		{"", "default:obsidian", ""}
+	}
+})
+
+minetest.register_craft({
 	output = "xdecor:fence_wrought_iron 2",
 	recipe = {
 		{"default:iron_lump", "default:iron_lump", "default:iron_lump"},
@@ -283,6 +292,15 @@ minetest.register_craft({
 	recipe = {
 		{"farming:wheat", "farming:wheat", "farming:wheat"}
 	} 
+})
+
+minetest.register_craft({
+	output = "xdecor:trash_can",
+	recipe = {
+		{"group:wood", "", "group:wood"},
+		{"group:wood", "", "group:wood"},
+		{"group:wood", "group:wood", "group:wood"}
+	}
 })
 
 minetest.register_craft({

@@ -222,6 +222,32 @@ xdecor.register("empty_shelf", {
 	sounds = xdecor.wood
 })
 
+xdecor.register("enderchest", {
+	description = "Ender Chest",
+	tiles = {
+		"xdecor_enderchest_top.png",
+		"xdecor_enderchest_top.png",
+		"xdecor_enderchest_side.png",
+		"xdecor_enderchest_side.png",
+		"xdecor_enderchest_side.png",
+		"xdecor_enderchest_front.png"
+	},
+	groups = {cracky=2},
+	on_construct = function(pos)
+		local meta = minetest.get_meta(pos)
+		meta:set_string("formspec",
+				"size[8,9]"..xdecor.fancy_gui..
+				"list[current_player;enderchest;0,0;8,4;]"..
+				"list[current_player;main;0,5;8,4;]")
+		meta:set_string("infotext", "Ender Chest")
+	end
+})
+
+minetest.register_on_joinplayer(function(player)
+	local inv = player:get_inventory()
+	inv:set_size("enderchest", 8*4)
+end)
+
 local fence_sbox = {
 	type = "fixed",
 	fixed = {-1/7, -1/2, -1/7, 1/7, 1/2, 1/7}
@@ -471,6 +497,47 @@ xdecor.register("tatami", {
 		}
 	}
 })
+
+xdecor.register("trash_can", {
+	description = "Trash Can",
+	tiles = {"xdecor_wood.png"},
+   	groups = {choppy=3, flammable=2},
+   	sounds = xdecor.wood,
+   	node_box = {
+		type = "fixed",
+		fixed = {
+			{-0.3125, -0.5, 0.3125, 0.3125, 0.5, 0.375},
+			{0.3125, -0.5, -0.375, 0.375, 0.5, 0.375},
+			{-0.3125, -0.5, -0.375, 0.3125, 0.5, -0.3125},
+			{-0.375, -0.5, -0.375, -0.3125, 0.5, 0.375},
+			{-0.3125, -0.5, -0.3125, 0.3125, -0.4375, 0.3125}
+		}
+	},
+	collision_box = {
+		type = "fixed",
+		fixed = {
+			{-0.375, -0.5, 0.375, 0.375, 0.25, 0.375},
+			{0.375, -0.5, -0.375, 0.375, 0.25, 0.375},
+			{-0.375, -0.5, -0.375, 0.375, 0.25, -0.375},
+			{-0.375, -0.5, -0.375, -0.375, 0.25, 0.375},
+			{-0.375, -0.5, -0.375, 0.375, -0.4375, 0.375}
+		}
+	},
+	on_construct = function(pos)
+		local meta = minetest.get_meta(pos)
+		meta:set_string("infotext", "Trash Can - throw your waste here!")
+	end
+})
+
+-- Thanks to Evergreen for this code.
+local old_on_step = minetest.registered_entities["__builtin:item"].on_step
+minetest.registered_entities["__builtin:item"].on_step = function(self, dtime)
+	if minetest.get_node(self.object:getpos()).name == "xdecor:trash_can" then
+		self.object:remove()
+		return
+	end
+	old_on_step(self, dtime)
+end
 
 xdecor.register("tv", {
 	description = "Television",
