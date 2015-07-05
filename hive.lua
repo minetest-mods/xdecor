@@ -15,6 +15,7 @@ end
 local function hive_dig(pos, player)
 	local meta = minetest.get_meta(pos)
 	local inv = meta:get_inventory()
+
 	if not inv:is_empty("honey") then
 		return false
 	end
@@ -37,7 +38,14 @@ xdecor.register("hive", {
 	on_punch = function(pos, node, puncher, pointed_thing)
 		local health = puncher:get_hp()
 		puncher:set_hp(health-4)
-	end
+	end,
+	allow_metadata_inventory_put = function(pos, listname, index, stack, player)
+		local meta = minetest.get_meta(pos)
+		local inv = meta:get_inventory()
+		local to_stack = inv:get_stack(listname, index)
+
+		if listname == "honey" then return 0 end
+	end,
 })
 
 minetest.register_abm({

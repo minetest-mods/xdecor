@@ -99,11 +99,22 @@ local function xdig(pos, player)
 	local inv = meta:get_inventory()
 
 	if not inv:is_empty("input") or not inv:is_empty("output")
-	 or not inv:is_empty("fuel") or not inv:is_empty("src") then
+	  or not inv:is_empty("fuel") or not inv:is_empty("src") then
 		return false
 	end
-
 	return true
+end
+
+local function xput(pos, listname, index, stack, player)
+	local meta = minetest.get_meta(pos)
+	local inv = meta:get_inventory()
+	local to_stack = inv:get_stack(listname, index)
+
+	if listname == "output" then
+		return 0
+	else
+		return 99
+	end
 end
 
 xdecor.register("worktable", {
@@ -117,7 +128,8 @@ xdecor.register("worktable", {
 	},
 	on_construct = xconstruct,
 	on_receive_fields = xfields,
-	can_dig = xdig
+	can_dig = xdig,
+	allow_metadata_inventory_put = xput
 })
 
 local function light(mat)
