@@ -1,7 +1,10 @@
 local function hive_construct(pos)
 	local meta = minetest.get_meta(pos)
 	meta:set_string("formspec", "size[8,5;]"..xdecor.fancy_gui..
-		"label[1.5,0;Bees are making honey\nwith pollen around...]"..
+		"label[1.25,0;Bees are making honey\nwith pollen around...]"..
+		"image[0,0;0.9,0.9;xdecor_bee3.png]".. -- Bees textures by Charles Sanchez and Mark Weyer.
+		"image[6,0;0.9,0.9;xdecor_bee2.png]"..
+		"image[7,0.35;0.8,0.8;xdecor_bee1.png]"..
 		"list[current_name;honey;5,0;1,1;]"..
 		"list[current_player;main;0,1.35;8,4;]")
 	meta:set_string("infotext", "Artificial Hive")
@@ -39,7 +42,7 @@ xdecor.register("hive", {
 
 minetest.register_abm({
 	nodenames = {"xdecor:hive"},
-	interval = 10, chance = 10,
+	interval = 4, chance = 4,
 	action = function(pos, node, active_object_count, active_object_count_wider)
 		local meta = minetest.get_meta(pos)
 		local inv = meta:get_inventory()
