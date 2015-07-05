@@ -1,8 +1,8 @@
 minetest.register_craft({ 
 	output = "xdecor:baricade",
 	recipe = {
-		{"group:stick", "default:steel_ingot", "group:stick"},
-		{"", "group:stick", ""},
+		{"group:stick", "", "group:stick"},
+		{"", "default:steel_ingot", ""},
 		{"group:stick", "", "group:stick"}
 	} 
 })
@@ -24,6 +24,15 @@ minetest.register_craft({
 })
 
 minetest.register_craft({
+	output = "xdecor:cabinet",
+	recipe = {
+		{"group:wood", "group:wood", "group:wood"},
+		{"doors:trapdoor", "", "doors:trapdoor"},
+		{"group:wood", "group:wood", "group:wood"}
+	}
+})
+
+minetest.register_craft({
 	output = "xdecor:cabinet_half 2",
 	recipe = {
 		{"xdecor:cabinet"}
@@ -34,15 +43,6 @@ minetest.register_craft({
 	output = "xdecor:cushion 2",
 	recipe = {
 		{"wool:red", "wool:red"}
-	}
-})
-
-minetest.register_craft({
-	output = "xdecor:cabinet",
-	recipe = {
-		{"group:wood", "group:wood", "group:wood"},
-		{"doors:trapdoor", "", "doors:trapdoor"},
-		{"group:wood", "group:wood", "group:wood"}
 	}
 })
 
@@ -85,6 +85,15 @@ minetest.register_craft({
 	recipe = {
 		{"default:coalblock", "default:stone"},
 		{"default:stone", "default:coalblock"}
+	}
+})
+
+minetest.register_craft({
+	output = "xdecor:cobweb",
+	recipe = {
+		{"farming:cotton", "", "farming:cotton"},
+		{"", "farming:cotton", ""},
+		{"farming:cotton", "", "farming:cotton"}
 	}
 })
 	
@@ -146,9 +155,9 @@ minetest.register_craftitem("xdecor:hammer", {
 minetest.register_craft({
 	output = "xdecor:hive",
 	recipe = {
+		{"group:stick", "group:stick", "group:stick"},
 		{"default:paper", "default:paper", "default:paper"},
-		{"default:paper", "", "default:paper"},
-		{"default:paper", "default:paper", "default:paper"}
+		{"group:stick", "group:stick", "group:stick"}
 	}
 })
 

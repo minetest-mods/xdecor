@@ -44,7 +44,7 @@ xdecor.register("cabinet", {
 	tiles = {
 		"default_wood.png", "default_wood.png",
 		"default_wood.png", "default_wood.png",
-		"default_wood.png","xdecor_cabinet_front.png"
+		"default_wood.png", "xdecor_cabinet_front.png"
 	}
 })
 
@@ -110,6 +110,30 @@ xdecor.register("cauldron", {
 	}
 })
 
+if minetest.get_modpath("bucket") then
+	local original_bucket_on_use = minetest.registered_items["bucket:bucket_empty"].on_use
+	minetest.override_item("bucket:bucket_empty", {
+		on_use = function(itemstack, user, pointed_thing)
+			local inv = user:get_inventory()
+
+			if pointed_thing.type == "node" and
+				minetest.get_node(pointed_thing.under).name == "xdecor:cauldron" then
+				if inv:room_for_item("main", "bucket:bucket_water 1") then
+					itemstack:take_item()
+					inv:add_item("main", "bucket:bucket_water 1")
+				else
+					minetest.chat_send_player(user:get_player_name(),
+						"No room in your inventory to add a filled bucket!")
+				end
+				return itemstack
+			else if original_bucket_on_use then
+				return original_bucket_on_use(itemstack, user, pointed_thing)
+			else return end
+		end
+	end
+	})
+end
+
 xdecor.register("chair", {
 	description = "Chair",
 	tiles = {"xdecor_wood.png"},
@@ -146,7 +170,24 @@ xdecor.register("coalstone_tile", {
 	sounds = xdecor.stone
 })
 
-local colors = {"red"} -- Add more curtains colors simply here
+xdecor.register("cobweb", {
+	description = "Cobweb",
+	drawtype = "plantlike",
+	tiles = {"xdecor_cobweb.png"},
+	inventory_image = "xdecor_cobweb.png",
+	liquid_viscosity = 8,
+	liquidtype = "source",
+	liquid_alternative_flowing = "xdecor:cobweb",
+	liquid_alternative_source = "xdecor:cobweb",
+	liquid_renewable = false,
+	liquid_range = 0,
+	walkable = false,
+	selection_box = { type = "regular" },
+	groups = {dig_immediate=3, liquid=3, flammable=3},
+	sounds = xdecor.leaves
+})
+
+local colors = {"red"} -- Add more curtains colors simply here.
 
 for _, c in ipairs(colors) do
 	xdecor.register("curtain_"..c, {
@@ -161,8 +202,7 @@ for _, c in ipairs(colors) do
 		groups = {dig_immediate=3, flammable=3},
 		selection_box = {type="wallmounted"},
 		on_rightclick = function(pos, node, clicker, itemstack)
-			local fdir = node.param2
-			minetest.set_node(pos, { name="xdecor:curtain_open_"..c, param2=fdir })
+			minetest.set_node(pos, {name="xdecor:curtain_open_"..c, param2=node.param2})
 		end
 	})
 
@@ -176,8 +216,7 @@ for _, c in ipairs(colors) do
 		selection_box = {type="wallmounted"},
 		drop = "xdecor:curtain_"..c,
 		on_rightclick = function(pos, node, clicker, itemstack)
-			local fdir = node.param2
-			minetest.set_node(pos, { name="xdecor:curtain_"..c, param2=fdir })
+			minetest.set_node(pos, {name="xdecor:curtain_"..c, param2=node.param2})
 		end
 	})
 
@@ -194,7 +233,7 @@ end
 xdecor.register("cushion", {
 	description = "Cushion",
 	tiles = {"xdecor_cushion.png"},
-	groups = {snappy=3, flammable=3, fall_damage_add_percent = -50},
+	groups = {snappy=3, flammable=3, fall_damage_add_percent=-50},
 	on_place = minetest.rotate_node,
 	node_box = xdecor.nodebox.slab_y(-0.5, 0.5)
 })
@@ -209,7 +248,7 @@ for _, d in pairs(door_types) do
 		groups = {choppy=3, flammable=2, door=1},
 		tiles_bottom = {"xdecor_"..d.."_door_b.png", "xdecor_brown.png"},
 		tiles_top = {"xdecor_"..d.."_door_a.png", "xdecor_brown.png"},
-		sounds = xdecor.wood,
+		sounds = xdecor.wood
 	})
 end
 
@@ -286,12 +325,14 @@ minetest.register_tool("xdecor:flint_steel", {
 		}
 	},
 	on_use = function(itemstack, user, pointed_thing)
-		if pointed_thing.type == "node"
-		 and minetest.get_node(pointed_thing.above).name == "air" then
-			if not minetest.is_protected(pointed_thing.above, user:get_player_name()) then
+		if pointed_thing.type == "node" and
+			minetest.get_node(pointed_thing.above).name == "air" then
+			if not minetest.is_protected(pointed_thing.above,
+				user:get_player_name()) then
 				minetest.set_node(pointed_thing.above, {name="xdecor:fire"})
 			else
-				minetest.chat_send_player(user:get_player_name(), "This area is protected!")
+				minetest.chat_send_player(user:get_player_name(),
+					"This area is protected!")
 			end
 		else
 			return
@@ -309,7 +350,7 @@ xdecor.register("ivy", {
 	climbable = true,
 	groups = {dig_immediate=3, flammable=2, plant=1},
 	paramtype2 = "wallmounted",
-	selection_box = { type="wallmounted" },
+	selection_box = {type="wallmounted"},
 	legacy_wallmounted = true,
 	tiles = {"xdecor_ivy.png"},
 	inventory_image = "xdecor_ivy.png",
@@ -352,8 +393,10 @@ for _, f in ipairs(flowerstype) do
 	})
 
 	minetest.register_craft({
-		type = "shapeless", output = "xdecor:potted_"..f.." 2",
-		recipe = { "flowers:"..f, "xdecor:plant_pot" } 
+		output = "xdecor:potted_"..f.." 2",
+		recipe = {
+			{"flowers:"..f, "xdecor:plant_pot"}
+		}
 	})
 end
 
@@ -493,7 +536,7 @@ xdecor.register("tatami", {
 	node_box = {
 		type = "fixed",
 		fixed = {
-			{-0.5, -0.5, -0.5, 0.5, -0.4375, 0.5},
+			{-0.5, -0.5, -0.5, 0.5, -0.4375, 0.5}
 		}
 	}
 })

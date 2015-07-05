@@ -41,8 +41,8 @@ local remove_item = function(pos, node)
 
 	if objs then
 		for _, obj in ipairs(objs) do
-			if obj and obj:get_luaentity() 
-			 and obj:get_luaentity().name == "xdecor:f_item" then
+			if obj and obj:get_luaentity() and
+				obj:get_luaentity().name == "xdecor:f_item" then
 				obj:remove()
 			end
 		end

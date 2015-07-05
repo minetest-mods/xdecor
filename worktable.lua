@@ -80,8 +80,8 @@ local function xfields(pos, formname, fields, sender)
 		local v = material[m]
 		local w = def[n]
 
-		if (inputstack:get_name() == "default:"..v)
-		 and (outputstack:get_count() < 99) and fields[w[1]] then
+		if (inputstack:get_name() == "default:"..v) and
+			(outputstack:get_count() < 99) and fields[w[1]] then
 			shape = "xdecor:"..w[1].."_"..v
 			anz = w[2]
 			get = shape.." "..anz
@@ -98,8 +98,8 @@ local function xdig(pos, player)
 	local meta = minetest.get_meta(pos)
 	local inv = meta:get_inventory()
 
-	if not inv:is_empty("input") or not inv:is_empty("output")
-	  or not inv:is_empty("fuel") or not inv:is_empty("src") then
+	if not inv:is_empty("input") or not inv:is_empty("output") or not
+		inv:is_empty("fuel") or not inv:is_empty("src") then
 		return false
 	end
 	return true
@@ -146,8 +146,8 @@ local function light(mat)
 end
 
 local function sound(mat)
-	if string.find(mat, "glass") or string.find(mat, "lamp")
-	 or string.find(mat, "ice") then
+	if string.find(mat, "glass") or string.find(mat, "lamp") or
+		string.find(mat, "ice") then
 		return default.node_sound_glass_defaults()
 	elseif string.find(mat, "wood") or string.find(mat, "tree") then
 		return default.node_sound_wood_defaults()
