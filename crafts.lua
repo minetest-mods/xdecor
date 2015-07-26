@@ -63,6 +63,20 @@ minetest.register_craft({
 	}
 })
 
+if minetest.get_modpath("bucket") then
+	minetest.register_craft({
+	output = "xdecor:cauldron",
+	recipe = {
+		{"default:iron_lump", "", "default:iron_lump"},
+		{"default:iron_lump", "bucket:bucket_water", "default:iron_lump"},
+		{"default:iron_lump", "default:iron_lump", "default:iron_lump"}
+	},
+	replacements = {
+		{"bucket:bucket_water", "bucket:bucket_empty"}
+	}
+})
+end
+
 minetest.register_craft({
 	output = "xdecor:chair",
 	recipe = {
