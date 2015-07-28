@@ -54,7 +54,7 @@ local function xconstruct(pos)
 		"list[current_name;output;2,2;1,1;]"..
 		"label[4.5,1.5;Damaged tool]"..
 		"list[current_name;src;5,2;1,1;]"..
-		"image[6,2;1,1;xdecor_hammer.png]"..
+		"image[6.07,2.07;0.85,0.85;xdecor_anvil.png]"..
 		"label[6.8,1.5;Hammer]]"..
 		"list[current_name;fuel;7,2;1,1;]"..
 		"list[current_player;main;0,3.25;8,4;]")
