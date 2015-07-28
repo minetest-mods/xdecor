@@ -185,7 +185,7 @@ for m=1, #material do
 			light_source = light,
 			sounds = sound,
 			tiles = {tile},
-			groups = {cracky=2, not_in_creative_inventory=1},
+			groups = {snappy=2, cracky=2, not_in_creative_inventory=1},
 			node_box = {
 				type = "fixed",
 				fixed = w[3]

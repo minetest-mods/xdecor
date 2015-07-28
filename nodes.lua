@@ -31,7 +31,7 @@ xdecor.register("barrel", {
 	inventory = {size=24},
 	infotext = "Barrel",
 	tiles = {"xdecor_barrel_top.png", "xdecor_barrel_sides.png"},
-	groups = {choppy=3, flammable=2},
+	groups = {snappy=2, choppy=3, flammable=2},
 	sounds = xdecor.wood
 })
 
@@ -39,7 +39,7 @@ xdecor.register("cabinet", {
 	description = "Cabinet",
 	inventory = {size=24},
 	infotext = "Cabinet",
-	groups = {choppy=3},
+	groups = {snappy=2, choppy=3},
 	sounds = xdecor.wood,
 	tiles = {
 		"default_wood.png", "default_wood.png",
@@ -52,7 +52,7 @@ xdecor.register("cabinet_half", {
 	description = "Half Cabinet",
 	inventory = {size=8},
 	infotext = "Half Cabinet",
-	groups = {choppy=3, flammable=2},
+	groups = {snappy=3, choppy=3, flammable=2},
 	sounds = xdecor.wood,
 	node_box = xdecor.nodebox.slab_y(0.5, 0.5),
 	tiles = {
@@ -138,7 +138,7 @@ xdecor.register("chair", {
 	description = "Chair",
 	tiles = {"xdecor_wood.png"},
 	sounds = xdecor.wood,
-	groups = {choppy=3, flammable=2},
+	groups = {snappy=2, choppy=3, flammable=2},
 	node_box = {
 		type = "fixed",
 		fixed = {
@@ -182,7 +182,7 @@ xdecor.register("cobweb", {
 	liquid_renewable = false,
 	liquid_range = 0,
 	walkable = false,
-	selection_box = { type = "regular" },
+	selection_box = {type = "regular"},
 	groups = {dig_immediate=3, liquid=3, flammable=3},
 	sounds = xdecor.leaves
 })
@@ -244,7 +244,7 @@ for _, d in pairs(door_types) do
 		description = string.sub(string.upper(d), 0, 1)..
 				string.sub(d, 2).." Door",
 		inventory_image = "xdecor_"..d.."_door_inv.png",
-		groups = {choppy=3, flammable=2, door=1},
+		groups = {snappy=2, choppy=3, flammable=2, door=1},
 		tiles_bottom = {"xdecor_"..d.."_door_b.png", "xdecor_brown.png"},
 		tiles_top = {"xdecor_"..d.."_door_a.png", "xdecor_brown.png"},
 		sounds = xdecor.wood
@@ -256,7 +256,7 @@ xdecor.register("empty_shelf", {
 	inventory = {size=24},
 	infotext = "Empty Shelf",
 	tiles = {"default_wood.png", "xdecor_empty_shelf.png"},
-	groups = {choppy=3, flammable=2},
+	groups = {snappy=2, choppy=3, flammable=2},
 	sounds = xdecor.wood
 })
 
@@ -414,7 +414,7 @@ xdecor.register("painting", {
 
 xdecor.register("plant_pot", {
 	description = "Plant Pot",
-	groups = {cracky=3},
+	groups = {snappy=3, cracky=3},
 	tiles = {"xdecor_plant_pot_top.png", "xdecor_plant_pot_bottom.png",
 		"xdecor_plant_pot_sides.png"}
 })
@@ -422,7 +422,7 @@ xdecor.register("plant_pot", {
 xdecor.register("metal_cabinet", {
 	description = "Metal Cabinet",
 	inventory = {size=24},
-	groups = {cracky=2},
+	groups = {snappy=1, cracky=2},
 	infotext = "Metal Cabinet",
 	tiles = {
 		"xdecor_metal_cabinet_sides.png", "xdecor_metal_cabinet_sides.png",
@@ -444,7 +444,7 @@ xdecor.register("multishelf", {
 	inventory = {size=24},
 	infotext = "Multi Shelf",
 	tiles = {"default_wood.png", "xdecor_multishelf.png"},
-	groups = {choppy=3, flammable=2},
+	groups = {snappy=2, choppy=3, flammable=2},
 	sounds = xdecor.wood
 })
 
@@ -517,7 +517,7 @@ xdecor.register("stone_tile", {
 xdecor.register("table", {
 	description = "Table",
 	tiles = {"xdecor_wood.png"},
-	groups = {choppy=3, flammable=2},
+	groups = {snappy=2, choppy=3, flammable=2},
 	sounds = xdecor.wood,
 	node_box = {
 		type = "fixed",
@@ -543,7 +543,7 @@ xdecor.register("tatami", {
 xdecor.register("trash_can", {
 	description = "Trash Can",
 	tiles = {"xdecor_wood.png"},
-   	groups = {choppy=3, flammable=2},
+   	groups = {snappy=2, choppy=3, flammable=2},
    	sounds = xdecor.wood,
    	node_box = {
 		type = "fixed",
@@ -599,7 +599,7 @@ xdecor.register("woodframed_glass", {
 	description = "Wood Framed Glass",
 	drawtype = "glasslike_framed",
 	tiles = {"xdecor_framed_glass.png", "xdecor_framed_glass_detail.png"},
-	groups = {cracky=3},
+	groups = {snappy=2, cracky=3},
 	sounds = xdecor.glass
 })
 
@@ -607,6 +607,6 @@ xdecor.register("wood_tile", {
 	description = "Wood Tile",
 	tiles = {"xdecor_wood_tile.png"},
 	drawtype = "normal",
-	groups = {choppy=2, wood=1, flammable=2},
+	groups = {snappy=1, choppy=2, wood=1, flammable=2},
 	sounds = xdecor.wood
 })
