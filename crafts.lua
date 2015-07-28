@@ -221,7 +221,7 @@ minetest.register_craft({
 	output = "xdecor:metal_cabinet",
 	recipe = {
 		{"default:steel_ingot", "default:steel_ingot", "default:steel_ingot"},
-		{"", "", ""},
+		{"default:paper", "default:paper", "default:paper"},
 		{"default:steel_ingot", "default:steel_ingot", "default:steel_ingot"}
 	}
 })
