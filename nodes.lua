@@ -224,7 +224,6 @@ for _, c in ipairs(colors) do
 		output = "xdecor:curtain_"..c.." 4",
 		recipe = {
 			{"", "wool:"..c, ""},
-			{"", "wool:"..c, ""},
 			{"", "wool:"..c, ""}
 		}
 	})
