@@ -115,9 +115,8 @@ if minetest.get_modpath("bucket") then
 	minetest.override_item("bucket:bucket_empty", {
 		on_use = function(itemstack, user, pointed_thing)
 			local inv = user:get_inventory()
-
 			if pointed_thing.type == "node" and
-				minetest.get_node(pointed_thing.under).name == "xdecor:cauldron" then
+					minetest.get_node(pointed_thing.under).name == "xdecor:cauldron" then
 				if inv:room_for_item("main", "bucket:bucket_water 1") then
 					itemstack:take_item()
 					inv:add_item("main", "bucket:bucket_water 1")
@@ -316,22 +315,19 @@ xdecor.register("fire", {
 
 minetest.register_tool("xdecor:flint_steel", {
 	description = "Flint & Steel",
-	stack_max = 1, 
 	inventory_image = "xdecor_flint_steel.png",
 	tool_capabilities = {
-		groupcaps = {
-			flamable = {uses=65, maxlevel=1}
-		}
+		groupcaps = { flamable = {uses=65, maxlevel=1} }
 	},
 	on_use = function(itemstack, user, pointed_thing)
 		if pointed_thing.type == "node" and
-			minetest.get_node(pointed_thing.above).name == "air" then
+				minetest.get_node(pointed_thing.above).name == "air" then
 			if not minetest.is_protected(pointed_thing.above,
-				user:get_player_name()) then
+					user:get_player_name()) then
 				minetest.set_node(pointed_thing.above, {name="xdecor:fire"})
 			else
 				minetest.chat_send_player(user:get_player_name(),
-					"This area is protected!")
+						"This area is protected!")
 			end
 		else
 			return
@@ -339,6 +335,17 @@ minetest.register_tool("xdecor:flint_steel", {
 
 		itemstack:add_wear(65535/65)
 		return itemstack
+	end
+})
+
+minetest.register_tool("xdecor:hammer", {
+	description = "Hammer",
+	inventory_image = "xdecor_hammer.png",
+	tool_capabilities = {
+		groupcaps = { snappy = {uses=20, maxlevel=2} }
+	},
+	on_use = function(itemstack, user, pointed_thing)
+		if pointed_thing.type == "node" then return end -- The hammer ain't meant for digging but for repairing.
 	end
 })
 

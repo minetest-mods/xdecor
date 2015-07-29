@@ -40,7 +40,7 @@ local function xconstruct(pos)
 
 	for i=1, #def do
 		nodebtn[#nodebtn+1] = "item_image_button["..(i-1)..
-			",0.5;1,1;xdecor:"..def[i][1].."_cloud;"..def[i][1]..";]"
+				",0.5;1,1;xdecor:"..def[i][1].."_cloud;"..def[i][1]..";]"
 	end
 	nodebtn = table.concat(nodebtn)
 
@@ -52,7 +52,7 @@ local function xconstruct(pos)
 		"image[1,2;1,1;xdecor_saw.png]"..
 		"label[2,1.5;Output]"..
 		"list[current_name;output;2,2;1,1;]"..
-		"label[4.5,1.5;Damaged tool]"..
+		"label[5,1.5;Tool]"..
 		"list[current_name;src;5,2;1,1;]"..
 		"image[6,2;1,1;xdecor_anvil.png]"..
 		"label[6.8,1.5;Hammer]]"..
@@ -81,7 +81,7 @@ local function xfields(pos, formname, fields, sender)
 		local w = def[n]
 
 		if (inputstack:get_name() == "default:"..v) and
-			(outputstack:get_count() < 99) and fields[w[1]] then
+				(outputstack:get_count() < 99) and fields[w[1]] then
 			shape = "xdecor:"..w[1].."_"..v
 			anz = w[2]
 			get = shape.." "..anz
@@ -99,7 +99,7 @@ local function xdig(pos, player)
 	local inv = meta:get_inventory()
 
 	if not inv:is_empty("input") or not inv:is_empty("output") or not
-		inv:is_empty("fuel") or not inv:is_empty("src") then
+			inv:is_empty("fuel") or not inv:is_empty("src") then
 		return false
 	end
 	return true
@@ -114,7 +114,7 @@ local function xput(pos, listname, index, stack, player)
 	end
 	if listname == "fuel" then
 		if stack:get_name() == "xdecor:hammer" then
-			return stack:get_count()
+			return 1
 		else
 			return 0
 		end
@@ -158,7 +158,7 @@ end
 
 local function sound(mat)
 	if string.find(mat, "glass") or string.find(mat, "lamp") or
-		string.find(mat, "ice") then
+			string.find(mat, "ice") then
 		return default.node_sound_glass_defaults()
 	elseif string.find(mat, "wood") or string.find(mat, "tree") then
 		return default.node_sound_wood_defaults()
@@ -192,7 +192,7 @@ for m=1, #material do
 		local w = def[n]
 		xdecor.register(w[1].."_"..v, {
 			description = string.sub(string.upper(w[1]), 0, 1)..
-				string.sub(w[1], 2),
+					string.sub(w[1], 2),
 			light_source = light,
 			sounds = sound,
 			tiles = {tile},
@@ -208,27 +208,32 @@ end
 
 minetest.register_abm({ -- Repair Tool's code by Krock, modified by kilbith.
 	nodenames = {"xdecor:worktable"},
-	interval = 5, chance = 1,
+	interval = 1, chance = 1,
 	action = function(pos, node, active_object_count, active_object_count_wider)
 		local meta = minetest.get_meta(pos)
 		local inv = meta:get_inventory()
 		local src = inv:get_stack("src", 1)
+		local fuel = inv:get_stack("fuel", 1)
 		local wear = src:get_wear()
-		local repair = -1400
+		local wear2 = fuel:get_wear()
+
+		local repair = -1400 -- Tool's repairing factor (higher in negative means greater repairing).
+		local wearhammer = 700 -- Hammer's wearing factor (higher in positive means greater wearing).
 
 		if (src:is_empty() or wear == 0 or wear == 65535) then return end
 
-		local fuel = inv:get_stack("fuel", 1)
 		if (fuel:is_empty() or fuel:get_name() ~= "xdecor:hammer") then
 		return end
 
 		if (wear + repair < 0) then
-			src:add_wear(repair + wear)
+			src:add_wear(repair)
+			fuel:add_wear(wearhammer)
 		else
 			src:add_wear(repair)
+			fuel:add_wear(wearhammer)
 		end
 
 		inv:set_stack("src", 1, src)
-		inv:remove_item("fuel", "xdecor:hammer 1")
+		inv:set_stack("fuel", 1, fuel)
 	end
 })

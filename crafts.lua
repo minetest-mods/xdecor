@@ -142,15 +142,10 @@ minetest.register_craft({
 minetest.register_craft({
 	output = "xdecor:hammer",
 	recipe = {
-		{"default:steel_ingot","group:stick","default:steel_ingot"},
+		{"default:steel_ingot", "group:stick", "default:steel_ingot"},
 		{"", "group:stick", ""},
 		{"", "group:stick", ""}
 	}
-})
-	
-minetest.register_craftitem("xdecor:hammer", {
-	description = "Hammer",
-	inventory_image = "xdecor_hammer.png"
 })
 
 minetest.register_craft({
