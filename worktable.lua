@@ -119,6 +119,17 @@ local function xput(pos, listname, index, stack, player)
 			return 0
 		end
 	end
+	if listname == "src" then
+		local tname = stack:get_name()
+		local tdef = minetest.registered_tools[tname]
+		local twear = stack:get_wear()
+
+		if tdef and twear > 0 then
+			return 1
+		else
+			return 0
+		end
+	end
 	return stack:get_count()
 end
 
@@ -205,14 +216,11 @@ minetest.register_abm({ -- Repair Tool's code by Krock, modified by kilbith.
 		local wear = src:get_wear()
 		local repair = -1400
 
-		if (src:is_empty() or wear == 0 or wear == 65535) then
-			return
-		end
+		if (src:is_empty() or wear == 0 or wear == 65535) then return end
 
 		local fuel = inv:get_stack("fuel", 1)
 		if (fuel:is_empty() or fuel:get_name() ~= "xdecor:hammer") then
-			return
-		end
+		return end
 
 		if (wear + repair < 0) then
 			src:add_wear(repair + wear)
