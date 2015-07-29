@@ -378,7 +378,7 @@ xdecor.register("lantern", {
 })
 
 local flowerstype = { "dandelion_white", "dandelion_yellow", "geranium",
-	"rose", "tulip", "viola" }
+		"rose", "tulip", "viola" }
 
 for _, f in ipairs(flowerstype) do
 	xdecor.register("potted_"..f, {
