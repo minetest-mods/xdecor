@@ -340,13 +340,7 @@ minetest.register_tool("xdecor:flint_steel", {
 
 minetest.register_tool("xdecor:hammer", {
 	description = "Hammer",
-	inventory_image = "xdecor_hammer.png",
-	tool_capabilities = {
-		groupcaps = { snappy = {uses=20, maxlevel=2} }
-	},
-	on_use = function(itemstack, user, pointed_thing)
-		if pointed_thing.type == "node" then return end -- The hammer ain't meant for digging but for repairing.
-	end
+	inventory_image = "xdecor_hammer.png"
 })
 
 xdecor.register("ivy", {
