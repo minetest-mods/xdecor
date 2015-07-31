@@ -206,7 +206,7 @@ for m=1, #material do
 	end
 end
 
-minetest.register_abm({ -- Repair Tool's code by Krock, modified by kilbith.
+minetest.register_abm({
 	nodenames = {"xdecor:worktable"},
 	interval = 1, chance = 1,
 	action = function(pos, node, active_object_count, active_object_count_wider)
@@ -225,13 +225,8 @@ minetest.register_abm({ -- Repair Tool's code by Krock, modified by kilbith.
 		if (fuel:is_empty() or fuel:get_name() ~= "xdecor:hammer") then
 		return end
 
-		if (wear + repair < 0) then
-			src:add_wear(repair)
-			fuel:add_wear(wearhammer)
-		else
-			src:add_wear(repair)
-			fuel:add_wear(wearhammer)
-		end
+		src:add_wear(repair)
+		fuel:add_wear(wearhammer)
 
 		inv:set_stack("src", 1, src)
 		inv:set_stack("fuel", 1, fuel)
