@@ -29,7 +29,7 @@ local default_inventory_formspecs = {
 	"list[context;main;0,0.3;8,4;]"..
 	"list[current_player;main;0,4.85;8,1;]"..
 	"list[current_player;main;0,6.08;8,3;8]"..
-	default.get_hotbar_bg(0,4.85),
+	default.get_hotbar_bg(0, 4.85)
 }
 
 local function get_formspec_by_size(size)
@@ -42,11 +42,11 @@ function xdecor.register(name, def)
 	def.paramtype = def.paramtype or "light"
 	def.sounds = def.sounds or default.node_sound_defaults()
 	
-	if not (def.drawtype == "glasslike_framed"
-		or def.drawtype == "glasslike_framed_optional"
-		or def.drawtype == "plantlike"
-		or def.drawtype == "signlike"
-		or def.drawtype == "normal") then
+	if not (def.drawtype == "glasslike_framed" or
+			def.drawtype == "glasslike_framed_optional" or
+			def.drawtype == "plantlike" or
+			def.drawtype == "signlike" or
+			def.drawtype == "normal") then
 		def.paramtype2 = def.paramtype2 or "facedir"
 	end
 

@@ -5,33 +5,21 @@ local material = {
 	"cobble", "mossycobble", "desert_cobble",
 	"stone", "sandstone", "desert_stone", "obsidian",
 	"stonebrick", "sandstonebrick", "desert_stonebrick", "obsidianbrick",
-	"coalblock", "copperblock", "bronzeblock",
-	"goldblock", "steelblock", "diamondblock",
-	"clay", "ice", "meselamp",
+	"coalblock", "copperblock", "steelblock", "goldblock", 
+	"bronzeblock", "mese", "diamondblock",
+	"brick", "clay", "ice", "meselamp",
 	"glass", "obsidian_glass"
 }
 
 local def = { -- Node name, yield, nodebox shape.
-	{ "nanoslab", "16",
-		{-0.5, -0.5, -0.5, 0, -0.4375, 0} },
-	{ "micropanel", "16",
-		{-0.5, -0.5, -0.5, 0.5, -0.4375, 0} },
-	{ "microslab", "8",
-		{-0.5, -0.5, -0.5, 0.5, -0.4375, 0.5} },
-	{ "panel", "4",
-		{-0.5, -0.5, -0.5, 0.5, 0, 0} },
-	{ "slab", "2",
-		{-0.5, -0.5, -0.5, 0.5, 0, 0.5} },
-	{ "outerstair", "1", {
-		{-0.5, -0.5, -0.5, 0.5, 0, 0.5},
-		{-0.5, 0, 0, 0, 0.5, 0.5} } },
-	{ "stair", "1", {
-		{-0.5, -0.5, -0.5, 0.5, 0, 0.5},
-		{-0.5, 0, 0, 0.5, 0.5, 0.5} } },
-	{ "innerstair", "1", {
-		{-0.5, -0.5, -0.5, 0.5, 0, 0.5},
-		{-0.5, 0, 0, 0.5, 0.5, 0.5},
-		{-0.5, 0, -0.5, 0, 0.5, 0} } }
+	{ "nanoslab", "16", {-0.5, -0.5, -0.5, 0, -0.4375, 0} },
+	{ "micropanel", "16", {-0.5, -0.5, -0.5, 0.5, -0.4375, 0} },
+	{ "microslab", "8", {-0.5, -0.5, -0.5, 0.5, -0.4375, 0.5} },
+	{ "panel", "4", {-0.5, -0.5, -0.5, 0.5, 0, 0} },
+	{ "slab", "2", {-0.5, -0.5, -0.5, 0.5, 0, 0.5} },
+	{ "outerstair", "1", { {-0.5, -0.5, -0.5, 0.5, 0, 0.5}, {-0.5, 0, 0, 0, 0.5, 0.5} } },
+	{ "stair", "1", { {-0.5, -0.5, -0.5, 0.5, 0, 0.5}, {-0.5, 0, 0, 0.5, 0.5, 0.5} } },
+	{ "innerstair", "1", { {-0.5, -0.5, -0.5, 0.5, 0, 0.5}, {-0.5, 0, 0, 0.5, 0.5, 0.5}, {-0.5, 0, -0.5, 0, 0.5, 0} } }
 }
 
 local function xconstruct(pos)
@@ -109,27 +97,20 @@ local function xput(pos, listname, index, stack, player)
 	local meta = minetest.get_meta(pos)
 	local inv = meta:get_inventory()
 
-	if listname == "output" then
-		return 0
-	end
+	if listname == "output" then return 0 end
 	if listname == "hammer" then
-		if stack:get_name() == "xdecor:hammer" then
-			return 1
-		else
-			return 0
-		end
+		if stack:get_name() == "xdecor:hammer" then return 1
+			else return 0 end
 	end
 	if listname == "tool" then
 		local tname = stack:get_name()
 		local tdef = minetest.registered_tools[tname]
 		local twear = stack:get_wear()
 
-		if tdef and twear > 0 then
-			return 1
-		else
-			return 0
-		end
+		if tdef and twear > 0 then return 1
+			else return 0 end
 	end
+
 	return stack:get_count()
 end
 
@@ -148,55 +129,20 @@ xdecor.register("worktable", {
 	allow_metadata_inventory_put = xput
 })
 
-local function light(mat)
-	if (mat == "meselamp") then
-		return 12
-	else
-		return 0
-	end
-end
-
-local function sound(mat)
-	if string.find(mat, "glass") or string.find(mat, "lamp") or
-			string.find(mat, "ice") then
-		return default.node_sound_glass_defaults()
-	elseif string.find(mat, "wood") or string.find(mat, "tree") then
-		return default.node_sound_wood_defaults()
-	else
-		return default.node_sound_stone_defaults()
-	end
-end
-
-local function name(mat)
-	if string.find(mat, "block") then
-		local newname = string.gsub(mat, "(block)", "_%1")
-		return "default_"..newname..".png"
-	elseif string.find(mat, "brick") then
-		local newname = string.gsub(mat, "(brick)", "_%1")
-		return "default_"..newname..".png"
-	elseif string.find(mat, "tree") then
-		local newname = string.gsub(mat, "(tree)", "%1_top")
-		return "default_"..newname..".png"
-	else
-		return "default_"..mat..".png"
-	end
-end
-
 for m=1, #material do
 	local v = material[m]
-	local light = light(v)
-	local sound = sound(v)
-	local tile = name(v)
-
 	for n=1, #def do
 		local w = def[n]
+		local nodename = "default:"..v
+		local ndef = minetest.registered_nodes[nodename]
+
 		xdecor.register(w[1].."_"..v, {
 			description = string.sub(string.upper(w[1]), 0, 1)..
 					string.sub(w[1], 2),
-			light_source = light,
-			sounds = sound,
-			tiles = {tile},
-			groups = {snappy=2, cracky=3, not_in_creative_inventory=1},
+			light_source = ndef.light_source,
+			sounds = ndef.sounds,
+			tiles = ndef.tiles,
+			groups = {snappy=3, not_in_creative_inventory=1},
 			node_box = {
 				type = "fixed",
 				fixed = w[3]

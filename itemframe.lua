@@ -4,7 +4,7 @@ screwdriver = screwdriver or {}
 minetest.register_entity("xdecor:f_item", {
 	hp_max = 1,
 	visual = "wielditem",
-	visual_size = {x=.33,y=.33},
+	visual_size = {x=.33, y=.33},
 	collisionbox = {0, 0, 0, 0, 0, 0},
 	physical = false,
 	textures = {"air"},
@@ -16,7 +16,7 @@ minetest.register_entity("xdecor:f_item", {
 			tmp.texture = nil
 		else
 			if staticdata ~= nil and staticdata ~= "" then
-				local data = staticdata:split(';')
+				local data = staticdata:split(";")
 				if data and data[1] and data[2] then
 					self.nodename = data[1]
 					self.texture = data[2]
@@ -29,7 +29,7 @@ minetest.register_entity("xdecor:f_item", {
 	end,
 	get_staticdata = function(self)
 		if self.nodename ~= nil and self.texture ~= nil then
-			return self.nodename .. ';' .. self.texture
+			return self.nodename..";"..self.texture
 		end
 		return ""
 	end
@@ -58,18 +58,17 @@ facedir[3] = {x=-1, y=0, z=0}
 local update_item = function(pos, node)
 	remove_item(pos, node)
 	local meta = minetest.get_meta(pos)
+	local str_item = meta:get_string("item")
 
-	if meta:get_string("item") ~= "" then
+	if str_item ~= "" then
 		local posad = facedir[node.param2]
+		if not posad then return end
+		pos.x = pos.x + posad.x * 6.5/16
+		pos.y = pos.y + posad.y * 6.5/16
+		pos.z = pos.z + posad.z * 6.5/16
 
-		if not posad then
-			return
-		end
-		pos.x = pos.x + posad.x*6.5/16
-		pos.y = pos.y + posad.y*6.5/16
-		pos.z = pos.z + posad.z*6.5/16
 		tmp.nodename = node.name
-		tmp.texture = ItemStack(meta:get_string("item")):get_name()
+		tmp.texture = ItemStack(str_item):get_name()
 
 		local e = minetest.add_entity(pos, "xdecor:f_item")
 		local yaw = math.pi*2 - node.param2 * math.pi/2
@@ -89,6 +88,7 @@ end
 xdecor.register("frame", {
 	description = "Item frame",
 	groups = {snappy=3},
+	sounds = xdecor.wood,
 	on_rotate = screwdriver.disallow,
 	node_box = {
 		type = "fixed",
@@ -101,14 +101,12 @@ xdecor.register("frame", {
 	inventory_image = "xdecor_frame.png",
 	after_place_node = function(pos, placer, itemstack)
 		local meta = minetest.get_meta(pos)
-		meta:set_string("owner", placer:get_player_name())
-		meta:set_string("infotext", "Item frame (owned by "..placer:get_player_name()..")")
+		local name = placer:get_player_name()
+		meta:set_string("owner", name)
+		meta:set_string("infotext", "Item frame (owned by "..name..")")
 	end,
 	on_rightclick = function(pos, node, clicker, itemstack)
-		if not itemstack then
-			return
-		end
-
+		if not itemstack then return end
 		local meta = minetest.get_meta(pos)
 		if clicker:get_player_name() == meta:get_string("owner") then
 			drop_item(pos, node)
@@ -134,12 +132,10 @@ xdecor.register("frame", {
 
 minetest.register_abm({
 	nodenames = {"xdecor:frame"},
-	interval = 5,
+	interval = 10,
 	chance = 1,
 	action = function(pos, node, active_object_count, active_object_count_wider)
-		if #minetest.get_objects_inside_radius(pos, 0.5) > 0 then
-			return
-		end
+		if #minetest.get_objects_inside_radius(pos, 0.5) > 0 then return end
 		update_item(pos, node)
 	end
 })
