@@ -21,13 +21,13 @@ local function enchfields(pos, formname, fields, sender)
 	local inv = meta:get_inventory()
 	local toolstack = inv:get_stack("tool", 1)
 	local mesestack = inv:get_stack("mese", 1)
+	local toolname = toolstack:get_name()
+	local mese = mesestack:get_count()
 	local enchs = {"durable", "fast"}
 
 	for _, e in pairs(enchs) do
-		if string.find(toolstack:get_name(), "default:") and
-				mesestack:get_count() > 0 and fields[e] then
-
-			toolstack:replace("xdecor:enchanted_"..string.sub(toolstack:get_name(), 9).."_"..e)
+		if string.find(toolname, "default:") and mese > 0 and fields[e] then
+			toolstack:replace("xdecor:enchanted_"..string.sub(toolname, 9).."_"..e)
 			mesestack:take_item()
 			inv:set_stack("mese", 1, mesestack)
 			inv:set_stack("tool", 1, toolstack)
@@ -46,28 +46,21 @@ local function enchdig(pos, player)
 end
 
 local function enchput(pos, listname, index, stack, player)
-	local meta = minetest.get_meta(pos)
-	local inv = meta:get_inventory()
+	local toolname = stack:get_name()
+	local count = stack:get_count()
 
 	if listname == "mese" then
-		if stack:get_name() == "default:mese_crystal" then
-			return stack:get_count()
-		else
-			return 0
-		end
+		if toolname == "default:mese_crystal" then return count
+			else return 0 end
 	end
 	if listname == "tool" then
-		local tname = stack:get_name()
-		local tdef = minetest.registered_tools[tname]
-
-		if tdef and not string.find(stack:get_name(), "sword") and not
-				string.find(stack:get_name(), "stone") and not
-				string.find(stack:get_name(), "wood") then
+		local tdef = minetest.registered_tools[toolname]
+		if tdef and not string.find(toolname, "sword") and not
+				string.find(toolname, "stone") and not
+				string.find(toolname, "wood") then
 			return 1
 		else return 0 end
 	end
-
-	return stack:get_count()
 end
 
 xdecor.register("enchantment_table", {

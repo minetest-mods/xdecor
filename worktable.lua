@@ -89,15 +89,13 @@ local function xdig(pos, player)
 end
 
 local function xput(pos, listname, index, stack, player)
-	local meta = minetest.get_meta(pos)
-	local inv = meta:get_inventory()
 	local stackname = stack:get_name()
+	local count = stack:get_count()
 
 	if listname == "output" then return 0 end
 	if listname == "input" then
-		if string.find(stack:get_name(), "default:") then
-			return stack:get_count()
-		else return 0 end
+		if string.find(stackname, "default:") then return count
+			else return 0 end
 	end
 	if listname == "hammer" then
 		if not (stackname == "xdecor:hammer") then return 0 end
