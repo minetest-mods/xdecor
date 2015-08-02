@@ -37,7 +37,7 @@ remove_rope = function(pos, oldnode, digger, rope_name)
 		num = num + 1
 	end
 	if num ~= 0 then
-		digger:get_inventory():add_item("main", rope_name..' '..num)
+		digger:get_inventory():add_item("main", rope_name.." "..num)
 	end
 	return true
 end

@@ -11,9 +11,7 @@ local profiles = {
 }
 
 for _, p in pairs(profiles) do
-	local p1 = p[1]
-	local p2 = p[2]
-	local p3 = p[3]
+	local p1, p2, p3 = p[1], p[2], p[3]
 	xwall_get_candidate[p1] = {p2, p3}
 end
 
@@ -117,16 +115,8 @@ end
 
 local xwall_construct_node_box_data = function(node_box_list, center_node_box_list, node_box_line)
 	local res = {}
-	res.c0 = {}
-	res.c1 = {}
-	res.c2 = {}
-	res.c3 = {}
-	res.c4 = {}
-	local pos0 = #res.c0
-	local pos1 = #res.c1
-	local pos2 = #res.c2
-	local pos3 = #res.c3
-	local pos4 = #res.c4
+	res.c0, res.c1, res.c2, res.c3, res.c4 = {}, {}, {}, {}, {}
+	local pos0, pos1, pos2, pos3, pos4 = #res.c0, #res.c1, #res.c2, #res.c3, #res.c4
 
 	for _, v in pairs(node_box_list) do
 		pos1 = pos1 + 1
