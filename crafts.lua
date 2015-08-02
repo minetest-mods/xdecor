@@ -132,6 +132,15 @@ minetest.register_craft({
 })
 
 minetest.register_craft({
+	output = "xdecor:enchantment_table",
+	recipe = {
+		{"", "default:book", ""},
+		{"default:diamond", "default:obsidian", "default:diamond"},
+		{"default:obsidian", "default:obsidian", "default:obsidian"}
+	}
+})
+
+minetest.register_craft({
 	output = "xdecor:fence_wrought_iron 2",
 	recipe = {
 		{"default:iron_lump", "default:iron_lump", "default:iron_lump"},
