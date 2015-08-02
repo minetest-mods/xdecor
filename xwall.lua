@@ -21,9 +21,7 @@ local directions = {
 }
 
 local xwall_update_one_node = function(pos, name, digged)
-	if not pos or not name or not minetest.registered_nodes[name] then
-		return end
-
+	if not pos or not name or not minetest.registered_nodes[name] then return end
 	local candidates = {0, 0, 0, 0}
 	local pow2 = {1, 2, 4, 8}
 	local id = 0
@@ -61,8 +59,7 @@ local xwall_update_one_node = function(pos, name, digged)
 end
 
 local xwall_update = function(pos, name, active, has_been_digged)
-	if not pos or not name or not minetest.registered_nodes[name] then
-		return end
+	if not pos or not name or not minetest.registered_nodes[name] then return end
 
 	local c = xwall_update_one_node(pos, name, has_been_digged)
 	for j = 1, #directions do
@@ -73,7 +70,7 @@ local xwall_update = function(pos, name, active, has_been_digged)
 	end
 end
 
-local xwall_register = function(name, def, node_box_data, selection_box_data)
+local xwall_register = function(name, def, node_box_data)
 	for k, v in pairs(node_box_data) do
 		def.drawtype = "nodebox"
 		def.paramtype = "light"
@@ -82,10 +79,6 @@ local xwall_register = function(name, def, node_box_data, selection_box_data)
 		def.node_box = {
 			type = "fixed",
 			fixed = node_box_data[k]
-		}
-		def.selection_box = {
-			type = "fixed",
-			fixed = selection_box_data[k]
 		}
 
 		if not def.tiles then
@@ -177,11 +170,6 @@ local xwall_register_wall = function(name, tiles, def)
 		{{ -4/16, -0.5, -4/16, 4/16, 0.5, 4/16 }},
 		{{ -3/16, -0.5, -0.5, 3/16, 5/16, 0.5 }}
 	)
-	local selection_box_data = xwall_construct_node_box_data(
-		{{ -0.2, -0.5, 0, 0.2, 5/16, 0.5 }},
-		{{ -0.25, -0.5, -0.25, 0.25, 0.5, 0.25 }},
-		{{ -0.2, -0.5, -0.5, 0.2, 5/16, 0.5 }}
-	)
 
 	if def then return end
 	def = { 
@@ -195,7 +183,7 @@ local xwall_register_wall = function(name, tiles, def)
 			fixed = {-0.5, -0.5, -0.25, 0.5, 1, 0.25}
 		}
 	}
-	xwall_register(name, def, node_box_data, selection_box_data)
+	xwall_register(name, def, node_box_data)
 end
 
 xwall_register_wall("xdecor:cobble_wall", "default_cobble.png")
