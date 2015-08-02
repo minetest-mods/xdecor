@@ -183,20 +183,18 @@ local xwall_register_wall = function(name, tiles, def)
 		{{ -0.2, -0.5, -0.5, 0.2, 5/16, 0.5 }}
 	)
 
-	if not def then
-		def = { 
-			description = string.upper(string.sub(name, 8, 8))..string.sub(name, 9, -6).." "..
-					string.upper(string.sub(name, -4, -4))..string.sub(name, -3),
-			textures = {tiles, tiles, tiles, tiles},
-			sounds = xdecor.stone,
-			groups = {cracky=3, stone=1, pane=1},
-			collision_box = {
-				type = "fixed",
-				fixed = {-0.5, -0.5, -0.25, 0.5, 1, 0.25}
-			}
+	if def then return end
+	def = { 
+		description = string.upper(string.sub(name, 8, 8))..string.sub(name, 9, -6).." "..
+				string.upper(string.sub(name, -4, -4))..string.sub(name, -3),
+		textures = {tiles, tiles, tiles, tiles},
+		sounds = xdecor.stone,
+		groups = {cracky=3, stone=1, pane=1},
+		collision_box = {
+			type = "fixed",
+			fixed = {-0.5, -0.5, -0.25, 0.5, 1, 0.25}
 		}
-	end
-
+	}
 	xwall_register(name, def, node_box_data, selection_box_data)
 end
 

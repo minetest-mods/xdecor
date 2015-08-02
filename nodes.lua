@@ -31,7 +31,7 @@ xdecor.register("barrel", {
 	inventory = {size=24},
 	infotext = "Barrel",
 	tiles = {"xdecor_barrel_top.png", "xdecor_barrel_sides.png"},
-	groups = {snappy=2, choppy=3, flammable=2},
+	groups = {choppy=3, flammable=2},
 	sounds = xdecor.wood
 })
 
@@ -39,7 +39,7 @@ xdecor.register("cabinet", {
 	description = "Cabinet",
 	inventory = {size=24},
 	infotext = "Cabinet",
-	groups = {snappy=2, choppy=3},
+	groups = {choppy=3, flammable=2},
 	sounds = xdecor.wood,
 	tiles = {
 		"default_wood.png", "default_wood.png",
@@ -52,7 +52,7 @@ xdecor.register("cabinet_half", {
 	description = "Half Cabinet",
 	inventory = {size=8},
 	infotext = "Half Cabinet",
-	groups = {snappy=3, choppy=3, flammable=2},
+	groups = {choppy=3, flammable=3},
 	sounds = xdecor.wood,
 	node_box = xdecor.nodebox.slab_y(0.5, 0.5),
 	tiles = {
@@ -137,7 +137,7 @@ xdecor.register("chair", {
 	description = "Chair",
 	tiles = {"xdecor_wood.png"},
 	sounds = xdecor.wood,
-	groups = {snappy=2, choppy=3, flammable=2},
+	groups = {choppy=3, flammable=2},
 	node_box = {
 		type = "fixed",
 		fixed = {
@@ -255,7 +255,7 @@ xdecor.register("empty_shelf", {
 	inventory = {size=24},
 	infotext = "Empty Shelf",
 	tiles = {"default_wood.png", "xdecor_empty_shelf.png"},
-	groups = {snappy=2, choppy=3, flammable=2},
+	groups = {choppy=3, flammable=2},
 	sounds = xdecor.wood
 })
 
@@ -270,6 +270,7 @@ xdecor.register("enderchest", {
 		"xdecor_enderchest_front.png"
 	},
 	groups = {cracky=2},
+	sounds = xdecor.stone,
 	on_construct = function(pos)
 		local meta = minetest.get_meta(pos)
 		meta:set_string("formspec",
@@ -415,7 +416,7 @@ xdecor.register("painting", {
 
 xdecor.register("plant_pot", {
 	description = "Plant Pot",
-	groups = {snappy=3, cracky=3},
+	groups = {snappy=3},
 	tiles = {"xdecor_plant_pot_top.png", "xdecor_plant_pot_bottom.png",
 		"xdecor_plant_pot_sides.png"}
 })
@@ -423,7 +424,7 @@ xdecor.register("plant_pot", {
 xdecor.register("metal_cabinet", {
 	description = "Metal Cabinet",
 	inventory = {size=24},
-	groups = {snappy=1, cracky=2},
+	groups = {cracky=2},
 	infotext = "Metal Cabinet",
 	tiles = {
 		"xdecor_metal_cabinet_sides.png", "xdecor_metal_cabinet_sides.png",
@@ -445,7 +446,7 @@ xdecor.register("multishelf", {
 	inventory = {size=24},
 	infotext = "Multi Shelf",
 	tiles = {"default_wood.png", "xdecor_multishelf.png"},
-	groups = {snappy=2, choppy=3, flammable=2},
+	groups = {choppy=3, flammable=2},
 	sounds = xdecor.wood
 })
 
@@ -518,7 +519,7 @@ xdecor.register("stone_tile", {
 xdecor.register("table", {
 	description = "Table",
 	tiles = {"xdecor_wood.png"},
-	groups = {snappy=2, choppy=3, flammable=2},
+	groups = {choppy=3, flammable=2},
 	sounds = xdecor.wood,
 	node_box = {
 		type = "fixed",
@@ -544,7 +545,7 @@ xdecor.register("tatami", {
 xdecor.register("trash_can", {
 	description = "Trash Can",
 	tiles = {"xdecor_wood.png"},
-   	groups = {snappy=2, choppy=3, flammable=2},
+   	groups = {choppy=3, flammable=2},
    	sounds = xdecor.wood,
    	node_box = {
 		type = "fixed",
@@ -600,7 +601,7 @@ xdecor.register("woodframed_glass", {
 	description = "Wood Framed Glass",
 	drawtype = "glasslike_framed",
 	tiles = {"xdecor_framed_glass.png", "xdecor_framed_glass_detail.png"},
-	groups = {snappy=2, cracky=3},
+	groups = {cracky=3},
 	sounds = xdecor.glass
 })
 
@@ -608,6 +609,6 @@ xdecor.register("wood_tile", {
 	description = "Wood Tile",
 	tiles = {"xdecor_wood_tile.png"},
 	drawtype = "normal",
-	groups = {snappy=1, choppy=2, wood=1, flammable=2},
+	groups = {choppy=2, wood=1, flammable=2},
 	sounds = xdecor.wood
 })

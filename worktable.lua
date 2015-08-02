@@ -110,7 +110,7 @@ end
 
 xdecor.register("worktable", {
 	description = "Work Table",
-	groups = {snappy=3},
+	groups = {cracky=3},
 	sounds = xdecor.wood,
 	tiles = {
 		"xdecor_worktable_top.png", "xdecor_worktable_top.png",

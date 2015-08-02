@@ -5,7 +5,7 @@ xdecor.register("mailbox", {
 		"xdecor_mailbox_side.png", "xdecor_mailbox_side.png",
 		"xdecor_mailbox.png", "xdecor_mailbox.png",
 	},
-	groups = {snappy=2, cracky=2},
+	groups = {cracky=2},
 	after_place_node = function(pos, placer, itemstack)
 		local meta = minetest.get_meta(pos)
 		local owner = placer:get_player_name()
