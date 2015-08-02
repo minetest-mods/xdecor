@@ -94,7 +94,6 @@ local tools = {
 	{"shovel", "crumbly"}
 }
 local materials = {"steel", "bronze", "mese", "diamond"}
-local groups = {"cracky", "crumbly", "choppy"}
 
 for _, t in pairs(tools) do
 for _, m in pairs(materials) do
@@ -142,7 +141,7 @@ for _, m in pairs(materials) do
 		}
 	})
 
-	--- Axe ---
+	--- Axes ---
 
 	minetest.register_tool("xdecor:enchanted_axe_"..m.."_durable", {
 		description = "Enchanted "..string.sub(string.upper(m), 0, 1)..string.sub(m, 2).." Axe (Durable)",

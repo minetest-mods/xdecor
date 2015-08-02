@@ -91,22 +91,23 @@ end
 local function xput(pos, listname, index, stack, player)
 	local meta = minetest.get_meta(pos)
 	local inv = meta:get_inventory()
+	local stackname = stack:get_name()
 
 	if listname == "output" then return 0 end
+	if listname == "input" then
+		if string.find(stack:get_name(), "default:") then
+			return stack:get_count()
+		else return 0 end
+	end
 	if listname == "hammer" then
-		if stack:get_name() == "xdecor:hammer" then return 1
-			else return 0 end
+		if not (stackname == "xdecor:hammer") then return 0 end
 	end
 	if listname == "tool" then
-		local tname = stack:get_name()
-		local tdef = minetest.registered_tools[tname]
+		local tdef = minetest.registered_tools[stackname]
 		local twear = stack:get_wear()
 
-		if tdef and twear > 0 then return 1
-			else return 0 end
+		if not (tdef and twear > 0) then return 0 end
 	end
-
-	return stack:get_count()
 end
 
 xdecor.register("worktable", {
@@ -124,28 +125,25 @@ xdecor.register("worktable", {
 	allow_metadata_inventory_put = xput
 })
 
-for m=1, #material do
-	local v = material[m]
+for _, m in pairs(material) do
 	for n=1, #def do
 		local w = def[n]
-		local nodename = "default:"..v
+		local nodename = "default:"..m
 		local ndef = minetest.registered_nodes[nodename]
-		
-		if ndef then
-			xdecor.register(w[1].."_"..v, {
-				description = string.sub(string.upper(w[1]), 0, 1)..
-						string.sub(w[1], 2),
-				light_source = ndef.light_source,
-				sounds = ndef.sounds,
-				tiles = ndef.tiles,
-				groups = {snappy=3, not_in_creative_inventory=1},
-				node_box = {
-					type = "fixed",
-					fixed = w[3]
-				},
-				on_place = minetest.rotate_node
-			})
-		end
+		if not ndef then return end
+
+		xdecor.register(w[1].."_"..m, {
+			description = string.sub(string.upper(w[1]), 0, 1)..string.sub(w[1], 2),
+			light_source = ndef.light_source,
+			sounds = ndef.sounds,
+			tiles = ndef.tiles,
+			groups = {snappy=3, not_in_creative_inventory=1},
+			node_box = {
+				type = "fixed",
+				fixed = w[3]
+			},
+			on_place = minetest.rotate_node
+		})
 	end
 end
 
