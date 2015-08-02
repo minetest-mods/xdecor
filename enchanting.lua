@@ -26,7 +26,7 @@ local function enchfields(pos, formname, fields, sender)
 	local enchs = {"durable", "fast"}
 
 	for _, e in pairs(enchs) do
-		if string.find(toolname, "default:") and mese > 0 and fields[e] then
+		if mese > 0 and fields[e] then
 			toolstack:replace("xdecor:enchanted_"..string.sub(toolname, 9).."_"..e)
 			mesestack:take_item()
 			inv:set_stack("mese", 1, mesestack)
@@ -55,12 +55,14 @@ local function enchput(pos, listname, index, stack, player)
 	end
 	if listname == "tool" then
 		local tdef = minetest.registered_tools[toolname]
-		if tdef and not string.find(toolname, "sword") and not
+		if tdef and string.find(toolname, "default:") and not
+				string.find(toolname, "sword") and not
 				string.find(toolname, "stone") and not
 				string.find(toolname, "wood") then
 			return 1
 		else return 0 end
 	end
+	return count
 end
 
 xdecor.register("enchantment_table", {
@@ -82,9 +84,7 @@ xdecor.register("enchantment_table", {
 })
 
 local tools = {
-	{"axe", "choppy"},
-	{"pick", "cracky"},
-	{"shovel", "crumbly"}
+	{"axe", "choppy"}, {"pick", "cracky"}, {"shovel", "crumbly"}
 }
 local materials = {"steel", "bronze", "mese", "diamond"}
 
@@ -103,9 +103,9 @@ for _, m in pairs(materials) do
 	local maxlvl = registered_tool["maxlevel"]
 
 	local dig_faster, use_longer = {}, {}
-	use_longer = registered_tool["uses"] * 1.1 -- Wearing factor for enchanted tools (higher in positive means longer use).
+	use_longer = registered_tool["uses"] * 1.1 -- Wearing factor for enchanted tools (higher number = longer use).
 	for i = 1, 3 do
-		dig_faster[i] = registered_tool["times"][i] - 0.1 -- Digging factor for enchanted tools (higher in negative means faster dig).
+		dig_faster[i] = registered_tool["times"][i] - 0.1 -- Digging factor for enchanted tools (lower number = faster dig).
 	end
 
 	--- Pickaxes ---

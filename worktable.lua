@@ -12,20 +12,20 @@ local material = {
 }
 
 local def = { -- Node name, yield, nodebox shape.
-	{ "nanoslab", "16", {-0.5, -0.5, -0.5, 0, -0.4375, 0} },
-	{ "micropanel", "16", {-0.5, -0.5, -0.5, 0.5, -0.4375, 0} },
-	{ "microslab", "8", {-0.5, -0.5, -0.5, 0.5, -0.4375, 0.5} },
-	{ "panel", "4", {-0.5, -0.5, -0.5, 0.5, 0, 0} },
-	{ "slab", "2", {-0.5, -0.5, -0.5, 0.5, 0, 0.5} },
-	{ "outerstair", "1", { {-0.5, -0.5, -0.5, 0.5, 0, 0.5}, {-0.5, 0, 0, 0, 0.5, 0.5} } },
-	{ "stair", "1", { {-0.5, -0.5, -0.5, 0.5, 0, 0.5}, {-0.5, 0, 0, 0.5, 0.5, 0.5} } },
-	{ "innerstair", "1", { {-0.5, -0.5, -0.5, 0.5, 0, 0.5}, {-0.5, 0, 0, 0.5, 0.5, 0.5}, {-0.5, 0, -0.5, 0, 0.5, 0} } }
+	{"nanoslab", "16", {-0.5, -0.5, -0.5, 0, -0.4375, 0}},
+	{"micropanel", "16", {-0.5, -0.5, -0.5, 0.5, -0.4375, 0}},
+	{"microslab", "8", {-0.5, -0.5, -0.5, 0.5, -0.4375, 0.5}},
+	{"panel", "4", {-0.5, -0.5, -0.5, 0.5, 0, 0}},
+	{"slab", "2", {-0.5, -0.5, -0.5, 0.5, 0, 0.5}},
+	{"outerstair", "1", {{-0.5, -0.5, -0.5, 0.5, 0, 0.5}, {-0.5, 0, 0, 0, 0.5, 0.5}}},
+	{"stair", "1", {{-0.5, -0.5, -0.5, 0.5, 0, 0.5}, {-0.5, 0, 0, 0.5, 0.5, 0.5}}},
+	{"innerstair", "1", {{-0.5, -0.5, -0.5, 0.5, 0, 0.5}, {-0.5, 0, 0, 0.5, 0.5, 0.5}, {-0.5, 0, -0.5, 0, 0.5, 0}}}
 }
 
 local function xconstruct(pos)
 	local meta = minetest.get_meta(pos)
-	local nodebtn = {}
 
+	local nodebtn = {}
 	for i=1, #def do
 		nodebtn[#nodebtn+1] = "item_image_button["..(i-1)..
 				",0.5;1,1;xdecor:"..def[i][1].."_cloud;"..def[i][1]..";]"
@@ -60,13 +60,15 @@ local function xfields(pos, formname, fields, sender)
 	local inv = meta:get_inventory()
 	local inputstack = inv:get_stack("input", 1)
 	local outputstack = inv:get_stack("output", 1)
+	local outputcount = outputstack:get_count()
+	local inputname = inputstack:get_name()
 	local shape, get = {}, {}
 	local anz = 0
 
 	for _, d in pairs(def) do
 		local nb, anz = d[1], d[2]
-		if outputstack:get_count() < 99 and fields[nb] then
-			shape = "xdecor:"..nb.."_"..string.sub(inputstack:get_name(), 9)
+		if outputcount < 99 and fields[nb] then
+			shape = "xdecor:"..nb.."_"..string.sub(inputname, 9)
 			get = shape.." "..anz
 
 			if not minetest.registered_nodes[shape] then return end
@@ -82,7 +84,7 @@ local function xdig(pos, player)
 	local inv = meta:get_inventory()
 
 	if not inv:is_empty("input") or not inv:is_empty("output") or not
-			inv:is_empty("fuel") or not inv:is_empty("src") then
+			inv:is_empty("hammer") or not inv:is_empty("tool") then
 		return false
 	end
 	return true
@@ -103,14 +105,15 @@ local function xput(pos, listname, index, stack, player)
 	if listname == "tool" then
 		local tdef = minetest.registered_tools[stackname]
 		local twear = stack:get_wear()
-
 		if not (tdef and twear > 0) then return 0 end
 	end
+
+	return count
 end
 
 xdecor.register("worktable", {
 	description = "Work Table",
-	groups = {cracky=3},
+	groups = {cracky=2},
 	sounds = xdecor.wood,
 	tiles = {
 		"xdecor_worktable_top.png", "xdecor_worktable_top.png",
@@ -124,25 +127,25 @@ xdecor.register("worktable", {
 })
 
 for _, m in pairs(material) do
-	for n=1, #def do
-		local w = def[n]
-		local nodename = "default:"..m
-		local ndef = minetest.registered_nodes[nodename]
-		if not ndef then return end
+for n=1, #def do
+	local w = def[n]
+	local nodename = "default:"..m
+	local ndef = minetest.registered_nodes[nodename]
+	if not ndef then return end
 
-		xdecor.register(w[1].."_"..m, {
-			description = string.sub(string.upper(w[1]), 0, 1)..string.sub(w[1], 2),
-			light_source = ndef.light_source,
-			sounds = ndef.sounds,
-			tiles = ndef.tiles,
-			groups = {snappy=3, not_in_creative_inventory=1},
-			node_box = {
-				type = "fixed",
-				fixed = w[3]
-			},
-			on_place = minetest.rotate_node
-		})
-	end
+	xdecor.register(w[1].."_"..m, {
+		description = string.sub(string.upper(w[1]), 0, 1)..string.sub(w[1], 2),
+		light_source = ndef.light_source,
+		sounds = ndef.sounds,
+		tiles = ndef.tiles,
+		groups = {snappy=3, not_in_creative_inventory=1},
+		node_box = {
+			type = "fixed",
+			fixed = w[3]
+		},
+		on_place = minetest.rotate_node
+	})
+end
 end
 
 minetest.register_abm({
@@ -156,13 +159,10 @@ minetest.register_abm({
 		local wear = tool:get_wear()
 		local wear2 = hammer:get_wear()
 
-		local repair = -500 -- Tool's repairing factor (higher in negative means greater repairing).
-		local wearhammer = 250 -- Hammer's wearing factor (higher in positive means greater wearing).
+		local repair = -500 -- Tool's repairing factor (0-65535 -- 0 = new condition).
+		local wearhammer = 250 -- Hammer's wearing factor (0-65535 -- 0 = new condition).
 
-		if (tool:is_empty() or wear == 0 or wear == 65535) then return end
-
-		if (hammer:is_empty() or hammer:get_name() ~= "xdecor:hammer") then
-			return end
+		if tool:is_empty() or hammer:is_empty() or wear == 0 then return end
 
 		tool:add_wear(repair)
 		hammer:add_wear(wearhammer)
