@@ -115,14 +115,15 @@ if minetest.get_modpath("bucket") then
 	minetest.override_item("bucket:bucket_empty", {
 		on_use = function(itemstack, user, pointed_thing)
 			local inv = user:get_inventory()
+			local player = user:get_player_name()
+
 			if pointed_thing.type == "node" and
 					minetest.get_node(pointed_thing.under).name == "xdecor:cauldron" then
 				if inv:room_for_item("main", "bucket:bucket_water 1") then
 					itemstack:take_item()
 					inv:add_item("main", "bucket:bucket_water 1")
 				else
-					minetest.chat_send_player(user:get_player_name(),
-						"No room in your inventory to add a filled bucket!")
+					minetest.chat_send_player(player, "No enough room in your inventory.")
 				end
 				return itemstack
 			else if original_bucket_on_use then
@@ -243,7 +244,7 @@ for _, d in pairs(door_types) do
 		description = string.sub(string.upper(d), 0, 1)..
 				string.sub(d, 2).." Door",
 		inventory_image = "xdecor_"..d.."_door_inv.png",
-		groups = {snappy=2, choppy=3, flammable=2, door=1},
+		groups = {choppy=3, flammable=2, door=1},
 		tiles_bottom = {"xdecor_"..d.."_door_b.png", "xdecor_brown.png"},
 		tiles_top = {"xdecor_"..d.."_door_a.png", "xdecor_brown.png"},
 		sounds = xdecor.wood
@@ -311,6 +312,10 @@ xdecor.register("fire", {
 	drawtype = "plantlike",
 	damage_per_second = 2,
 	drop = "",
+	selection_box = {
+		type = "fixed",
+		fixed = {-1/3.5, -1/2, -1/3.5, 1/3.5, -1/2+2/16, 1/3.5}
+	},
 	groups = {dig_immediate=3, hot=3, not_in_creative_inventory=1}
 })
 
@@ -318,21 +323,18 @@ minetest.register_tool("xdecor:flint_steel", {
 	description = "Flint & Steel",
 	inventory_image = "xdecor_flint_steel.png",
 	tool_capabilities = {
-		groupcaps = { flamable = {uses=65, maxlevel=1} }
+		groupcaps = { igniter = {uses=65, maxlevel=1} }
 	},
 	on_use = function(itemstack, user, pointed_thing)
+		local player = user:get_player_name()
 		if pointed_thing.type == "node" and
 				minetest.get_node(pointed_thing.above).name == "air" then
-			if not minetest.is_protected(pointed_thing.above,
-					user:get_player_name()) then
+			if not minetest.is_protected(pointed_thing.above, player) then
 				minetest.set_node(pointed_thing.above, {name="xdecor:fire"})
 			else
-				minetest.chat_send_player(user:get_player_name(),
-						"This area is protected!")
+				minetest.chat_send_player(player, "This area is protected.")
 			end
-		else
-			return
-		end
+		else return end
 
 		itemstack:add_wear(65535/65)
 		return itemstack
