@@ -10,15 +10,16 @@ minetest.register_on_punchnode(function(pos, oldnode, digger)
 	end
 end)
 
-local place_rope = function(itemstack, placer, pointed_thing)
+local function place_rope(itemstack, placer, pointed_thing)
 	if pointed_thing.type == "node" then
 		local under = pointed_thing.under
 		local above = pointed_thing.above
 		local pos = above
 		local oldnode = minetest.get_node(pos)
+		local stackname = itemstack:get_name()
 
 		while oldnode.name == "air" and not itemstack:is_empty() do
-			local newnode = {name = itemstack:get_name(), param1 = 0}
+			local newnode = {name = stackname, param1 = 0}
 			minetest.set_node(pos, newnode)
 			itemstack:take_item()
 			pos.y = pos.y - 1
@@ -28,16 +29,18 @@ local place_rope = function(itemstack, placer, pointed_thing)
 	return itemstack
 end
 
-remove_rope = function(pos, oldnode, digger, rope_name)
+function remove_rope(pos, oldnode, digger, rope_name)
 	local num = 0
 	local below = {x=pos.x, y=pos.y, z=pos.z}
+	local digger_inv = digger:get_inventory()
+
 	while minetest.get_node(below).name == rope_name do
 		minetest.remove_node(below)
 		below.y = below.y - 1
 		num = num + 1
 	end
 	if num ~= 0 then
-		digger:get_inventory():add_item("main", rope_name.." "..num)
+		digger_inv:add_item("main", rope_name.." "..num)
 	end
 	return true
 end
