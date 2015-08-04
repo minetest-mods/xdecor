@@ -535,6 +535,7 @@ xdecor.register("table", {
 xdecor.register("tatami", {
 	description = "Tatami",
 	tiles = {"xdecor_tatami.png"},
+	wield_image = "xdecor_tatami.png",
 	groups = {snappy=3, flammable=2},
 	node_box = {
 		type = "fixed",
