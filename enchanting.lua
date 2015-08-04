@@ -26,7 +26,7 @@ local function enchfields(pos, formname, fields, sender)
 	local enchs = {"durable", "fast"}
 
 	for _, e in pairs(enchs) do
-		if toolname ~= "" and mese > 0 and fields[e] then
+		if string.find(toolstack:get_name(), "default:") and mese > 0 and fields[e] then
 			toolstack:replace("xdecor:enchanted_"..string.sub(toolname, 9).."_"..e)
 			mesestack:take_item()
 			inv:set_stack("mese", 1, mesestack)
