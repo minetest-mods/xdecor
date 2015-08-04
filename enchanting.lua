@@ -16,6 +16,17 @@ local function enchconstruct(pos)
 	inv:set_size("mese", 1)
 end
 
+local function enchistoolallowed(toolname)
+	print(toolname)
+	local tdef = minetest.registered_tools[toolname]
+	if tdef and string.find(toolname, "default:") and not
+			string.find(toolname, "sword") and not
+			string.find(toolname, "stone") and not
+			string.find(toolname, "wood") then
+		return 1
+	else return 0 end
+end
+
 local function enchfields(pos, formname, fields, sender)
 	local meta = minetest.get_meta(pos)
 	local inv = meta:get_inventory()
@@ -26,7 +37,7 @@ local function enchfields(pos, formname, fields, sender)
 	local enchs = {"durable", "fast"}
 
 	for _, e in pairs(enchs) do
-		if toolname ~= "" and mese > 0 and fields[e] then
+		if toolname ~= "" and mese > 0 and fields[e] and enchistoolallowed(toolname) > 0 then
 			toolstack:replace("xdecor:enchanted_"..string.sub(toolname, 9).."_"..e)
 			mesestack:take_item()
 			inv:set_stack("mese", 1, mesestack)
@@ -54,13 +65,7 @@ local function enchput(pos, listname, index, stack, player)
 			else return 0 end
 	end
 	if listname == "tool" then
-		local tdef = minetest.registered_tools[toolname]
-		if tdef and string.find(toolname, "default:") and not
-				string.find(toolname, "sword") and not
-				string.find(toolname, "stone") and not
-				string.find(toolname, "wood") then
-			return 1
-		else return 0 end
+		return enchistoolallowed(toolname)
 	end
 	return count
 end
