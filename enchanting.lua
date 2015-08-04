@@ -1,13 +1,13 @@
 local function enchconstruct(pos)
 	local meta = minetest.get_meta(pos)
 	meta:set_string("formspec", "size[8,7;]"..xdecor.fancy_gui..
-		"label[0.65,-0.15;Enchant]"..
-		"image[0.4,0.2;2,2;default_book.png]"..
-		"image[1.3,2;1,1;ench_mese_layout.png]"..
-		"list[current_name;tool;0.3,2;1,1;]"..
-		"list[current_name;mese;1.3,2;1,1;]"..
-		"image_button[2.5,0;5.3,1.5;ench_bg.png;durable;Durable]"..
-		"image_button[2.5,1.5;5.3,1.5;ench_bg.png;fast;Fast]"..
+		"label[0.85,-0.15;Enchant]"..
+		"image[0.6,0.2;2,2;default_book.png]"..
+		"image[1.5,2;1,1;ench_mese_layout.png]"..
+		"list[current_name;tool;0.5,2;1,1;]"..
+		"list[current_name;mese;1.5,2;1,1;]"..
+		"image_button[2.75,0;5,1.5;ench_bg.png;durable;Durable]"..
+		"image_button[2.75,1.5;5,1.5;ench_bg.png;fast;Fast]"..
 		"list[current_player;main;0,3.3;8,4;]")
 	meta:set_string("infotext", "Enchantment Table")
 
