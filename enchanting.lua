@@ -2,7 +2,7 @@ local function enchconstruct(pos)
 	local meta = minetest.get_meta(pos)
 	meta:set_string("formspec", "size[8,7;]"..xdecor.fancy_gui..
 		"label[0.85,-0.15;Enchant]"..
-		"image[0.6,0.2;2,2;default_book.png]"..
+		"image[0.6,0.2;2,2;xdecor_enchbook.png]"..
 		"image[1.5,2;1,1;ench_mese_layout.png]"..
 		"list[current_name;tool;0.5,2;1,1;]"..
 		"list[current_name;mese;1.5,2;1,1;]"..
