@@ -72,12 +72,9 @@ end
 xdecor.register("enchantment_table", {
 	description = "Enchantment Table",
 	tiles = {
-		"xdecor_enchantment_top.png",
-		"xdecor_enchantment_bottom.png",
-		"xdecor_enchantment_side.png",
-		"xdecor_enchantment_side.png",
-		"xdecor_enchantment_side.png",
-		"xdecor_enchantment_side.png"
+		"xdecor_enchantment_top.png", "xdecor_enchantment_bottom.png",
+		"xdecor_enchantment_side.png", "xdecor_enchantment_side.png",
+		"xdecor_enchantment_side.png", "xdecor_enchantment_side.png"
 	},
 	groups = {cracky=1},
 	sounds = xdecor.stone,

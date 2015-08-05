@@ -19,14 +19,13 @@ xdecor.register("mailbox", {
 	end,
 	on_rightclick = function(pos, node, clicker, itemstack)
 		local meta = minetest.get_meta(pos)
-		local playername = clicker:get_player_name()
-		local owner  = meta:get_string("owner")
-		local meta = minetest.get_meta(pos)
+		local player = clicker:get_player_name()
+		local owner = meta:get_string("owner")
 
 		if owner == player then
-			minetest.show_formspec(playername, "default:chest_locked",
+			minetest.show_formspec(player, "default:chest_locked",
 				xdecor.get_mailbox_formspec(pos))
-		else minetest.show_formspec(playername, "default:chest_locked",
+		else minetest.show_formspec(player, "default:chest_locked",
 				xdecor.get_mailbox_insert_formspec(pos))
 		end
 	end,
@@ -34,9 +33,8 @@ xdecor.register("mailbox", {
 		local meta = minetest.get_meta(pos)
 		local owner = meta:get_string("owner")
 		local inv = meta:get_inventory()
-		local playername = player:get_player_name()
 
-		return playername == owner and inv:is_empty("main")
+		return player:get_player_name() == owner and inv:is_empty("main")
 	end,
 	on_metadata_inventory_put = function(pos, listname, index, stack, player)
 		local meta = minetest.get_meta(pos)
@@ -54,7 +52,7 @@ xdecor.register("mailbox", {
 			local inv = meta:get_inventory()
 
 			if inv:room_for_item("main", stack) then return -1
-				else return 0 end
+			else return 0 end
 		end
 	end
 })
