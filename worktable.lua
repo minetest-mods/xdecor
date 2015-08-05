@@ -135,12 +135,26 @@ for n=1, #def do
 	local ndef = minetest.registered_nodes[nodename]
 	if not ndef then return end
 
+	local function description(m)
+		if m == "cloud" then return "" end
+		return string.gsub(m, "%l", string.upper, 1).." "..string.gsub(w[1], "%l", string.upper, 1)
+	end
+
+	local function groups(m)
+		if string.find(m, "tree") or string.find(m, "wood") or m == "cactus" then
+			return {choppy=3, not_in_creative_inventory=1}
+		elseif m == "clay" or m == "snowblock" then
+			return {snappy=3, not_in_creative_inventory=1}
+		end
+		return {cracky=3, not_in_creative_inventory=1}
+	end
+
 	xdecor.register(w[1].."_"..m, {
-		description = string.gsub(w[1], "%l", string.upper, 1),
+		description = description(m),
 		light_source = ndef.light_source,
 		sounds = ndef.sounds,
 		tiles = ndef.tiles,
-		groups = {snappy=3, not_in_creative_inventory=1},
+		groups = groups(m),
 		node_box = {type = "fixed", fixed = w[3]},
 		on_place = minetest.rotate_node
 	})
