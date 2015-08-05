@@ -63,7 +63,7 @@ function enchanting.put(pos, listname, index, stack, player)
 
 	if listname == "mese" then
 		if toolname == "default:mese_crystal" then return count
-			else return 0 end
+		else return 0 end
 	end
 	if listname == "tool" then
 		return enchanting.is_allowed_tool(toolname)

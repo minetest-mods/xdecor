@@ -1,3 +1,5 @@
+local worktable = {}
+
 local material = {
 	"cloud", -- Only used for the formspec display.
 	"wood", "junglewood", "pinewood", "acacia_wood",
@@ -22,7 +24,7 @@ local def = { -- Node name, yield, nodebox shape.
 	{"innerstair", "1", {{-0.5, -0.5, -0.5, 0.5, 0, 0.5}, {-0.5, 0, 0, 0.5, 0.5, 0.5}, {-0.5, 0, -0.5, 0, 0.5, 0}}}
 }
 
-local function xconstruct(pos)
+function worktable.construct(pos)
 	local meta = minetest.get_meta(pos)
 
 	local nodebtn = {}
@@ -55,7 +57,7 @@ local function xconstruct(pos)
 	inv:set_size("hammer", 1)
 end
 
-local function xfields(pos, formname, fields, sender)
+function worktable.fields(pos, formname, fields, sender)
 	local meta = minetest.get_meta(pos)
 	local inv = meta:get_inventory()
 	local inputstack = inv:get_stack("input", 1)
@@ -79,7 +81,7 @@ local function xfields(pos, formname, fields, sender)
 	end
 end
 
-local function xdig(pos, player)
+function worktable.dig(pos, player)
 	local meta = minetest.get_meta(pos)
 	local inv = meta:get_inventory()
 
@@ -90,14 +92,14 @@ local function xdig(pos, player)
 	return true
 end
 
-local function xput(pos, listname, index, stack, player)
+function worktable.put(pos, listname, index, stack, player)
 	local stackname = stack:get_name()
 	local count = stack:get_count()
 
 	if listname == "output" then return 0 end
 	if listname == "input" then
 		if string.find(stackname, "default:") then return count
-			else return 0 end
+		else return 0 end
 	end
 	if listname == "hammer" then
 		if not (stackname == "xdecor:hammer") then return 0 end
@@ -120,10 +122,10 @@ xdecor.register("worktable", {
 		"xdecor_worktable_sides.png", "xdecor_worktable_sides.png",
 		"xdecor_worktable_front.png", "xdecor_worktable_front.png"
 	},
-	on_construct = xconstruct,
-	on_receive_fields = xfields,
-	can_dig = xdig,
-	allow_metadata_inventory_put = xput
+	on_construct = worktable.construct,
+	on_receive_fields = worktable.fields,
+	can_dig = worktable.dig,
+	allow_metadata_inventory_put = worktable.put
 })
 
 for _, m in pairs(material) do
@@ -134,15 +136,12 @@ for n=1, #def do
 	if not ndef then return end
 
 	xdecor.register(w[1].."_"..m, {
-		description = string.sub(string.upper(w[1]), 0, 1)..string.sub(w[1], 2),
+		description = string.gsub(w[1], "%l", string.upper, 1),
 		light_source = ndef.light_source,
 		sounds = ndef.sounds,
 		tiles = ndef.tiles,
 		groups = {snappy=3, not_in_creative_inventory=1},
-		node_box = {
-			type = "fixed",
-			fixed = w[3]
-		},
+		node_box = {type = "fixed", fixed = w[3]},
 		on_place = minetest.rotate_node
 	})
 end
