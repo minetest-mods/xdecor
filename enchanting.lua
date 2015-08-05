@@ -89,28 +89,29 @@ xdecor.register("enchantment_table", {
 })
 
 function enchanting.register_enchtools(init, m, def)
-	local faster, longer = {}, {}
-	longer = init["uses"] * 1.2 -- Wearing factor for enchanted tools (higher number = longer use).
+	local longer = init["uses"] * 1.2 -- Higher number = longer use.
+	local faster = {}
 	for i = 1, 3 do
-		faster[i] = init["times"][i] - 0.1 -- Digging factor for enchanted tools (higher number = faster dig).
+		faster[i] = init["times"][i] - 0.1 -- Higher number = faster dig.
 	end
 
+	local fast = {times=faster, uses=def.uses, maxlevel=def.maxlvl}
+	local long = {times=def.times, uses=longer, maxlevel=def.maxlvl}
+
 	local enchtools = {
-		{"axe", "durable", {choppy = {times=def.times, uses=longer, maxlevel=def.maxlvl}}},
-		{"axe", "fast", {choppy = {times=faster, uses=def.uses, maxlevel=def.maxlvl}}},
-		{"pick", "durable", {cracky = {times=def.times, uses=longer, maxlevel=def.maxlvl}}},
-		{"pick", "fast", {cracky = {times=faster, uses=def.uses, maxlevel=def.maxlvl}}},
-		{"shovel", "durable", {crumbly = {times=def.times, uses=longer, maxlevel=def.maxlvl}}},
-		{"shovel", "fast", {crumbly = {times=faster, uses=def.uses, maxlevel=def.maxlvl}}}
+		{"axe", "durable", {choppy = long}}, {"axe", "fast", {choppy = fast}},
+		{"pick", "durable", {cracky = long}}, {"pick", "fast", {cracky = fast}},
+		{"shovel", "durable", {crumbly = long}}, {"shovel", "fast", {crumbly = fast}}
 	}
 	for _, x in pairs(enchtools) do
-		local tool, ench, grp = x[1], x[2], x[3]
-		minetest.register_tool("xdecor:enchanted_"..tool.."_"..m.."_"..ench, {
+		local t, e, g = x[1], x[2], x[3]
+		minetest.register_tool("xdecor:enchanted_"..t.."_"..m.."_"..e, {
 			description = "Enchanted "..string.gsub(m, "%l", string.upper, 1)..
-					" "..string.gsub(tool, "%l", string.upper, 1).." ("..string.gsub(ench, "%l", string.upper, 1)..")",
-			inventory_image = minetest.registered_tools["default:"..tool.."_"..m]["inventory_image"],
+					" "..string.gsub(t, "%l", string.upper, 1)..
+					" ("..string.gsub(e, "%l", string.upper, 1)..")",
+			inventory_image = minetest.registered_tools["default:"..t.."_"..m]["inventory_image"],
 			groups = {not_in_creative_inventory=1},
-			tool_capabilities = {groupcaps = grp, damage_groups = def.dmg}
+			tool_capabilities = {groupcaps = g, damage_groups = def.dmg}
 		})
 	end
 end

@@ -39,9 +39,8 @@ function remove_rope(pos, oldnode, digger, rope_name)
 		below.y = below.y - 1
 		num = num + 1
 	end
-	if num ~= 0 then
-		digger_inv:add_item("main", rope_name.." "..num)
-	end
+	if num == 0 then return end
+	digger_inv:add_item("main", rope_name.." "..num)
 	return true
 end
 
