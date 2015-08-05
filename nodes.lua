@@ -106,7 +106,7 @@ xdecor.register("cauldron", {
 	groups = {cracky=1},
 	tiles = {
 		{ name = "xdecor_cauldron_top_anim.png",
-		animation = {type="vertical_frames", length=3.0} },
+			animation = {type="vertical_frames", length=3.0} },
 		"xdecor_cauldron_sides.png"
 	}
 })
@@ -191,7 +191,7 @@ xdecor.register("cobweb", {
 
 local colors = {"red"} -- Add more curtains colors simply here.
 
-for _, c in ipairs(colors) do
+for _, c in pairs(colors) do
 	xdecor.register("curtain_"..c, {
 		description = "Curtain ("..c..")",
 		use_texture_alpha = true,
@@ -243,8 +243,7 @@ local door_types = {"woodglass", "japanese"}
 
 for _, d in pairs(door_types) do
 	doors.register_door("xdecor:"..d.."_door", {
-		description = string.sub(string.upper(d), 0, 1)..
-				string.sub(d, 2).." Door",
+		description = string.gsub(d, "%l", string.upper, 1).." Door",
 		inventory_image = "xdecor_"..d.."_door_inv.png",
 		groups = {choppy=3, flammable=2, door=1},
 		tiles_bottom = {"xdecor_"..d.."_door_b.png", "xdecor_brown.png"},
@@ -386,7 +385,7 @@ xdecor.register("lantern", {
 local flowerstype = { "dandelion_white", "dandelion_yellow", "geranium",
 		"rose", "tulip", "viola" }
 
-for _, f in ipairs(flowerstype) do
+for _, f in pairs(flowerstype) do
 	xdecor.register("potted_"..f, {
 		description = "Potted Flowers ("..f..")",
 		walkable = false,
