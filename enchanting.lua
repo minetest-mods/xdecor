@@ -34,12 +34,14 @@ function enchanting.fields(pos, formname, fields, sender)
 	local toolstack = inv:get_stack("tool", 1)
 	local mesestack = inv:get_stack("mese", 1)
 	local toolname = toolstack:get_name()
+	local toolwear = toolstack:get_wear()
 	local mese = mesestack:get_count()
 	local enchs = {"durable", "fast"}
 
 	for _, e in pairs(enchs) do
 		if enchanting.is_allowed_tool(toolname) ~= 0 and mese > 0 and fields[e] then
 			toolstack:replace("xdecor:enchanted_"..string.sub(toolname, 9).."_"..e)
+			toolstack:add_wear(toolwear)
 			mesestack:take_item()
 			inv:set_stack("mese", 1, mesestack)
 			inv:set_stack("tool", 1, toolstack)
