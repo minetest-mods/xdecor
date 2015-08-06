@@ -6,7 +6,7 @@ xdecor.box = {
 }
 
 xdecor.nodebox = {
-	regular = { type="regular" },
+	regular = { type = "regular" },
 	null = { type = "fixed", fixed = { 0, 0, 0, 0, 0, 0 } }
 }
 

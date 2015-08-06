@@ -20,10 +20,8 @@ end
 
 function enchanting.is_allowed_tool(toolname)
 	local tdef = minetest.registered_tools[toolname]
-	if tdef and string.find(toolname, "default:") and not
-			string.find(toolname, "sword") and not
-			string.find(toolname, "stone") and not
-			string.find(toolname, "wood") then
+	if tdef and toolname:find("default:") and not toolname:find("sword") and not
+			toolname:find("stone") and not toolname:find("wood") then
 		return 1
 	else return 0 end
 end
@@ -40,7 +38,7 @@ function enchanting.fields(pos, formname, fields, sender)
 
 	for _, e in pairs(enchs) do
 		if enchanting.is_allowed_tool(toolname) ~= 0 and mese > 0 and fields[e] then
-			toolstack:replace("xdecor:enchanted_"..string.sub(toolname, 9).."_"..e)
+			toolstack:replace("xdecor:enchanted_"..toolname:sub(9).."_"..e)
 			toolstack:add_wear(toolwear)
 			mesestack:take_item()
 			inv:set_stack("mese", 1, mesestack)
@@ -74,8 +72,7 @@ function enchanting.put(pos, listname, index, stack, player)
 end
 
 function enchanting.move(pos, from_list, from_index, to_list, to_index, count, player)
-	return 0
-end
+	return 0 end
 
 xdecor.register("enchantment_table", {
 	description = "Enchantment Table",
@@ -94,10 +91,10 @@ xdecor.register("enchantment_table", {
 })
 
 function enchanting.register_enchtools(init, m, def)
-	local longer = init["uses"] * 1.2 -- Higher number = longer use.
+	local longer = init.uses * 1.2 -- Higher number = longer use.
 	local faster = {}
 	for i = 1, 3 do
-		faster[i] = init["times"][i] - 0.1 -- Higher number = faster dig.
+		faster[i] = init.times[i] - 0.1 -- Higher number = faster dig.
 	end
 
 	local fast = {times=faster, uses=def.uses, maxlevel=def.maxlvl}
@@ -111,10 +108,9 @@ function enchanting.register_enchtools(init, m, def)
 	for _, x in pairs(enchtools) do
 		local t, e, g = x[1], x[2], x[3]
 		minetest.register_tool("xdecor:enchanted_"..t.."_"..m.."_"..e, {
-			description = "Enchanted "..string.gsub(m, "%l", string.upper, 1)..
-					" "..string.gsub(t, "%l", string.upper, 1)..
-					" ("..string.gsub(e, "%l", string.upper, 1)..")",
-			inventory_image = minetest.registered_tools["default:"..t.."_"..m]["inventory_image"],
+			description = "Enchanted "..m:gsub("%l", string.upper, 1).." "..
+					t:gsub("%l", string.upper, 1).." ("..e:gsub("%l", string.upper, 1)..")",
+			inventory_image = minetest.registered_tools["default:"..t.."_"..m].inventory_image,
 			groups = {not_in_creative_inventory=1},
 			tool_capabilities = {groupcaps = g, damage_groups = def.dmg}
 		})
@@ -127,17 +123,17 @@ local tools = {
 local materials = {"steel", "bronze", "mese", "diamond"}
 
 for _, t in pairs(tools) do
-for _, m in pairs(materials) do
+for _, material in pairs(materials) do
 	local tool, group = t[1], t[2]
-	local toolname = tool.."_"..m
-	local init_def = minetest.registered_tools["default:"..toolname]["tool_capabilities"]["groupcaps"][group]
+	local toolname = tool.."_"..material
+	local init_def = minetest.registered_tools["default:"..toolname].tool_capabilities.groupcaps[group]
 
 	local tooldef = {
-		times = init_def["times"],
-		uses = init_def["uses"],
-		dmg = init_def["damage_groups"],
-		maxlvl = init_def["maxlevel"]
+		times = init_def.times,
+		uses = init_def.uses,
+		dmg = init_def.damage_groups,
+		maxlvl = init_def.maxlevel
 	}
-	enchanting.register_enchtools(init_def, m, tooldef)
+	enchanting.register_enchtools(init_def, material, tooldef)
 end
 end

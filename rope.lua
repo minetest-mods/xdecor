@@ -1,16 +1,13 @@
-local rope_sbox = {
-	type = "fixed",
-	fixed = {-0.15, -0.5, -0.15, 0.15, 0.5, 0.15}
-}
+local rope = {}
 
 -- Code by Mirko K. (modified by Temperest, Wulfsdad and kilbith) (License: GPL).
 minetest.register_on_punchnode(function(pos, oldnode, digger)
 	if oldnode.name == "xdecor:rope" then
-		remove_rope(pos, oldnode, digger, "xdecor:rope")
+		rope.remove(pos, oldnode, digger, "xdecor:rope")
 	end
 end)
 
-local function place_rope(itemstack, placer, pointed_thing)
+function rope.place(itemstack, placer, pointed_thing)
 	if pointed_thing.type == "node" then
 		local under = pointed_thing.under
 		local above = pointed_thing.above
@@ -29,7 +26,7 @@ local function place_rope(itemstack, placer, pointed_thing)
 	return itemstack
 end
 
-function remove_rope(pos, oldnode, digger, rope_name)
+function rope.remove(pos, oldnode, digger, rope_name)
 	local num = 0
 	local below = {x=pos.x, y=pos.y, z=pos.z}
 	local digger_inv = digger:get_inventory()
@@ -50,9 +47,12 @@ xdecor.register("rope", {
 	walkable = false,
 	climbable = true,
 	groups = {dig_immediate=3, flammable=3},
-	selection_box = rope_sbox,
 	tiles = {"xdecor_rope.png"},
 	inventory_image = "xdecor_rope_inv.png",
 	wield_image = "xdecor_rope_inv.png",
-	on_place = place_rope
+	selection_box = {
+		type = "fixed",
+		fixed = {-0.15, -0.5, -0.15, 0.15, 0.5, 0.15}
+	},
+	on_place = rope.place
 })

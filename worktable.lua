@@ -45,7 +45,7 @@ function worktable.construct(pos)
 		"label[5,1.5;Tool]"..
 		"list[current_name;tool;5,2;1,1;]"..
 		"image[6,2;1,1;xdecor_anvil.png]"..
-		"label[6.8,1.5;Hammer]]"..
+		"label[6.8,1.5;Hammer]"..
 		"list[current_name;hammer;7,2;1,1;]"..
 		"list[current_player;main;0,3.25;8,4;]")
 	meta:set_string("infotext", "Work Table")
@@ -64,15 +64,16 @@ function worktable.fields(pos, formname, fields, sender)
 	local outputstack = inv:get_stack("output", 1)
 	local outputcount = outputstack:get_count()
 	local inputname = inputstack:get_name()
+	local outputname = outputstack:get_name()
 	local shape, get = {}, {}
 	local anz = 0
 
 	for _, d in pairs(def) do
 		local nb, anz = d[1], d[2]
 		if outputcount < 99 and fields[nb] then
-			local outputshape = string.match(outputstack:get_name(), nb)
+			local outputshape = outputname:match(nb)
 			if nb ~= outputshape and outputcount > 0 then return end
-			shape = "xdecor:"..nb.."_"..string.sub(inputname, 9)
+			shape = "xdecor:"..nb.."_"..inputname:sub(9)
 			get = shape.." "..anz
 
 			if minetest.registered_nodes[shape] then
@@ -101,8 +102,7 @@ function worktable.put(pos, listname, index, stack, player)
 
 	if listname == "output" then return 0 end
 	if listname == "input" then
-		if string.find(stackname, "default:") then return count
-		else return 0 end
+		if stackname:find("default:") then return count else return 0 end
 	end
 	if listname == "hammer" then
 		if not (stackname == "xdecor:hammer") then return 0 end
@@ -117,8 +117,7 @@ function worktable.put(pos, listname, index, stack, player)
 end
 
 function worktable.move(pos, from_list, from_index, to_list, to_index, count, player)
-	return 0
-end
+	return 0 end
 
 xdecor.register("worktable", {
 	description = "Work Table",
@@ -145,11 +144,11 @@ for n=1, #def do
 
 	local function description(m)
 		if m == "cloud" then return "" end
-		return string.gsub(m, "%l", string.upper, 1).." "..string.gsub(w[1], "%l", string.upper, 1)
+		return m:gsub("%l", string.upper, 1).." "..w[1]:gsub("%l", string.upper, 1)
 	end
 
 	local function groups(m)
-		if string.find(m, "tree") or string.find(m, "wood") or m == "cactus" then
+		if m:find("tree") or m:find("wood") or m == "cactus" then
 			return {choppy=3, not_in_creative_inventory=1}
 		elseif m == "clay" or m == "snowblock" then
 			return {snappy=3, not_in_creative_inventory=1}
@@ -158,7 +157,7 @@ for n=1, #def do
 	end
 
 	local function shady(w)
-		if string.find(w, "stair") or w == "slab" then return false end
+		if w:find("stair") or w == "slab" then return false end
 		return true
 	end
 

@@ -29,11 +29,8 @@ local function clone_table(table)
 	local newtable = {}
 
 	for idx, item in pairs(table) do
-		if type(item) == "table" then
-			newtable[idx] = clone_table(item)
-		else
-			newtable[idx] = item
-		end
+		if type(item) == "table" then newtable[idx] = clone_table(item)
+		else newtable[idx] = item end
 	end
 
 	return newtable
@@ -66,7 +63,7 @@ function xwall.update_one_node(pos, name, digged)
 
 	local newnode = xwall.get_candidate[id]
 	if newnode and newnode[1] then
-		local newname = string.sub(name, 1, string.len(name)-3)..newnode[1]
+		local newname = name:sub(1, name:len()-3)..newnode[1]
 		if newname and minetest.registered_nodes[newname] then
 			minetest.swap_node(pos, {name=newname, param2=newnode[2]})
 		elseif newnode[1] == '_c0' and not minetest.registered_nodes[newname] then
@@ -189,7 +186,7 @@ function xwall.register_wall(name, tiles, def)
 
 	if def then return end
 	def = { 
-		description = string.sub(string.gsub(name, "%l", string.upper, 7), 8, -6).." Wall",
+		description = string.sub(name:gsub("%l", string.upper, 7), 8, -6).." Wall",
 		textures = {tiles, tiles, tiles, tiles},
 		sounds = xdecor.stone,
 		groups = {cracky=3, stone=1, pane=1},
