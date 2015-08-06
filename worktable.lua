@@ -116,6 +116,10 @@ function worktable.put(pos, listname, index, stack, player)
 	return count
 end
 
+function worktable.move(pos, from_list, from_index, to_list, to_index, count, player)
+	return 0
+end
+
 xdecor.register("worktable", {
 	description = "Work Table",
 	groups = {cracky=2},
@@ -128,7 +132,8 @@ xdecor.register("worktable", {
 	on_construct = worktable.construct,
 	on_receive_fields = worktable.fields,
 	can_dig = worktable.dig,
-	allow_metadata_inventory_put = worktable.put
+	allow_metadata_inventory_put = worktable.put,
+	allow_metadata_inventory_move = worktable.move
 })
 
 for _, m in pairs(material) do
