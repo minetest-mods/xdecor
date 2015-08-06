@@ -50,7 +50,6 @@ xdecor.register("mailbox", {
 		if listname == "drop" then
 			local meta = minetest.get_meta(pos)
 			local inv = meta:get_inventory()
-
 			if inv:room_for_item("main", stack) then return -1
 			else return 0 end
 		end

@@ -70,13 +70,16 @@ function worktable.fields(pos, formname, fields, sender)
 	for _, d in pairs(def) do
 		local nb, anz = d[1], d[2]
 		if outputcount < 99 and fields[nb] then
+			local outputshape = string.match(outputstack:get_name(), nb)
+			if nb ~= outputshape and outputcount > 0 then return end
 			shape = "xdecor:"..nb.."_"..string.sub(inputname, 9)
 			get = shape.." "..anz
 
-			if not minetest.registered_nodes[shape] then return end
-			inv:add_item("output", get)
-			inputstack:take_item()
-			inv:set_stack("input", 1, inputstack)
+			if minetest.registered_nodes[shape] then
+				inv:add_item("output", get)
+				inputstack:take_item()
+				inv:set_stack("input", 1, inputstack)
+			end
 		end
 	end
 end
