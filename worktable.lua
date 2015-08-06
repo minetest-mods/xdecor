@@ -149,6 +149,11 @@ for n=1, #def do
 		return {cracky=3, not_in_creative_inventory=1}
 	end
 
+	local function shady(w)
+		if string.find(w, "stair") or w == "slab" then return false end
+		return true
+	end
+
 	xdecor.register(w[1].."_"..m, {
 		description = description(m),
 		light_source = ndef.light_source,
@@ -156,6 +161,7 @@ for n=1, #def do
 		tiles = ndef.tiles,
 		groups = groups(m),
 		node_box = {type = "fixed", fixed = w[3]},
+		sunlight_propagates = shady(w[1]),
 		on_place = minetest.rotate_node
 	})
 end
