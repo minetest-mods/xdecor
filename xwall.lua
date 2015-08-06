@@ -66,7 +66,7 @@ function xwall.update_one_node(pos, name, digged)
 
 	local newnode = xwall.get_candidate[id]
 	if newnode and newnode[1] then
-		local newname = string.sub(name, 1, string.len(name) -3)..newnode[1]
+		local newname = string.sub(name, 1, string.len(name)-3)..newnode[1]
 		if newname and minetest.registered_nodes[newname] then
 			minetest.swap_node(pos, {name=newname, param2=newnode[2]})
 		elseif newnode[1] == '_c0' and not minetest.registered_nodes[newname] then
