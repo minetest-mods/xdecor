@@ -302,9 +302,9 @@ minetest.register_craft({
 minetest.register_craft({
 	output = "xdecor:stonepath 16",
 	recipe = {
-		{"stairs:slab_stone", "", "stairs:slab_stone"},
-		{"", "stairs:slab_stone", ""},
-		{"stairs:slab_stone", "", "stairs:slab_stone"}
+		{"stairs:slab_cobble", "", "stairs:slab_cobble"},
+		{"", "stairs:slab_cobble", ""},
+		{"stairs:slab_cobble", "", "stairs:slab_cobble"}
 	}
 })
 
