@@ -190,6 +190,7 @@ function xwall.register_wall(name, tiles, def)
 		textures = {tiles, tiles, tiles, tiles},
 		sounds = xdecor.stone,
 		groups = {cracky=3, stone=1, pane=1},
+		sunlight_propagates = true,
 		collision_box = {
 			type = "fixed",
 			fixed = {-0.5, -0.5, -0.25, 0.5, 1, 0.25}

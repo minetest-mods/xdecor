@@ -3,7 +3,6 @@ xpanes.register_pane("bamboo_frame", {
 	tiles = {"xdecor_bamboo_frame.png"},
 	drawtype = "airlike",
 	paramtype = "light",
-	sunlight_propagates = true,
 	textures = {"xdecor_bamboo_frame.png", "xdecor_bamboo_frame.png", 
 			"xpanes_space.png"},
 	inventory_image = "xdecor_bamboo_frame.png",
@@ -90,6 +89,7 @@ xdecor.register("cardboard_box", {
 	description = "Cardboard Box",
 	inventory = {size=8},
 	infotext = "Cardboard Box",
+	sunlight_propagates = true,
 	groups = {snappy=3, flammable=3},
 	tiles = {"xdecor_cardbox_top.png", "xdecor_cardbox_top.png", 
 		"xdecor_cardbox_sides.png"},
@@ -140,6 +140,7 @@ xdecor.register("chair", {
 	tiles = {"xdecor_wood.png"},
 	sounds = xdecor.wood,
 	groups = {choppy=3, flammable=2},
+	sunlight_propagates = true,
 	node_box = {
 		type = "fixed",
 		fixed = {
@@ -288,29 +289,27 @@ minetest.register_on_joinplayer(function(player)
 	inv:set_size("enderchest", 8*4)
 end)
 
-local fence_sbox = {
-	type = "fixed",
-	fixed = {-1/7, -1/2, -1/7, 1/7, 1/2, 1/7}
-}
-
 xdecor.register("fence_wrought_iron", {
 	description = "Wrought Iron Fence",
 	drawtype = "fencelike",
 	groups = {cracky=2},
 	tiles = {"xdecor_wrought_iron.png"},
-	selection_box = fence_sbox,
+	selection_box = {
+		type = "fixed",
+		fixed = {-1/7, -1/2, -1/7, 1/7, 1/2, 1/7}
+	},
 	inventory_image = "default_fence_overlay.png^xdecor_wrought_iron.png^default_fence_overlay.png^[makealpha:255,126,126"
 })
 
 xdecor.register("fire", {
 	description = "Fancy Fire",
+	drawtype = "plantlike",
 	light_source = 14,
 	walkable = false,
 	tiles = {
 		{ name = "xdecor_fire_anim.png",
 		animation = {type="vertical_frames", length=1.5} }
 	},
-	drawtype = "plantlike",
 	damage_per_second = 2,
 	drop = "",
 	selection_box = {
@@ -459,7 +458,6 @@ xpanes.register_pane("rust_bar", {
 	tiles = {"xdecor_rust_bars.png"},
 	drawtype = "airlike",
 	paramtype = "light",
-	sunlight_propagates = true,
 	textures = {"xdecor_rust_bars.png", "xdecor_rust_bars.png", 
 			"xpanes_space.png"},
 	inventory_image = "xdecor_rust_bars.png",
@@ -493,6 +491,7 @@ xdecor.register("stonepath", {
 	tiles = {"default_stone.png"},
 	groups = {snappy=3, stone=1},
 	sounds = xdecor.stone,
+	sunlight_propagates = true,
 	node_box = {
 		type = "fixed",
 		fixed = {
@@ -551,6 +550,7 @@ xdecor.register("trash_can", {
 	description = "Trash Can",
 	tiles = {"xdecor_wood.png"},
    	groups = {choppy=3, flammable=2},
+   	sunlight_propagates = true,
    	sounds = xdecor.wood,
    	node_box = {
 		type = "fixed",
@@ -570,7 +570,7 @@ xdecor.register("trash_can", {
 	},
 	on_construct = function(pos)
 		local meta = minetest.get_meta(pos)
-		meta:set_string("infotext", "Trash Can - throw your waste here!")
+		meta:set_string("infotext", "Trash Can - throw your waste here.")
 	end
 })
 

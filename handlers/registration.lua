@@ -43,11 +43,14 @@ function xdecor.register(name, def)
 	def.sounds = def.sounds or default.node_sound_defaults()
 	
 	if not (def.drawtype == "glasslike_framed" or
-			def.drawtype == "glasslike_framed_optional" or
-			def.drawtype == "plantlike" or
-			def.drawtype == "signlike" or
-			def.drawtype == "normal") then
+			def.drawtype == "glasslike_framed_optional" or def.drawtype == "plantlike" or
+			def.drawtype == "signlike" or def.drawtype == "normal") then
 		def.paramtype2 = def.paramtype2 or "facedir"
+	end
+
+	if def.drawtype == "plantlike" or def.drawtype == "torchlike" or
+			def.drawtype == "signlike" or def.drawtype == "fencelike" then
+		def.sunlight_propagates = true
 	end
 
 	local infotext = def.infotext
