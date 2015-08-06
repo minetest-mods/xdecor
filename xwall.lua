@@ -189,7 +189,7 @@ function xwall.register_wall(name, tiles, def)
 
 	if def then return end
 	def = { 
-		description = string.sub(string.gsub(name, "%l", string.upper, 1), 1, -6).." Wall",
+		description = string.sub(string.gsub(name, "%l", string.upper, 7), 8, -6).." Wall",
 		textures = {tiles, tiles, tiles, tiles},
 		sounds = xdecor.stone,
 		groups = {cracky=3, stone=1, pane=1},
