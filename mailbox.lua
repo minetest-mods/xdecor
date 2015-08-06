@@ -34,7 +34,8 @@ xdecor.register("mailbox", {
 		local owner = meta:get_string("owner")
 		local inv = meta:get_inventory()
 
-		return player:get_player_name() == owner and inv:is_empty("main")
+		if not inv:is_empty("main") then return false end
+		return player:get_player_name() == owner
 	end,
 	on_metadata_inventory_put = function(pos, listname, index, stack, player)
 		local meta = minetest.get_meta(pos)
