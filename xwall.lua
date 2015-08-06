@@ -118,7 +118,7 @@ function xwall.register(name, def, node_box_data)
 			return xwall.update(pos, name.."_ln", true, true)
 		end
 
-		minetest.register_node("xdecor:"..name.."_"..k, newdef)
+		minetest.register_node(name.."_"..k, newdef)
 	end
 end
 
@@ -201,5 +201,5 @@ function xwall.register_wall(name, tiles, def)
 	xwall.register(name, def, node_box_data)
 end
 
-xwall.register_wall("cobble_wall", "default_cobble.png")
-xwall.register_wall("mossycobble_wall", "default_mossycobble.png")
+xwall.register_wall("xdecor:cobble_wall", "default_cobble.png")
+xwall.register_wall("xdecor:mossycobble_wall", "default_mossycobble.png")
