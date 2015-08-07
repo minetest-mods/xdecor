@@ -99,7 +99,7 @@ end
 function worktable.put(pos, listname, index, stack, player)
 	local stackname = stack:get_name()
 	local count = stack:get_count()
-	local mat = dump(material)
+	local mat = minetest.serialize(material)
 
 	if listname == "output" then return 0 end
 	if listname == "input" then
