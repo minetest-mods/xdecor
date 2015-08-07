@@ -65,13 +65,13 @@ function worktable.fields(pos, formname, fields, sender)
 	local outputcount = outputstack:get_count()
 	local inputname = inputstack:get_name()
 	local outputname = outputstack:get_name()
-	local shape, get = {}, {}
+	local shape, get, outputshape = {}, {}, {}
 	local anz = 0
 
 	for _, d in pairs(def) do
 		local nb, anz = d[1], d[2]
 		if outputcount < 99 and fields[nb] then
-			local outputshape = outputname:match(nb)
+			outputshape = outputname:match(nb)
 			if nb ~= outputshape and outputcount > 0 then return end
 			shape = "xdecor:"..nb.."_"..inputname:sub(9)
 			get = shape.." "..anz
@@ -99,10 +99,13 @@ end
 function worktable.put(pos, listname, index, stack, player)
 	local stackname = stack:get_name()
 	local count = stack:get_count()
+	local mat = dump(material)
 
 	if listname == "output" then return 0 end
 	if listname == "input" then
-		if stackname:find("default:") then return count else return 0 end
+		if stackname:find("default:") and mat:match(stackname:sub(9)) then
+			return count
+		else return 0 end
 	end
 	if listname == "hammer" then
 		if not (stackname == "xdecor:hammer") then return 0 end
