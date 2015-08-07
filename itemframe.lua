@@ -131,7 +131,7 @@ xdecor.register("frame", {
 
 minetest.register_abm({
 	nodenames = {"xdecor:frame"},
-	interval = 10, chance = 1,
+	interval = 15, chance = 1,
 	action = function(pos, node, active_object_count, active_object_count_wider)
 		local num
 		if node.name ~= "xdecor:frame" then return end

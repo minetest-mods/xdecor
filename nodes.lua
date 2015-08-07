@@ -323,7 +323,7 @@ minetest.register_tool("xdecor:flint_steel", {
 	description = "Flint & Steel",
 	inventory_image = "xdecor_flint_steel.png",
 	tool_capabilities = {
-		groupcaps = { igniter = {uses=65, maxlevel=1} }
+		groupcaps = { igniter = {uses=10, maxlevel=1} }
 	},
 	on_use = function(itemstack, user, pointed_thing)
 		local player = user:get_player_name()
@@ -336,7 +336,7 @@ minetest.register_tool("xdecor:flint_steel", {
 			end
 		else return end
 
-		itemstack:add_wear(65535/65)
+		itemstack:add_wear(1000)
 		return itemstack
 	end
 })

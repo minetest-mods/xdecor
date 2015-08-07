@@ -49,12 +49,12 @@ xdecor.register("hive", {
 
 minetest.register_abm({
 	nodenames = {"xdecor:hive"},
-	interval = 4, chance = 4,
+	interval = 10, chance = 4,
 	action = function(pos, node, active_object_count, active_object_count_wider)
 		local meta = minetest.get_meta(pos)
 		local inv = meta:get_inventory()
 
-		local radius = 16
+		local radius = 8
 		local minp = {x=pos.x-radius, y=pos.y-radius, z=pos.z-radius}
 		local maxp = {x=pos.x+radius, y=pos.y+radius, z=pos.z+radius}
 		local flowers = minetest.find_nodes_in_area(minp, maxp, "group:flower")
