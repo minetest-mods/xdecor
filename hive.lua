@@ -8,7 +8,7 @@ function hive.construct(pos)
 		"image[0.5,0.2;1,1;flowers_dandelion_yellow.png]"..
 		"image[6.6,0.1;1,1;flowers_geranium.png]"..
 		"image[7.2,-0.1;1,1;flowers_rose.png]"..
-		"image[6,0;0.9,0.9;xdecor_bee.png]".. -- Bee texture by Charles Sanchez and Mark Weyer.
+		"image[6,0;0.9,0.9;xdecor_bee.png]"..
 		"list[current_name;honey;5,0;1,1;]"..
 		"list[current_player;main;0,1.35;8,4;]")
 	meta:set_string("infotext", "Artificial Hive")
@@ -27,12 +27,9 @@ end
 xdecor.register("hive", {
 	description = "Artificial Hive",
 	tiles = {
-		"xdecor_hive_top.png",
-		"xdecor_hive_top.png",
-		"xdecor_hive_side.png",
-		"xdecor_hive_side.png",
-		"xdecor_hive_side.png",
-		"xdecor_hive_front.png",
+		"xdecor_hive_top.png", "xdecor_hive_top.png",
+		"xdecor_hive_side.png", "xdecor_hive_side.png",
+		"xdecor_hive_side.png", "xdecor_hive_front.png"
 	},
 	groups = {snappy=3, flammable=1},
 	on_construct = hive.construct,
