@@ -381,6 +381,14 @@ xdecor.register("lantern", {
 	}
 })
 
+xdecor.register("lightbox", {
+	description = "Light Box",
+	tiles = {"xdecor_lightbox.png"},
+	groups = {cracky=3},
+	light_source = 13,
+	sounds = xdecor.glass
+})
+
 local flowerstype = { "dandelion_white", "dandelion_yellow", "geranium",
 		"rose", "tulip", "viola" }
 
