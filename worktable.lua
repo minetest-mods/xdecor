@@ -7,9 +7,9 @@ local material = {
 	"cobble", "mossycobble", "desert_cobble",
 	"stone", "sandstone", "desert_stone", "obsidian",
 	"stonebrick", "sandstonebrick", "desert_stonebrick", "obsidianbrick",
-	"snowblock", "coalblock", "copperblock", "steelblock", "goldblock", 
+	"coalblock", "copperblock", "steelblock", "goldblock", 
 	"bronzeblock", "mese", "diamondblock",
-	"brick", "cactus", "clay", "ice", "meselamp",
+	"brick", "cactus", "ice", "meselamp",
 	"glass", "obsidian_glass"
 }
 
@@ -120,16 +120,16 @@ function worktable.move(pos, from_list, from_index, to_list, to_index, count, pl
 
 xdecor.register("worktable", {
 	description = "Work Table",
-	groups = {cracky=2},
+	groups = {cracky=2, choppy=2},
 	sounds = xdecor.wood,
 	tiles = {
 		"xdecor_worktable_top.png", "xdecor_worktable_top.png",
 		"xdecor_worktable_sides.png", "xdecor_worktable_sides.png",
 		"xdecor_worktable_front.png", "xdecor_worktable_front.png"
 	},
+	can_dig = worktable.dig,
 	on_construct = worktable.construct,
 	on_receive_fields = worktable.fields,
-	can_dig = worktable.dig,
 	allow_metadata_inventory_put = worktable.put,
 	allow_metadata_inventory_move = worktable.move
 })
@@ -142,8 +142,6 @@ end
 local function groups(m)
 	if m:find("tree") or m:find("wood") or m == "cactus" then
 		return {choppy=3, not_in_creative_inventory=1}
-	elseif m == "clay" or m == "snowblock" then
-		return {snappy=3, not_in_creative_inventory=1}
 	end
 	return {cracky=3, not_in_creative_inventory=1}
 end

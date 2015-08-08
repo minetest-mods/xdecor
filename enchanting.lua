@@ -82,10 +82,10 @@ xdecor.register("enchantment_table", {
 	},
 	groups = {cracky=1},
 	sounds = xdecor.stone,
-	on_construct = enchanting.construct,
 	can_dig = enchanting.dig,
-	allow_metadata_inventory_put = enchanting.put,
+	on_construct = enchanting.construct,
 	on_receive_fields = enchanting.fields,
+	allow_metadata_inventory_put = enchanting.put,
 	allow_metadata_inventory_move = enchanting.move
 })
 
