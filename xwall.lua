@@ -147,13 +147,13 @@ function xwall.construct_node_box_data(node_box_list, center_node_box_list, node
 	for _, v in pairs(node_box_list) do
 		pos3 = pos3 + 1
 		pos4 = pos4 + 1
-		res.c3[pos3] = {v[4], v[2], v[3]-0.5, v[1], v[5], v[6]-0.5}
-		res.c4[pos4] = {v[4], v[2], v[3]-0.5, v[1], v[5], v[6]-0.5}
+		res.c3[pos3] = {v[4], v[2], v[3]-.5, v[1], v[5], v[6]-.5}
+		res.c4[pos4] = {v[4], v[2], v[3]-.5, v[1], v[5], v[6]-.5}
 	end
 
 	for _, v in pairs(node_box_list) do
 		pos4 = pos4 + 1
-		res.c4[pos4] = {v[3]-0.5, v[2], v[4], v[6]-0.5, v[5], v[1]}
+		res.c4[pos4] = {v[3]-.5, v[2], v[4], v[6]-.5, v[5], v[1]}
 	end
 
 	for _, v in pairs(center_node_box_list) do
@@ -179,9 +179,8 @@ end
 
 function xwall.register_wall(name, tiles, def)
 	local node_box_data = xwall.construct_node_box_data(
-		{{ -3/16, -0.5, 0,  3/16, 5/16, 0.5 }},
-		{{ -4/16, -0.5, -4/16, 4/16, 0.5, 4/16 }},
-		{{ -3/16, -0.5, -0.5, 3/16, 5/16, 0.5 }}
+		{{-.1875,-.5,0,.1875,.3125,.5}},{{-.25,-.5,-.25,.25,.5,.25}},
+		{{-.1875,-.5,-.5,.1875,.3125,.5}}
 	)
 
 	if def then return end
@@ -193,7 +192,7 @@ function xwall.register_wall(name, tiles, def)
 		sunlight_propagates = true,
 		collision_box = {
 			type = "fixed",
-			fixed = {-0.5, -0.5, -0.25, 0.5, 1, 0.25}
+			fixed = {-.5, -.5, -.25, .5, 1, .25}
 		}
 	}
 	xwall.register(name, def, node_box_data)

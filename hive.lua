@@ -4,11 +4,9 @@ function hive.construct(pos)
 	local meta = minetest.get_meta(pos)
 	meta:set_string("formspec", "size[8,5;]"..xdecor.fancy_gui..
 		"label[1.35,0;Bees are making honey\nwith pollen around...]"..
-		"image[-0.1,-0.2;1,1;flowers_tulip.png]"..
-		"image[0.5,0.2;1,1;flowers_dandelion_yellow.png]"..
-		"image[6.6,0.1;1,1;flowers_geranium.png]"..
-		"image[7.2,-0.1;1,1;flowers_rose.png]"..
-		"image[6,0;0.9,0.9;xdecor_bee.png]"..
+		"image[0.2,-0.1;1,1;flowers_dandelion_white.png]"..
+		"image[7,0.1;1,1;flowers_viola.png]"..
+		"image[6,0;1,1;xdecor_bee.png]"..
 		"list[current_name;honey;5,0;1,1;]"..
 		"list[current_player;main;0,1.35;8,4;]")
 	meta:set_string("infotext", "Artificial Hive")

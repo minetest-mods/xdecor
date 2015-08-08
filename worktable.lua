@@ -14,14 +14,14 @@ local material = {
 }
 
 local def = { -- Node name, yield, nodebox shape.
-	{"nanoslab", "16", {-0.5, -0.5, -0.5, 0, -0.4375, 0}},
-	{"micropanel", "16", {-0.5, -0.5, -0.5, 0.5, -0.4375, 0}},
-	{"microslab", "8", {-0.5, -0.5, -0.5, 0.5, -0.4375, 0.5}},
-	{"panel", "4", {-0.5, -0.5, -0.5, 0.5, 0, 0}},
-	{"slab", "2", {-0.5, -0.5, -0.5, 0.5, 0, 0.5}},
-	{"outerstair", "1", {{-0.5, -0.5, -0.5, 0.5, 0, 0.5}, {-0.5, 0, 0, 0, 0.5, 0.5}}},
-	{"stair", "1", {{-0.5, -0.5, -0.5, 0.5, 0, 0.5}, {-0.5, 0, 0, 0.5, 0.5, 0.5}}},
-	{"innerstair", "1", {{-0.5, -0.5, -0.5, 0.5, 0, 0.5}, {-0.5, 0, 0, 0.5, 0.5, 0.5}, {-0.5, 0, -0.5, 0, 0.5, 0}}}
+	{"nanoslab", "16", {-.5,-.5,-.5,0,-.4375,0}},
+	{"micropanel", "16", {-.5,-.5,-.5,.5,-.4375,0}},
+	{"microslab", "8", {-.5,-.5,-.5,.5,-.4375,.5}},
+	{"panel", "4", {-.5,-.5,-.5,.5,0,0}},
+	{"slab", "2", {-.5,-.5,-.5,.5,0,.5}},
+	{"outerstair", "1", {{-.5,-.5,-.5,.5,0,.5},{-.5,0,0,0,.5,.5}}},
+	{"stair", "1", {{-.5,-.5,-.5,.5,0,.5},{-.5,0,0,.5,.5,.5}}},
+	{"innerstair", "1", {{-.5,-.5,-.5,.5,0,.5},{-.5,0,0,.5,.5,.5},{-.5,0,-.5,0,.5,0}}}
 }
 
 function worktable.construct(pos)
@@ -35,18 +35,13 @@ function worktable.construct(pos)
 	nodebtn = table.concat(nodebtn)
 
 	meta:set_string("formspec", "size[8,7;]"..xdecor.fancy_gui..
-		"label[0,0;Cut your material into...]"..
-		nodebtn..
-		"label[0,1.5;Input]"..
-		"list[current_name;input;0,2;1,1;]"..
+		"label[0,0;Cut your material into...]"..nodebtn..
+		"label[0,1.5;Input]".."list[current_name;input;0,2;1,1;]"..
 		"image[1,2;1,1;xdecor_saw.png]"..
-		"label[2,1.5;Output]"..
-		"list[current_name;output;2,2;1,1;]"..
-		"label[5,1.5;Tool]"..
-		"list[current_name;tool;5,2;1,1;]"..
+		"label[2,1.5;Output]".."list[current_name;output;2,2;1,1;]"..
+		"label[5,1.5;Tool]".."list[current_name;tool;5,2;1,1;]"..
 		"image[6,2;1,1;xdecor_anvil.png]"..
-		"label[6.8,1.5;Hammer]"..
-		"list[current_name;hammer;7,2;1,1;]"..
+		"label[6.8,1.5;Hammer]".."list[current_name;hammer;7,2;1,1;]"..
 		"list[current_player;main;0,3.25;8,4;]")
 	meta:set_string("infotext", "Work Table")
 
