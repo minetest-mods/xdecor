@@ -12,7 +12,8 @@ local profiles = {
 	{11, "_c3", 0}, {13, "_c3", 1}, {14, "_c3", 2}, {15, "_c4", 1}
 }
 
-for _, p in pairs(profiles) do
+for i = 1, #profiles do
+	local p = profiles[i]
 	local p1, p2, p3 = p[1], p[2], p[3]
 	xwall.get_candidate[p1] = {p2, p3}
 end
@@ -124,7 +125,8 @@ function xwall.construct_node_box_data(node_box_list, center_node_box_list, node
 	res.c0, res.c1, res.c2, res.c3, res.c4 = {}, {}, {}, {}, {}
 	local pos0, pos1, pos2, pos3, pos4 = #res.c0, #res.c1, #res.c2, #res.c3, #res.c4
 
-	for _, v in pairs(node_box_list) do
+	for i = 1, #node_box_list do
+		local v = node_box_list[i]
 		pos1 = pos1 + 1
 		pos2 = pos2 + 1
 		pos3 = pos3 + 1
@@ -135,7 +137,8 @@ function xwall.construct_node_box_data(node_box_list, center_node_box_list, node
 		res.c4[pos4] = v
 	end
 
-	for _, v in pairs(node_box_list) do
+	for i = 1, #node_box_list do
+		local v = node_box_list[i]
 		pos2 = pos2 + 1
 		pos3 = pos3 + 1
 		pos4 = pos4 + 1
@@ -144,19 +147,22 @@ function xwall.construct_node_box_data(node_box_list, center_node_box_list, node
 		res.c4[pos4] = {v[3], v[2], v[1], v[6], v[5], v[4]}
 	end
 
-	for _, v in pairs(node_box_list) do
+	for i = 1, #node_box_list do
+		local v = node_box_list[i]
 		pos3 = pos3 + 1
 		pos4 = pos4 + 1
 		res.c3[pos3] = {v[4], v[2], v[3]-.5, v[1], v[5], v[6]-.5}
 		res.c4[pos4] = {v[4], v[2], v[3]-.5, v[1], v[5], v[6]-.5}
 	end
 
-	for _, v in pairs(node_box_list) do
+	for i = 1, #node_box_list do
+		local v = node_box_list[i]
 		pos4 = pos4 + 1
 		res.c4[pos4] = {v[3]-.5, v[2], v[4], v[6]-.5, v[5], v[1]}
 	end
 
-	for _, v in pairs(center_node_box_list) do
+	for i = 1, #center_node_box_list do
+		local v = center_node_box_list[i]
 		pos0 = pos0 + 1
 		pos1 = pos1 + 1
 		pos2 = pos2 + 1
@@ -169,9 +175,7 @@ function xwall.construct_node_box_data(node_box_list, center_node_box_list, node
 		res.c4[pos4] = v
 	end	
 
-	if #res.c0 < 1 then
-		res.c0 = nil
-	end
+	if #res.c0 < 1 then res.c0 = nil end
 
 	res.ln = node_box_line
 	return res

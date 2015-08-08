@@ -34,7 +34,8 @@ function enchanting.fields(pos, formname, fields, sender)
 	local mese = mesestack:get_count()
 	local enchs = {"durable", "fast"}
 
-	for _, e in pairs(enchs) do
+	for i = 1, #enchs do
+		local e = enchs[i]
 		if enchanting.is_allowed_tool(toolname) ~= 0 and mese > 0 and fields[e] then
 			toolstack:replace("xdecor:enchanted_"..toolname:sub(9).."_"..e)
 			toolstack:add_wear(toolwear)
@@ -103,7 +104,8 @@ function enchanting.register_enchtools(init, m, def)
 		{"pick", "durable", {cracky = long}}, {"pick", "fast", {cracky = fast}},
 		{"shovel", "durable", {crumbly = long}}, {"shovel", "fast", {crumbly = fast}}
 	}
-	for _, x in pairs(enchtools) do
+	for i = 1, #enchtools do
+		local x = enchtools[i]
 		local t, e, g = x[1], x[2], x[3]
 		minetest.register_tool("xdecor:enchanted_"..t.."_"..m.."_"..e, {
 			description = "Enchanted "..m:gsub("%l", string.upper, 1).." "..
@@ -120,11 +122,11 @@ local tools = {
 }
 local materials = {"steel", "bronze", "mese", "diamond"}
 
-for _, t in pairs(tools) do
-for _, material in pairs(materials) do
-	local tool, group = t[1], t[2]
-	local toolname = tool.."_"..material
-	local init_def = minetest.registered_tools["default:"..toolname].tool_capabilities.groupcaps[group]
+for i = 1, #tools do
+for j = 1, #materials do
+	local t, m = tools[i], materials[j]
+	local toolname = t[1].."_"..m
+	local init_def = minetest.registered_tools["default:"..toolname].tool_capabilities.groupcaps[t[2]]
 
 	local tooldef = {
 		times = init_def.times,
@@ -132,6 +134,6 @@ for _, material in pairs(materials) do
 		dmg = init_def.damage_groups,
 		maxlvl = init_def.maxlevel
 	}
-	enchanting.register_enchtools(init_def, material, tooldef)
+	enchanting.register_enchtools(init_def, m, tooldef)
 end
 end

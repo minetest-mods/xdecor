@@ -28,7 +28,7 @@ function worktable.construct(pos)
 	local meta = minetest.get_meta(pos)
 
 	local nodebtn = {}
-	for i=1, #def do
+	for i = 1, #def do
 		nodebtn[#nodebtn+1] = "item_image_button["..(i-1)..
 				",0.5;1,1;xdecor:"..def[i][1].."_cloud;"..def[i][1]..";]"
 	end
@@ -63,11 +63,12 @@ function worktable.fields(pos, formname, fields, sender)
 	local shape, get, outputshape = {}, {}, {}
 	local anz = 0
 
-	for _, d in pairs(def) do
+	for i = 1, #def do
+		local d = def[i]
 		local nb, anz = d[1], d[2]
 		if outputcount < 99 and fields[nb] then
 			outputshape = outputname:match(nb)
-			if nb ~= outputshape and outputcount > 0 then return end
+			if nb ~= outputshape and outputcount > 0 then break end
 			shape = "xdecor:"..nb.."_"..inputname:sub(9)
 			get = shape.." "..anz
 
@@ -133,38 +134,38 @@ xdecor.register("worktable", {
 	allow_metadata_inventory_move = worktable.move
 })
 
-for _, m in pairs(material) do
-for n=1, #def do
-	local w = def[n]
-	local nodename = "default:"..m
+local function description(m, w)
+	if m == "cloud" then return "" end
+	return m:gsub("%l", string.upper, 1).." "..w:gsub("%l", string.upper, 1)
+end
+
+local function groups(m)
+	if m:find("tree") or m:find("wood") or m == "cactus" then
+		return {choppy=3, not_in_creative_inventory=1}
+	elseif m == "clay" or m == "snowblock" then
+		return {snappy=3, not_in_creative_inventory=1}
+	end
+	return {cracky=3, not_in_creative_inventory=1}
+end
+
+local function shady(w)
+	if w:find("stair") or w == "slab" then return false end
+	return true
+end
+
+for n = 1, #def do
+for m = 1, #material do
+	local w, x = def[n], material[m]
+	local nodename = "default:"..x
 	local ndef = minetest.registered_nodes[nodename]
-	if not ndef then return end
+	if not ndef then break end
 
-	local function description(m)
-		if m == "cloud" then return "" end
-		return m:gsub("%l", string.upper, 1).." "..w[1]:gsub("%l", string.upper, 1)
-	end
-
-	local function groups(m)
-		if m:find("tree") or m:find("wood") or m == "cactus" then
-			return {choppy=3, not_in_creative_inventory=1}
-		elseif m == "clay" or m == "snowblock" then
-			return {snappy=3, not_in_creative_inventory=1}
-		end
-		return {cracky=3, not_in_creative_inventory=1}
-	end
-
-	local function shady(w)
-		if w:find("stair") or w == "slab" then return false end
-		return true
-	end
-
-	xdecor.register(w[1].."_"..m, {
-		description = description(m),
+	xdecor.register(w[1].."_"..x, {
+		description = description(x, w[1]),
 		light_source = ndef.light_source,
 		sounds = ndef.sounds,
 		tiles = ndef.tiles,
-		groups = groups(m),
+		groups = groups(x),
 		node_box = {type = "fixed", fixed = w[3]},
 		sunlight_propagates = shady(w[1]),
 		on_place = minetest.rotate_node
