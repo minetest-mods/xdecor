@@ -52,7 +52,7 @@ function worktable.construct(pos)
 	inv:set_size("hammer", 1)
 end
 
-function worktable.fields(pos, formname, fields, sender)
+function worktable.fields(pos, _, fields, _)
 	local meta = minetest.get_meta(pos)
 	local inv = meta:get_inventory()
 	local inputstack = inv:get_stack("input", 1)
@@ -81,7 +81,7 @@ function worktable.fields(pos, formname, fields, sender)
 	end
 end
 
-function worktable.dig(pos, player)
+function worktable.dig(pos, _)
 	local meta = minetest.get_meta(pos)
 	local inv = meta:get_inventory()
 
@@ -92,7 +92,7 @@ function worktable.dig(pos, player)
 	return true
 end
 
-function worktable.put(pos, listname, index, stack, player)
+function worktable.put(_, listname, _, stack, _)
 	local stackname = stack:get_name()
 	local count = stack:get_count()
 	local mat = minetest.serialize(material)
@@ -115,8 +115,7 @@ function worktable.put(pos, listname, index, stack, player)
 	return count
 end
 
-function worktable.move(pos, from_list, from_index, to_list, to_index, count, player)
-	return 0 end
+function worktable.move(_, _, _, _, _, _, _) return 0 end
 
 xdecor.register("worktable", {
 	description = "Work Table",
@@ -174,7 +173,7 @@ end
 minetest.register_abm({
 	nodenames = {"xdecor:worktable"},
 	interval = 3, chance = 1,
-	action = function(pos, node, active_object_count, active_object_count_wider)
+	action = function(pos, _, _, _)
 		local meta = minetest.get_meta(pos)
 		local inv = meta:get_inventory()
 		local tool = inv:get_stack("tool", 1)

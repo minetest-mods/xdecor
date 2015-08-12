@@ -132,7 +132,7 @@ xdecor.register("frame", {
 minetest.register_abm({
 	nodenames = {"xdecor:frame"},
 	interval = 15, chance = 1,
-	action = function(pos, node, active_object_count, active_object_count_wider)
+	action = function(pos, node, _, _)
 		local num
 		if node.name ~= "xdecor:frame" then return end
 		num = #minetest.get_objects_inside_radius(pos, 0.5)

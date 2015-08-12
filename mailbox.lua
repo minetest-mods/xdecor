@@ -6,7 +6,7 @@ xdecor.register("mailbox", {
 		"xdecor_mailbox.png", "xdecor_mailbox.png",
 	},
 	groups = {cracky=2},
-	after_place_node = function(pos, placer, itemstack)
+	after_place_node = function(pos, placer, _)
 		local meta = minetest.get_meta(pos)
 		local owner = placer:get_player_name()
 
@@ -17,7 +17,7 @@ xdecor.register("mailbox", {
 		inv:set_size("main", 8*4)
 		inv:set_size("drop", 1)
 	end,
-	on_rightclick = function(pos, node, clicker, itemstack)
+	on_rightclick = function(pos, _, clicker, _)
 		local meta = minetest.get_meta(pos)
 		local player = clicker:get_player_name()
 		local owner = meta:get_string("owner")
@@ -37,7 +37,7 @@ xdecor.register("mailbox", {
 		if not inv:is_empty("main") then return false end
 		return player:get_player_name() == owner
 	end,
-	on_metadata_inventory_put = function(pos, listname, index, stack, player)
+	on_metadata_inventory_put = function(pos, listname, _, stack, _)
 		local meta = minetest.get_meta(pos)
 		local inv = meta:get_inventory()
 
@@ -46,7 +46,7 @@ xdecor.register("mailbox", {
 			inv:add_item("main", stack)
 		end
 	end,
-	allow_metadata_inventory_put = function(pos, listname, index, stack, player)
+	allow_metadata_inventory_put = function(pos, listname, _, stack, _)
 		if listname == "main" then return 0 end
 		if listname == "drop" then
 			local meta = minetest.get_meta(pos)

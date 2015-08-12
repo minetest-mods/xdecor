@@ -14,7 +14,7 @@ function hive.construct(pos)
 	inv:set_size("honey", 1)
 end
 
-function hive.dig(pos, player)
+function hive.dig(pos, _)
 	local meta = minetest.get_meta(pos)
 	local inv = meta:get_inventory()
 
@@ -32,11 +32,11 @@ xdecor.register("hive", {
 	groups = {snappy=3, flammable=1},
 	on_construct = hive.construct,
 	can_dig = hive.dig,
-	on_punch = function(pos, node, puncher, pointed_thing)
+	on_punch = function(_, _, puncher, _)
 		local health = puncher:get_hp()
-		puncher:set_hp(health-4)
+		puncher:set_hp(health - 4)
 	end,
-	allow_metadata_inventory_put = function(pos, listname, index, stack, player)
+	allow_metadata_inventory_put = function(_, listname, _, stack, _)
 		if listname == "honey" then return 0 end
 		return stack:get_count()
 	end,
@@ -45,7 +45,7 @@ xdecor.register("hive", {
 minetest.register_abm({
 	nodenames = {"xdecor:hive"},
 	interval = 10, chance = 4,
-	action = function(pos, node, active_object_count, active_object_count_wider)
+	action = function(pos, _, _, _)
 		local meta = minetest.get_meta(pos)
 		local inv = meta:get_inventory()
 

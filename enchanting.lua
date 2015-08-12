@@ -24,7 +24,7 @@ function enchanting.is_allowed_tool(toolname)
 	else return 0 end
 end
 
-function enchanting.fields(pos, formname, fields, sender)
+function enchanting.fields(pos, _, fields, _)
 	local meta = minetest.get_meta(pos)
 	local inv = meta:get_inventory()
 	local toolstack = inv:get_stack("tool", 1)
@@ -46,7 +46,7 @@ function enchanting.fields(pos, formname, fields, sender)
 	end
 end
 
-function enchanting.dig(pos, player)
+function enchanting.dig(pos, _)
 	local meta = minetest.get_meta(pos)
 	local inv = meta:get_inventory()
 
@@ -56,7 +56,7 @@ function enchanting.dig(pos, player)
 	return true
 end
 
-function enchanting.put(pos, listname, index, stack, player)
+function enchanting.put(_, listname, _, stack, _)
 	local toolname = stack:get_name()
 	local count = stack:get_count()
 
@@ -70,8 +70,7 @@ function enchanting.put(pos, listname, index, stack, player)
 	return count
 end
 
-function enchanting.move(pos, from_list, from_index, to_list, to_index, count, player)
-	return 0 end
+function enchanting.move(_, _, _, _, _, _, _) return 0 end
 
 xdecor.register("enchantment_table", {
 	description = "Enchantment Table",

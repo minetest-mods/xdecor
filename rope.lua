@@ -7,7 +7,7 @@ minetest.register_on_punchnode(function(pos, oldnode, digger)
 	end
 end)
 
-function rope.place(itemstack, placer, pointed_thing)
+function rope.place(itemstack, _, pointed_thing)
 	if pointed_thing.type == "node" then
 		local under = pointed_thing.under
 		local above = pointed_thing.above
