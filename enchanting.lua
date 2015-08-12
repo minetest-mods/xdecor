@@ -70,8 +70,6 @@ function enchanting.put(_, listname, _, stack, _)
 	return count
 end
 
-function enchanting.move(_, _, _, _, _, _, _) return 0 end
-
 xdecor.register("enchantment_table", {
 	description = "Enchantment Table",
 	tiles = {
@@ -85,7 +83,7 @@ xdecor.register("enchantment_table", {
 	on_construct = enchanting.construct,
 	on_receive_fields = enchanting.fields,
 	allow_metadata_inventory_put = enchanting.put,
-	allow_metadata_inventory_move = enchanting.move
+	allow_metadata_inventory_move = function(_,_,_,_,_,_,_) return 0 end
 })
 
 function enchanting.register_enchtools(init, m, def)

@@ -39,7 +39,7 @@ xdecor.register("hive", {
 	allow_metadata_inventory_put = function(_, listname, _, stack, _)
 		if listname == "honey" then return 0 end
 		return stack:get_count()
-	end,
+	end
 })
 
 minetest.register_abm({

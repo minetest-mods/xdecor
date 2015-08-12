@@ -115,8 +115,6 @@ function worktable.put(_, listname, _, stack, _)
 	return count
 end
 
-function worktable.move(_, _, _, _, _, _, _) return 0 end
-
 xdecor.register("worktable", {
 	description = "Work Table",
 	groups = {cracky=2, choppy=2},
@@ -130,7 +128,7 @@ xdecor.register("worktable", {
 	on_construct = worktable.construct,
 	on_receive_fields = worktable.fields,
 	allow_metadata_inventory_put = worktable.put,
-	allow_metadata_inventory_move = worktable.move
+	allow_metadata_inventory_move = function(_,_,_,_,_,_,_) return 0 end
 })
 
 local function description(m, w)
