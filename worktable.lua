@@ -180,15 +180,11 @@ minetest.register_abm({
 		local tool = inv:get_stack("tool", 1)
 		local hammer = inv:get_stack("hammer", 1)
 		local wear = tool:get_wear()
-		local wear2 = hammer:get_wear()
-
-		local repair = -500 -- Tool's repairing factor (0-65535 -- 0 = new condition).
-		local wearhammer = 250 -- Hammer's wearing factor (0-65535 -- 0 = new condition).
 
 		if tool:is_empty() or hammer:is_empty() or wear == 0 then return end
 
-		tool:add_wear(repair)
-		hammer:add_wear(wearhammer)
+		tool:add_wear(-500) -- Tool's repairing factor (0-65535 -- 0 = new condition).
+		hammer:add_wear(250) -- Hammer's wearing factor (0-65535 -- 0 = new condition).
 
 		inv:set_stack("tool", 1, tool)
 		inv:set_stack("hammer", 1, hammer)
