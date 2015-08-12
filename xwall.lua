@@ -45,10 +45,10 @@ function xwall.update_one_node(pos, name, digged)
 
 	for i = 1, #directions do
 		local dir = directions[i]
-		local node = minetest.get_node({x=pos.x + dir.x, y=pos.y, z=pos.z + dir.z})
+		local node = minetest.get_node(vector.add(pos, dir))
+		local ndef = minetest.registered_nodes[node.name]
 
-		if node and node.name and minetest.registered_nodes[node.name] then
-			local ndef = minetest.registered_nodes[node.name]
+		if node and node.name and ndef then
 			if ndef.drop == name or (ndef.groups and ndef.groups.xwall) then
 				candidates[i] = node.name
 				id = id + pow2[i]
@@ -65,13 +65,14 @@ function xwall.update_one_node(pos, name, digged)
 	local newnode = xwall.get_candidate[id]
 	if newnode and newnode[1] then
 		local newname = name:sub(1, name:len()-3)..newnode[1]
-		if newname and minetest.registered_nodes[newname] then
+		local regnode = minetest.registered_nodes[newname]
+
+		if newname and regnode then
 			minetest.swap_node(pos, {name=newname, param2=newnode[2]})
-		elseif newnode[1] == '_c0' and not minetest.registered_nodes[newname] then
+		elseif newnode[1] == '_c0' and not regnode then
 			minetest.swap_node(pos, {name=name, param2=0})
 		end
 	end
-
 	return candidates
 end
 
@@ -82,7 +83,7 @@ function xwall.update(pos, name, active, has_been_digged)
 	for j = 1, #directions do
 		local dir2 = directions[j]
 		if c[j] ~= 0 and c[j] ~= "ignore" then
-			xwall.update_one_node({x=pos.x + dir2.x, y=pos.y, z=pos.z + dir2.z}, c[j], false)
+			xwall.update_one_node(vector.add(pos, dir2), c[j], false)
 		end
 	end
 end
@@ -112,7 +113,7 @@ function xwall.register(name, def, node_box_data)
 		else
 			newdef.groups.not_in_creative_inventory = 1
 		end
-		newdef.after_dig_node = function(pos, oldnode, oldmetadata, digger)
+		newdef.after_dig_node = function(pos, _, _, _)
 			return xwall.update(pos, name.."_ln", true, true)
 		end
 

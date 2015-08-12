@@ -50,8 +50,8 @@ minetest.register_abm({
 		local inv = meta:get_inventory()
 
 		local radius = 8
-		local minp = {x=pos.x-radius, y=pos.y-radius, z=pos.z-radius}
-		local maxp = {x=pos.x+radius, y=pos.y+radius, z=pos.z+radius}
+		local minp = vector.add(pos, -radius)
+		local maxp = vector.add(pos, radius)
 		local flowers = minetest.find_nodes_in_area(minp, maxp, "group:flower")
 
 		if #flowers >= 4 then inv:add_item("honey", "xdecor:honey") end
