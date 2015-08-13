@@ -1,3 +1,5 @@
+local mailbox = {}
+
 xdecor.register("mailbox", {
 	description = "Mailbox",
 	tiles = {
@@ -24,9 +26,9 @@ xdecor.register("mailbox", {
 
 		if owner == player then
 			minetest.show_formspec(player, "default:chest_locked",
-				xdecor.get_mailbox_formspec(pos))
+				mailbox.get_formspec(pos))
 		else minetest.show_formspec(player, "default:chest_locked",
-				xdecor.get_mailbox_insert_formspec(pos, owner))
+				mailbox.get_insert_formspec(pos, owner))
 		end
 	end,
 	can_dig = function(pos, player)
@@ -57,7 +59,7 @@ xdecor.register("mailbox", {
 	end
 })
 
-function xdecor.get_mailbox_formspec(pos)
+function mailbox.get_formspec(pos)
 	local spos = pos.x..","..pos.y..","..pos.z
 	local formspec =
 		"size[8,9]"..xdecor.fancy_gui..
@@ -67,7 +69,7 @@ function xdecor.get_mailbox_formspec(pos)
 	return formspec
 end
 
-function xdecor.get_mailbox_insert_formspec(pos, owner)
+function mailbox.get_insert_formspec(pos, owner)
 	local spos = pos.x..","..pos.y..","..pos.z
 	local formspec =
 		"size[8,5]"..xdecor.fancy_gui..
