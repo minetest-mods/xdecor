@@ -48,10 +48,11 @@ function xwall.update_one_node(pos, name, digged)
 		local node = minetest.get_node(vector.add(pos, dir))
 		local ndef = minetest.registered_nodes[node.name]
 
-		if not node and not node.name and not ndef then break end
-		if ndef.drop == name or (ndef.groups and ndef.groups.xwall) then
-			candidates[i] = node.name
-			id = id + pow2[i]
+		if node and node.name and ndef then
+			if ndef.drop == name or (ndef.groups and ndef.groups.xwall) then
+				candidates[i] = node.name
+				id = id + pow2[i]
+			end
 		end
 	end
 
@@ -78,8 +79,9 @@ function xwall.update(pos, name, active, has_been_digged)
 	local c = xwall.update_one_node(pos, name, has_been_digged)
 	for j = 1, #directions do
 		local dir2 = directions[j]
-		if c[j] == 0 and c[j] == "ignore" then break end
-		xwall.update_one_node(vector.add(pos, dir2), c[j], false)
+		if c[j] ~= 0 and c[j] ~= "ignore" then
+			xwall.update_one_node(vector.add(pos, dir2), c[j], false)
+		end
 	end
 end
 
@@ -94,16 +96,14 @@ function xwall.register(name, def, node_box_data)
 		if not def.tiles then def.tiles = def.textures end
 		if not def.groups then
 			def.groups = {xwall=1, cracky=3}
-		end
-		def.groups.xwall = 1
+		else def.groups.xwall = 1 end
 
 		local newdef = clone_table(def)
 		if k == "ln" then
 			newdef.on_construct = function(pos)
 				return xwall.update(pos, name.."_ln", true, nil)
 			end
-		end
-		newdef.groups.not_in_creative_inventory = 1
+		else newdef.groups.not_in_creative_inventory = 1 end
 
 		newdef.after_dig_node = function(pos, _, _, _)
 			return xwall.update(pos, name.."_ln", true, true)
