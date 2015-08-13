@@ -26,7 +26,7 @@ xdecor.register("mailbox", {
 			minetest.show_formspec(player, "default:chest_locked",
 				xdecor.get_mailbox_formspec(pos))
 		else minetest.show_formspec(player, "default:chest_locked",
-				xdecor.get_mailbox_insert_formspec(pos))
+				xdecor.get_mailbox_insert_formspec(pos, owner))
 		end
 	end,
 	can_dig = function(pos, player)
@@ -67,11 +67,11 @@ function xdecor.get_mailbox_formspec(pos)
 	return formspec
 end
 
-function xdecor.get_mailbox_insert_formspec(pos)
+function xdecor.get_mailbox_insert_formspec(pos, owner)
 	local spos = pos.x..","..pos.y..","..pos.z
 	local formspec =
 		"size[8,5]"..xdecor.fancy_gui..
-		"label[0,0;Send your goods...]"..
+		"label[0.5,0;Send your goods\nto "..owner.." :]"..
 		"list[nodemeta:"..spos..";drop;3.5,0;1,1;]"..
 		"list[current_player;main;0,1.25;8,4;]"
 	return formspec
