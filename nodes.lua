@@ -135,6 +135,23 @@ if minetest.get_modpath("bucket") then
 	})
 end
 
+xpanes.register_pane("chainlink", {
+	description = "Chain Link",
+	tiles = {"xdecor_chainlink.png"},
+	drawtype = "airlike",
+	paramtype = "light",
+	textures = {"xdecor_chainlink.png", "xdecor_chainlink.png", 
+			"xpanes_space.png"},
+	inventory_image = "xdecor_chainlink.png",
+	wield_image = "xdecor_chainlink.png",
+	groups = {snappy=3, pane=1},
+	recipe = {
+		{"default:steel_ingot", "", "default:steel_ingot"},
+		{"", "default:steel_ingot", ""},
+		{"default:steel_ingot", "", "default:steel_ingot"}
+	}
+})
+
 xdecor.register("chair", {
 	description = "Chair",
 	tiles = {"xdecor_wood.png"},
