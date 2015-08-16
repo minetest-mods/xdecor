@@ -257,16 +257,30 @@ xdecor.register("cushion", {
 	node_box = xdecor.nodebox.slab_y(-0.5, 0.5)
 })
 
-local door_types = {"woodglass", "japanese"}
+local function door_access(door)
+	if door:find("prison") then return true end
+	return false
+end
+
+local door_types = {
+	{"japanese", "brown"},
+	{"prison", "grey"},
+	{"prison_rust", "rust"},
+	{"screen", "brownb"},
+	{"slide", "brownc"},
+	{"woodglass", "brown"}
+}
 
 for _, d in pairs(door_types) do
-	doors.register_door("xdecor:"..d.."_door", {
-		description = d:gsub("%l", string.upper, 1).." Door",
-		inventory_image = "xdecor_"..d.."_door_inv.png",
+	doors.register_door("xdecor:"..d[1].."_door", {
+		description = d[1]:gsub("%l", string.upper, 1).." Door",
+		inventory_image = "xdecor_"..d[1].."_door_inv.png",
 		groups = {choppy=3, flammable=2, door=1},
-		tiles_bottom = {"xdecor_"..d.."_door_b.png", "xdecor_brown.png"},
-		tiles_top = {"xdecor_"..d.."_door_a.png", "xdecor_brown.png"},
-		sounds = xdecor.wood
+		tiles_bottom = {"xdecor_"..d[1].."_door_b.png", "xdecor_"..d[2]..".png"},
+		tiles_top = {"xdecor_"..d[1].."_door_a.png", "xdecor_"..d[2]..".png"},
+		only_placer_can_open = door_access(d[1]),
+		sounds = xdecor.wood,
+		sunlight = false
 	})
 end
 
