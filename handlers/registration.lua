@@ -11,23 +11,23 @@ sound.glass = default.node_sound_glass_defaults()
 sound.leaves = default.node_sound_leaves_defaults()
 sound.stone = default.node_sound_stone_defaults()
 
-bg = default.gui_bg..default.gui_bg_img..default.gui_slots
+xbg = default.gui_bg..default.gui_bg_img..default.gui_slots
 
 local default_inventory_size = 32
 local default_inventory_formspecs = {
-	["8"] = "size[8,6]"..bg..
+	["8"] = "size[8,6]"..xbg..
 	"list[context;main;0,0;8,1;]"..
 	"list[current_player;main;0,2;8,4;]",
 
-	["16"] = "size[8,7]"..bg..
+	["16"] = "size[8,7]"..xbg..
 	"list[context;main;0,0;8,2;]"..
 	"list[current_player;main;0,3;8,4;]",
 
-	["24"] = "size[8,8]"..bg..
+	["24"] = "size[8,8]"..xbg..
 	"list[context;main;0,0;8,3;]"..
 	"list[current_player;main;0,4;8,4;]",
 
-	["32"] = "size[8,9]"..bg..
+	["32"] = "size[8,9]"..xbg..
 	"list[context;main;0,0.3;8,4;]"..
 	"list[current_player;main;0,4.85;8,1;]"..
 	"list[current_player;main;0,6.08;8,3;8]"..

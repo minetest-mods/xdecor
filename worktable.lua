@@ -34,7 +34,7 @@ function worktable.construct(pos)
 	end
 	nodebtn = table.concat(nodebtn)
 
-	meta:set_string("formspec", "size[8,7;]"..bg..
+	meta:set_string("formspec", "size[8,7;]"..xbg..
 		"label[0,0;Cut your material into...]"..nodebtn..
 		"label[0,1.5;Input]".."list[current_name;input;0,2;1,1;]"..
 		"image[1,2;1,1;xdecor_saw.png]"..

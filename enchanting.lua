@@ -2,7 +2,7 @@ local enchanting = {}
 
 function enchanting.construct(pos)
 	local meta = minetest.get_meta(pos)
-	meta:set_string("formspec", "size[8,7;]"..bg..
+	meta:set_string("formspec", "size[8,7;]"..xbg..
 		"label[0.85,-0.15;Enchant]".."image[0.6,0.2;2,2;xdecor_enchbook.png]"..
 		"list[current_name;tool;0.5,2;1,1;]"..
 		"list[current_name;mese;1.5,2;1,1;]".."image[1.5,2;1,1;mese_layout.png]"..

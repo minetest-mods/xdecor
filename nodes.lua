@@ -23,7 +23,7 @@ xdecor.register("baricade", {
 	tiles = {"xdecor_baricade.png"},
 	groups = {snappy=3, flammable=2},
 	damage_per_second = 4,
-	selection_box = xdecor.nodebox.slab_y(0.5, 0)
+	selection_box = xdecor.nodebox.slab_y(0.3)
 })
 
 xdecor.register("barrel", {
@@ -432,7 +432,7 @@ for _, f in pairs(flowerstype) do
 		inventory_image = "xdecor_"..f.."_pot.png",
 		drawtype = "plantlike",
 		sounds = sound.leaves,
-		selection_box = xdecor.nodebox.slab_y(0.5, 0)
+		selection_box = xdecor.nodebox.slab_y(0.3)
 	})
 
 	minetest.register_craft({
@@ -544,10 +544,7 @@ xdecor.register("stonepath", {
 			{0.125, -0.5, -0.4375, 0.25, -0.48, -0.3125}
 		}
 	},
-	selection_box = {
-		type = "fixed",
-		fixed = {-0.4375, -0.5, -0.4375, 0.4375, -0.4, 0.4375}
-	}
+	selection_box = xdecor.nodebox.slab_y(0.05)
 })
 
 xdecor.register("stone_tile", {
