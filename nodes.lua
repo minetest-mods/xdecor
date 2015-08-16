@@ -509,7 +509,9 @@ xpanes.register_pane("rust_bar", {
 	wield_image = "xdecor_rust_bars.png",
 	groups = {snappy=2, pane=1},
 	recipe = {
-		{"xpanes:bar", "default:dirt"}
+		{"", "default:dirt", ""},
+		{"default:steel_ingot", "default:steel_ingot", "default:steel_ingot"},
+		{"default:steel_ingot", "default:steel_ingot", "default:steel_ingot"}
 	}
 })
 
