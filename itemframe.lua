@@ -82,7 +82,7 @@ end
 xdecor.register("frame", {
 	description = "Item frame",
 	groups = {choppy=3, snappy=2},
-	sounds = xdecor.wood,
+	sounds = sound.wood,
 	on_rotate = screwdriver.disallow,
 	node_box = {
 		type = "fixed",
