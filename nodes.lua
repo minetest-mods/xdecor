@@ -1,3 +1,9 @@
+local sound = {}
+sound.wood = default.node_sound_wood_defaults()
+sound.glass = default.node_sound_glass_defaults()
+sound.leaves = default.node_sound_leaves_defaults()
+sound.stone = default.node_sound_stone_defaults()
+
 xpanes.register_pane("bamboo_frame", {
 	description = "Bamboo Frame",
 	tiles = {"xdecor_bamboo_frame.png"},

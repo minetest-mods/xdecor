@@ -2,6 +2,8 @@ local hive = {}
 
 function hive.construct(pos)
 	local meta = minetest.get_meta(pos)
+	local xbg = default.gui_bg..default.gui_bg_img..default.gui_slots
+
 	meta:set_string("formspec", "size[8,5;]"..xbg..
 		"label[1.35,0;Bees are making honey\nwith pollen around...]"..
 		"image[0.2,-0.1;1,1;flowers_dandelion_white.png]"..

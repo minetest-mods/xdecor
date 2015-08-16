@@ -59,6 +59,8 @@ xdecor.register("mailbox", {
 	end
 })
 
+local xbg = default.gui_bg..default.gui_bg_img..default.gui_slots
+
 function mailbox.get_formspec(pos)
 	local spos = pos.x..","..pos.y..","..pos.z
 	local formspec =

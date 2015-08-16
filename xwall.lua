@@ -184,7 +184,7 @@ function xwall.register_wall(name, tiles, def)
 	def = { 
 		description = string.sub(name:gsub("%l", string.upper, 7), 8, -6).." Wall",
 		textures = {tiles, tiles, tiles, tiles},
-		sounds = sound.stone,
+		sounds = default.node_sound_stone_defaults(),
 		groups = {cracky=3, stone=1, pane=1},
 		sunlight_propagates = true,
 		collision_box = {

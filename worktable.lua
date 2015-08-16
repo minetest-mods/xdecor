@@ -34,6 +34,7 @@ function worktable.construct(pos)
 	end
 	nodebtn = table.concat(nodebtn)
 
+	local xbg = default.gui_bg..default.gui_bg_img..default.gui_slots
 	meta:set_string("formspec", "size[8,7;]"..xbg..
 		"label[0,0;Cut your material into...]"..nodebtn..
 		"label[0,1.5;Input]".."list[current_name;input;0,2;1,1;]"..
@@ -118,7 +119,7 @@ end
 xdecor.register("worktable", {
 	description = "Work Table",
 	groups = {cracky=2, choppy=2},
-	sounds = sound.wood,
+	sounds = default.node_sound_wood_defaults(),
 	tiles = {
 		"xdecor_worktable_top.png", "xdecor_worktable_top.png",
 		"xdecor_worktable_sides.png", "xdecor_worktable_sides.png",

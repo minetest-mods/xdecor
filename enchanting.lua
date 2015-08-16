@@ -2,6 +2,8 @@ local enchanting = {}
 
 function enchanting.construct(pos)
 	local meta = minetest.get_meta(pos)
+	local xbg = default.gui_bg..default.gui_bg_img..default.gui_slots
+
 	meta:set_string("formspec", "size[8,7;]"..xbg..
 		"label[0.85,-0.15;Enchant]".."image[0.6,0.2;2,2;xdecor_enchbook.png]"..
 		"list[current_name;tool;0.5,2;1,1;]"..
@@ -78,7 +80,7 @@ xdecor.register("enchantment_table", {
 		"xdecor_enchantment_side.png", "xdecor_enchantment_side.png"
 	},
 	groups = {cracky=1},
-	sounds = sound.stone,
+	sounds = default.node_sound_stone_defaults(),
 	can_dig = enchanting.dig,
 	on_construct = enchanting.construct,
 	on_receive_fields = enchanting.fields,

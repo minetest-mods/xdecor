@@ -5,13 +5,7 @@ local default_can_dig = function(pos, _)
 	return inv:is_empty("main")
 end
 
-sound = {}
-sound.wood = default.node_sound_wood_defaults()
-sound.glass = default.node_sound_glass_defaults()
-sound.leaves = default.node_sound_leaves_defaults()
-sound.stone = default.node_sound_stone_defaults()
-
-xbg = default.gui_bg..default.gui_bg_img..default.gui_slots
+local xbg = default.gui_bg..default.gui_bg_img..default.gui_slots
 
 local default_inventory_size = 32
 local default_inventory_formspecs = {
@@ -66,7 +60,8 @@ function xdecor.register(name, def)
 				meta:set_string("infotext", infotext)
 			end
 			local size = inventory.size or default_inventory_size
-			meta:get_inventory():set_size("main", size)
+			local inv = meta:get_inventory()
+			inv:set_size("main", size)
 			meta:set_string("formspec", inventory.formspec or get_formspec_by_size(size))
 		end
 
