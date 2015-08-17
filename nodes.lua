@@ -427,6 +427,14 @@ xdecor.register("lightbox", {
 	sounds = sound.glass
 })
 
+xdecor.register("packed_ice", {
+	drawtype = "normal",
+	description = "Packed Ice",
+	tiles = {"xdecor_packed_ice.png"},
+	groups = {cracky=2},
+	sounds = sound.glass
+})
+
 local flowerstype = { "dandelion_white", "dandelion_yellow", "geranium",
 		"rose", "tulip", "viola" }
 
