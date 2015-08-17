@@ -110,6 +110,7 @@ function enchanting.register_enchtools(init, m, def)
 			description = "Enchanted "..m:gsub("%l", string.upper, 1).." "..
 					t:gsub("%l", string.upper, 1).." ("..e:gsub("%l", string.upper, 1)..")",
 			inventory_image = minetest.registered_tools["default:"..t.."_"..m].inventory_image,
+			wield_image = minetest.registered_tools["default:"..t.."_"..m].wield_image,
 			groups = {not_in_creative_inventory=1},
 			tool_capabilities = {groupcaps = g, damage_groups = def.dmg}
 		})
