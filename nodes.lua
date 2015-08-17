@@ -73,7 +73,7 @@ xdecor.register("candle", {
 	light_source = 12,
 	drawtype = "torchlike",
 	inventory_image = "xdecor_candle_inv.png",
-	wield_image = "xdecor_candle_inv.png",
+	wield_image = "xdecor_candle_wield.png",
 	paramtype2 = "wallmounted",
 	legacy_wallmounted = true,
 	walkable = false,
