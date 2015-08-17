@@ -313,8 +313,9 @@ xdecor.register("enderchest", {
 	sounds = sound.stone,
 	on_construct = function(pos)
 		local meta = minetest.get_meta(pos)
+		local xbg = default.gui_bg..default.gui_bg_img..default.gui_slots
 		meta:set_string("formspec",
-				"size[8,9]"..xdecor.fancy_gui..
+				"size[8,9]"..xbg..
 				"list[current_player;enderchest;0,0;8,4;]"..
 				"list[current_player;main;0,5;8,4;]")
 		meta:set_string("infotext", "Ender Chest")
