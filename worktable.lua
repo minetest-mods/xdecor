@@ -13,15 +13,15 @@ local material = {
 	"glass", "obsidian_glass"
 }
 
-local def = { -- Node name, yield, nodebox shape.
-	{"nanoslab", "16", {-.5,-.5,-.5,0,-.4375,0}},
-	{"micropanel", "16", {-.5,-.5,-.5,.5,-.4375,0}},
-	{"microslab", "8", {-.5,-.5,-.5,.5,-.4375,.5}},
-	{"panel", "4", {-.5,-.5,-.5,.5,0,0}},
-	{"slab", "2", {-.5,-.5,-.5,.5,0,.5}},
-	{"outerstair", "1", {{-.5,-.5,-.5,.5,0,.5},{-.5,0,0,0,.5,.5}}},
-	{"stair", "1", {{-.5,-.5,-.5,.5,0,.5},{-.5,0,0,.5,.5,.5}}},
-	{"innerstair", "1", {{-.5,-.5,-.5,.5,0,.5},{-.5,0,0,.5,.5,.5},{-.5,0,-.5,0,.5,0}}}
+local def = { -- Node name, nodebox shape.
+	{"nanoslab", {-.5,-.5,-.5,0,-.4375,0}},
+	{"micropanel", {-.5,-.5,-.5,.5,-.4375,0}},
+	{"microslab", {-.5,-.5,-.5,.5,-.4375,.5}},
+	{"panel", {-.5,-.5,-.5,.5,0,0}},
+	{"slab", {-.5,-.5,-.5,.5,0,.5}},
+	{"outerstair", {{-.5,-.5,-.5,.5,0,.5},{-.5,0,0,0,.5,.5}}},
+	{"stair", {{-.5,-.5,-.5,.5,0,.5},{-.5,0,0,.5,.5,.5}}},
+	{"innerstair", {{-.5,-.5,-.5,.5,0,.5},{-.5,0,0,.5,.5,.5},{-.5,0,-.5,0,.5,0}}}
 }
 
 function worktable.construct(pos)
@@ -62,24 +62,28 @@ function worktable.fields(pos, _, fields, _)
 	local inputname = inputstack:get_name()
 	local outputname = outputstack:get_name()
 	local shape, get, outputshape = {}, {}, {}
-	local anz = 0
+	local name = dump(fields):match("%w+")
 
-	for i = 1, #def do
-		local d = def[i]
-		local nb, anz = d[1], d[2]
-		if outputcount < 99 and fields[nb] then
-			outputshape = outputname:match(nb)
-			if nb ~= outputshape and outputcount > 0 then break end
-			shape = "xdecor:"..nb.."_"..inputname:sub(9)
-			get = shape.." "..anz
+	if outputcount < 99 and fields[name] then
+		outputshape = outputname:match(name)
+		if name ~= outputshape and outputcount > 0 then return end
+		shape = "xdecor:"..name.."_"..inputname:sub(9)
+		get = shape.." "..worktable.anz(name)
 
-			if minetest.registered_nodes[shape] then
-				inv:add_item("output", get)
-				inputstack:take_item()
-				inv:set_stack("input", 1, inputstack)
-			end
+		if minetest.registered_nodes[shape] then
+			inv:add_item("output", get)
+			inputstack:take_item()
+			inv:set_stack("input", 1, inputstack)
 		end
 	end
+end
+
+function worktable.anz(n)
+	if n == "nanoslab" or n == "micropanel" then return 16
+	elseif n == "microslab" then return 8
+	elseif n == "panel" then return 4
+	elseif n == "slab" then return 2
+	else return 1 end
 end
 
 function worktable.dig(pos, _)
@@ -96,7 +100,7 @@ end
 function worktable.put(_, listname, _, stack, _)
 	local stackname = stack:get_name()
 	local count = stack:get_count()
-	local mat = minetest.serialize(material)
+	local mat = table.concat(material)
 
 	if listname == "output" then return 0 end
 	if listname == "input" then
@@ -162,7 +166,7 @@ for m = 1, #material do
 		sounds = ndef.sounds,
 		tiles = ndef.tiles,
 		groups = groups(x),
-		node_box = {type = "fixed", fixed = w[3]},
+		node_box = {type = "fixed", fixed = w[2]},
 		sunlight_propagates = shady(w[1]),
 		on_place = minetest.rotate_node
 	})
