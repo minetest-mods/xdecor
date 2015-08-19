@@ -1,5 +1,5 @@
 xdecor = {}
-modpath = minetest.get_modpath("xdecor")
+local modpath = minetest.get_modpath("xdecor")
 
 dofile(modpath.."/handlers/nodeboxes.lua")
 dofile(modpath.."/handlers/registration.lua")
