@@ -35,7 +35,8 @@ function enchanting.fields(pos, _, fields, _)
 	local mese = mesestack:get_count()
 	local ench = dump(fields):match("%w+")
 
-	if enchanting.is_allowed(toolname) ~= 0 and mese > 0 and fields[ench] then
+	if enchanting.is_allowed(toolname) ~= 0 and mese > 0 and
+			fields[ench] and ench ~= "quit" then
 		toolstack:replace("xdecor:enchanted_"..toolname:sub(9).."_"..ench)
 		toolstack:add_wear(toolwear)
 		mesestack:take_item()
