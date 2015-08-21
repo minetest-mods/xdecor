@@ -188,14 +188,6 @@ xdecor.register("chandelier", {
 	selection_box = xdecor.nodebox.slab_y(0.5, 0.5)
 })
 
-xdecor.register("coalstone_tile", {
-	drawtype = "normal",
-	description = "Coalstone Tile",
-	tiles = {"xdecor_coalstone_tile.png"},
-	groups = {cracky=2, stone=1},
-	sounds = sound.stone
-})
-
 xdecor.register("cobweb", {
 	description = "Cobweb",
 	drawtype = "plantlike",
@@ -261,14 +253,6 @@ xdecor.register("cushion", {
 	groups = {snappy=3, flammable=3, fall_damage_add_percent=-50},
 	on_place = minetest.rotate_node,
 	node_box = xdecor.nodebox.slab_y(-0.5, 0.5)
-})
-
-xdecor.register("desertstone_tile", {
-	drawtype = "normal",
-	description = "Desert Stone Tile",
-	tiles = {"xdecor_desertstone_tile.png"},
-	groups = {cracky=3, stone=1},
-	sounds = sound.stone
 })
 
 local function door_access(door)
@@ -393,14 +377,6 @@ minetest.register_tool("xdecor:hammer", {
 	wield_image = "xdecor_hammer.png"
 })
 
-xdecor.register("hard_clay", {
-	drawtype = "normal",
-	description = "Hard Clay",
-	tiles = {"xdecor_hard_clay.png"},
-	groups = {cracky=2},
-	sounds = sound.stone
-})
-
 xdecor.register("ivy", {
 	description = "Ivy",
 	drawtype = "signlike",
@@ -507,14 +483,6 @@ xdecor.register("metal_cabinet", {
 	}
 })
 
-xdecor.register("moonbrick", {
-	drawtype = "normal",
-	description = "Moonbrick",
-	tiles = {"xdecor_moonbrick.png"},
-	groups = {cracky=2},
-	sounds = sound.stone
-})
-
 xdecor.register("multishelf", {
 	description = "Multi Shelf",
 	inventory = {size=24},
@@ -551,14 +519,6 @@ xdecor.register("stereo", {
 	}
 })
 
-xdecor.register("stone_rune", {
-	description = "Stone Rune",
-	tiles = {"xdecor_stone_rune.png"},
-	drawtype = "normal",
-	groups = {cracky=2, stone=1},
-	sounds = sound.stone
-})
-
 xdecor.register("stonepath", {
 	description = "Garden Stone Path",
 	tiles = {"default_stone.png"},
@@ -581,13 +541,19 @@ xdecor.register("stonepath", {
 	selection_box = xdecor.nodebox.slab_y(0.05)
 })
 
-xdecor.register("stone_tile", {
-	description = "Stone Tile",
-	tiles = {"xdecor_stone_tile.png"},
+local stonish = {"desertstone_tile", "stone_tile", "stone_rune",
+		"coalstone_tile", "moonbrick", "hard_clay"}
+
+for _, t in pairs(stonish) do
+xdecor.register(t, {
 	drawtype = "normal",
-	groups = {cracky=2, stone=1},
+	description = string.sub(t:gsub("%l", string.upper, 1), 1, -6)
+			.." "..t:sub(-4):gsub("%l", string.upper, 1),
+	tiles = {"xdecor_"..t..".png"},
+	groups = {cracky=2},
 	sounds = sound.stone
 })
+end
 
 xdecor.register("table", {
 	description = "Table",
