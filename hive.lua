@@ -50,12 +50,15 @@ minetest.register_abm({
 	action = function(pos, _, _, _)
 		local meta = minetest.get_meta(pos)
 		local inv = meta:get_inventory()
+		local honeystack = inv:get_stack("honey", 1)
+		local honey = honeystack:get_count()
 
 		local radius = 8
 		local minp = vector.add(pos, -radius)
 		local maxp = vector.add(pos, radius)
 		local flowers = minetest.find_nodes_in_area(minp, maxp, "group:flower")
 
-		if #flowers >= 4 then inv:add_item("honey", "xdecor:honey") end
+		if #flowers >= 4 and honey < 16 then
+			inv:add_item("honey", "xdecor:honey") end
 	end
 })
