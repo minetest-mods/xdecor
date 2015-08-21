@@ -23,20 +23,6 @@ local directions = {
 	{x = -1, y = 0, z = 0}, {x = 0, y = 0, z = -1}
 }
 
--- Source: Mesecons (util.lua).
--- Creates a deep copy of the table.
-local function clone_table(table) 
-	if type(table) ~= "table" then return table end -- No need to copy.
-	local newtable = {}
-
-	for idx, item in pairs(table) do
-		if type(item) == "table" then newtable[idx] = clone_table(item)
-		else newtable[idx] = item end
-	end
-
-	return newtable
-end
-
 function xwall.update_one_node(pos, name, digged)
 	if not pos or not name or not minetest.registered_nodes[name] then return end
 	local candidates = {0, 0, 0, 0}
@@ -98,7 +84,7 @@ function xwall.register(name, def, node_box_data)
 			def.groups = {xwall=1, cracky=3}
 		else def.groups.xwall = 1 end
 
-		local newdef = clone_table(def)
+		local newdef = table.copy(def)
 		if k == "ln" then
 			newdef.on_construct = function(pos)
 				return xwall.update(pos, name.."_ln", true, nil)
