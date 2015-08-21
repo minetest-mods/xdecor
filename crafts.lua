@@ -112,6 +112,14 @@ minetest.register_craft({
 		{"farming:cotton", "", "farming:cotton"}
 	}
 })
+
+minetest.register_craft({
+	output = "xdecor:desertstone_tile",
+	recipe = {
+		{"default:desert_cobble", "default:desert_cobble"},
+		{"default:desert_cobble", "default:desert_cobble"}
+	}
+})
 	
 minetest.register_craft({
 	output = "xdecor:empty_shelf",
@@ -170,6 +178,14 @@ minetest.register_craft({
 		{"default:steel_ingot", "group:stick", "default:steel_ingot"},
 		{"", "group:stick", ""},
 		{"", "group:stick", ""}
+	}
+})
+
+minetest.register_craft({
+	output = "xdecor:hard_clay",
+	recipe = {
+		{"default:clay", "default:clay"},
+		{"default:clay", "default:clay"}
 	}
 })
 

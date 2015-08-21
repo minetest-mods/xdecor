@@ -263,6 +263,14 @@ xdecor.register("cushion", {
 	node_box = xdecor.nodebox.slab_y(-0.5, 0.5)
 })
 
+xdecor.register("desertstone_tile", {
+	drawtype = "normal",
+	description = "Desert Stone Tile",
+	tiles = {"xdecor_desertstone_tile.png"},
+	groups = {cracky=3},
+	sounds = sound.stone
+})
+
 local function door_access(door)
 	if door:find("prison") then return true end
 	return false
@@ -382,6 +390,14 @@ minetest.register_tool("xdecor:flint_steel", {
 minetest.register_tool("xdecor:hammer", {
 	description = "Hammer",
 	inventory_image = "xdecor_hammer.png"
+})
+
+xdecor.register("hard_clay", {
+	drawtype = "normal",
+	description = "Hard Clay",
+	tiles = {"xdecor_hard_clay.png"},
+	groups = {cracky=2},
+	sounds = sound.stone
 })
 
 xdecor.register("ivy", {
