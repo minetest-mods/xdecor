@@ -217,7 +217,7 @@ local colors = {"red"} -- Add more curtains colors simply here.
 
 for _, c in pairs(colors) do
 	xdecor.register("curtain_"..c, {
-		description = "Curtain ("..c..")",
+		description = c:gsub("%l", string.upper, 1).." Curtain",
 		use_texture_alpha = true,
 		walkable = false,
 		tiles = {"xdecor_curtain.png^[colorize:"..c..":130"},
@@ -267,7 +267,7 @@ xdecor.register("desertstone_tile", {
 	drawtype = "normal",
 	description = "Desert Stone Tile",
 	tiles = {"xdecor_desertstone_tile.png"},
-	groups = {cracky=3},
+	groups = {cracky=3, stone=1},
 	sounds = sound.stone
 })
 
@@ -389,7 +389,8 @@ minetest.register_tool("xdecor:flint_steel", {
 
 minetest.register_tool("xdecor:hammer", {
 	description = "Hammer",
-	inventory_image = "xdecor_hammer.png"
+	inventory_image = "xdecor_hammer.png",
+	wield_image = "xdecor_hammer.png"
 })
 
 xdecor.register("hard_clay", {

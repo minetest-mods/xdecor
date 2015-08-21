@@ -80,7 +80,7 @@ local drop_item = function(pos, node)
 end
 
 xdecor.register("frame", {
-	description = "Item frame",
+	description = "Item Frame",
 	groups = {choppy=3, snappy=2},
 	sounds = default.node_sound_wood_defaults(),
 	on_rotate = screwdriver.disallow,

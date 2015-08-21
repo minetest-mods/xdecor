@@ -46,7 +46,7 @@ xdecor.register("hive", {
 
 minetest.register_abm({
 	nodenames = {"xdecor:hive"},
-	interval = 10, chance = 4,
+	interval = 10, chance = 5,
 	action = function(pos, _, _, _)
 		local meta = minetest.get_meta(pos)
 		local inv = meta:get_inventory()
