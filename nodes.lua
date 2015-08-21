@@ -444,9 +444,10 @@ for _, f in pairs(flowerstype) do
 	})
 
 	minetest.register_craft({
-		output = "xdecor:potted_"..f.." 2",
+		output = "xdecor:potted_"..f,
 		recipe = {
-			{"flowers:"..f, "xdecor:plant_pot"}
+		{"default:clay_brick", "flowers:"..f, "default:clay_brick"},
+		{"", "default:clay_brick", ""}
 		}
 	})
 end

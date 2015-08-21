@@ -57,7 +57,7 @@ minetest.register_craft({
 minetest.register_craft({
 	output = "xdecor:cauldron",
 	recipe = {
-		{"default:iron_lump", "", "default:iron_lump"},
+		{"default:iron_lump", "bucket:bucket_water", "default:iron_lump"},
 		{"default:iron_lump", "bucket:bucket_water", "default:iron_lump"},
 		{"default:iron_lump", "default:iron_lump", "default:iron_lump"}
 	}
@@ -292,9 +292,9 @@ minetest.register_craft({
 minetest.register_craft({
 	output = "xdecor:plant_pot",
 	recipe = {
-		{"default:clay_lump", "", "default:clay_lump"},
-		{"default:clay_lump", "default:dirt", "default:clay_lump"},
-		{"default:clay_lump", "default:clay_lump", "default:clay_lump"}
+		{"default:clay_brick", "default:dirt", "default:clay_brick"},
+		{"default:clay_brick", "default:dirt", "default:clay_brick"},
+		{"default:clay_brick", "default:clay_brick", "default:clay_brick"}
 	}
 })
 
