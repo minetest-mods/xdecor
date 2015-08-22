@@ -9,4 +9,4 @@
 ##### Special thanks to Gambit for the textures from PixelBox #####
 
 ![Preview](http://i.imgur.com/q892y2g.png)
-![Preview2](http://i.imgur.com/4G5gIZs.png)
+![Preview2](http://i.imgur.com/w9jIRrg.png)
