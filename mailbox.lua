@@ -1,4 +1,6 @@
 local mailbox = {}
+local concat = table.concat
+local xbg = default.gui_bg..default.gui_bg_img..default.gui_slots
 
 xdecor.register("mailbox", {
 	description = "Mailbox",
@@ -25,9 +27,8 @@ xdecor.register("mailbox", {
 		local owner = meta:get_string("owner")
 
 		if owner == player then
-			minetest.show_formspec(player, "default:chest_locked",
-				mailbox.get_formspec(pos))
-		else minetest.show_formspec(player, "default:chest_locked",
+			minetest.show_formspec(player, "", mailbox.get_formspec(pos))
+		else minetest.show_formspec(player, "",
 				mailbox.get_insert_formspec(pos, owner))
 		end
 	end,
@@ -59,24 +60,22 @@ xdecor.register("mailbox", {
 	end
 })
 
-local xbg = default.gui_bg..default.gui_bg_img..default.gui_slots
-
 function mailbox.get_formspec(pos)
 	local spos = pos.x..","..pos.y..","..pos.z
-	local formspec =
-		"size[8,9]"..xbg..
+	local f = {"size[8,9]"..xbg..
 		"label[0,0;You received...]"..
 		"list[nodemeta:"..spos..";main;0,0.75;8,4;]"..
-		"list[current_player;main;0,5.25;8,4;]"
+		"list[current_player;main;0,5.25;8,4;]"}
+	local formspec = concat(f)
 	return formspec
 end
 
 function mailbox.get_insert_formspec(pos, owner)
 	local spos = pos.x..","..pos.y..","..pos.z
-	local formspec =
-		"size[8,5]"..xbg..
+	local f = {"size[8,5]"..xbg..
 		"label[0.5,0;Send your goods\nto "..owner.." :]"..
 		"list[nodemeta:"..spos..";drop;3.5,0;1,1;]"..
-		"list[current_player;main;0,1.25;8,4;]"
+		"list[current_player;main;0,1.25;8,4;]"}
+	local formspec = concat(f)
 	return formspec
 end

@@ -4,8 +4,8 @@ local concat = table.concat
 
 local material = {
 	"cloud", -- Only used for the formspec display.
-	"wood", "junglewood", "pinewood", "acacia_wood",
-	"tree", "jungletree", "pinetree", "acacia_tree",
+	"wood", "junglewood", "pine_wood", "acacia_wood",
+	"tree", "jungletree", "pine_tree", "acacia_tree",
 	"cobble", "mossycobble", "desert_cobble",
 	"stone", "sandstone", "desert_stone", "obsidian",
 	"stonebrick", "sandstonebrick", "desert_stonebrick", "obsidianbrick",
@@ -98,6 +98,7 @@ function worktable.construct(pos)
 end
 
 function worktable.fields(pos, _, fields, sender)
+	local player = sender:get_player_name()
 	local meta = minetest.get_meta(pos)
 	local inv = meta:get_inventory()
 	local inputstack = inv:get_stack("input", 1)
@@ -120,13 +121,11 @@ function worktable.fields(pos, _, fields, sender)
 			inv:set_stack("input", 1, inputstack)
 		end
 	end
-	if fields["storage"] then
-		local player = sender:get_player_name()
-		minetest.show_formspec(player, "xdecor:worktable", worktable.storage(pos))
+	if fields.storage then
+		minetest.show_formspec(player, "", worktable.storage(pos))
 	end
-	if fields["craft"] then
-		local player = sender:get_player_name()
-		minetest.show_formspec(player, "xdecor:worktable", worktable.crafting(pos))
+	if fields.craft then
+		minetest.show_formspec(player, "", worktable.crafting(pos))
 	end
 end
 

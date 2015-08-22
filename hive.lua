@@ -3,14 +3,18 @@ local hive = {}
 function hive.construct(pos)
 	local meta = minetest.get_meta(pos)
 	local xbg = default.gui_bg..default.gui_bg_img..default.gui_slots
+	local concat = table.concat
 
-	meta:set_string("formspec", "size[8,5;]"..xbg..
+	local f = {"size[8,5;]"..xbg..
 		"label[1.35,0;Bees are making honey\nwith pollen around...]"..
 		"image[0.2,-0.1;1,1;flowers_dandelion_white.png]"..
 		"image[7,0.1;1,1;flowers_viola.png]"..
 		"image[6,0;1,1;xdecor_bee.png]"..
 		"list[current_name;honey;5,0;1,1;]"..
-		"list[current_player;main;0,1.35;8,4;]")
+		"list[current_player;main;0,1.35;8,4;]"}
+	local formspec = concat(f)
+
+	meta:set_string("formspec", formspec)
 	meta:set_string("infotext", "Artificial Hive")
 	local inv = meta:get_inventory()
 	inv:set_size("honey", 1)

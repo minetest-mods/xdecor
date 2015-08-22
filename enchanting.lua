@@ -3,13 +3,18 @@ local enchanting = {}
 function enchanting.construct(pos)
 	local meta = minetest.get_meta(pos)
 	local xbg = default.gui_bg..default.gui_bg_img..default.gui_slots
-	meta:set_string("formspec", "size[8,7;]"..xbg..
+	local concat = table.concat
+
+	local f = {"size[8,7;]"..xbg..
 		"label[0.85,-0.15;Enchant]".."image[0.6,0.2;2,2;xdecor_enchbook.png]"..
 		"list[current_name;tool;0.5,2;1,1;]"..
 		"list[current_name;mese;1.5,2;1,1;]".."image[1.5,2;1,1;mese_layout.png]"..
 		"image_button[2.75,0;5,1.5;ench_bg.png;durable;Durable]"..
 		"image_button[2.75,1.5;5,1.5;ench_bg.png;fast;Fast]"..
-		"list[current_player;main;0,3.3;8,4;]")
+		"list[current_player;main;0,3.3;8,4;]"}
+	local formspec = concat(f)
+
+	meta:set_string("formspec", formspec)
 	meta:set_string("infotext", "Enchantment Table")
 
 	local inv = meta:get_inventory()
