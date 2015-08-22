@@ -219,7 +219,7 @@ for _, c in pairs(colors) do
 		paramtype2 = "wallmounted",
 		groups = {dig_immediate=3, flammable=3},
 		selection_box = {type="wallmounted"},
-		on_rightclick = function(pos, node, clicker, itemstack)
+		on_rightclick = function(pos, node, _, _)
 			minetest.set_node(pos, {name="xdecor:curtain_open_"..c, param2=node.param2})
 		end
 	})
@@ -233,7 +233,7 @@ for _, c in pairs(colors) do
 		groups = {dig_immediate=3, flammable=3, not_in_creative_inventory=1},
 		selection_box = {type="wallmounted"},
 		drop = "xdecor:curtain_"..c,
-		on_rightclick = function(pos, node, clicker, itemstack)
+		on_rightclick = function(pos, node, _, _)
 			minetest.set_node(pos, {name="xdecor:curtain_"..c, param2=node.param2})
 		end
 	})
@@ -374,7 +374,8 @@ minetest.register_tool("xdecor:flint_steel", {
 minetest.register_tool("xdecor:hammer", {
 	description = "Hammer",
 	inventory_image = "xdecor_hammer.png",
-	wield_image = "xdecor_hammer.png"
+	wield_image = "xdecor_hammer.png",
+	on_use = function(_,_,_) do return end end
 })
 
 xdecor.register("ivy", {
