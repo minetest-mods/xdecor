@@ -476,7 +476,7 @@ xdecor.register("plant_pot", {
 xdecor.register("metal_cabinet", {
 	description = "Metal Cabinet",
 	inventory = {size=24},
-	groups = {cracky=2},
+	groups = {snappy=3},
 	infotext = "Metal Cabinet",
 	tiles = {
 		"xdecor_metal_cabinet_sides.png", "xdecor_metal_cabinet_sides.png",
@@ -503,7 +503,7 @@ xpanes.register_pane("rust_bar", {
 			"xpanes_space.png"},
 	inventory_image = "xdecor_rust_bars.png",
 	wield_image = "xdecor_rust_bars.png",
-	groups = {snappy=2, pane=1},
+	groups = {snappy=3, pane=1},
 	recipe = {
 		{"", "default:dirt", ""},
 		{"default:steel_ingot", "default:steel_ingot", "default:steel_ingot"},
@@ -513,7 +513,7 @@ xpanes.register_pane("rust_bar", {
 
 xdecor.register("stereo", {
 	description = "Stereo",
-	groups = {snappy=2},
+	groups = {snappy=3},
 	tiles = {
 		"xdecor_stereo_top.png", "xdecor_stereo_bottom.png",
 		"xdecor_stereo_left.png^[transformFX", "xdecor_stereo_left.png",
@@ -625,7 +625,7 @@ end
 xdecor.register("tv", {
 	description = "Television",
 	light_source = 11,
-	groups = {snappy=2},
+	groups = {snappy=3},
 	tiles = {
 		"xdecor_television_left.png^[transformR270",
 		"xdecor_television_left.png^[transformR90",
