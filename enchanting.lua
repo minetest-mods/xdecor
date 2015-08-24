@@ -90,50 +90,46 @@ xdecor.register("enchantment_table", {
 	allow_metadata_inventory_move = function(...) return 0 end
 })
 
-local function capitalize(str)
-	return str:gsub("^%l", string.upper)
-end
+local function capitalize(str) return str:gsub("^%l", string.upper) end
 
- -- Higher number = longer use.
+ -- Higher number = stronger enchant.
 local use_factor = 1.2
--- Higher number = faster dig.
 local times_subtractor = 0.1
 
 function enchanting.register_enchtools()
 	local materials = {"steel", "bronze", "mese", "diamond"}
 	local tools = { {"axe", "choppy"}, {"pick", "cracky"}, {"shovel", "crumbly"} }
-	local chants = { "durable", "fast" }
+	local chants = {"durable", "fast"}
+
 	for j = 1, #materials do
+	for t = 1, #tools do
+	for i = 1, #chants do
+		local chant = chants[i]
 		local material = materials[j]
-		for t = 1, #tools do
-			local tool_name = tools[t][1]
-			local original_tool = minetest.registered_tools["default:"..tool_name.."_"..material]
-			local original_groupcaps = original_tool.tool_capabilities.groupcaps
-			local main_groupcap = tools[t][2]
+		local tool_name = tools[t][1]
+		local main_groupcap = tools[t][2]
+		local original_tool = minetest.registered_tools["default:"..tool_name.."_"..material]
+		local original_groupcaps = original_tool.tool_capabilities.groupcaps
+		local groupcaps = table.copy(original_groupcaps)
 
-			for i = 1, #chants do
-				local chant = chants[i]
-
-				local groupcaps = table.copy(original_groupcaps)
-				if chant == "durable" then
-					groupcaps[main_groupcap].uses = original_groupcaps[main_groupcap].uses * use_factor
-				elseif chant == "fast" then
-					for i = 1, 3 do
-						groupcaps[main_groupcap].times[i] = original_groupcaps[main_groupcap].times[i] - times_subtractor
-					end
-				end
-
-				minetest.register_tool(string.format("xdecor:enchanted_%s_%s_%s", tool_name, material, chant), {
-					description = string.format("Enchanted %s %s (%s)", capitalize(material), capitalize(tool_name), capitalize(chant)),
-					inventory_image = original_tool.inventory_image,
-					wield_image = original_tool.wield_image,
-					groups = {not_in_creative_inventory=1},
-					tool_capabilities = {groupcaps = groupcaps, damage_groups = original_tool.damage_groups}
-				})
+		if chant == "durable" then
+			groupcaps[main_groupcap].uses = original_groupcaps[main_groupcap].uses * use_factor
+		elseif chant == "fast" then
+			for i = 1, 3 do
+				groupcaps[main_groupcap].times[i] = original_groupcaps[main_groupcap].times[i] - times_subtractor
 			end
 		end
+
+		minetest.register_tool(string.format("xdecor:enchanted_%s_%s_%s", tool_name, material, chant), {
+			description = string.format("Enchanted %s %s (%s)", capitalize(material), capitalize(tool_name), capitalize(chant)),
+			inventory_image = original_tool.inventory_image,
+			wield_image = original_tool.wield_image,
+			groups = {not_in_creative_inventory=1},
+			tool_capabilities = {groupcaps = groupcaps, damage_groups = original_tool.damage_groups}
+		})
+	end
+	end
 	end
 end
 
 enchanting.register_enchtools()
-
