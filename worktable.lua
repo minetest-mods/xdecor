@@ -141,8 +141,8 @@ local function update_form_inventory(inv, input_stack)
 	for _, form in pairs(def) do
 		local material_name = input_stack:get_name():match("%a+:(.+)")
 		local form_name = form[1]
-
 		local count = math.min(worktable.anz(form_name) * inv:get_stack("input", 1):get_count(), input_stack:get_stack_max())
+
 		form_inv_list[#form_inv_list+1] = string.format("xdecor:%s_%s %d", form_name, material_name, count)
 	end
 	inv:set_list("forms", form_inv_list)
@@ -162,9 +162,9 @@ function worktable.on_take(pos, listname, index, stack, player)
 	elseif listname == "forms" then
 		local form_name = stack:get_name():match("%a+:(%a+)_%a+")
 		local input_stack = inv:get_stack("input", 1)
+
 		input_stack:take_item(math.ceil(stack:get_count() / worktable.anz(form_name)))
 		inv:set_stack("input", 1, input_stack)
-
 		update_form_inventory(inv, input_stack)
 	end
 end
@@ -229,8 +229,7 @@ minetest.register_abm({
 	nodenames = {"xdecor:worktable"},
 	interval = 3, chance = 1,
 	action = function(pos, _, _, _)
-		local meta = minetest.get_meta(pos)
-		local inv = meta:get_inventory()
+		local inv = minetest.get_meta(pos):get_inventory()
 		local tool = inv:get_stack("tool", 1)
 		local hammer = inv:get_stack("hammer", 1)
 		local wear = tool:get_wear()

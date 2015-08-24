@@ -2,28 +2,24 @@ local hive = {}
 
 function hive.construct(pos)
 	local meta = minetest.get_meta(pos)
+	local inv = meta:get_inventory()
 	local xbg = default.gui_bg..default.gui_bg_img..default.gui_slots
-	local concat = table.concat
 
-	local f = {"size[8,5;]"..xbg..
+	local formspec = "size[8,5;]"..xbg..
 		"label[1.35,0;Bees are making honey\nwith pollen around...]"..
 		"image[0.2,-0.1;1,1;flowers_dandelion_white.png]"..
 		"image[7,0.1;1,1;flowers_viola.png]"..
 		"image[6,0;1,1;xdecor_bee.png]"..
 		"list[current_name;honey;5,0;1,1;]"..
-		"list[current_player;main;0,1.35;8,4;]"}
-	local formspec = concat(f)
+		"list[current_player;main;0,1.35;8,4;]"
 
 	meta:set_string("formspec", formspec)
 	meta:set_string("infotext", "Artificial Hive")
-	local inv = meta:get_inventory()
 	inv:set_size("honey", 1)
 end
 
 function hive.dig(pos, _)
-	local meta = minetest.get_meta(pos)
-	local inv = meta:get_inventory()
-
+	local inv = minetest.get_meta(pos):get_inventory()
 	if not inv:is_empty("honey") then return false end
 	return true
 end
@@ -52,8 +48,7 @@ minetest.register_abm({
 	nodenames = {"xdecor:hive"},
 	interval = 10, chance = 5,
 	action = function(pos, _, _, _)
-		local meta = minetest.get_meta(pos)
-		local inv = meta:get_inventory()
+		local inv = minetest.get_meta(pos):get_inventory()
 		local honeystack = inv:get_stack("honey", 1)
 		local honey = honeystack:get_count()
 
