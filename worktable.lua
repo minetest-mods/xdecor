@@ -138,13 +138,11 @@ function worktable.move(_, from_list, _, to_list, _, count, _)
 end
 
 local function update_form_inventory(inv, input_stack)
-	if inv:is_empty("input") then
-		inv:set_list("forms", {})
-		return end
+	if inv:is_empty("input") then inv:set_list("forms", {}) return end
 
 	local form_inv_list = {}
 	for _, form in pairs(def) do
-		local material_name = input_stack:get_name():match("%a+:(%a+)")
+		local material_name = input_stack:get_name():match("%a+:(.+)")
 		local form_name = form[1]
 
 		local count = math.min(worktable.anz(form_name) * inv:get_stack("input", 1):get_count(), input_stack:get_stack_max())
@@ -194,7 +192,8 @@ xdecor.register("worktable", {
 })
 
 local function description(m, w)
-	return m:gsub("^%l", string.upper).." "..w:gsub("^%l", string.upper)
+	local d = m:gsub("%W", "")
+	return d:gsub("^%l", string.upper).." "..w:gsub("^%l", string.upper)
 end
 
 local function groups(m)
@@ -241,8 +240,9 @@ minetest.register_abm({
 
 		if tool:is_empty() or hammer:is_empty() or wear == 0 then return end
 
-		tool:add_wear(-500) -- Tool's repairing factor (0-65535 -- 0 = new condition).
-		hammer:add_wear(250) -- Hammer's wearing factor (0-65535 -- 0 = new condition).
+		-- Wear : 0-65535	0 = new condition.
+		tool:add_wear(-500)
+		hammer:add_wear(250)
 
 		inv:set_stack("tool", 1, tool)
 		inv:set_stack("hammer", 1, hammer)
