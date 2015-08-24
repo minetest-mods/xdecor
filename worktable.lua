@@ -98,7 +98,7 @@ function worktable.dig(pos, _)
 
 	if not inv:is_empty("input") or not inv:is_empty("forms") or not
 			inv:is_empty("hammer") or not inv:is_empty("tool") or not
-			inv:is_empty("storage") or not inv:is_empty("craft") then
+			inv:is_empty("storage") then
 		return false
 	end
 	return true
@@ -146,7 +146,7 @@ local function update_form_inventory(inv, input_stack)
 		local form_name = form[1]
 
 		local count = math.min(worktable.anz(form_name) * inv:get_stack("input", 1):get_count(), input_stack:get_stack_max())
-		table.insert(form_inv_list, string.format("xdecor:%s_%s %d", form_name, material_name, count))
+		form_inv_list[#form_inv_list+1] = string.format("xdecor:%s_%s %d", form_name, material_name, count)
 	end
 	inv:set_list("forms", form_inv_list)
 end

@@ -104,33 +104,33 @@ function xwall.construct_node_box_data(node_box_list, center_node_box_list, node
 	res.c0, res.c1, res.c2, res.c3, res.c4 = {}, {}, {}, {}, {}
 
 	for _, v in pairs(node_box_list) do
-		table.insert(res.c1, v)
-		table.insert(res.c2, v)
-		table.insert(res.c3, v)
-		table.insert(res.c4, v)
+		res.c1[#res.c1+1] = v
+		res.c2[#res.c2+1] = v
+		res.c3[#res.c3+1] = v
+		res.c4[#res.c4+1] = v
 	end
 
 	for _, v in pairs(node_box_list) do
-		table.insert(res.c2, {v[3], v[2], v[1], v[6], v[5], v[4]})
-		table.insert(res.c3, {v[3], v[2], v[1], v[6], v[5], v[4]})
-		table.insert(res.c4, {v[3], v[2], v[1], v[6], v[5], v[4]})
+		res.c2[#res.c2+1] = {v[3], v[2], v[1], v[6], v[5], v[4]}
+		res.c3[#res.c3+1] = {v[3], v[2], v[1], v[6], v[5], v[4]}
+		res.c4[#res.c4+1] = {v[3], v[2], v[1], v[6], v[5], v[4]}
 	end
 
 	for _, v in pairs(node_box_list) do
-		table.insert(res.c3, {v[4], v[2], v[3]-0.5,  v[1], v[5], v[6]-0.5})
-		table.insert(res.c4, {v[4], v[2], v[3]-0.5,  v[1], v[5], v[6]-0.5})
+		res.c3[#res.c3+1] = {v[4], v[2], v[3]-0.5,  v[1], v[5], v[6]-0.5}
+		res.c4[#res.c4+1] = {v[4], v[2], v[3]-0.5,  v[1], v[5], v[6]-0.5}
 	end
 
 	for _, v in pairs(node_box_list) do
-		table.insert(res.c4, {v[3]-0.5, v[2], v[4], v[6]-0.5, v[5], v[1]})
+		res.c4[#res.c4+1] = {v[3]-0.5, v[2], v[4], v[6]-0.5, v[5], v[1]}
 	end
 
 	for _, v in pairs(center_node_box_list) do
-		table.insert(res.c0, v)
-		table.insert(res.c1, v)
-		table.insert(res.c2, v)
-		table.insert(res.c3, v)
-		table.insert(res.c4, v)
+		res.c0[#res.c0+1] = v
+		res.c1[#res.c1+1] = v
+		res.c2[#res.c2+1] = v
+		res.c3[#res.c3+1] = v
+		res.c4[#res.c4+1] = v
 	end	
 
 	if #res.c0 < 1 then res.c0 = nil end
