@@ -201,7 +201,8 @@ local function groups(m)
 end
 
 local function shady(w)
-	if w:find("stair") or w == "slab" then return false end
+	if w == "stair" or w == "slab" or w == "innerstair" or
+			w == "outerstair" then return false end
 	return true
 end
 
