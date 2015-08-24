@@ -38,10 +38,10 @@ function worktable.crafting(pos)
 end
 
 function worktable.storage(pos)
-	local meta = minetest.get_meta(pos)
+	local inv = minetest.get_meta(pos):get_inventory()
 	local f = "size[8,7]"..xbg..
 		"list[context;storage;0,0;8,2;]list[current_player;main;0,3.25;8,4;]"
-	meta:get_inventory():set_size("storage", 8*2)
+	inv:set_size("storage", 8*2)
 	return f
 end
 
@@ -73,8 +73,7 @@ end
 
 function worktable.fields(pos, _, fields, sender)
 	local player = sender:get_player_name()
-	local meta = minetest.get_meta(pos)
-	local inv = meta:get_inventory()
+	local inv = minetest.get_meta(pos):get_inventory()
 
 	if fields.storage then
 		minetest.show_formspec(player, "", worktable.storage(pos))
@@ -93,9 +92,7 @@ function worktable.anz(n)
 end
 
 function worktable.dig(pos, _)
-	local meta = minetest.get_meta(pos)
-	local inv = meta:get_inventory()
-
+	local inv = minetest.get_meta(pos):get_inventory()
 	if not inv:is_empty("input") or not inv:is_empty("forms") or not
 			inv:is_empty("hammer") or not inv:is_empty("tool") or not
 			inv:is_empty("storage") then
