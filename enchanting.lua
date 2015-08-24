@@ -87,7 +87,7 @@ xdecor.register("enchantment_table", {
 	on_construct = enchanting.construct,
 	on_receive_fields = enchanting.fields,
 	allow_metadata_inventory_put = enchanting.put,
-	allow_metadata_inventory_move = function(_,_,_,_,_,_,_) return 0 end
+	allow_metadata_inventory_move = function(...) return 0 end
 })
 
 function enchanting.register_enchtools(init, m, def)

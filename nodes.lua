@@ -375,7 +375,7 @@ minetest.register_tool("xdecor:hammer", {
 	description = "Hammer",
 	inventory_image = "xdecor_hammer.png",
 	wield_image = "xdecor_hammer.png",
-	on_use = function(_,_,_) do return end end
+	on_use = function(...) do return end end
 })
 
 xdecor.register("ivy", {
@@ -485,6 +485,14 @@ xdecor.register("metal_cabinet", {
 	}
 })
 
+xdecor.register("moonbrick", {
+	drawtype = "normal",
+	description = "Moon Brick",
+	tiles = {"xdecor_moonbrick.png"},
+	groups = {cracky=2},
+	sounds = sound.stone
+})
+
 xdecor.register("multishelf", {
 	description = "Multi Shelf",
 	inventory = {size=24},
@@ -544,7 +552,7 @@ xdecor.register("stonepath", {
 })
 
 local stonish = {"desertstone_tile", "stone_tile", "stone_rune",
-		"coalstone_tile", "moonbrick", "hard_clay"}
+		"coalstone_tile", "hard_clay"}
 
 for _, t in pairs(stonish) do
 xdecor.register(t, {
