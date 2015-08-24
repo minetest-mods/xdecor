@@ -209,7 +209,7 @@ local colors = {"red"} -- Add more curtains colors simply here.
 
 for _, c in pairs(colors) do
 	xdecor.register("curtain_"..c, {
-		description = c:gsub("%l", string.upper, 1).." Curtain",
+		description = c:gsub("^%l", string.upper).." Curtain",
 		use_texture_alpha = true,
 		walkable = false,
 		tiles = {"xdecor_curtain.png^[colorize:"..c..":130"},
@@ -271,7 +271,7 @@ local door_types = {
 
 for _, d in pairs(door_types) do
 	doors.register_door("xdecor:"..d[1].."_door", {
-		description = d[1]:gsub("%l", string.upper, 1).." Door",
+		description = d[1]:gsub("^%l", string.upper).." Door",
 		inventory_image = "xdecor_"..d[1].."_door_inv.png",
 		groups = {choppy=3, flammable=2, door=1},
 		tiles_bottom = {"xdecor_"..d[1].."_door_b.png", "xdecor_"..d[2]..".png"},
@@ -557,8 +557,8 @@ local stonish = {"desertstone_tile", "stone_tile", "stone_rune",
 for _, t in pairs(stonish) do
 xdecor.register(t, {
 	drawtype = "normal",
-	description = string.sub(t:gsub("%l", string.upper, 1), 1, -6)
-			.." "..t:sub(-4):gsub("%l", string.upper, 1),
+	description = string.sub(t:gsub("^%l", string.upper), 1, -6)
+			.." "..t:sub(-4):gsub("^%l", string.upper),
 	tiles = {"xdecor_"..t..".png"},
 	groups = {cracky=2},
 	sounds = sound.stone

@@ -194,7 +194,7 @@ xdecor.register("worktable", {
 })
 
 local function description(m, w)
-	return m:gsub("%l", string.upper, 1).." "..w:gsub("%l", string.upper, 1)
+	return m:gsub("^%l", string.upper).." "..w:gsub("^%l", string.upper)
 end
 
 local function groups(m)
