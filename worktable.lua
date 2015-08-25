@@ -83,48 +83,37 @@ function worktable.fields(pos, _, fields, sender)
 	end
 end
 
-function worktable.anz(n)
-	if n == "nanoslab" or n == "micropanel" then return 16
-	elseif n == "microslab" or n == "thinstair" then return 8
-	elseif n == "panel" or n == "cube" then return 4
-	elseif n == "slab" or n == "halfstair" or n == "doublepanel" then return 2
-	else return 1 end
-end
-
 function worktable.dig(pos, _)
 	local inv = minetest.get_meta(pos):get_inventory()
-	if not inv:is_empty("input") or not inv:is_empty("forms") or not
-			inv:is_empty("hammer") or not inv:is_empty("tool") or not
-			inv:is_empty("storage") then
+	if not inv:is_empty("input") or not inv:is_empty("hammer") or not
+			inv:is_empty("tool") or not inv:is_empty("storage") then
 		return false
 	end
 	return true
 end
 
-function worktable.put(pos, listname, _, stack, _)
-	local stackname = stack:get_name()
+function worktable.put(_, listname, _, stack, _)
+	local stn = stack:get_name()
 	local count = stack:get_count()
 	local mat = table.concat(material)
 
 	if listname == "forms" then return 0 end
 	if listname == "input" then
-		if stackname:find("default:") and mat:match(stackname:sub(9)) then
-			return count
-		else return 0 end
+		if stn:find("default:") and mat:match(stn:sub(9)) then return count end
+		return 0
 	end
 	if listname == "hammer" then
-		if not (stackname == "xdecor:hammer") then return 0 end
+		if stn ~= "xdecor:hammer" then return 0 end
 	end
 	if listname == "tool" then
-		local tdef = minetest.registered_tools[stackname]
+		local tdef = minetest.registered_tools[stn]
 		local twear = stack:get_wear()
 		if not (tdef and twear > 0) then return 0 end
 	end
-
 	return count
 end
 
-function worktable.take(pos, listname, index, stack, player)
+function worktable.take(_, listname, _, stack, _)
 	if listname == "forms" then return -1 end
 	return stack:get_count()
 end
@@ -134,38 +123,46 @@ function worktable.move(_, from_list, _, to_list, _, count, _)
 		return count else return 0 end
 end
 
-local function update_form_inventory(inv, input_stack)
+local function anz(n)
+	if n == "nanoslab" or n == "micropanel" then return 16
+	elseif n == "microslab" or n == "thinstair" then return 8
+	elseif n == "panel" or n == "cube" then return 4
+	elseif n == "slab" or n == "halfstair" or n == "doublepanel" then return 2
+	else return 1 end
+end
+
+local function update_inventory(inv, inputstack)
 	if inv:is_empty("input") then inv:set_list("forms", {}) return end
 
-	local form_inv_list = {}
-	for _, form in pairs(def) do
-		local material_name = input_stack:get_name():match("%a+:(.+)")
-		local form_name = form[1]
-		local count = math.min(worktable.anz(form_name) * inv:get_stack("input", 1):get_count(), input_stack:get_stack_max())
+	local output = {}
+	for _, n in pairs(def) do
+		local mat = inputstack:get_name():match("%a+:(.+)")
+		local input = inv:get_stack("input", 1)
+		local count = math.min(anz(n[1]) * input:get_count(), inputstack:get_stack_max())
 
-		form_inv_list[#form_inv_list+1] = string.format("xdecor:%s_%s %d", form_name, material_name, count)
+		output[#output+1] = string.format("xdecor:%s_%s %d", n[1], mat, count)
 	end
-	inv:set_list("forms", form_inv_list)
+	inv:set_list("forms", output)
 end
 
 function worktable.on_put(pos, listname, _, stack, _)
 	if listname == "input" then
 		local inv = minetest.get_meta(pos):get_inventory()
-		update_form_inventory(inv, stack)
+		update_inventory(inv, stack)
 	end
 end
 
-function worktable.on_take(pos, listname, index, stack, player)
+function worktable.on_take(pos, listname, _, stack, _)
 	local inv = minetest.get_meta(pos):get_inventory()
 	if listname == "input" then
-		update_form_inventory(inv, stack)
+		update_inventory(inv, stack)
 	elseif listname == "forms" then
-		local form_name = stack:get_name():match("%a+:(%a+)_%a+")
-		local input_stack = inv:get_stack("input", 1)
+		local nodebox = stack:get_name():match("%a+:(%a+)_%a+")
+		local inputstack = inv:get_stack("input", 1)
 
-		input_stack:take_item(math.ceil(stack:get_count() / worktable.anz(form_name)))
-		inv:set_stack("input", 1, input_stack)
-		update_form_inventory(inv, input_stack)
+		inputstack:take_item(math.ceil(stack:get_count() / anz(nodebox)))
+		inv:set_stack("input", 1, inputstack)
+		update_inventory(inv, inputstack)
 	end
 end
 
