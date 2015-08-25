@@ -206,6 +206,11 @@ local function shady(w)
 	return true
 end
 
+local function tiles(m, ndef)
+	if m:find("glass") then return {"default_"..m..".png"} end
+	return ndef.tiles
+end
+
 for n = 1, #def do
 for m = 1, #material do
 	local w, x = def[n], material[m]
@@ -217,7 +222,7 @@ for m = 1, #material do
 		description = description(x, w[1]),
 		light_source = ndef.light_source,
 		sounds = ndef.sounds,
-		tiles = ndef.tiles,
+		tiles = tiles(x, ndef),
 		groups = groups(x),
 		node_box = {type = "fixed", fixed = w[2]},
 		sunlight_propagates = shady(w[1]),
