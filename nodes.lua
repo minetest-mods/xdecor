@@ -267,7 +267,7 @@ xdecor.register("empty_shelf", {
 	description = "Empty Shelf",
 	inventory = {size=24},
 	infotext = "Empty Shelf",
-	tiles = {"default_wood.png", "xdecor_empty_shelf.png"},
+	tiles = {"default_wood.png", "default_wood.png^xdecor_empty_shelf.png"},
 	groups = {choppy=3, flammable=3},
 	sounds = default.node_sound_wood_defaults()
 })
@@ -473,7 +473,7 @@ xdecor.register("multishelf", {
 	description = "Multi Shelf",
 	inventory = {size=24},
 	infotext = "Multi Shelf",
-	tiles = {"default_wood.png", "xdecor_multishelf.png"},
+	tiles = {"default_wood.png", "default_wood.png^xdecor_multishelf.png"},
 	groups = {choppy=3, flammable=3},
 	sounds = default.node_sound_wood_defaults()
 })
