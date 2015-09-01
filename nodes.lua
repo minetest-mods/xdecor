@@ -294,17 +294,6 @@ minetest.register_on_joinplayer(function(player)
 	inv:set_size("enderchest", 8*4)
 end)
 
-xdecor.register("fence_wrought_iron", {
-	description = "Wrought Iron Fence",
-	drawtype = "fencelike",
-	groups = {cracky=2},
-	tiles = {"xdecor_wrought_iron.png"},
-	selection_box = {
-		type = "fixed", fixed = {-1/7, -1/2, -1/7, 1/7, 1/2, 1/7}
-	},
-	inventory_image = "default_fence_overlay.png^xdecor_wrought_iron.png^default_fence_overlay.png^[makealpha:255,126,126"
-})
-
 xdecor.register("fire", {
 	description = "Fancy Fire",
 	drawtype = "plantlike",
@@ -447,18 +436,6 @@ xdecor.register("plant_pot", {
 	groups = {snappy=3},
 	tiles = {"xdecor_plant_pot.png"},
 	sounds = default.node_sound_stone_defaults()
-})
-
-xdecor.register("metal_cabinet", {
-	description = "Metal Cabinet",
-	inventory = {size=24},
-	groups = {snappy=3},
-	infotext = "Metal Cabinet",
-	tiles = {
-		"xdecor_metal_cabinet_sides.png", "xdecor_metal_cabinet_sides.png",
-		"xdecor_metal_cabinet_sides.png", "xdecor_metal_cabinet_sides.png",
-		"xdecor_metal_cabinet_sides.png", "xdecor_metal_cabinet_front.png"
-	}
 })
 
 xdecor.register("moonbrick", {
