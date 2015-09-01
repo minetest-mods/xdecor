@@ -195,11 +195,10 @@ local colors = {"red"} -- Add more curtains colors simply here.
 for _, c in pairs(colors) do
 	xdecor.register("curtain_"..c, {
 		description = c:gsub("^%l", string.upper).." Curtain",
-		use_texture_alpha = true,
 		walkable = false,
-		tiles = {"xdecor_curtain.png^[colorize:"..c..":130"},
-		inventory_image = "xdecor_curtain_open.png^[colorize:"..c..":130",
-		wield_image = "xdecor_curtain.png^[colorize:"..c..":130",
+		tiles = {"wool_white.png^[colorize:"..c..":170"},
+		inventory_image = "wool_white.png^[colorize:"..c..":170^xdecor_curtain_open_overlay.png^[makealpha:255,126,126",
+		wield_image = "wool_white.png^[colorize:"..c..":170",
 		drawtype = "signlike",
 		paramtype2 = "wallmounted",
 		groups = {dig_immediate=3, flammable=3},
@@ -210,10 +209,9 @@ for _, c in pairs(colors) do
 	})
 
 	xdecor.register("curtain_open_"..c, {
-		tiles = {"xdecor_curtain_open.png^[colorize:"..c..":130"},
+		tiles = {"wool_white.png^[colorize:"..c..":170^xdecor_curtain_open_overlay.png^[makealpha:255,126,126"},
 		drawtype = "signlike",
 		paramtype2 = "wallmounted",
-		use_texture_alpha = true,
 		walkable = false,
 		groups = {dig_immediate=3, flammable=3, not_in_creative_inventory=1},
 		selection_box = {type="wallmounted"},
