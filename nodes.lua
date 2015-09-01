@@ -113,8 +113,7 @@ if minetest.get_modpath("bucket") then
 			local inv = user:get_inventory()
 			local player = user:get_player_name()
 
-			if pointed_thing.type == "node" and
-					minetest.get_node(pointed_thing.under).name == "xdecor:cauldron" then
+			if minetest.get_node(pointed_thing.under).name == "xdecor:cauldron" then
 				if inv:room_for_item("main", "bucket:bucket_water 1") then
 					itemstack:take_item()
 					inv:add_item("main", "bucket:bucket_water 1")
@@ -532,37 +531,6 @@ xdecor.register("tatami", {
 		type = "fixed", fixed = {{-0.5, -0.5, -0.5, 0.5, -0.4375, 0.5}}
 	}
 })
-
-xdecor.register("trash_can", {
-	description = "Trash Can",
-	tiles = {"xdecor_wood.png"},
-   	groups = {choppy=3, flammable=3},
-   	sounds = default.node_sound_wood_defaults(),
-   	node_box = {
-		type = "fixed",
-		fixed = {{-0.3125, -0.5, 0.3125, 0.3125, 0.5, 0.375},
-			{0.3125, -0.5, -0.375, 0.375, 0.5, 0.375},
-			{-0.3125, -0.5, -0.375, 0.3125, 0.5, -0.3125},
-			{-0.375, -0.5, -0.375, -0.3125, 0.5, 0.375},
-			{-0.3125, -0.5, -0.3125, 0.3125, -0.4375, 0.3125}}
-	},
-	collision_box = {
-		type = "fixed", fixed = {{-0.375, -0.5, -0.375, 0.375, 0.19, 0.375}}
-	},
-	on_construct = function(pos)
-		local meta = minetest.get_meta(pos)
-		meta:set_string("infotext", "Trash Can - throw your waste here.")
-	end
-})
-
-local old_on_step = minetest.registered_entities["__builtin:item"].on_step
-minetest.registered_entities["__builtin:item"].on_step = function(self, dtime)
-	if minetest.get_node(self.object:getpos()).name == "xdecor:trash_can" then
-		self.object:remove()
-		return
-	end
-	old_on_step(self, dtime)
-end
 
 xdecor.register("tv", {
 	description = "Television",

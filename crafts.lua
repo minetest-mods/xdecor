@@ -81,7 +81,7 @@ minetest.register_craft({
 })
 
 minetest.register_craft({
-	output = "xdecor:coalstone_tile 8",
+	output = "xdecor:coalstone_tile 4",
 	recipe = {
 		{"default:coalblock", "default:stone"},
 		{"default:stone", "default:coalblock"}
@@ -168,7 +168,6 @@ minetest.register_craft({
 	output = "xdecor:hammer",
 	recipe = {
 		{"default:steel_ingot", "group:stick", "default:steel_ingot"},
-		{"", "group:stick", ""},
 		{"", "group:stick", ""}
 	}
 })
@@ -198,7 +197,7 @@ minetest.register_craftitem("xdecor:honey", {
 })
 
 minetest.register_craft({
-	output = "xdecor:ivy 2",
+	output = "xdecor:ivy 4",
 	recipe = {
 		{"group:leaves"},
 		{"group:leaves"}
@@ -375,15 +374,6 @@ minetest.register_craft({
 	recipe = {
 		{"farming:wheat", "farming:wheat", "farming:wheat"}
 	} 
-})
-
-minetest.register_craft({
-	output = "xdecor:trash_can",
-	recipe = {
-		{"group:wood", "", "group:wood"},
-		{"group:wood", "", "group:wood"},
-		{"group:wood", "group:wood", "group:wood"}
-	}
 })
 
 minetest.register_craft({
