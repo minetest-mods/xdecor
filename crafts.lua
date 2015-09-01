@@ -149,14 +149,6 @@ minetest.register_craft({
 })
 
 minetest.register_craft({
-	output = "xdecor:fence_wrought_iron 2",
-	recipe = {
-		{"default:iron_lump", "default:iron_lump", "default:iron_lump"},
-		{"default:iron_lump", "default:iron_lump", "default:iron_lump"}
-	}
-})
-
-minetest.register_craft({
 	output = "xdecor:flint_steel",
 	recipe = {
 		{"default:obsidian_shard", "default:steel_ingot"}
@@ -245,15 +237,6 @@ minetest.register_craft({
 	recipe = {
 		{"default:steel_ingot", "default:steel_ingot", "default:steel_ingot"},
 		{"dye:red", "default:paper", "dye:red"},
-		{"default:steel_ingot", "default:steel_ingot", "default:steel_ingot"}
-	}
-})
-	
-minetest.register_craft({
-	output = "xdecor:metal_cabinet",
-	recipe = {
-		{"default:steel_ingot", "default:steel_ingot", "default:steel_ingot"},
-		{"default:paper", "default:paper", "default:paper"},
 		{"default:steel_ingot", "default:steel_ingot", "default:steel_ingot"}
 	}
 })
