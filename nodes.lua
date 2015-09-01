@@ -35,29 +35,29 @@ xdecor.register("barrel", {
 })
 
 xdecor.register("cabinet", {
-	description = "Cabinet",
+	description = "Wood Cabinet",
 	inventory = {size=24},
-	infotext = "Cabinet",
+	infotext = "Wood Cabinet",
 	groups = {choppy=3, flammable=3},
 	sounds = default.node_sound_wood_defaults(),
 	tiles = {
-		"default_wood.png", "default_wood.png",
-		"default_wood.png", "default_wood.png",
-		"default_wood.png", "xdecor_cabinet_front.png"
+		"xdecor_cabinet_sides.png", "xdecor_cabinet_sides.png",
+		"xdecor_cabinet_sides.png", "xdecor_cabinet_sides.png",
+		"xdecor_cabinet_sides.png", "xdecor_cabinet_front.png"
 	}
 })
 
 xdecor.register("cabinet_half", {
-	description = "Half Cabinet",
+	description = "Half Wood Cabinet",
 	inventory = {size=8},
-	infotext = "Half Cabinet",
+	infotext = "Half Wood Cabinet",
 	groups = {choppy=3, flammable=3},
 	sounds = default.node_sound_wood_defaults(),
 	node_box = xdecor.nodebox.slab_y(0.5, 0.5),
 	tiles = {
-		"default_wood.png", "default_wood.png",
-		"default_wood.png", "default_wood.png",
-		"default_wood.png", "xdecor_cabinet_half_front.png"
+		"xdecor_cabinet_sides.png", "xdecor_cabinet_sides.png",
+		"xdecor_half_cabinet_sides.png", "xdecor_half_cabinet_sides.png",
+		"xdecor_half_cabinet_sides.png", "xdecor_half_cabinet_front.png"
 	}
 })
 
