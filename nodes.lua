@@ -407,7 +407,7 @@ local flowers = {"dandelion_white", "dandelion_yellow", "geranium",
 
 for _, f in pairs(flowers) do
 	xdecor.register("potted_"..f, {
-		description = "Potted Flowers ("..f..")",
+		description = string.gsub("Potted Flowers ("..f..")", "_", " "),
 		walkable = false,
 		groups = {dig_immediate=3, flammable=3, plant=1, flower=1},
 		tiles = {"xdecor_"..f.."_pot.png"},
@@ -441,10 +441,12 @@ xdecor.register("painting", {
 
 xdecor.register("plant_pot", {
 	description = "Plant Pot",
+	drawtype = "plantlike",
+	inventory_image = "xdecor_plant_pot.png",
+	wield_image = "xdecor_plant_pot.png",
 	groups = {snappy=3},
-	tiles = {"xdecor_plant_pot_top.png", "xdecor_plant_pot_bottom.png",
-			"xdecor_plant_pot_sides.png"},
-	sounds = default.node_sound_stone_defaults(),
+	tiles = {"xdecor_plant_pot.png"},
+	sounds = default.node_sound_stone_defaults()
 })
 
 xdecor.register("metal_cabinet", {
