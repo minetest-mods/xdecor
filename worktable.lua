@@ -190,8 +190,8 @@ xdecor.register("worktable", {
 })
 
 local function description(node, shape)
-	local desc = string.gsub(string.gsub(node:match(":(.+)"):gsub("_%l", string.upper),
-		"_", " "), "^%l", string.upper).." "..shape:gsub("^%l", string.upper)
+	local desc = node:gsub("%w+:", " "):gsub("_", " "):gsub(" %l", string.upper):sub(2)..
+		" "..shape:gsub("^%l", string.upper)
 	return desc
 end
 
