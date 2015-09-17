@@ -1,19 +1,23 @@
 local worktable = {}
 local xbg = default.gui_bg..default.gui_bg_img..default.gui_slots
 
-local material = {
-	"wood", "junglewood", "pine_wood", "acacia_wood",
-	"tree", "jungletree", "pine_tree", "acacia_tree",
-	"cobble", "mossycobble", "desert_cobble",
-	"stone", "sandstone", "desert_stone", "obsidian",
-	"stonebrick", "sandstonebrick", "desert_stonebrick", "obsidianbrick",
-	"coalblock", "copperblock", "steelblock", "goldblock", 
-	"bronzeblock", "mese", "diamondblock",
-	"brick", "cactus", "ice", "meselamp",
-	"glass", "obsidian_glass"
+local nodes = { -- Nodes allowed to be cut.
+	"default:wood", "default:junglewood", "default:pine_wood", "default:acacia_wood",
+	"default:tree", "default:jungletree", "default:pine_tree", "default:acacia_tree",
+	"default:cobble", "default:mossycobble", "default:desert_cobble",
+	"default:stone", "default:sandstone", "default:desert_stone", "default:obsidian",
+	"default:stonebrick", "default:sandstonebrick", "default:desert_stonebrick", "default:obsidianbrick",
+	"default:coalblock", "default:copperblock", "default:steelblock", "default:goldblock", 
+	"default:bronzeblock", "default:mese", "default:diamondblock",
+	"default:brick", "default:cactus", "default:ice", "default:meselamp",
+	"default:glass", "default:obsidian_glass",
+
+	"xdecor:coalstone_tile", "xdecor:desertstone_tile", "xdecor:stone_rune", "xdecor:stone_tile",
+	"xdecor:hard_clay", "xdecor:packed_ice", "xdecor:moonbrick",
+	"xdecor:woodframed_glass", "xdecor:wood_tile"
 }
 
-local def = { -- Node name, nodebox shape.
+local def = { -- Nodebox name and definition.
 	{"nanoslab", {-.5,-.5,-.5,0,-.4375,0}},
 	{"micropanel", {-.5,-.5,-.5,.5,-.4375,0}},
 	{"microslab", {-.5,-.5,-.5,.5,-.4375,.5}},
@@ -95,11 +99,11 @@ end
 function worktable.put(_, listname, _, stack, _)
 	local stn = stack:get_name()
 	local count = stack:get_count()
-	local mat = table.concat(material)
+	local mat = table.concat(nodes)
 
 	if listname == "forms" then return 0 end
 	if listname == "input" then
-		if stn:find("default:") and mat:match(stn:sub(9)) then return count end
+		if mat:match(stn) then return count end
 		return 0
 	end
 	if listname == "hammer" then
@@ -136,11 +140,11 @@ local function update_inventory(inv, inputstack)
 
 	local output = {}
 	for _, n in pairs(def) do
-		local mat = inputstack:get_name():match("%a+:(.+)")
+		local mat = inputstack:get_name()
 		local input = inv:get_stack("input", 1)
 		local count = math.min(anz(n[1]) * input:get_count(), inputstack:get_stack_max())
 
-		output[#output+1] = string.format("xdecor:%s_%s %d", n[1], mat, count)
+		output[#output+1] = string.format("%s_%s %d", mat, n[1], count)
 	end
 	inv:set_list("forms", output)
 end
@@ -157,7 +161,7 @@ function worktable.on_take(pos, listname, _, stack, _)
 	if listname == "input" then
 		update_inventory(inv, stack)
 	elseif listname == "forms" then
-		local nodebox = stack:get_name():match("%a+:(%a+)_%a+")
+		local nodebox = stack:get_name():match("%a+:%a+_(%a+)")
 		local inputstack = inv:get_stack("input", 1)
 
 		inputstack:take_item(math.ceil(stack:get_count() / anz(nodebox)))
@@ -185,46 +189,50 @@ xdecor.register("worktable", {
 	allow_metadata_inventory_move = worktable.move
 })
 
-local function description(m, w)
-	local d = m:gsub("%W", "")
-	return d:gsub("^%l", string.upper).." "..w:gsub("^%l", string.upper)
+local function description(node, shape)
+	local desc = string.gsub(string.gsub(node:match(":(.+)"):gsub("_%l", string.upper),
+		"_", " "), "^%l", string.upper).." "..shape:gsub("^%l", string.upper)
+	return desc
 end
 
-local function groups(m)
-	if m:find("tree") or m:find("wood") or m == "cactus" then
+local function groups(node)
+	if node:find("tree") or node:find("wood") or node:find("cactus") then
 		return {choppy=3, not_in_creative_inventory=1}
 	end
 	return {cracky=3, not_in_creative_inventory=1}
 end
 
-local function shady(w)
-	if w == "stair" or w == "slab" or w == "innerstair" or
-			w == "outerstair" then return false end
+local function shady(shape)
+	if shape == "stair" or shape == "slab" or shape == "innerstair" or
+			shape == "outerstair" then return false end
 	return true
 end
 
-local function tiles(m, ndef)
-	if m:find("glass") then return {"default_"..m..".png"} end
+local function tiles(node, ndef)
+	if node:find("glass") then return {node:gsub(":", "_")..".png"} end
 	return ndef.tiles
 end
 
-for n = 1, #def do
-for m = 1, #material do
-	local w, x = def[n], material[m]
-	local nodename = "default:"..x
-	local ndef = minetest.registered_nodes[nodename]
-	if not ndef then break end
+for _, d in pairs(def) do
+for _, n in pairs(nodes) do
+	local ndef = minetest.registered_nodes[n]
+	if ndef then
+		minetest.register_node(":"..n.."_"..d[1], {
+			description = description(n, d[1]),
+			paramtype = "light",
+			paramtype2 = "facedir",
+			drawtype = "nodebox",
+			light_source = ndef.light_source,
+			sounds = ndef.sounds,
+			tiles = tiles(n, ndef),
+			groups = groups(n),
+			node_box = {type = "fixed", fixed = d[2]},
+			sunlight_propagates = shady(d[1]),
+			on_place = minetest.rotate_node
+		})
+	end
 
-	xdecor.register(w[1].."_"..x, {
-		description = description(x, w[1]),
-		light_source = ndef.light_source,
-		sounds = ndef.sounds,
-		tiles = tiles(x, ndef),
-		groups = groups(x),
-		node_box = {type = "fixed", fixed = w[2]},
-		sunlight_propagates = shady(w[1]),
-		on_place = minetest.rotate_node
-	})
+	minetest.register_alias("xdecor:"..d[1].."_"..n:match(":(.+)"), n.."_"..d[1])
 end
 end
 
@@ -239,9 +247,9 @@ minetest.register_abm({
 
 		if tool:is_empty() or hammer:is_empty() or wear == 0 then return end
 
-		-- Wear : 0-65535	0 = new condition.
+		-- Wear : 0-65535 // 0 = new condition.
 		tool:add_wear(-500)
-		hammer:add_wear(250)
+		hammer:add_wear(300)
 
 		inv:set_stack("tool", 1, tool)
 		inv:set_stack("hammer", 1, hammer)

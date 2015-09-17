@@ -549,7 +549,7 @@ xdecor.register("tv", {
 xdecor.register("woodframed_glass", {
 	description = "Wood Framed Glass",
 	drawtype = "glasslike_framed",
-	tiles = {"xdecor_framed_glass.png", "xdecor_framed_glass_detail.png"},
+	tiles = {"xdecor_woodframed_glass.png", "xdecor_woodframed_glass_detail.png"},
 	groups = {cracky=3},
 	sounds = default.node_sound_glass_defaults()
 })
