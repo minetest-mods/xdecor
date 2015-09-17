@@ -111,14 +111,12 @@ if minetest.get_modpath("bucket") then
 	minetest.override_item("bucket:bucket_empty", {
 		on_use = function(itemstack, user, pointed_thing)
 			local inv = user:get_inventory()
-			local player = user:get_player_name()
-
-			if minetest.get_node(pointed_thing.under).name == "xdecor:cauldron" then
+			if pointed_thing.type == "node" and minetest.get_node(pointed_thing.under).name == "xdecor:cauldron" then
 				if inv:room_for_item("main", "bucket:bucket_water 1") then
 					itemstack:take_item()
 					inv:add_item("main", "bucket:bucket_water 1")
 				else
-					minetest.chat_send_player(player, "No enough room in your inventory.")
+					minetest.chat_send_player(user:get_player_name(), "No room in your inventory to add a filled bucket!")
 				end
 				return itemstack
 			else if original_bucket_on_use then
