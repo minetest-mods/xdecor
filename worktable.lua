@@ -17,19 +17,19 @@ local nodes = { -- Nodes allowed to be cut.
 	"xdecor:woodframed_glass", "xdecor:wood_tile"
 }
 
-local def = { -- Nodebox name and definition.
-	{"nanoslab", {-.5,-.5,-.5,0,-.4375,0}},
-	{"micropanel", {-.5,-.5,-.5,.5,-.4375,0}},
-	{"microslab", {-.5,-.5,-.5,.5,-.4375,.5}},
-	{"thinstair", {{-.5,-.0625,-.5,.5,0,0},{-.5,.4375,0,.5,.5,.5}}},
-	{"cube", {-.5,-.5,0,0,0,.5}},
-	{"panel", {-.5,-.5,-.5,.5,0,0}},
-	{"slab", {-.5,-.5,-.5,.5,0,.5}},
-	{"doublepanel", {{-.5,-.5,-.5,.5,0,0},{-.5,0,0,.5,.5,.5}}},
-	{"halfstair", {{-.5,-.5,-.5,0,0,.5},{-.5,0,0,0,.5,.5}}},
-	{"outerstair", {{-.5,-.5,-.5,.5,0,.5},{-.5,0,0,0,.5,.5}}},
-	{"stair", {{-.5,-.5,-.5,.5,0,.5},{-.5,0,0,.5,.5,.5}}},
-	{"innerstair", {{-.5,-.5,-.5,.5,0,.5},{-.5,0,0,.5,.5,.5},{-.5,0,-.5,0,.5,0}}}
+local def = { -- Nodebox name, anzhal, definition.
+	{"nanoslab", 16, {-.5,-.5,-.5,0,-.4375,0}},
+	{"micropanel", 16, {-.5,-.5,-.5,.5,-.4375,0}},
+	{"microslab", 8, {-.5,-.5,-.5,.5,-.4375,.5}},
+	{"thinstair", 8, {{-.5,-.0625,-.5,.5,0,0},{-.5,.4375,0,.5,.5,.5}}},
+	{"cube", 4, {-.5,-.5,0,0,0,.5}},
+	{"panel", 4, {-.5,-.5,-.5,.5,0,0}},
+	{"slab", 2, {-.5,-.5,-.5,.5,0,.5}},
+	{"doublepanel", 2, {{-.5,-.5,-.5,.5,0,0},{-.5,0,0,.5,.5,.5}}},
+	{"halfstair", 2, {{-.5,-.5,-.5,0,0,.5},{-.5,0,0,0,.5,.5}}},
+	{"outerstair", 1, {{-.5,-.5,-.5,.5,0,.5},{-.5,0,0,0,.5,.5}}},
+	{"stair", 1, {{-.5,-.5,-.5,.5,0,.5},{-.5,0,0,.5,.5,.5}}},
+	{"innerstair", 1, {{-.5,-.5,-.5,.5,0,.5},{-.5,0,0,.5,.5,.5},{-.5,0,-.5,0,.5,0}}}
 }
 
 function worktable.crafting(pos)
@@ -127,22 +127,14 @@ function worktable.move(_, from_list, _, to_list, _, count, _)
 		return count else return 0 end
 end
 
-local function anz(n)
-	if n == "nanoslab" or n == "micropanel" then return 16
-	elseif n == "microslab" or n == "thinstair" then return 8
-	elseif n == "panel" or n == "cube" then return 4
-	elseif n == "slab" or n == "halfstair" or n == "doublepanel" then return 2
-	else return 1 end
-end
-
 local function update_inventory(inv, inputstack)
 	if inv:is_empty("input") then inv:set_list("forms", {}) return end
-
 	local output = {}
+
 	for _, n in pairs(def) do
 		local mat = inputstack:get_name()
 		local input = inv:get_stack("input", 1)
-		local count = math.min(anz(n[1]) * input:get_count(), inputstack:get_stack_max())
+		local count = math.min(n[2] * input:get_count(), inputstack:get_stack_max())
 
 		output[#output+1] = string.format("%s_%s %d", mat, n[1], count)
 	end
@@ -156,15 +148,13 @@ function worktable.on_put(pos, listname, _, stack, _)
 	end
 end
 
-function worktable.on_take(pos, listname, _, stack, _)
+function worktable.on_take(pos, listname, index, stack, _)
 	local inv = minetest.get_meta(pos):get_inventory()
 	if listname == "input" then
 		update_inventory(inv, stack)
 	elseif listname == "forms" then
-		local nodebox = stack:get_name():match("%a+:%a+_(%a+)")
 		local inputstack = inv:get_stack("input", 1)
-
-		inputstack:take_item(math.ceil(stack:get_count() / anz(nodebox)))
+		inputstack:take_item(math.ceil(stack:get_count() / def[index][2]))
 		inv:set_stack("input", 1, inputstack)
 		update_inventory(inv, inputstack)
 	end
@@ -226,12 +216,11 @@ for _, n in pairs(nodes) do
 			sounds = ndef.sounds,
 			tiles = tiles(n, ndef),
 			groups = groups(n),
-			node_box = {type = "fixed", fixed = d[2]},
+			node_box = {type = "fixed", fixed = d[3]},
 			sunlight_propagates = shady(d[1]),
 			on_place = minetest.rotate_node
 		})
 	end
-
 	minetest.register_alias("xdecor:"..d[1].."_"..n:match(":(.+)"), n.."_"..d[1])
 end
 end
@@ -247,7 +236,7 @@ minetest.register_abm({
 
 		if tool:is_empty() or hammer:is_empty() or wear == 0 then return end
 
-		-- Wear : 0-65535 // 0 = new condition.
+		-- Wear : 0-65535 | 0 = new condition.
 		tool:add_wear(-500)
 		hammer:add_wear(300)
 
