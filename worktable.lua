@@ -186,13 +186,6 @@ local function description(node, shape)
 	return desc
 end
 
-local function groups(node)
-	if node:find("tree") or node:find("wood") or node:find("cactus") then
-		return {choppy=3, not_in_creative_inventory=1}
-	end
-	return {cracky=3, not_in_creative_inventory=1}
-end
-
 local function shady(shape)
 	if shape == "stair" or shape == "slab" or shape == "innerstair" or
 		shape == "outerstair" then return false end
@@ -208,6 +201,15 @@ for _, d in pairs(def) do
 for _, n in pairs(nodes) do
 	local ndef = minetest.registered_nodes[n]
 	if ndef then
+		local groups = {}
+		groups.not_in_creative_inventory=1
+
+		for k, v in pairs(ndef.groups)
+			do if k ~= "wood" and k ~= "stone" then
+				groups[k] = v
+			end
+		end
+
 		minetest.register_node(":"..n.."_"..d[1], {
 			description = description(n, d[1]),
 			paramtype = "light",
@@ -216,7 +218,7 @@ for _, n in pairs(nodes) do
 			light_source = ndef.light_source,
 			sounds = ndef.sounds,
 			tiles = tiles(n, ndef),
-			groups = groups(n),
+			groups = groups,
 			node_box = {type = "fixed", fixed = d[3]},
 			sunlight_propagates = shady(d[1]),
 			on_place = minetest.rotate_node
