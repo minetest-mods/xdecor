@@ -104,8 +104,7 @@ function worktable.put(_, listname, _, stack, _)
 
 	if listname == "forms" then return 0 end
 	if listname == "input" then
-		if mat:match(stn) then return count end
-		return 0
+		if not mat:match(stn) then return 0 end
 	end
 	if listname == "hammer" then
 		if stn ~= "xdecor:hammer" then return 0 end
@@ -180,18 +179,6 @@ xdecor.register("worktable", {
 	allow_metadata_inventory_move = worktable.move
 })
 
-local function description(node, shape)
-	local desc = node:gsub("%w+:", " "):gsub("_", " "):gsub(" %l", string.upper):sub(2)..
-		" "..shape:gsub("^%l", string.upper)
-	return desc
-end
-
-local function shady(shape)
-	if shape == "stair" or shape == "slab" or shape == "innerstair" or
-		shape == "outerstair" then return false end
-	return true
-end
-
 local function tiles(node, ndef)
 	if node:find("glass") then return {node:gsub(":", "_")..".png"} end
 	return ndef.tiles
@@ -204,14 +191,12 @@ for _, n in pairs(nodes) do
 		local groups = {}
 		groups.not_in_creative_inventory=1
 
-		for k, v in pairs(ndef.groups)
-			do if k ~= "wood" and k ~= "stone" then
-				groups[k] = v
-			end
+		for k, v in pairs(ndef.groups) do
+			if k ~= "wood" and k ~= "stone" then groups[k] = v end
 		end
 
 		minetest.register_node(":"..n.."_"..d[1], {
-			description = description(n, d[1]),
+			description = ndef.description.." "..d[1]:gsub("^%l", string.upper),
 			paramtype = "light",
 			paramtype2 = "facedir",
 			drawtype = "nodebox",
@@ -220,7 +205,7 @@ for _, n in pairs(nodes) do
 			tiles = tiles(n, ndef),
 			groups = groups,
 			node_box = {type = "fixed", fixed = d[3]},
-			sunlight_propagates = shady(d[1]),
+			sunlight_propagates = true,
 			on_place = minetest.rotate_node
 		})
 	end
