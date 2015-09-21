@@ -74,6 +74,8 @@ xdecor.register("candle", {
 	tiles = {
 		{ name = "xdecor_candle_floor.png",
 			animation = {type="vertical_frames", length=1.5} },
+		{ name = "xdecor_candle_ceiling.png",
+			animation = {type="vertical_frames", length=1.5} },
 		{ name = "xdecor_candle_wall.png",
 			animation = {type="vertical_frames", length=1.5} }
 	},
