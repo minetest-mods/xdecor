@@ -14,10 +14,12 @@ local nodes = { -- Nodes allowed to be cut.
 
 	"xdecor:coalstone_tile", "xdecor:desertstone_tile", "xdecor:stone_rune", "xdecor:stone_tile",
 	"xdecor:hard_clay", "xdecor:packed_ice", "xdecor:moonbrick",
-	"xdecor:woodframed_glass", "xdecor:wood_tile"
+	"xdecor:woodframed_glass", "xdecor:wood_tile",
+
+	"oresplus:emerald_block", "oresplus:glowstone",
 }
 
-local def = { -- Nodebox name, anzhal, definition.
+local def = { -- Nodebox name, yield, definition.
 	{"nanoslab", 16, {-.5,-.5,-.5,0,-.4375,0}},
 	{"micropanel", 16, {-.5,-.5,-.5,.5,-.4375,0}},
 	{"microslab", 8, {-.5,-.5,-.5,.5,-.4375,.5}},
@@ -90,9 +92,8 @@ end
 function worktable.dig(pos, _)
 	local inv = minetest.get_meta(pos):get_inventory()
 	if not inv:is_empty("input") or not inv:is_empty("hammer") or not
-			inv:is_empty("tool") or not inv:is_empty("storage") then
-		return false
-	end
+		inv:is_empty("tool") or not inv:is_empty("storage") then
+		return false end
 	return true
 end
 
@@ -194,7 +195,7 @@ end
 
 local function shady(shape)
 	if shape == "stair" or shape == "slab" or shape == "innerstair" or
-			shape == "outerstair" then return false end
+		shape == "outerstair" then return false end
 	return true
 end
 
