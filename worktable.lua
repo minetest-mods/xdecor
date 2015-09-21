@@ -13,7 +13,7 @@ local nodes = { -- Nodes allowed to be cut.
 	"default:glass", "default:obsidian_glass",
 
 	"xdecor:coalstone_tile", "xdecor:desertstone_tile", "xdecor:stone_rune", "xdecor:stone_tile",
-	"xdecor:hard_clay", "xdecor:packed_ice", "xdecor:moonbrick",
+	"xdecor:cactusbrick", "xdecor:hard_clay", "xdecor:packed_ice", "xdecor:moonbrick",
 	"xdecor:woodframed_glass", "xdecor:wood_tile",
 
 	"oresplus:emerald_block", "oresplus:glowstone",

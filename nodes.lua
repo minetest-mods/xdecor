@@ -435,13 +435,23 @@ xdecor.register("plant_pot", {
 	sounds = default.node_sound_stone_defaults()
 })
 
-xdecor.register("moonbrick", {
-	drawtype = "normal",
-	description = "Moon Brick",
-	tiles = {"xdecor_moonbrick.png"},
-	groups = {cracky=2},
-	sounds = default.node_sound_stone_defaults(),
+
+for _, b in pairs({{"cactus", "cactus"}, {"moon", "stone"}}) do
+	xdecor.register(b[1].."brick", {
+		drawtype = "normal",
+		description = b[1]:gsub("^%l", string.upper).." Brick",
+		tiles = {"xdecor_"..b[1].."brick.png"},
+		groups = {cracky=2},
+		sounds = default.node_sound_stone_defaults(),
+	})
+	
+	minetest.register_craft({
+	output = "xdecor:"..b[1].."brick",
+	recipe = {
+		{"default:brick", "default:"..b[2]}
+	}
 })
+end
 
 xdecor.register("multishelf", {
 	description = "Multi Shelf",

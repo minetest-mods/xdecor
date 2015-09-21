@@ -241,13 +241,6 @@ minetest.register_craft({
 })
 
 minetest.register_craft({
-	output = "xdecor:moonbrick",
-	recipe = {
-		{"default:brick", "default:stone"}
-	}
-})
-
-minetest.register_craft({
 	output = "xdecor:multishelf",
 	recipe = {
 		{"group:wood", "group:wood", "group:wood"},
