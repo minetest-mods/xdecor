@@ -81,6 +81,7 @@ xdecor.register("candle", {
 	},
 	selection_box = {
 		type = "wallmounted",
+		wall_top = {-0.3, -0.4, -0.3, 0.3, 0.5, 0.3},
 		wall_bottom = {-0.25, -0.5, -0.25, 0.25, 0.1, 0.25},
 		wall_side = {-0.5, -0.35, -0.15, -0.15, 0.4, 0.15}
 	}
