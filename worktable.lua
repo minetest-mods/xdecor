@@ -96,14 +96,21 @@ function worktable.dig(pos, _)
 	return true
 end
 
+function worktable.contains(table, element)
+	for _, value in pairs(table) do
+		if value == element then return true end
+	end
+	return false
+end
+
 function worktable.put(_, listname, _, stack, _)
 	local stn = stack:get_name()
 	local count = stack:get_count()
-	local mat = table.concat(nodes)
+	local mod, node = stn:match("([%a_]+):([%a_]+)")
 
 	if listname == "forms" then return 0 end
 	if listname == "input" then
-		if not mat:match(stn) then return 0 end
+		if not worktable.contains(nodes[mod], node) then return 0 end
 	end
 	if listname == "hammer" then
 		if stn ~= "xdecor:hammer" then return 0 end
