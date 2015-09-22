@@ -1,22 +1,21 @@
 local worktable = {}
 local xbg = default.gui_bg..default.gui_bg_img..default.gui_slots
 
-local nodes = { -- Nodes allowed to be cut.
-	"default:wood", "default:junglewood", "default:pine_wood", "default:acacia_wood",
-	"default:tree", "default:jungletree", "default:pine_tree", "default:acacia_tree",
-	"default:cobble", "default:mossycobble", "default:desert_cobble",
-	"default:stone", "default:sandstone", "default:desert_stone", "default:obsidian",
-	"default:stonebrick", "default:sandstonebrick", "default:desert_stonebrick", "default:obsidianbrick",
-	"default:coalblock", "default:copperblock", "default:steelblock", "default:goldblock", 
-	"default:bronzeblock", "default:mese", "default:diamondblock",
-	"default:brick", "default:cactus", "default:ice", "default:meselamp",
-	"default:glass", "default:obsidian_glass",
+local nodes = { -- Nodes allowed to be cut. Mod name = {node name}.
+	default = {"wood", "junglewood", "pine_wood", "acacia_wood",
+		"tree", "jungletree", "pine_tree", "acacia_tree",
+		"cobble", "mossycobble", "desert_cobble",
+		"stone", "sandstone", "desert_stone", "obsidian",
+		"stonebrick", "sandstonebrick", "desert_stonebrick", "obsidianbrick",
+		"coalblock", "copperblock", "steelblock", "goldblock", 
+		"bronzeblock", "mese", "diamondblock",
+		"brick", "cactus", "ice", "meselamp", "glass", "obsidian_glass"},
 
-	"xdecor:coalstone_tile", "xdecor:desertstone_tile", "xdecor:stone_rune", "xdecor:stone_tile",
-	"xdecor:cactusbrick", "xdecor:hard_clay", "xdecor:packed_ice", "xdecor:moonbrick",
-	"xdecor:woodframed_glass", "xdecor:wood_tile",
+	xdecor = {"coalstone_tile", "desertstone_tile", "stone_rune", "stone_tile",
+		"cactusbrick", "hard_clay", "packed_ice", "moonbrick",
+		"woodframed_glass", "wood_tile"},
 
-	"oresplus:emerald_block", "oresplus:glowstone",
+	oresplus = {"emerald_block", "glowstone"},
 }
 
 local def = { -- Nodebox name, yield, definition.
@@ -180,8 +179,9 @@ xdecor.register("worktable", {
 })
 
 for _, d in pairs(def) do
-for _, n in pairs(nodes) do
-	local ndef = minetest.registered_nodes[n]
+for mod, n in pairs(nodes) do
+for _, name in pairs(n) do
+	local ndef = minetest.registered_nodes[mod..":"..name]
 	if ndef then
 		local groups = {}
 		groups.not_in_creative_inventory=1
@@ -190,7 +190,7 @@ for _, n in pairs(nodes) do
 			if k ~= "wood" and k ~= "stone" then groups[k] = v end
 		end
 
-		minetest.register_node(":"..n.."_"..d[1], {
+		minetest.register_node(":"..mod..":"..name.."_"..d[1], {
 			description = ndef.description.." "..d[1]:gsub("^%l", string.upper),
 			paramtype = "light",
 			paramtype2 = "facedir",
@@ -204,7 +204,8 @@ for _, n in pairs(nodes) do
 			on_place = minetest.rotate_node
 		})
 	end
-	minetest.register_alias("xdecor:"..d[1].."_"..n:match(":(.+)"), n.."_"..d[1])
+	minetest.register_alias("xdecor:"..d[1].."_"..name, mod..":"..name.."_"..d[1])
+end
 end
 end
 
