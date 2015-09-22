@@ -179,11 +179,6 @@ xdecor.register("worktable", {
 	allow_metadata_inventory_move = worktable.move
 })
 
-local function tiles(node, ndef)
-	if node:find("glass") then return {node:gsub(":", "_")..".png"} end
-	return ndef.tiles
-end
-
 for _, d in pairs(def) do
 for _, n in pairs(nodes) do
 	local ndef = minetest.registered_nodes[n]
@@ -202,7 +197,7 @@ for _, n in pairs(nodes) do
 			drawtype = "nodebox",
 			light_source = ndef.light_source,
 			sounds = ndef.sounds,
-			tiles = tiles(n, ndef),
+			tiles = {ndef.tiles[1]},
 			groups = groups,
 			node_box = {type = "fixed", fixed = d[3]},
 			sunlight_propagates = true,
