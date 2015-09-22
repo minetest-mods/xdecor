@@ -194,7 +194,8 @@ for _, name in pairs(n) do
 		groups.not_in_creative_inventory=1
 
 		for k, v in pairs(ndef.groups) do
-			if k ~= "wood" and k ~= "stone" then groups[k] = v end
+			if k ~= "wood" and k ~= "stone" and k ~= "level" then
+				groups[k] = v end
 		end
 
 		minetest.register_node(":"..mod..":"..name.."_"..d[1], {
