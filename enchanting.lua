@@ -3,21 +3,21 @@ local xbg = default.gui_bg..default.gui_bg_img..default.gui_slots
 
 function enchanting.tools_fs()
 	return "size[8,7;]"..xbg..
-		"label[0.85,-0.15;Enchant]image[0.6,0.2;2,2;xdecor_enchbook.png]list[current_name;tool;0.5,2;1,1;]list[current_name;mese;1.5,2;1,1;]image[1.5,2;1,1;mese_layout.png]image[3,-0.15;5.7,3.8;ench_ui.png]list[current_player;main;0,3.3;8,4;]"..
+		"label[0.85,-0.15;Enchant]image[0.6,0.2;2,2;xdecor_enchbook.png]list[current_name;tool;0.5,2;1,1;]list[current_name;mese;1.5,2;1,1;]image[1.5,2;1,1;mese_layout.png]image[3,-0.15;5.7,3.8;ench_ui.png]list[current_player;main;0,3.35;8,4;]"..
 		"image_button[3.35,0.2;4,0.8;bg_btn.png;fast;Efficiency]"..
 		"image_button[3.35,1.2;4,0.8;bg_btn.png;durable;Durability]"
 end
 
 function enchanting.swords_fs()
 	return "size[8,7;]"..xbg..
-		"label[0.85,-0.15;Enchant]image[0.6,0.2;2,2;xdecor_enchbook.png]list[current_name;tool;0.5,2;1,1;]list[current_name;mese;1.5,2;1,1;]image[1.5,2;1,1;mese_layout.png]image[3,-0.15;5.7,3.8;ench_ui.png]list[current_player;main;0,3.3;8,4;]"..
+		"label[0.85,-0.15;Enchant]image[0.6,0.2;2,2;xdecor_enchbook.png]list[current_name;tool;0.5,2;1,1;]list[current_name;mese;1.5,2;1,1;]image[1.5,2;1,1;mese_layout.png]image[3,-0.15;5.7,3.8;ench_ui.png]list[current_player;main;0,3.35;8,4;]"..
 		"image_button[3.35,2.2;4,0.8;bg_btn.png;sharp;Sharpness]"
 end
 
 function enchanting.default_fs(pos)
 	local meta = minetest.get_meta(pos)
 	local formspec = "size[8,7;]"..xbg..
-		"label[0.85,-0.15;Enchant]image[0.6,0.2;2,2;xdecor_enchbook.png]list[current_name;tool;0.5,2;1,1;]list[current_name;mese;1.5,2;1,1;]image[1.5,2;1,1;mese_layout.png]image[3,-0.15;5.7,3.8;ench_ui.png]list[current_player;main;0,3.3;8,4;]"..
+		"label[0.85,-0.15;Enchant]image[0.6,0.2;2,2;xdecor_enchbook.png]list[current_name;tool;0.5,2;1,1;]list[current_name;mese;1.5,2;1,1;]image[1.5,2;1,1;mese_layout.png]image[3,-0.15;5.7,3.8;ench_ui.png]list[current_player;main;0,3.35;8,4;]"..
 		"image_button[3.35,0.2;4,0.8;bg_btn.png;fast;Efficiency]"..
 		"image_button[3.35,1.2;4,0.8;bg_btn.png;durable;Durability]"..
 		"image_button[3.35,2.2;4,0.8;bg_btn.png;sharp;Sharpness]"
@@ -140,10 +140,10 @@ function enchanting.register_enchtools()
 		elseif c == "sharp" and k == 4 then
 			fleshy = original_damage_groups.fleshy + sharp_factor
 		end
-		
+
 		minetest.register_tool(string.format("xdecor:enchanted_%s_%s_%s", t[1], m, c), {
 			description = string.format("Enchanted %s %s (%s)", cap(m), cap(t[1]), cap(c)),
-			inventory_image = original_tool.inventory_image,
+			inventory_image = original_tool.inventory_image.."^[colorize:violet:50",
 			wield_image = original_tool.wield_image,
 			groups = {not_in_creative_inventory=1},
 			tool_capabilities = {groupcaps = groupcaps, damage_groups = fleshy}
