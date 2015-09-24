@@ -97,8 +97,10 @@ function worktable.dig(pos, _)
 end
 
 function worktable.contains(table, element)
-	for _, value in pairs(table) do
-		if value == element then return true end
+	if table then
+		for _, value in pairs(table) do
+			if value == element then return true end
+		end
 	end
 	return false
 end
