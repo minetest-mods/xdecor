@@ -1,16 +1,26 @@
 local enchanting = {}
+local xbg = default.gui_bg..default.gui_bg_img..default.gui_slots
 
-function enchanting.construct(pos)
+function enchanting.tools_fs()
+	return "size[8,7;]"..xbg..
+		"label[0.85,-0.15;Enchant]image[0.6,0.2;2,2;xdecor_enchbook.png]list[current_name;tool;0.5,2;1,1;]list[current_name;mese;1.5,2;1,1;]image[1.5,2;1,1;mese_layout.png]image[3,-0.15;5.7,3.8;ench_ui.png]list[current_player;main;0,3.3;8,4;]"..
+		"image_button[3.35,0.2;4,0.8;bg_btn.png;fast;Efficiency]"..
+		"image_button[3.35,1.2;4,0.8;bg_btn.png;durable;Durability]"
+end
+
+function enchanting.swords_fs()
+	return "size[8,7;]"..xbg..
+		"label[0.85,-0.15;Enchant]image[0.6,0.2;2,2;xdecor_enchbook.png]list[current_name;tool;0.5,2;1,1;]list[current_name;mese;1.5,2;1,1;]image[1.5,2;1,1;mese_layout.png]image[3,-0.15;5.7,3.8;ench_ui.png]list[current_player;main;0,3.3;8,4;]"..
+		"image_button[3.35,2.2;4,0.8;bg_btn.png;sharp;Sharpness]"
+end
+
+function enchanting.default_fs(pos)
 	local meta = minetest.get_meta(pos)
-	local xbg = default.gui_bg..default.gui_bg_img..default.gui_slots
-
 	local formspec = "size[8,7;]"..xbg..
-		"label[0.85,-0.15;Enchant]".."image[0.6,0.2;2,2;xdecor_enchbook.png]"..
-		"list[current_name;tool;0.5,2;1,1;]"..
-		"list[current_name;mese;1.5,2;1,1;]".."image[1.5,2;1,1;mese_layout.png]"..
-		"image_button[2.75,0;5,1.5;ench_bg.png;durable;Durable]"..
-		"image_button[2.75,1.5;5,1.5;ench_bg.png;fast;Fast]"..
-		"list[current_player;main;0,3.3;8,4;]"
+		"label[0.85,-0.15;Enchant]image[0.6,0.2;2,2;xdecor_enchbook.png]list[current_name;tool;0.5,2;1,1;]list[current_name;mese;1.5,2;1,1;]image[1.5,2;1,1;mese_layout.png]image[3,-0.15;5.7,3.8;ench_ui.png]list[current_player;main;0,3.3;8,4;]"..
+		"image_button[3.35,0.2;4,0.8;bg_btn.png;fast;Efficiency]"..
+		"image_button[3.35,1.2;4,0.8;bg_btn.png;durable;Durability]"..
+		"image_button[3.35,2.2;4,0.8;bg_btn.png;sharp;Sharpness]"
 
 	meta:set_string("formspec", formspec)
 	meta:set_string("infotext", "Enchantment Table")
@@ -20,10 +30,23 @@ function enchanting.construct(pos)
 	inv:set_size("mese", 1)
 end
 
+function enchanting.on_put(pos, listname, _, stack, _)
+	local stn = stack:get_name()
+	local meta = minetest.get_meta(pos)
+
+	if listname == "tool" then
+		if stn:find("sword") then
+			meta:set_string("formspec", enchanting.swords_fs())
+		else
+			meta:set_string("formspec", enchanting.tools_fs())
+		end
+	end	
+end
+
 function enchanting.is_allowed(toolname)
 	local tdef = minetest.registered_tools[toolname]
-	if tdef and toolname:find("default:") and not toolname:find("sword") and not
-			toolname:find("stone") and not toolname:find("wood") then
+	if tdef and toolname:find("default:") and not toolname:find("stone") and not
+		toolname:find("wood") then
 		return 1
 	else return 0 end
 end
@@ -77,10 +100,14 @@ xdecor.register("enchantment_table", {
 	groups = {cracky=1},
 	sounds = default.node_sound_stone_defaults(),
 	can_dig = enchanting.dig,
-	on_construct = enchanting.construct,
+	on_construct = enchanting.default_fs,
 	on_receive_fields = enchanting.fields,
+	on_metadata_inventory_put = enchanting.on_put,
 	allow_metadata_inventory_put = enchanting.put,
-	allow_metadata_inventory_move = function(...) return 0 end
+	allow_metadata_inventory_move = function(...) return 0 end,
+	on_metadata_inventory_take = function(pos, listname, _, _, _)
+		if listname == "tool" then enchanting.default_fs(pos) end
+	end
 })
 
 local function cap(str) return str:gsub("^%l", string.upper) end
@@ -88,33 +115,38 @@ local function cap(str) return str:gsub("^%l", string.upper) end
  -- Higher number = stronger enchant.
 local use_factor = 1.2
 local times_subtractor = 0.1
+local sharp_factor = 1
 
 function enchanting.register_enchtools()
 	local materials = {"steel", "bronze", "mese", "diamond"}
-	local tools = { {"axe", "choppy"}, {"pick", "cracky"}, {"shovel", "crumbly"} }
-	local chants = {"durable", "fast"}
+	local tools = { {"axe", "choppy"}, {"pick", "cracky"}, {"shovel", "crumbly"}, {"sword", "fleshy"} }
+	local chants = {"durable", "fast", "sharp"}
 
 	for _, m in pairs(materials) do
-	for _, t in pairs(tools) do
+	for k, t in pairs(tools) do
 	for _, c in pairs(chants) do
 		local original_tool = minetest.registered_tools["default:"..t[1].."_"..m]
+		local original_damage_groups = original_tool.tool_capabilities.damage_groups
 		local original_groupcaps = original_tool.tool_capabilities.groupcaps
 		local groupcaps = table.copy(original_groupcaps)
-
-		if c == "durable" then
+		local fleshy
+		
+		if c == "durable" and k <= 3 then
 			groupcaps[t[2]].uses = original_groupcaps[t[2]].uses * use_factor
-		elseif c == "fast" then
+		elseif c == "fast" and k <= 3 then
 			for i = 1, 3 do
 				groupcaps[t[2]].times[i] = original_groupcaps[t[2]].times[i] - times_subtractor
 			end
+		elseif c == "sharp" and k == 4 then
+			fleshy = original_damage_groups.fleshy + sharp_factor
 		end
-
+		
 		minetest.register_tool(string.format("xdecor:enchanted_%s_%s_%s", t[1], m, c), {
 			description = string.format("Enchanted %s %s (%s)", cap(m), cap(t[1]), cap(c)),
 			inventory_image = original_tool.inventory_image,
 			wield_image = original_tool.wield_image,
 			groups = {not_in_creative_inventory=1},
-			tool_capabilities = {groupcaps = groupcaps, damage_groups = original_tool.damage_groups}
+			tool_capabilities = {groupcaps = groupcaps, damage_groups = fleshy}
 		})
 	end
 	end

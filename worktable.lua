@@ -33,8 +33,7 @@ local def = { -- Nodebox name, yield, definition.
 	{"innerstair", 1, {{-.5,-.5,-.5,.5,0,.5},{-.5,0,0,.5,.5,.5},{-.5,0,-.5,0,.5,0}}}
 }
 
-function worktable.crafting(pos)
-	local meta = minetest.get_meta(pos)
+function worktable.crafting()
 	return "size[8,7;]"..xbg..
 		"list[current_player;main;0,3.3;8,4;]"..
 		"image[5,1;1,1;gui_furnace_arrow_bg.png^[transformR270]"..
