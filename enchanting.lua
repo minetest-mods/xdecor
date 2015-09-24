@@ -4,8 +4,7 @@ local xbg = default.gui_bg..default.gui_bg_img..default.gui_slots
 function enchanting.tools_fs()
 	return "size[8,7;]"..xbg..
 		"label[0.85,-0.15;Enchant]image[0.6,0.2;2,2;xdecor_enchbook.png]list[current_name;tool;0.5,2;1,1;]list[current_name;mese;1.5,2;1,1;]image[1.5,2;1,1;mese_layout.png]image[3,-0.15;5.7,3.8;ench_ui.png]list[current_player;main;0,3.35;8,4;]"..
-		"image_button[3.35,0.2;4,0.8;bg_btn.png;fast;Efficiency]"..
-		"image_button[3.35,1.2;4,0.8;bg_btn.png;durable;Durability]"
+		"image_button[3.35,0.2;4,0.8;bg_btn.png;fast;Efficiency]image_button[3.35,1.2;4,0.8;bg_btn.png;durable;Durability]"
 end
 
 function enchanting.swords_fs()
@@ -17,10 +16,7 @@ end
 function enchanting.default_fs(pos)
 	local meta = minetest.get_meta(pos)
 	local formspec = "size[8,7;]"..xbg..
-		"label[0.85,-0.15;Enchant]image[0.6,0.2;2,2;xdecor_enchbook.png]list[current_name;tool;0.5,2;1,1;]list[current_name;mese;1.5,2;1,1;]image[1.5,2;1,1;mese_layout.png]image[3,-0.15;5.7,3.8;ench_ui.png]list[current_player;main;0,3.35;8,4;]"..
-		"image_button[3.35,0.2;4,0.8;bg_btn.png;fast;Efficiency]"..
-		"image_button[3.35,1.2;4,0.8;bg_btn.png;durable;Durability]"..
-		"image_button[3.35,2.2;4,0.8;bg_btn.png;sharp;Sharpness]"
+		"label[0.85,-0.15;Enchant]image[0.6,0.2;2,2;xdecor_enchbook.png]list[current_name;tool;0.5,2;1,1;]list[current_name;mese;1.5,2;1,1;]image[1.5,2;1,1;mese_layout.png]image[3,-0.15;5.7,3.8;ench_ui.png]list[current_player;main;0,3.35;8,4;]"
 
 	meta:set_string("formspec", formspec)
 	meta:set_string("infotext", "Enchantment Table")
