@@ -35,16 +35,12 @@ local def = { -- Nodebox name, yield, definition.
 
 function worktable.crafting()
 	return "size[8,7;]"..xbg..
-		"list[current_player;main;0,3.3;8,4;]"..
-		"image[5,1;1,1;gui_furnace_arrow_bg.png^[transformR270]"..
-		"list[current_player;craft;2,0;3,3;]"..
-		"list[current_player;craftpreview;6,1;1,1;]"
+		"list[current_player;main;0,3.3;8,4;]image[5,1;1,1;gui_furnace_arrow_bg.png^[transformR270]list[current_player;craft;2,0;3,3;]list[current_player;craftpreview;6,1;1,1;]"
 end
 
 function worktable.storage(pos)
 	local inv = minetest.get_meta(pos):get_inventory()
-	local f = "size[8,7]"..xbg..
-		"list[context;storage;0,0;8,2;]list[current_player;main;0,3.25;8,4;]"
+	local f = "size[8,7]"..xbg.."list[context;storage;0,0;8,2;]list[current_player;main;0,3.25;8,4;]"
 	inv:set_size("storage", 8*2)
 	return f
 end
@@ -59,17 +55,7 @@ function worktable.construct(pos)
 	inv:set_size("hammer", 1)
 
 	local formspec = "size[8,7;]"..xbg..
-		"list[context;forms;4,0;4,3;]" ..
-		"label[0.95,1.23;Cut]box[-0.05,1;2.05,0.9;#555555]"..
-		"image[3,1;1,1;gui_furnace_arrow_bg.png^[transformR270]"..
-		"label[0.95,2.23;Repair]box[-0.05,2;2.05,0.9;#555555]"..
-		"image[0,1;1,1;xdecor_saw.png]image[0,2;1,1;xdecor_anvil.png]"..
-		"image[3,2;1,1;hammer_layout.png]"..
-		"list[current_name;input;2,1;1,1;]"..
-		"list[current_name;tool;2,2;1,1;]list[current_name;hammer;3,2;1,1;]"..
-		"button[0,0;2,1;craft;Crafting]"..
-		"button[2,0;2,1;storage;Storage]"..
-		"list[current_player;main;0,3.25;8,4;]"
+		"list[context;forms;4,0;4,3;]label[0.95,1.23;Cut]box[-0.05,1;2.05,0.9;#555555]image[3,1;1,1;gui_furnace_arrow_bg.png^[transformR270]label[0.95,2.23;Repair]box[-0.05,2;2.05,0.9;#555555]image[0,1;1,1;xdecor_saw.png]image[0,2;1,1;xdecor_anvil.png]image[3,2;1,1;hammer_layout.png]list[current_name;input;2,1;1,1;]list[current_name;tool;2,2;1,1;]list[current_name;hammer;3,2;1,1;]button[0,0;2,1;craft;Crafting]button[2,0;2,1;storage;Storage]list[current_player;main;0,3.25;8,4;]"
 
 	meta:set_string("formspec", formspec)
 	meta:set_string("infotext", "Work Table")
@@ -199,7 +185,7 @@ for _, name in pairs(n) do
 				groups[k] = v end
 		end
 
-		minetest.register_node(":"..mod..":"..name.."_"..d[1], {
+		minetest.register_node(string.format(":%s:%s_%s", mod, name, d[1]), {
 			description = ndef.description.." "..d[1]:gsub("^%l", string.upper),
 			paramtype = "light",
 			paramtype2 = "facedir",
