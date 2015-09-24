@@ -185,7 +185,7 @@ for _, name in pairs(n) do
 				groups[k] = v end
 		end
 
-		minetest.register_node(string.format(":%s:%s_%s", mod, name, d[1]), {
+		minetest.register_node(":"..mod..":"..name.."_"..d[1], {
 			description = ndef.description.." "..d[1]:gsub("^%l", string.upper),
 			paramtype = "light",
 			paramtype2 = "facedir",

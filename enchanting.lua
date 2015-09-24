@@ -125,8 +125,8 @@ function enchanting.register_enchtools()
 		local original_damage_groups = original_tool.tool_capabilities.damage_groups
 		local original_groupcaps = original_tool.tool_capabilities.groupcaps
 		local groupcaps = table.copy(original_groupcaps)
-		local fleshy
-		
+		local fleshy = original_damage_groups.fleshy
+
 		if c == "durable" and k <= 3 then
 			groupcaps[t[2]].uses = original_groupcaps[t[2]].uses * use_factor
 		elseif c == "fast" and k <= 3 then
@@ -134,15 +134,15 @@ function enchanting.register_enchtools()
 				groupcaps[t[2]].times[i] = original_groupcaps[t[2]].times[i] - times_subtractor
 			end
 		elseif c == "sharp" and k == 4 then
-			fleshy = original_damage_groups.fleshy + sharp_factor
+			fleshy = fleshy + sharp_factor
 		end
 
-		minetest.register_tool(string.format("xdecor:enchanted_%s_%s_%s", t[1], m, c), {
+		minetest.register_tool("xdecor:enchanted_"..t[1].."_"..m.."_"..c, {
 			description = string.format("Enchanted %s %s (%s)", cap(m), cap(t[1]), cap(c)),
 			inventory_image = original_tool.inventory_image.."^[colorize:violet:50",
 			wield_image = original_tool.wield_image,
 			groups = {not_in_creative_inventory=1},
-			tool_capabilities = {groupcaps = groupcaps, damage_groups = fleshy}
+			tool_capabilities = {groupcaps = groupcaps, damage_groups = {fleshy = fleshy}}
 		})
 	end
 	end
