@@ -119,7 +119,10 @@ xdecor.register("frame", {
 	end,
 	can_dig = function(pos, player)
 		local meta = minetest.get_meta(pos)
-		return player:get_player_name() == meta:get_string("owner")
+		local owner = meta:get_string("owner")
+
+		if not player or player:get_player_name() ~= owner then return false end
+		return true
 	end,
 	on_destruct = function(pos)
 		local meta = minetest.get_meta(pos)
