@@ -111,7 +111,7 @@ local function cap(str) return str:gsub("^%l", string.upper) end
  -- Higher number = stronger enchant.
 local use_factor = 1.2
 local times_subtractor = 0.1
-local sharp_factor = 1
+local damage_adder = 1
 
 function enchanting.register_enchtools()
 	local materials = {"steel", "bronze", "mese", "diamond"}
@@ -134,7 +134,7 @@ function enchanting.register_enchtools()
 				groupcaps[t[2]].times[i] = original_groupcaps[t[2]].times[i] - times_subtractor
 			end
 		elseif c == "sharp" and k == 4 then
-			fleshy = fleshy + sharp_factor
+			fleshy = fleshy + damage_adder
 		end
 
 		minetest.register_tool("xdecor:enchanted_"..t[1].."_"..m.."_"..c, {
