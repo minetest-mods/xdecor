@@ -513,6 +513,23 @@ xdecor.register("tv", {
 	}
 })
 
+xpanes.register_pane("wood_frame", {
+	description = "Wood Frame",
+	tiles = {"xdecor_wood_frame.png"},
+	drawtype = "airlike",
+	paramtype = "light",
+	textures = {"xdecor_wood_frame.png", "xdecor_wood_frame.png", "xpanes_space.png"},
+	inventory_image = "xdecor_wood_frame.png",
+	wield_image = "xdecor_wood_frame.png",
+	groups = {choppy=3, pane=1, flammable=3},
+	sounds = default.node_sound_wood_defaults(),
+	recipe = {
+		{"group:wood", "group:stick", "group:wood"},
+		{"group:stick", "group:stick", "group:stick"},
+		{"group:wood", "group:stick", "group:wood"}
+	}
+})
+
 xdecor.register("woodframed_glass", {
 	description = "Wood Framed Glass",
 	drawtype = "glasslike_framed",
