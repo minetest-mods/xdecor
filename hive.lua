@@ -6,7 +6,7 @@ function hive.construct(pos)
 	local xbg = default.gui_bg..default.gui_bg_img..default.gui_slots
 
 	local formspec = "size[8,5;]"..xbg..
-		"label[1.35,0;Bees are making honey\nwith pollen around...]image[6,0;1,1;xdecor_bee.png]list[current_name;honey;5,0;1,1;]list[current_player;main;0,1.35;8,4;]"
+		"label[1.35,0;Bees are making honey\nwith pollen around...]image[6,0;1,1;xdecor_bee.png]image[5,0;1,1;hive_layout.png]list[current_name;honey;5,0;1,1;]list[current_player;main;0,1.35;8,4;]"
 
 	meta:set_string("formspec", formspec)
 	meta:set_string("infotext", "Artificial Hive")
