@@ -87,18 +87,6 @@ xdecor.register("candle", {
 	}
 })
 
-xdecor.register("cardboard_box", {
-	description = "Cardboard Box",
-	inventory = {size=8},
-	infotext = "Cardboard Box",
-	groups = {snappy=3, flammable=3},
-	tiles = {"xdecor_cardbox_top.png", "xdecor_cardbox_top.png", 
-		"xdecor_cardbox_sides.png"},
-	node_box = {
-		type = "fixed", fixed = {{-0.3125, -0.5, -0.3125, 0.3125, 0, 0.3125}}
-	}
-})
-
 xdecor.register("cauldron", {
 	description = "Cauldron",
 	groups = {cracky=2},
@@ -160,17 +148,6 @@ xdecor.register("chair", {
 			{0.1875, -0.5, -0.3125, 0.3125, -0.125, -0.1875},
 			{-0.3125, -0.125, -0.3125, 0.3125, 0, 0.1875}}
 	}
-})
-
-xdecor.register("chandelier", {
-	description = "Chandelier",
-	drawtype = "plantlike",
-	walkable = false,
-	inventory_image = "xdecor_chandelier.png",
-	tiles = {"xdecor_chandelier.png"},
-	groups = {dig_immediate=3},
-	light_source = 14,
-	selection_box = xdecor.nodebox.slab_y(0.5, 0.5)
 })
 
 xdecor.register("cobweb", {
@@ -428,17 +405,6 @@ xdecor.register("painting", {
 	groups = {dig_immediate=3, flammable=3, attached_node=1}
 })
 
-xdecor.register("plant_pot", {
-	description = "Plant Pot",
-	drawtype = "plantlike",
-	inventory_image = "xdecor_plant_pot.png",
-	wield_image = "xdecor_plant_pot.png",
-	groups = {snappy=3},
-	tiles = {"xdecor_plant_pot.png"},
-	sounds = default.node_sound_stone_defaults()
-})
-
-
 for _, b in pairs({{"cactus", "cactus"}, {"moon", "stone"}}) do
 	xdecor.register(b[1].."brick", {
 		drawtype = "normal",
@@ -478,16 +444,6 @@ xpanes.register_pane("rust_bar", {
 		{"", "default:dirt", ""},
 		{"default:steel_ingot", "default:steel_ingot", "default:steel_ingot"},
 		{"default:steel_ingot", "default:steel_ingot", "default:steel_ingot"}
-	}
-})
-
-xdecor.register("stereo", {
-	description = "Stereo",
-	groups = {snappy=3},
-	tiles = {
-		"xdecor_stereo_top.png", "xdecor_stereo_bottom.png",
-		"xdecor_stereo_left.png^[transformFX", "xdecor_stereo_left.png",
-		"xdecor_stereo_back.png", "xdecor_stereo_front.png"
 	}
 })
 

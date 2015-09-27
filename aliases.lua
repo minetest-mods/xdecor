@@ -1,3 +1,7 @@
 minetest.register_alias("xdecor:fence_wrought_iron", "default:fence_wood")
 minetest.register_alias("xdecor:metal_cabinet", "xdecor:cabinet")
 minetest.register_alias("xdecor:trash_can", "xdecor:chair")
+minetest.register_alias("xdecor:plant_pot", "default:dirt")
+minetest.register_alias("xdecor:chandelier", "xdecor:candle")
+minetest.register_alias("xdecor:cardboard_box", "xdecor:cabinet_half")
+minetest.register_alias("xdecor:stereo", "xdecor:television")
