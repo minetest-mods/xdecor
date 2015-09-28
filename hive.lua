@@ -33,6 +33,10 @@ xdecor.register("hive", {
 		local health = puncher:get_hp()
 		puncher:set_hp(health - 4)
 	end,
+	on_rightclick = function(_, _, clicker)
+		local health = clicker:get_hp()
+		clicker:set_hp(health - 1)
+	end,
 	allow_metadata_inventory_put = function(_, listname, _, stack, _)
 		if listname == "honey" then return 0 end
 		return stack:get_count()
