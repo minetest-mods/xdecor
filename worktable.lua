@@ -1,7 +1,7 @@
 local worktable = {}
 local xbg = default.gui_bg..default.gui_bg_img..default.gui_slots
 
-local nodes = { -- Nodes allowed to be cut. Mod name = {node name}.
+xdecor.worktable_nodes = { -- Nodes allowed to be cut. Mod name = {node name}.
 	default = {"wood", "junglewood", "pine_wood", "acacia_wood",
 		"tree", "jungletree", "pine_tree", "acacia_tree",
 		"cobble", "mossycobble", "desert_cobble",
@@ -97,7 +97,7 @@ function worktable.put(_, listname, _, stack, _)
 
 	if listname == "forms" then return 0 end
 	if listname == "input" then
-		if not worktable.contains(nodes[mod], node) then return 0 end
+		if not worktable.contains(xdecor.worktable_nodes[mod], node) then return 0 end
 	end
 	if listname == "hammer" then
 		if stn ~= "xdecor:hammer" then return 0 end
@@ -173,7 +173,7 @@ xdecor.register("worktable", {
 })
 
 for _, d in pairs(def) do
-for mod, n in pairs(nodes) do
+for mod, n in pairs(xdecor.worktable_nodes) do
 for _, name in pairs(n) do
 	local ndef = minetest.registered_nodes[mod..":"..name]
 	if ndef then
