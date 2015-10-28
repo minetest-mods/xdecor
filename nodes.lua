@@ -1,3 +1,39 @@
+local function sit(pos, node, clicker)
+	local meta = minetest.get_meta(pos)
+	local param2 = node.param2
+	local player = clicker:get_player_name()
+
+	if player == meta:get_string("is_sit") then
+		meta:set_string("is_sit", "")
+		pos.y = pos.y - 0.5
+		clicker:setpos(pos)
+		clicker:set_eye_offset({x=0, y=0, z=0}, {x=0, y=0, z=0})
+		clicker:set_physics_override(1, 1, 1)
+		default.player_attached[player] = false
+		default.player_set_animation(clicker, "stand", 30)
+	elseif clicker:get_player_velocity().x == 0 and
+		clicker:get_player_velocity().y == 0 and
+		clicker:get_player_velocity().z == 0 then
+
+		meta:set_string("is_sit", player)
+		clicker:set_eye_offset({x=0, y=-7, z=2}, {x=0, y=0, z=0})
+		clicker:set_physics_override(0, 0, 0)
+		clicker:setpos(pos)
+		default.player_attached[player] = true
+		default.player_set_animation(clicker, "sit", 30)
+
+		if param2 == 0 then
+			clicker:set_look_yaw(3.15)
+		elseif param2 == 1 then
+			clicker:set_look_yaw(7.9)
+		elseif param2 == 2 then
+			clicker:set_look_yaw(6.28)
+		elseif param2 == 3 then
+			clicker:set_look_yaw(4.75)
+		else return end
+	else return end
+end
+
 xpanes.register_pane("bamboo_frame", {
 	description = "Bamboo Frame",
 	tiles = {"xdecor_bamboo_frame.png"},
@@ -147,7 +183,11 @@ xdecor.register("chair", {
 			{-0.3125, -0.5, -0.3125, -0.1875, -0.125, -0.1875},
 			{0.1875, -0.5, -0.3125, 0.3125, -0.125, -0.1875},
 			{-0.3125, -0.125, -0.3125, 0.3125, 0, 0.1875}}
-	}
+	},
+	on_rightclick = function(pos, node, clicker)
+		pos.y = pos.y + 0 -- where do I put my ass ?
+		sit(pos, node, clicker)
+	end
 })
 
 xdecor.register("cobweb", {
@@ -212,7 +252,11 @@ xdecor.register("cushion", {
 	tiles = {"xdecor_cushion.png"},
 	groups = {snappy=3, flammable=3, fall_damage_add_percent=-50},
 	on_place = minetest.rotate_node,
-	node_box = xdecor.nodebox.slab_y(-0.5, 0.5)
+	node_box = xdecor.nodebox.slab_y(-0.5, 0.5),
+	on_rightclick = function(pos, node, clicker)
+		pos.y = pos.y + 0 -- where do I put my ass ?
+		sit(pos, node, clicker)
+	end
 })
 
 local function door_access(door)
