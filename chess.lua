@@ -151,6 +151,8 @@ function realchess.move(pos, from_list, from_index, to_list, to_index, count, pl
 				elseif from_x - 1 == to_x or from_x + 1 == to_x then
 					if not pieceTo:find("black") then
 						return 0
+					elseif to_index >= 1 and to_index <= 8 then
+						inv:set_stack(from_list, from_index, "realchess:queen_white")
 					end
 				else
 					return 0
@@ -174,6 +176,8 @@ function realchess.move(pos, from_list, from_index, to_list, to_index, count, pl
 				elseif from_x - 1 == to_x or from_x + 1 == to_x then
 					if not pieceTo:find("white") then
 						return 0
+					elseif to_index >= 57 and to_index <= 64 then
+						inv:set_stack(from_list, from_index, "realchess:queen_black")
 					end
 				else
 					return 0
@@ -548,7 +552,7 @@ function realchess.fields(pos, formname, fields, sender)
 			meta:get_string("playerBlack") == playerName) then
 		realchess.init(pos)
 	elseif fields.new and meta:get_int("lastMoveTime") ~= 0 and
-			minetest.get_gametime() >= meta:get_int("lastMoveTime") + 250 and
+			minetest.get_gametime() >= meta:get_int("lastMoveTime") + 300 and
 			(meta:get_string("playerWhite") ~= playerName or
 			meta:get_string("playerBlack") ~= playerName) then
 		realchess.init(pos)
@@ -563,7 +567,7 @@ function realchess.dig(pos, player)
 
 	-- the chess can't be dug during a started game unless if nobody has played during a while (~5 min. by default)
 	if meta:get_int("lastMoveTime") ~= 0 and
-			minetest.get_gametime() <= meta:get_int("lastMoveTime") + 250 then
+			minetest.get_gametime() <= meta:get_int("lastMoveTime") + 300 then
 		minetest.chat_send_player(playerName, "You can't dig the chessboard, a game has been started.\nReset it first if you're a current player, or try digging again after a while.")
 		return false
 	end
