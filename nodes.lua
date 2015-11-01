@@ -1,9 +1,8 @@
 local function sit(pos, node, clicker)
 	local meta = minetest.get_meta(pos)
-	local param2 = node.param2
 	local player = clicker:get_player_name()
 
-	if player == meta:get_string("is_sit") then
+	if meta:get_string("is_sit") == "yes" then
 		meta:set_string("is_sit", "")
 		pos.y = pos.y - 0.5
 		clicker:setpos(pos)
@@ -11,24 +10,25 @@ local function sit(pos, node, clicker)
 		clicker:set_physics_override(1, 1, 1)
 		default.player_attached[player] = false
 		default.player_set_animation(clicker, "stand", 30)
-	elseif clicker:get_player_velocity().x == 0 and
+	elseif meta:get_string("is_sit") == "" and
+		clicker:get_player_velocity().x == 0 and
 		clicker:get_player_velocity().y == 0 and
 		clicker:get_player_velocity().z == 0 then
 
-		meta:set_string("is_sit", player)
+		meta:set_string("is_sit", "yes")
 		clicker:set_eye_offset({x=0, y=-7, z=2}, {x=0, y=0, z=0})
 		clicker:set_physics_override(0, 0, 0)
 		clicker:setpos(pos)
 		default.player_attached[player] = true
 		default.player_set_animation(clicker, "sit", 30)
 
-		if param2 == 0 then
+		if node.param2 == 0 then
 			clicker:set_look_yaw(3.15)
-		elseif param2 == 1 then
+		elseif node.param2 == 1 then
 			clicker:set_look_yaw(7.9)
-		elseif param2 == 2 then
+		elseif node.param2 == 2 then
 			clicker:set_look_yaw(6.28)
-		elseif param2 == 3 then
+		elseif node.param2 == 3 then
 			clicker:set_look_yaw(4.75)
 		else return end
 	else return end
@@ -187,6 +187,11 @@ xdecor.register("chair", {
 	on_rightclick = function(pos, node, clicker)
 		pos.y = pos.y + 0 -- where do I put my ass ?
 		sit(pos, node, clicker)
+	end,
+	can_dig = function(pos, _)
+		local meta = minetest.get_meta(pos)
+		if meta:get_string("is_sit") == "yes" then return false end
+		return true
 	end
 })
 
@@ -256,6 +261,11 @@ xdecor.register("cushion", {
 	on_rightclick = function(pos, node, clicker)
 		pos.y = pos.y + 0 -- where do I put my ass ?
 		sit(pos, node, clicker)
+	end,
+	can_dig = function(pos, _)
+		local meta = minetest.get_meta(pos)
+		if meta:get_string("is_sit") == "yes" then return false end
+		return true
 	end
 })
 
