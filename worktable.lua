@@ -1,7 +1,7 @@
 local worktable = {}
 local xbg = default.gui_bg..default.gui_bg_img..default.gui_slots
 
-xdecor.worktable_nodes = { -- Nodes allowed to be cut. Mod name = {node name}.
+local nodes = { -- Nodes allowed to be cut. Mod name = {node name}.
 	default = {"wood", "junglewood", "pine_wood", "acacia_wood",
 		"tree", "jungletree", "pine_tree", "acacia_tree",
 		"cobble", "mossycobble", "desert_cobble",
@@ -97,7 +97,7 @@ function worktable.put(_, listname, _, stack, _)
 
 	if listname == "forms" then return 0 end
 	if listname == "input" then
-		if not worktable.contains(xdecor.worktable_nodes[mod], node) then return 0 end
+		if not worktable.contains(nodes[mod], node) then return 0 end
 	end
 	if listname == "hammer" then
 		if stn ~= "xdecor:hammer" then return 0 end
@@ -110,8 +110,15 @@ function worktable.put(_, listname, _, stack, _)
 	return count
 end
 
-function worktable.take(_, listname, _, stack, _)
-	if listname == "forms" then return -1 end
+function worktable.take(pos, listname, _, stack, _)
+	local inv = minetest.get_meta(pos):get_inventory()
+	local inputstack = inv:get_stack("input", 1):get_name()
+	local mod, node = inputstack:match("([%a_]+):([%a_]+)")
+
+	if listname == "forms" then
+		if not worktable.contains(nodes[mod], node) then return 0 end
+		return -1
+	end
 	return stack:get_count()
 end
 
@@ -127,8 +134,10 @@ local function update_inventory(inv, inputstack)
 	for _, n in pairs(def) do
 		local mat = inputstack:get_name()
 		local input = inv:get_stack("input", 1)
+		local mod, node = mat:match("([%a_]+):([%a_]+)")
 		local count = math.min(n[2] * input:get_count(), inputstack:get_stack_max())
-
+		
+		if not worktable.contains(nodes[mod], node) then return end
 		output[#output+1] = string.format("%s_%s %d", mat, n[1], count)
 	end
 	inv:set_list("forms", output)
@@ -173,7 +182,7 @@ xdecor.register("worktable", {
 })
 
 for _, d in pairs(def) do
-for mod, n in pairs(xdecor.worktable_nodes) do
+for mod, n in pairs(nodes) do
 for _, name in pairs(n) do
 	local ndef = minetest.registered_nodes[mod..":"..name]
 	if ndef then
