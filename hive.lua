@@ -51,12 +51,12 @@ minetest.register_abm({
 		local honeystack = inv:get_stack("honey", 1)
 		local honey = honeystack:get_count()
 
-		local radius = 8
+		local radius = 4
 		local minp = vector.add(pos, -radius)
 		local maxp = vector.add(pos, radius)
 		local flowers = minetest.find_nodes_in_area(minp, maxp, "group:flower")
 
-		if #flowers >= 4 and honey < 16 then
+		if #flowers >= 2 and honey < 10 then
 			inv:add_item("honey", "xdecor:honey") end
 	end
 })

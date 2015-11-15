@@ -84,6 +84,7 @@ xdecor.register("frame", {
 	groups = {choppy=3, snappy=2},
 	sounds = default.node_sound_wood_defaults(),
 	on_rotate = screwdriver.disallow,
+	sunlight_propagates = true,
 	node_box = {
 		type = "fixed",
 		fixed = {-0.5, -0.5, 7/16, 0.5, 0.5, 0.5}
