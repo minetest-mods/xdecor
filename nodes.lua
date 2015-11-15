@@ -207,7 +207,7 @@ xdecor.register("chair", {
 		for _, p in pairs(objs) do
 			if p:get_player_name() ~= nil or
 				default.player_attached[pname] == true or not
-				player:is_player() then 
+				player or not player:is_player() then 
 				return false
 			end
 		end
@@ -282,7 +282,7 @@ xdecor.register("cushion", {
 		local objs = minetest.get_objects_inside_radius(pos, 0.5)
 		for _, p in pairs(objs) do
 			if p:get_player_name() ~= nil or node.param2 > 3 or not
-				clicker:is_player() then return end
+				clicker or not clicker:is_player() then return end
 		end
 		pos.y = pos.y + 0
 		sit(pos, node, clicker)
