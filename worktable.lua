@@ -165,7 +165,7 @@ end
 
 xdecor.register("worktable", {
 	description = "Work Table",
-	groups = {cracky=2, choppy=2},
+	groups = {cracky=2, choppy=2, oddly_breakable_by_hand=1},
 	sounds = default.node_sound_wood_defaults(),
 	tiles = {
 		"xdecor_worktable_top.png", "xdecor_worktable_top.png",

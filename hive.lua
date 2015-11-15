@@ -26,7 +26,7 @@ xdecor.register("hive", {
 		"xdecor_hive_side.png", "xdecor_hive_side.png",
 		"xdecor_hive_side.png", "xdecor_hive_front.png"
 	},
-	groups = {snappy=3, flammable=1},
+	groups = {choppy=3, oddly_breakable_by_hand=2, flammable=1},
 	on_construct = hive.construct,
 	can_dig = hive.dig,
 	on_punch = function(_, _, puncher, _)

@@ -40,7 +40,7 @@ xpanes.register_pane("bamboo_frame", {
 	textures = {"xdecor_bamboo_frame.png", "xdecor_bamboo_frame.png", "xpanes_space.png"},
 	inventory_image = "xdecor_bamboo_frame.png",
 	wield_image = "xdecor_bamboo_frame.png",
-	groups = {snappy=3, pane=1, flammable=2},
+	groups = {choppy=3, oddly_breakable_by_hand=2, pane=1, flammable=2},
 	recipe = {
 		{"default:papyrus", "default:papyrus", "default:papyrus"},
 		{"default:papyrus", "farming:cotton", "default:papyrus"},
@@ -54,7 +54,7 @@ xdecor.register("baricade", {
 	walkable = false,
 	inventory_image = "xdecor_baricade.png",
 	tiles = {"xdecor_baricade.png"},
-	groups = {snappy=3, flammable=3},
+	groups = {choppy=2, oddly_breakable_by_hand=1, flammable=3},
 	damage_per_second = 4,
 	selection_box = xdecor.nodebox.slab_y(0.3)
 })
@@ -64,7 +64,7 @@ xdecor.register("barrel", {
 	inventory = {size=24},
 	infotext = "Barrel",
 	tiles = {"xdecor_barrel_top.png", "xdecor_barrel_sides.png"},
-	groups = {choppy=3, flammable=3},
+	groups = {choppy=2, oddly_breakable_by_hand=1, flammable=3},
 	sounds = default.node_sound_wood_defaults()
 })
 
@@ -72,7 +72,7 @@ xdecor.register("cabinet", {
 	description = "Wood Cabinet",
 	inventory = {size=24},
 	infotext = "Wood Cabinet",
-	groups = {choppy=3, flammable=3},
+	groups = {choppy=2, oddly_breakable_by_hand=1, flammable=3},
 	sounds = default.node_sound_wood_defaults(),
 	on_rotate = screwdriver.rotate_simple,
 	tiles = {
@@ -86,7 +86,7 @@ xdecor.register("cabinet_half", {
 	description = "Half Wood Cabinet",
 	inventory = {size=8},
 	infotext = "Half Wood Cabinet",
-	groups = {choppy=3, flammable=3},
+	groups = {choppy=3, oddly_breakable_by_hand=2, flammable=3},
 	sounds = default.node_sound_wood_defaults(),
 	node_box = xdecor.nodebox.slab_y(0.5, 0.5),
 	tiles = {
@@ -124,7 +124,7 @@ xdecor.register("candle", {
 
 xdecor.register("cauldron", {
 	description = "Cauldron",
-	groups = {cracky=2},
+	groups = {cracky=2, oddly_breakable_by_hand=1},
 	on_rotate = screwdriver.rotate_simple,
 	tiles = {
 		{ name = "xdecor_cauldron_top_anim.png",
@@ -162,7 +162,7 @@ xpanes.register_pane("chainlink", {
 	textures = {"xdecor_chainlink.png", "xdecor_chainlink.png", "xpanes_space.png"},
 	inventory_image = "xdecor_chainlink.png",
 	wield_image = "xdecor_chainlink.png",
-	groups = {snappy=3, pane=1},
+	groups = {cracky=3, oddly_breakable_by_hand=2, pane=1},
 	recipe = {
 		{"default:steel_ingot", "", "default:steel_ingot"},
 		{"", "default:steel_ingot", ""},
@@ -174,7 +174,7 @@ xdecor.register("chair", {
 	description = "Chair",
 	tiles = {"xdecor_wood.png"},
 	sounds = default.node_sound_wood_defaults(),
-	groups = {choppy=3, flammable=3},
+	groups = {choppy=3, oddly_breakable_by_hand=2, flammable=3},
 	on_rotate = screwdriver.rotate_simple,
 	node_box = {
 		type = "fixed",
@@ -310,7 +310,7 @@ for _, d in pairs(door_types) do
 	doors.register_door("xdecor:"..d[1].."_door", {
 		description = string.gsub(d[1]:gsub("^%l", string.upper), "_r", " R").." Door",
 		inventory_image = "xdecor_"..d[1].."_door_inv.png",
-		groups = {choppy=3, flammable=2, door=1},
+		groups = {choppy=3, cracky=3, oddly_breakable_by_hand=1, flammable=2, door=1},
 		tiles_bottom = {"xdecor_"..d[1].."_door_b.png", "xdecor_"..d[2]..".png"},
 		tiles_top = {"xdecor_"..d[1].."_door_a.png", "xdecor_"..d[2]..".png"},
 		only_placer_can_open = door_access(d[1]),
@@ -324,7 +324,7 @@ xdecor.register("empty_shelf", {
 	inventory = {size=24},
 	infotext = "Empty Shelf",
 	tiles = {"default_wood.png", "default_wood.png^xdecor_empty_shelf.png"},
-	groups = {choppy=3, flammable=3},
+	groups = {choppy=2, oddly_breakable_by_hand=1, flammable=3},
 	sounds = default.node_sound_wood_defaults(),
 	on_rotate = screwdriver.rotate_simple
 })
@@ -336,7 +336,7 @@ xdecor.register("enderchest", {
 		"xdecor_enderchest_side.png", "xdecor_enderchest_side.png",
 		"xdecor_enderchest_side.png", "xdecor_enderchest_front.png"
 	},
-	groups = {cracky=2},
+	groups = {cracky=1, choppy=1, oddly_breakable_by_hand=1},
 	sounds = default.node_sound_stone_defaults(),
 	on_rotate = screwdriver.rotate_simple,
 	on_construct = function(pos)
@@ -438,7 +438,7 @@ xdecor.register("lantern", {
 xdecor.register("lightbox", {
 	description = "Light Box",
 	tiles = {"xdecor_lightbox.png"},
-	groups = {cracky=3},
+	groups = {cracky=3, choppy=3, oddly_breakable_by_hand=2},
 	light_source = 13,
 	sounds = default.node_sound_glass_defaults()
 })
@@ -447,7 +447,7 @@ xdecor.register("packed_ice", {
 	drawtype = "normal",
 	description = "Packed Ice",
 	tiles = {"xdecor_packed_ice.png"},
-	groups = {cracky=2},
+	groups = {cracky=1, puts_out_fire=1},
 	sounds = default.node_sound_glass_defaults()
 })
 
@@ -512,7 +512,7 @@ xdecor.register("multishelf", {
 	infotext = "Multi Shelf",
 	on_rotate = screwdriver.rotate_simple,
 	tiles = {"default_wood.png", "default_wood.png^xdecor_multishelf.png"},
-	groups = {choppy=3, flammable=3},
+	groups = {choppy=2, oddly_breakable_by_hand=1, flammable=3},
 	sounds = default.node_sound_wood_defaults()
 })
 
@@ -524,7 +524,7 @@ xpanes.register_pane("rust_bar", {
 	textures = {"xdecor_rust_bars.png", "xdecor_rust_bars.png", "xpanes_space.png"},
 	inventory_image = "xdecor_rust_bars.png",
 	wield_image = "xdecor_rust_bars.png",
-	groups = {snappy=3, pane=1},
+	groups = {cracky=3, oddly_breakable_by_hand=2, pane=1},
 	recipe = {
 		{"", "default:dirt", ""},
 		{"default:steel_ingot", "default:steel_ingot", "default:steel_ingot"},
@@ -558,7 +558,7 @@ for _, t in pairs(stonish) do
 		description = string.sub(t:gsub("^%l", string.upper), 1, -6)
 				.." "..t:sub(-4):gsub("^%l", string.upper),
 		tiles = {"xdecor_"..t..".png"},
-		groups = {cracky=2},
+		groups = {cracky=1},
 		sounds = default.node_sound_stone_defaults()
 	})
 end
@@ -566,7 +566,7 @@ end
 xdecor.register("table", {
 	description = "Table",
 	tiles = {"xdecor_wood.png"},
-	groups = {choppy=3, flammable=3},
+	groups = {choppy=3, oddly_breakable_by_hand=2, flammable=3},
 	sounds = default.node_sound_wood_defaults(),
 	node_box = {
 		type = "fixed",
@@ -608,7 +608,7 @@ xpanes.register_pane("wood_frame", {
 	textures = {"xdecor_wood_frame.png", "xdecor_wood_frame.png", "xpanes_space.png"},
 	inventory_image = "xdecor_wood_frame.png",
 	wield_image = "xdecor_wood_frame.png",
-	groups = {choppy=3, pane=1, flammable=3},
+	groups = {choppy=3, oddly_breakable_by_hand=2, pane=1, flammable=3},
 	sounds = default.node_sound_wood_defaults(),
 	recipe = {
 		{"group:wood", "group:stick", "group:wood"},
@@ -621,7 +621,7 @@ xdecor.register("woodframed_glass", {
 	description = "Wood Framed Glass",
 	drawtype = "glasslike_framed",
 	tiles = {"xdecor_woodframed_glass.png", "xdecor_woodframed_glass_detail.png"},
-	groups = {cracky=3},
+	groups = {cracky=3, oddly_breakable_by_hand=2},
 	sounds = default.node_sound_glass_defaults()
 })
 
@@ -629,6 +629,6 @@ xdecor.register("wood_tile", {
 	description = "Wood Tile",
 	tiles = {"xdecor_wood_tile.png"},
 	drawtype = "normal",
-	groups = {choppy=2, wood=1, flammable=2},
+	groups = {choppy=1, oddly_breakable_by_hand=1, wood=1, flammable=2},
 	sounds = default.node_sound_wood_defaults()
 })

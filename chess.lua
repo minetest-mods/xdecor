@@ -596,7 +596,7 @@ minetest.register_node(":realchess:chessboard", {
 	tiles = {"chessboard_top.png", "chessboard_top.png",
 		"chessboard_sides.png", "chessboard_sides.png",
 		"chessboard_top.png", "chessboard_top.png"},
-	groups = {choppy=3, flammable=3},
+	groups = {choppy=3, oddly_breakable_by_hand=2, flammable=3},
 	sounds = default.node_sound_wood_defaults(),
 	node_box = {type = "fixed", fixed = {-0.5, -0.5, -0.5, 0.5, -0.4375, 0.5}},
 	sunlight_propagates = true,
