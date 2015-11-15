@@ -185,12 +185,26 @@ xdecor.register("chair", {
 			{-0.3125, -0.125, -0.3125, 0.3125, 0, 0.1875}}
 	},
 	on_rightclick = function(pos, node, clicker)
-		pos.y = pos.y + 0 -- where do I put my ass ?
+		local objs = minetest.get_objects_inside_radius(pos, 0.5)
+		for _, p in pairs(objs) do
+			if p:get_player_name() ~= nil or node.param2 > 3 or not
+				clicker or not clicker:is_player() then return end
+		end
+		pos.y = pos.y + 0
 		sit(pos, node, clicker)
 	end,
-	can_dig = function(pos, _)
+	can_dig = function(pos, player)
 		local meta = minetest.get_meta(pos)
-		if meta:get_string("is_sit") == "yes" then return false end
+		local pname = player:get_player_name()
+		local objs = minetest.get_objects_inside_radius(pos, 0.5)
+
+		for _, p in pairs(objs) do
+			if p:get_player_name() ~= nil or
+				default.player_attached[pname] == true or not
+				player:is_player() then 
+				return false
+			end
+		end
 		return true
 	end
 })
@@ -259,12 +273,26 @@ xdecor.register("cushion", {
 	on_place = minetest.rotate_node,
 	node_box = xdecor.nodebox.slab_y(-0.5, 0.5),
 	on_rightclick = function(pos, node, clicker)
-		pos.y = pos.y + 0 -- where do I put my ass ?
+		local objs = minetest.get_objects_inside_radius(pos, 0.5)
+		for _, p in pairs(objs) do
+			if p:get_player_name() ~= nil or node.param2 > 3 or not
+				clicker:is_player() then return end
+		end
+		pos.y = pos.y + 0
 		sit(pos, node, clicker)
 	end,
-	can_dig = function(pos, _)
+	can_dig = function(pos, player)
 		local meta = minetest.get_meta(pos)
-		if meta:get_string("is_sit") == "yes" then return false end
+		local pname = player:get_player_name()
+		local objs = minetest.get_objects_inside_radius(pos, 0.5)
+
+		for _, p in pairs(objs) do
+			if p:get_player_name() ~= nil or
+				default.player_attached[pname] == true or not
+				player or not player:is_player() then 
+				return false
+			end
+		end
 		return true
 	end
 })
