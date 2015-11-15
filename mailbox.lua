@@ -1,4 +1,5 @@
 local mailbox = {}
+screwdriver = screwdriver or {}
 local xbg = default.gui_bg..default.gui_bg_img..default.gui_slots
 
 xdecor.register("mailbox", {
@@ -9,6 +10,7 @@ xdecor.register("mailbox", {
 		"xdecor_mailbox.png", "xdecor_mailbox.png",
 	},
 	groups = {cracky=3},
+	on_rotate = screwdriver.rotate_simple,
 	after_place_node = function(pos, placer, _)
 		local meta = minetest.get_meta(pos)
 		local owner = placer:get_player_name()

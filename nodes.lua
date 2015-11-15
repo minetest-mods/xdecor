@@ -1,3 +1,5 @@
+screwdriver = screwdriver or {}
+
 local function sit(pos, node, clicker)
 	local meta = minetest.get_meta(pos)
 	local player = clicker:get_player_name()
@@ -67,7 +69,8 @@ xdecor.register("barrel", {
 	infotext = "Barrel",
 	tiles = {"xdecor_barrel_top.png", "xdecor_barrel_sides.png"},
 	groups = {choppy=3, flammable=3},
-	sounds = default.node_sound_wood_defaults()
+	sounds = default.node_sound_wood_defaults(),
+	on_rotate = screwdriver.rotate_simple
 })
 
 xdecor.register("cabinet", {
@@ -76,6 +79,7 @@ xdecor.register("cabinet", {
 	infotext = "Wood Cabinet",
 	groups = {choppy=3, flammable=3},
 	sounds = default.node_sound_wood_defaults(),
+	on_rotate = screwdriver.rotate_simple,
 	tiles = {
 		"xdecor_cabinet_sides.png", "xdecor_cabinet_sides.png",
 		"xdecor_cabinet_sides.png", "xdecor_cabinet_sides.png",
@@ -126,6 +130,7 @@ xdecor.register("candle", {
 xdecor.register("cauldron", {
 	description = "Cauldron",
 	groups = {cracky=2},
+	on_rotate = screwdriver.rotate_simple,
 	tiles = {
 		{ name = "xdecor_cauldron_top_anim.png",
 			animation = {type="vertical_frames", length=3.0} },
@@ -175,6 +180,7 @@ xdecor.register("chair", {
 	tiles = {"xdecor_wood.png"},
 	sounds = default.node_sound_wood_defaults(),
 	groups = {choppy=3, flammable=3},
+	on_rotate = screwdriver.rotate_simple,
 	node_box = {
 		type = "fixed",
 		fixed = {{-0.3125, -0.5, 0.1875, -0.1875, 0.5, 0.3125},
@@ -326,7 +332,8 @@ xdecor.register("empty_shelf", {
 	infotext = "Empty Shelf",
 	tiles = {"default_wood.png", "default_wood.png^xdecor_empty_shelf.png"},
 	groups = {choppy=3, flammable=3},
-	sounds = default.node_sound_wood_defaults()
+	sounds = default.node_sound_wood_defaults(),
+	on_rotate = screwdriver.rotate_simple
 })
 
 xdecor.register("enderchest", {
@@ -338,6 +345,7 @@ xdecor.register("enderchest", {
 	},
 	groups = {cracky=2},
 	sounds = default.node_sound_stone_defaults(),
+	on_rotate = screwdriver.rotate_simple,
 	on_construct = function(pos)
 		local meta = minetest.get_meta(pos)
 		local xbg = default.gui_bg..default.gui_bg_img..default.gui_slots
@@ -482,6 +490,7 @@ xdecor.register("painting", {
 	paramtype2 = "wallmounted",
 	legacy_wallmounted = true,
 	walkable = false,
+	on_rotate = screwdriver.rotate_simple,
 	wield_image = "xdecor_painting.png",
 	selection_box = {type="wallmounted"},
 	groups = {dig_immediate=3, flammable=3, attached_node=1}
@@ -508,6 +517,7 @@ xdecor.register("multishelf", {
 	description = "Multi Shelf",
 	inventory = {size=24},
 	infotext = "Multi Shelf",
+	on_rotate = screwdriver.rotate_simple,
 	tiles = {"default_wood.png", "default_wood.png^xdecor_multishelf.png"},
 	groups = {choppy=3, flammable=3},
 	sounds = default.node_sound_wood_defaults()
@@ -533,6 +543,7 @@ xdecor.register("stonepath", {
 	description = "Garden Stone Path",
 	tiles = {"default_stone.png"},
 	groups = {snappy=3},
+	on_rotate = screwdriver.rotate_simple,
 	sounds = default.node_sound_stone_defaults(),
 	sunlight_propagates = true,
 	node_box = {
@@ -585,6 +596,7 @@ xdecor.register("tv", {
 	description = "Television",
 	light_source = 11,
 	groups = {snappy=3},
+	on_rotate = screwdriver.rotate_simple,
 	tiles = {
 		"xdecor_television_left.png^[transformR270",
 		"xdecor_television_left.png^[transformR90",

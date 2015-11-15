@@ -1,6 +1,7 @@
 -- See https://github.com/kilbith/realchess for the main repository
 
 local realchess = {}
+screwdriver = screwdriver or {}
 
 local function index_to_xy(index)
 	index = index - 1
@@ -599,6 +600,7 @@ minetest.register_node(":realchess:chessboard", {
 	sounds = default.node_sound_wood_defaults(),
 	node_box = {type = "fixed", fixed = {-0.5, -0.5, -0.5, 0.5, -0.4375, 0.5}},
 	sunlight_propagates = true,
+	on_rotate = screwdriver.rotate_simple,
 	can_dig = realchess.dig,
 	on_construct = realchess.init,
 	on_receive_fields = realchess.fields,

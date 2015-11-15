@@ -1,4 +1,5 @@
 local worktable = {}
+screwdriver = screwdriver or {}
 local xbg = default.gui_bg..default.gui_bg_img..default.gui_slots
 
 local nodes = { -- Nodes allowed to be cut. Mod name = {node name}.
@@ -171,6 +172,7 @@ xdecor.register("worktable", {
 		"xdecor_worktable_sides.png", "xdecor_worktable_sides.png",
 		"xdecor_worktable_front.png", "xdecor_worktable_front.png"
 	},
+	on_rotate = screwdriver.rotate_simple,
 	can_dig = worktable.dig,
 	on_construct = worktable.construct,
 	on_receive_fields = worktable.fields,

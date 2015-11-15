@@ -1,4 +1,5 @@
 local enchanting = {}
+screwdriver = screwdriver or {}
 
 function enchanting.tools_fs()
 	return "size[9,8;]"..default.gui_slots..
@@ -94,6 +95,7 @@ xdecor.register("enchantment_table", {
 	},
 	groups = {cracky=1},
 	sounds = default.node_sound_stone_defaults(),
+	on_rotate = screwdriver.rotate_simple,
 	can_dig = enchanting.dig,
 	on_construct = enchanting.default_fs,
 	on_receive_fields = enchanting.fields,
