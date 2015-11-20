@@ -81,6 +81,15 @@ minetest.register_craft({
 })
 
 minetest.register_craft({
+	output = "xdecor:crate",
+	recipe = {
+		{"group:wood", "group:wood", "group:stick"},
+		{"group:wood", "group:stick", "group:wood"},
+		{"group:stick", "group:wood", "group:wood"}
+	}
+})
+
+minetest.register_craft({
 	output = "xdecor:mossycobble_wall_ln 6",
 	recipe = {
 		{"default:mossycobble", "default:mossycobble", "default:mossycobble"},

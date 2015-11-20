@@ -266,6 +266,15 @@ for _, c in pairs(colors) do
 	})
 end
 
+xdecor.register("crate", {
+	description = "Crate",
+	inventory = {size=24},
+	infotext = "Crate",
+	tiles = {"xdecor_crate.png"},
+	groups = {choppy=2, oddly_breakable_by_hand=1, flammable=3},
+	sounds = default.node_sound_wood_defaults()
+})
+
 xdecor.register("cushion", {
 	description = "Cushion",
 	tiles = {"xdecor_cushion.png"},
