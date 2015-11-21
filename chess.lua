@@ -528,9 +528,11 @@ function realchess.move(pos, from_list, from_index, to_list, to_index, count, pl
 	meta:set_int("lastMoveTime", minetest.get_gametime())
 
 	if meta:get_string("lastMove") == "black" then
-		minetest.chat_send_player(playerWhite, "["..os.date("%H:%M:%S").."] "..playerName.." has moved a "..pieceFrom:match("%a+:(%a+)")..", it's now your turn.")
+		minetest.chat_send_player(playerWhite, "["..os.date("%H:%M:%S").."] "..
+				playerName.." has moved a "..pieceFrom:match("%a+:(%a+)")..", it's now your turn.")
 	elseif meta:get_string("lastMove") == "white" then
-		minetest.chat_send_player(playerBlack, "["..os.date("%H:%M:%S").."] "..playerName.." has moved a "..pieceFrom:match("%a+:(%a+)")..", it's now your turn.")
+		minetest.chat_send_player(playerBlack, "["..os.date("%H:%M:%S").."] "..
+				playerName.." has moved a "..pieceFrom:match("%a+:(%a+)")..", it's now your turn.")
 	end
 
 	if pieceTo:find("king") then
@@ -542,34 +544,45 @@ function realchess.move(pos, from_list, from_index, to_list, to_index, count, pl
 	return 1
 end
 
+local function timeout_format(timeout_limit)
+	local time_remaining = timeout_limit - minetest.get_gametime()
+	local minutes = math.floor(time_remaining / 60)
+	local seconds = time_remaining % 60
+
+	if minutes == 0 then return seconds.." sec." end
+	return minutes.." min. "..seconds.." sec."
+end
+
 function realchess.fields(pos, formname, fields, sender)
 	local playerName = sender:get_player_name()
 	local meta = minetest.get_meta(pos)
-
+	local timeout_limit = meta:get_int("lastMoveTime") + 300
 	if fields.quit then return end
 
-	-- the chess can't be reset during a started game unless if nobody has played during a while (~5 min. by default)
+	-- timeout is 5 min. by default for resetting the game (non-players only)
 	if fields.new and (meta:get_string("playerWhite") == playerName or
 			meta:get_string("playerBlack") == playerName) then
 		realchess.init(pos)
 	elseif fields.new and meta:get_int("lastMoveTime") ~= 0 and
-			minetest.get_gametime() >= meta:get_int("lastMoveTime") + 300 and
+			minetest.get_gametime() >= timeout_limit and
 			(meta:get_string("playerWhite") ~= playerName or
 			meta:get_string("playerBlack") ~= playerName) then
 		realchess.init(pos)
 	else
-		minetest.chat_send_player(playerName, "You can't reset the chessboard, a game has been started.\nIf you are not a current player, try again after a while.")
+		minetest.chat_send_player(playerName, "[!] You can't reset the chessboard, a game has been started.\n"..
+				"If you are not a current player, try again in "..timeout_format(timeout_limit))
 	end
 end
 
 function realchess.dig(pos, player)
 	local meta = minetest.get_meta(pos)
 	local playerName = player:get_player_name()
+	local timeout_limit = meta:get_int("lastMoveTime") + 300
 
-	-- the chess can't be dug during a started game unless if nobody has played during a while (~5 min. by default)
-	if meta:get_int("lastMoveTime") ~= 0 and
-			minetest.get_gametime() <= meta:get_int("lastMoveTime") + 300 then
-		minetest.chat_send_player(playerName, "You can't dig the chessboard, a game has been started.\nReset it first if you're a current player, or try digging again after a while.")
+	-- timeout is 5 min. by default for digging the chessboard (non-players only)
+	if meta:get_int("lastMoveTime") ~= 0 and minetest.get_gametime() <= timeout_limit then
+		minetest.chat_send_player(playerName, "[!] You can't dig the chessboard, a game has been started.\n"..
+				"Reset it first if you're a current player, or dig again in "..timeout_format(timeout_limit))
 		return false
 	end
 
