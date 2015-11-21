@@ -350,7 +350,7 @@ xdecor.register("enderchest", {
 	on_rotate = screwdriver.rotate_simple,
 	on_construct = function(pos)
 		local meta = minetest.get_meta(pos)
-		local xbg = default.gui_bg..default.gui_bg_img..default.gui_slots
+		local xbg = default.gui_bg..default.gui_bg_img..default.gui_slots..default.get_hotbar_bg(0,5)
 		meta:set_string("formspec", "size[8,9]"..xbg..
 				"list[current_player;enderchest;0,0;8,4;]"..
 				"list[current_player;main;0,5;8,4;]")

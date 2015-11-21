@@ -1,6 +1,6 @@
 local mailbox = {}
 screwdriver = screwdriver or {}
-local xbg = default.gui_bg..default.gui_bg_img..default.gui_slots
+local xbg = default.gui_bg..default.gui_bg_img..default.gui_slots..default.get_hotbar_bg(0,5.25)
 
 xdecor.register("mailbox", {
 	description = "Mailbox",

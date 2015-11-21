@@ -1,22 +1,23 @@
 local enchanting = {}
 screwdriver = screwdriver or {}
+local xbg = default.gui_slots..default.get_hotbar_bg(0.5,4.5)
 
 function enchanting.tools_fs()
-	return "size[9,8;]"..default.gui_slots..
-		"bgcolor[#080808BB;true]background[0,0;9,8;ench_ui.png]list[current_name;tool;0.9,2.9;1,1;]list[current_name;mese;2,2.9;1,1;]image[2,2.9;1,1;mese_layout.png]list[current_player;main;0.5,4.5;8,3;]"..
+	return "size[9,8;]"..xbg..
+		"bgcolor[#080808BB;true]background[0,0;9,8;ench_ui.png]list[context;tool;0.9,2.9;1,1;]list[context;mese;2,2.9;1,1;]image[2,2.9;1,1;mese_layout.png]list[current_player;main;0.5,4.5;8,3;]"..
 		"image_button[3.9,0.9;4,0.9;bg_btn.png;fast;Efficiency]image_button[3.9,1.82;4,1.1;bg_btn.png;durable;Durability]"
 end
 
 function enchanting.swords_fs()
-	return "size[9,8;]"..default.gui_slots..
-		"bgcolor[#080808BB;true]background[0,0;9,8;ench_ui.png]list[current_name;tool;0.9,2.9;1,1;]list[current_name;mese;2,2.9;1,1;]image[2,2.9;1,1;mese_layout.png]list[current_player;main;0.5,4.5;8,3;]"..
+	return "size[9,8;]"..xbg..
+		"bgcolor[#080808BB;true]background[0,0;9,8;ench_ui.png]list[context;tool;0.9,2.9;1,1;]list[context;mese;2,2.9;1,1;]image[2,2.9;1,1;mese_layout.png]list[current_player;main;0.5,4.5;8,3;]"..
 		"image_button[3.9,2.95;4,0.9;bg_btn.png;sharp;Sharpness]"
 end
 
 function enchanting.default_fs(pos)
 	local meta = minetest.get_meta(pos)
-	local formspec = "size[9,8;]"..default.gui_slots..
-		"bgcolor[#080808BB;true]background[0,0;9,8;ench_ui.png]list[current_name;tool;0.9,2.9;1,1;]list[current_name;mese;2,2.9;1,1;]image[2,2.9;1,1;mese_layout.png]list[current_player;main;0.5,4.5;8,3;]"
+	local formspec = "size[9,8;]"..xbg..
+		"bgcolor[#080808BB;true]background[0,0;9,8;ench_ui.png]list[context;tool;0.9,2.9;1,1;]list[context;mese;2,2.9;1,1;]image[2,2.9;1,1;mese_layout.png]list[current_player;main;0.5,4.5;8,3;]"
 
 	meta:set_string("formspec", formspec)
 	meta:set_string("infotext", "Enchantment Table")
