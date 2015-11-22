@@ -100,6 +100,8 @@ function worktable.put(_, listname, _, stack, _)
 		stn == "xdecor:hammer" then return 1
 	elseif listname == "tool" and tdef and twear > 0 then
 		return 1
+	elseif listname == "storage" then
+		return count
 	end
 	return 0
 end
