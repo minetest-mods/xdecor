@@ -69,8 +69,7 @@ function worktable.fields(pos, _, fields, sender)
 
 	if fields.storage then
 		minetest.show_formspec(player, "", worktable.storage(pos))
-	end
-	if fields.craft then
+	elseif fields.craft then
 		minetest.show_formspec(player, "", worktable.crafting(pos))
 	end
 end
@@ -79,7 +78,8 @@ function worktable.dig(pos, _)
 	local inv = minetest.get_meta(pos):get_inventory()
 	if not inv:is_empty("input") or not inv:is_empty("hammer") or not
 		inv:is_empty("tool") or not inv:is_empty("storage") then
-		return false end
+		return false
+	end
 	return true
 end
 
@@ -97,14 +97,12 @@ function worktable.put(_, listname, _, stack, _)
 	local count = stack:get_count()
 	local mod, node = stn:match("([%a_]+):([%a_]+)")
 
-	if listname == "forms" then return 0 end
-	if listname == "input" then
+	if listname == "forms" then return 0
+	elseif listname == "input" then
 		if not worktable.contains(nodes[mod], node) then return 0 end
-	end
-	if listname == "hammer" then
+	elseif listname == "hammer" then
 		if stn ~= "xdecor:hammer" then return 0 end
-	end
-	if listname == "tool" then
+	elseif listname == "tool" then
 		local tdef = minetest.registered_tools[stn]
 		local twear = stack:get_wear()
 		if not (tdef and twear > 0) then return 0 end
@@ -125,8 +123,8 @@ function worktable.take(pos, listname, _, stack, _)
 end
 
 function worktable.move(_, from_list, _, to_list, _, count, _)
-	if from_list == "storage" and to_list == "storage" then
-		return count else return 0 end
+	if from_list == "storage" and to_list == "storage" then return count end
+	return 0
 end
 
 local function update_inventory(inv, inputstack)
@@ -138,9 +136,9 @@ local function update_inventory(inv, inputstack)
 		local input = inv:get_stack("input", 1)
 		local mod, node = mat:match("([%a_]+):([%a_]+)")
 		local count = math.min(n[2] * input:get_count(), inputstack:get_stack_max())
-		
+
 		if not worktable.contains(nodes[mod], node) then return end
-		output[#output+1] = string.format("%s_%s %d", mat, n[1], count)
+		output[#output+1] = mat.."_"..n[1].." "..count
 	end
 	inv:set_list("forms", output)
 end
