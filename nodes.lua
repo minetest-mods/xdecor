@@ -1,4 +1,5 @@
 screwdriver = screwdriver or {}
+local xbg = default.gui_bg..default.gui_bg_img..default.gui_slots
 
 local function sit(pos, node, clicker)
 	local player = clicker:get_player_name()
@@ -12,7 +13,7 @@ local function sit(pos, node, clicker)
 	elseif default.player_attached[player] ~= true and
 		clicker:get_player_velocity().x == 0 and
 		clicker:get_player_velocity().y == 0 and
-		clicker:get_player_velocity().z == 0 then
+		clicker:get_player_velocity().z == 0 and node.param2 <= 3 then
 
 		clicker:set_eye_offset({x=0, y=-7, z=2}, {x=0, y=0, z=0})
 		clicker:set_physics_override(0, 0, 0)
@@ -28,8 +29,8 @@ local function sit(pos, node, clicker)
 			clicker:set_look_yaw(6.28)
 		elseif node.param2 == 3 then
 			clicker:set_look_yaw(4.75)
-		else return end
-	else return end
+		end
+	end
 end
 
 xpanes.register_pane("bamboo_frame", {
@@ -188,8 +189,7 @@ xdecor.register("chair", {
 	on_rightclick = function(pos, node, clicker)
 		local objs = minetest.get_objects_inside_radius(pos, 0.5)
 		for _, p in pairs(objs) do
-			if p:get_player_name() ~= clicker:get_player_name() or
-				node.param2 > 3 then return end
+			if p:get_player_name() ~= clicker:get_player_name() then return end
 		end
 		pos.y = pos.y + 0
 		sit(pos, node, clicker)
@@ -284,8 +284,7 @@ xdecor.register("cushion", {
 	on_rightclick = function(pos, node, clicker)
 		local objs = minetest.get_objects_inside_radius(pos, 0.5)
 		for _, p in pairs(objs) do
-			if p:get_player_name() ~= clicker:get_player_name() or
-				node.param2 > 3 then return end
+			if p:get_player_name() ~= clicker:get_player_name() then return end
 		end
 		pos.y = pos.y + 0
 		sit(pos, node, clicker)
@@ -306,8 +305,7 @@ xdecor.register("cushion", {
 })
 
 local function door_access(door)
-	if door:find("prison") then return true end
-	return false
+	return door:find("prison")
 end
 
 local door_types = {
@@ -350,8 +348,7 @@ xdecor.register("enderchest", {
 	on_rotate = screwdriver.rotate_simple,
 	on_construct = function(pos)
 		local meta = minetest.get_meta(pos)
-		local xbg = default.gui_bg..default.gui_bg_img..default.gui_slots..default.get_hotbar_bg(0,5)
-		meta:set_string("formspec", "size[8,9]"..xbg..
+		meta:set_string("formspec", "size[8,9]"..xbg..default.get_hotbar_bg(0,5)
 				"list[current_player;enderchest;0,0;8,4;]"..
 				"list[current_player;main;0,5;8,4;]")
 		meta:set_string("infotext", "Ender Chest")
@@ -395,7 +392,7 @@ minetest.register_tool("xdecor:flint_steel", {
 			else
 				minetest.chat_send_player(player, "This area is protected.")
 			end
-		else return end
+		end
 
 		itemstack:add_wear(1000)
 		return itemstack

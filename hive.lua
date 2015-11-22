@@ -15,8 +15,7 @@ end
 
 function hive.dig(pos, _)
 	local inv = minetest.get_meta(pos):get_inventory()
-	if not inv:is_empty("honey") then return false end
-	return true
+	return inv:is_empty("honey")
 end
 
 xdecor.register("hive", {
@@ -37,10 +36,7 @@ xdecor.register("hive", {
 		local health = clicker:get_hp()
 		clicker:set_hp(health - 1)
 	end,
-	allow_metadata_inventory_put = function(_, listname, _, stack, _)
-		if listname == "honey" then return 0 end
-		return stack:get_count()
-	end
+	allow_metadata_inventory_put = function(...) return 0 end
 })
 
 minetest.register_abm({
@@ -56,7 +52,8 @@ minetest.register_abm({
 		local maxp = vector.add(pos, radius)
 		local flowers = minetest.find_nodes_in_area(minp, maxp, "group:flower")
 
-		if #flowers >= 2 and honey < 10 then
-			inv:add_item("honey", "xdecor:honey") end
+		if #flowers >= 2 and honey < 12 then
+			inv:add_item("honey", "xdecor:honey")
+		end
 	end
 })

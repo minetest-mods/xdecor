@@ -31,21 +31,19 @@ function enchanting.on_put(pos, listname, _, stack, _)
 	local stn = stack:get_name()
 	local meta = minetest.get_meta(pos)
 
-	if listname == "tool" then
-		if stn:find("sword") then
-			meta:set_string("formspec", enchanting.swords_fs())
-		else
-			meta:set_string("formspec", enchanting.tools_fs())
-		end
-	end	
+	if listname == "tool" and stn:find("sword") then
+		meta:set_string("formspec", enchanting.swords_fs())
+	else meta:set_string("formspec", enchanting.tools_fs()) end
 end
 
 function enchanting.is_allowed(toolname)
 	local tdef = minetest.registered_tools[toolname]
-	if tdef and toolname:find("default:") and not toolname:find("stone") and not
+	if tdef and toolname:find("default:") and not
+		toolname:find("stone") and not
 		toolname:find("wood") then
 		return 1
-	else return 0 end
+	end
+	return 0
 end
 
 function enchanting.fields(pos, _, fields, _)
@@ -69,22 +67,19 @@ end
 
 function enchanting.dig(pos, _)
 	local inv = minetest.get_meta(pos):get_inventory()
-	if not inv:is_empty("tool") or not inv:is_empty("mese") then
-		return false
-	end
-	return true
+	return inv:is_empty("tool") and inv:is_empty("mese")
 end
 
 function enchanting.put(_, listname, _, stack, _)
 	local toolname = stack:get_name()
 	local count = stack:get_count()
 
-	if listname == "mese" then
-		if toolname == "default:mese_crystal" then return count
-		else return 0 end
+	if listname == "mese" and
+		toolname == "default:mese_crystal" then return count
+	elseif listname == "tool" then
+		return enchanting.is_allowed(toolname)
 	end
-	if listname == "tool" then return enchanting.is_allowed(toolname) end
-	return count
+	return 0
 end
 
 xdecor.register("enchantment_table", {

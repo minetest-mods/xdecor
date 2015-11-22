@@ -1,6 +1,6 @@
 local mailbox = {}
 screwdriver = screwdriver or {}
-local xbg = default.gui_bg..default.gui_bg_img..default.gui_slots..default.get_hotbar_bg(0,5.25)
+local xbg = default.gui_bg..default.gui_bg_img..default.gui_slots
 
 xdecor.register("mailbox", {
 	description = "Mailbox",
@@ -38,9 +38,7 @@ xdecor.register("mailbox", {
 		local owner = meta:get_string("owner")
 		local inv = meta:get_inventory()
 
-		if not inv:is_empty("main") or not player or
-			player:get_player_name() ~= owner then return false end
-		return true
+		return inv:is_empty("main") and player and player:get_player_name() == owner
 	end,
 	on_metadata_inventory_put = function(pos, listname, _, stack, _)
 		local inv = minetest.get_meta(pos):get_inventory()
@@ -50,26 +48,23 @@ xdecor.register("mailbox", {
 		end
 	end,
 	allow_metadata_inventory_put = function(pos, listname, _, stack, _)
-		if listname == "main" then return 0 end
 		if listname == "drop" then
 			local meta = minetest.get_meta(pos)
 			local inv = meta:get_inventory()
-			if inv:room_for_item("main", stack) then return -1
-			else return 0 end
+			if inv:room_for_item("main", stack) then return -1 end
 		end
+		return 0
 	end
 })
 
 function mailbox.get_formspec(pos)
 	local spos = pos.x..","..pos.y..","..pos.z
-	local formspec = "size[8,9]"..xbg..
+	return "size[8,9]"..xbg..default.get_hotbar_bg(0,5.25)..
 		"label[0,0;You received...]list[nodemeta:"..spos..";main;0,0.75;8,4;]list[current_player;main;0,5.25;8,4;]"
-	return formspec
 end
 
 function mailbox.get_insert_formspec(pos, owner)
 	local spos = pos.x..","..pos.y..","..pos.z
-	local formspec = "size[8,5]"..xbg..
+	return "size[8,5]"..xbg..default.get_hotbar_bg(0,1.25)..
 		"label[0.5,0;Send your goods\nto "..owner.." :]list[nodemeta:"..spos..";drop;3.5,0;1,1;]list[current_player;main;0,1.25;8,4;]"
-	return formspec
 end

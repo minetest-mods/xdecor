@@ -41,10 +41,8 @@ end
 
 function worktable.storage(pos)
 	local inv = minetest.get_meta(pos):get_inventory()
-	local f = "size[8,7]"..xbg..
-		"list[context;storage;0,0;8,2;]list[current_player;main;0,3.25;8,4;]"
 	inv:set_size("storage", 8*2)
-	return f
+	return "size[8,7]"..xbg.."list[context;storage;0,0;8,2;]list[current_player;main;0,3.25;8,4;]"
 end
 
 function worktable.construct(pos)
@@ -76,11 +74,8 @@ end
 
 function worktable.dig(pos, _)
 	local inv = minetest.get_meta(pos):get_inventory()
-	if not inv:is_empty("input") or not inv:is_empty("hammer") or not
-		inv:is_empty("tool") or not inv:is_empty("storage") then
-		return false
-	end
-	return true
+	return inv:is_empty("input") and inv:is_empty("hammer") and
+		inv:is_empty("tool") and inv:is_empty("storage")
 end
 
 function worktable.contains(table, element)
@@ -96,18 +91,17 @@ function worktable.put(_, listname, _, stack, _)
 	local stn = stack:get_name()
 	local count = stack:get_count()
 	local mod, node = stn:match("([%a_]+):([%a_]+)")
+	local tdef = minetest.registered_tools[stn]
+	local twear = stack:get_wear()
 
-	if listname == "forms" then return 0
-	elseif listname == "input" then
-		if not worktable.contains(nodes[mod], node) then return 0 end
-	elseif listname == "hammer" then
-		if stn ~= "xdecor:hammer" then return 0 end
-	elseif listname == "tool" then
-		local tdef = minetest.registered_tools[stn]
-		local twear = stack:get_wear()
-		if not (tdef and twear > 0) then return 0 end
+	if listname == "input" and
+		worktable.contains(nodes[mod], node) then return count
+	elseif listname == "hammer" and
+		stn == "xdecor:hammer" then return 1
+	elseif listname == "tool" and tdef and twear > 0 then
+		return 1
 	end
-	return count
+	return 0
 end
 
 function worktable.take(pos, listname, _, stack, _)
@@ -192,7 +186,8 @@ for _, name in pairs(n) do
 
 		for k, v in pairs(ndef.groups) do
 			if k ~= "wood" and k ~= "stone" and k ~= "level" then
-				groups[k] = v end
+				groups[k] = v
+			end
 		end
 
 		minetest.register_node(":"..mod..":"..name.."_"..d[1], {
