@@ -104,14 +104,18 @@ function worktable.put(_, listname, _, stack, _)
 	return 0
 end
 
-function worktable.take(pos, listname, _, stack, _)
+function worktable.take(pos, listname, _, stack, player)
 	local inv = minetest.get_meta(pos):get_inventory()
+	local user_inv = player:get_inventory()
 	local inputstack = inv:get_stack("input", 1):get_name()
 	local mod, node = inputstack:match("([%a_]+):([%a_]+)")
 
 	if listname == "forms" then
-		if not worktable.contains(nodes[mod], node) then return 0 end
-		return -1
+		if worktable.contains(nodes[mod], node) and
+			user_inv:room_for_item("main", stack:get_name()) then
+			return -1
+		end
+		return 0
 	end
 	return stack:get_count()
 end

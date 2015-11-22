@@ -149,7 +149,7 @@ if minetest.get_modpath("bucket") then
 				return itemstack
 			else if original_bucket_on_use then
 				return original_bucket_on_use(itemstack, user, pointed_thing)
-			else return end
+			end
 		end
 	end
 	})

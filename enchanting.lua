@@ -31,9 +31,13 @@ function enchanting.on_put(pos, listname, _, stack, _)
 	local stn = stack:get_name()
 	local meta = minetest.get_meta(pos)
 
-	if listname == "tool" and stn:find("sword") then
-		meta:set_string("formspec", enchanting.swords_fs())
-	else meta:set_string("formspec", enchanting.tools_fs()) end
+	if listname == "tool" then
+		if stn:find("sword") then
+			meta:set_string("formspec", enchanting.swords_fs())
+		else
+			meta:set_string("formspec", enchanting.tools_fs())
+		end
+	end
 end
 
 function enchanting.is_allowed(toolname)
