@@ -166,6 +166,8 @@ for _, ench in pairs(tooldef[3]) do
 			local original_groupcaps = original_tool.tool_capabilities.groupcaps
 			local groupcaps = table.copy(original_groupcaps)
 			local fleshy = original_damage_groups.fleshy
+			local full_punch_interval = original_tool.tool_capabilities.full_punch_interval
+			local max_drop_level = original_tool.tool_capabilities.max_drop_level
 
 			if enchant == "durable" then
 				groupcaps[group].uses = math.ceil(original_groupcaps[group].uses * use_factor)
@@ -182,7 +184,10 @@ for _, ench in pairs(tooldef[3]) do
 				inventory_image = original_tool.inventory_image.."^[colorize:violet:50",
 				wield_image = original_tool.wield_image,
 				groups = {not_in_creative_inventory=1},
-				tool_capabilities = {groupcaps = groupcaps, damage_groups = {fleshy = fleshy}}
+				tool_capabilities = {
+					groupcaps = groupcaps, damage_groups = {fleshy = fleshy},
+					full_punch_interval = full_punch_interval, max_drop_level = max_drop_level
+				}
 			})
 		end
 
@@ -192,15 +197,13 @@ for _, ench in pairs(tooldef[3]) do
 			local armorcaps = {}
 			armorcaps.not_in_creative_inventory=1
 
-			if enchant == "strong" then
-				for armor_group, value in pairs(original_armor_groups) do
+			for armor_group, value in pairs(original_armor_groups) do
+				if enchant == "strong" then
 					armorcaps[armor_group] = math.ceil(value * 1.2)
-				end
-			elseif enchant == "speed" then
-				for armor_group, value in pairs(original_armor_groups) do
+				elseif enchant == "speed" then
 					armorcaps[armor_group] = value
-					armorcaps.physics_speed = 0.5
-					armorcaps.physics_jump = 0.3
+					armorcaps.physics_speed = 0.4
+					armorcaps.physics_jump = 0.2
 				end
 			end
 
