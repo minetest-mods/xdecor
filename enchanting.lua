@@ -213,8 +213,8 @@ for _, ench in pairs(tooldef[3]) do
 			})
 		end
 	end
-	minetest.register_alias("xdecor:enchanted_"..tool.."_"..material.."_"..enchant,
-			":"..mod..":enchanted_"..tool.."_"..material.."_"..enchant)
+	minetest.register_alias("xdecor:enchanted_"..tool.."_"..material.."_"..enchant, mod..":enchanted_"..tool.."_"..material.."_"..enchant)
+	minetest.register_alias(":"..mod..":enchanted_"..tool.."_"..material.."_"..enchant, mod..":enchanted_"..tool.."_"..material.."_"..enchant)
 end
 end
 end
