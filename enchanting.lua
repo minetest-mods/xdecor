@@ -187,20 +187,20 @@ for _, ench in pairs(tooldef[3]) do
 		end
 
 		if mod == "3d_armor" then
-			local original_protect_groups = original_tool.groups
-			local protectcaps = table.copy(original_protect_groups)
-			local protectcaps = {}
-			protectcaps.not_in_creative_inventory=1
+			local original_armor_groups = original_tool.groups
+			local armorcaps = table.copy(original_armor_groups)
+			local armorcaps = {}
+			armorcaps.not_in_creative_inventory=1
 
 			if enchant == "strong" then
-				for protect_group, value in pairs(original_protect_groups) do
-					protectcaps[protect_group] = math.ceil(value * 1.2)
+				for armor_group, value in pairs(original_armor_groups) do
+					armorcaps[armor_group] = math.ceil(value * 1.2)
 				end
 			elseif enchant == "speed" then
-				for protect_group, value in pairs(original_protect_groups) do
-					protectcaps[protect_group] = value
-					protectcaps.physics_speed = 0.8
-					protectcaps.physics_jump = 0.3
+				for armor_group, value in pairs(original_armor_groups) do
+					armorcaps[armor_group] = value
+					armorcaps.physics_speed = 0.5
+					armorcaps.physics_jump = 0.3
 				end
 			end
 
@@ -208,7 +208,7 @@ for _, ench in pairs(tooldef[3]) do
 				description = string.format("Enchanted %s %s (%s)", cap(material), cap(tool), cap(enchant)),
 				inventory_image = original_tool.inventory_image.."^[colorize:blue:20",
 				wield_image = original_tool.wield_image,
-				groups = protectcaps,
+				groups = armorcaps,
 				wear = 0
 			})
 		end
