@@ -2,9 +2,8 @@ local enchanting = {}
 screwdriver = screwdriver or {}
 
 function enchanting.formspec(pos, tooltype)
-	local xbg = default.gui_slots..default.get_hotbar_bg(0.5,4.5)
 	local meta = minetest.get_meta(pos)
-	local formspec = "size[9,9;]"..xbg..
+	local formspec = "size[9,9;]"..default.gui_slots..default.get_hotbar_bg(0.5,4.5)..
 		"bgcolor[#080808BB;true]background[0,0;9,9;ench_ui.png]list[context;tool;0.9,2.9;1,1;]list[context;mese;2,2.9;1,1;]image[2,2.9;1,1;mese_layout.png]list[current_player;main;0.5,4.5;8,4;]"
 
 	if tooltype == "sword" then
@@ -18,12 +17,6 @@ function enchanting.formspec(pos, tooltype)
 	end
 
 	meta:set_string("formspec", formspec)
-	meta:set_string("infotext", "Enchantment Table")
-
-	local inv = meta:get_inventory()
-	inv:set_size("tool", 1)
-	inv:set_size("mese", 1)
-
 	return formspec
 end
 
@@ -97,7 +90,16 @@ xdecor.register("enchantment_table", {
 	sounds = default.node_sound_stone_defaults(),
 	on_rotate = screwdriver.rotate_simple,
 	can_dig = enchanting.dig,
-	on_construct = enchanting.formspec,
+	on_construct = function(pos)
+		local meta = minetest.get_meta(pos)
+		enchanting.formspec(pos, nil)
+		meta:set_string("infotext", "Enchantment Table")
+
+		local inv = meta:get_inventory()
+		inv:set_size("tool", 1)
+		inv:set_size("mese", 1)
+	end,
+	enchanting.formspec,
 	on_receive_fields = enchanting.fields,
 	on_metadata_inventory_put = enchanting.on_put,
 	allow_metadata_inventory_put = enchanting.put,
@@ -187,7 +189,7 @@ for _, ench in pairs(tooldef[3]) do
 					armorcaps[armor_group] = math.ceil(value * 1.2)
 				elseif enchant == "speed" then
 					armorcaps[armor_group] = value
-					armorcaps.physics_speed = 0.4
+					armorcaps.physics_speed = 0.3
 					armorcaps.physics_jump = 0.2
 				end
 			end
