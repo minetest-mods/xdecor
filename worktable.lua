@@ -234,3 +234,4 @@ minetest.register_abm({
 		inv:set_stack("hammer", 1, hammer)
 	end
 })
+
