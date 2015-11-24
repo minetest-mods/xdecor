@@ -86,7 +86,7 @@ xdecor.register("enchantment_table", {
 		"xdecor_enchantment_side.png", "xdecor_enchantment_side.png",
 		"xdecor_enchantment_side.png", "xdecor_enchantment_side.png"
 	},
-	groups = {cracky=1, oddly_breakable_by_hand=1, level=2},
+	groups = {cracky=1, oddly_breakable_by_hand=1, level=1},
 	sounds = default.node_sound_stone_defaults(),
 	on_rotate = screwdriver.rotate_simple,
 	can_dig = enchanting.dig,
