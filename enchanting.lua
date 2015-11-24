@@ -1,35 +1,21 @@
 local enchanting = {}
 screwdriver = screwdriver or {}
-local xbg = default.gui_slots..default.get_hotbar_bg(0.5,4.5)
 
-function enchanting.tools_fs()
-	return "size[9,9;]"..xbg..
-		"bgcolor[#080808BB;true]background[0,0;9,9;ench_ui.png]list[context;tool;0.9,2.9;1,1;]list[context;mese;2,2.9;1,1;]image[2,2.9;1,1;mese_layout.png]list[current_player;main;0.5,4.5;8,4;]"..
-		"image_button[3.9,0.9;4,0.9;bg_btn.png;fast;Efficiency]image_button[3.9,1.82;4,1.1;bg_btn.png;durable;Durability]"
-end
-
-function enchanting.swords_fs()
-	return "size[9,9;]"..xbg..
-		"bgcolor[#080808BB;true]background[0,0;9,9;ench_ui.png]list[context;tool;0.9,2.9;1,1;]list[context;mese;2,2.9;1,1;]image[2,2.9;1,1;mese_layout.png]list[current_player;main;0.5,4.5;8,4;]"..
-		"image_button[3.9,2.95;4,0.9;bg_btn.png;sharp;Sharpness]"
-end
-
-function enchanting.armors_fs()
-	return "size[9,9;]"..xbg..
-		"bgcolor[#080808BB;true]background[0,0;9,9;ench_ui.png]list[context;tool;0.9,2.9;1,1;]list[context;mese;2,2.9;1,1;]image[2,2.9;1,1;mese_layout.png]list[current_player;main;0.5,4.5;8,4;]"..
-		"image_button[3.9,0.9;4,0.9;bg_btn.png;strong;Strength]"
-end
-
-function enchanting.boots_fs()
-	return "size[9,9;]"..xbg..
-		"bgcolor[#080808BB;true]background[0,0;9,9;ench_ui.png]list[context;tool;0.9,2.9;1,1;]list[context;mese;2,2.9;1,1;]image[2,2.9;1,1;mese_layout.png]list[current_player;main;0.5,4.5;8,4;]"..
-		"image_button[3.9,0.9;4,0.9;bg_btn.png;strong;Strength]image_button[3.9,1.82;4,1.1;bg_btn.png;speed;Speed]"
-end
-
-function enchanting.default_fs(pos)
+function enchanting.formspec(pos, tooltype)
+	local xbg = default.gui_slots..default.get_hotbar_bg(0.5,4.5)
 	local meta = minetest.get_meta(pos)
 	local formspec = "size[9,9;]"..xbg..
 		"bgcolor[#080808BB;true]background[0,0;9,9;ench_ui.png]list[context;tool;0.9,2.9;1,1;]list[context;mese;2,2.9;1,1;]image[2,2.9;1,1;mese_layout.png]list[current_player;main;0.5,4.5;8,4;]"
+	
+	if tooltype == "sword" then
+		formspec = formspec.."image_button[3.9,2.95;4,0.9;bg_btn.png;sharp;Sharpness]"
+	elseif tooltype == "tool" then
+		formspec = formspec.."image_button[3.9,0.9;4,0.9;bg_btn.png;fast;Efficiency]image_button[3.9,1.82;4,1.1;bg_btn.png;durable;Durability]"
+	elseif tooltype == "armor" then
+		formspec = formspec.."image_button[3.9,0.9;4,0.9;bg_btn.png;strong;Strength]"
+	elseif tooltype == "boots" then
+		formspec = formspec.."image_button[3.9,0.9;4,0.9;bg_btn.png;strong;Strength]image_button[3.9,1.82;4,1.1;bg_btn.png;speed;Speed]"
+	end
 
 	meta:set_string("formspec", formspec)
 	meta:set_string("infotext", "Enchantment Table")
@@ -37,6 +23,8 @@ function enchanting.default_fs(pos)
 	local inv = meta:get_inventory()
 	inv:set_size("tool", 1)
 	inv:set_size("mese", 1)
+
+	return formspec
 end
 
 function enchanting.on_put(pos, listname, _, stack, _)
@@ -44,15 +32,14 @@ function enchanting.on_put(pos, listname, _, stack, _)
 	local meta = minetest.get_meta(pos)
 
 	if listname == "tool" then
-		if stn:find("sword") then
-			meta:set_string("formspec", enchanting.swords_fs())
-		elseif stn:find("pick") or stn:find("axe") or stn:find("shovel") then
-			meta:set_string("formspec", enchanting.tools_fs())
-		elseif stn:find("3d_armor:chestplate") or stn:find("3d_armor:helmet") or
-			stn:find("3d_armor:leggings") then
-			meta:set_string("formspec", enchanting.armors_fs())
-		elseif stn:find("3d_armor:boots") then
-			meta:set_string("formspec", enchanting.boots_fs())
+		if stn:find("pick") or stn:find("axe") or stn:find("shovel") then
+			meta:set_string("formspec", enchanting.formspec(pos, "tool"))
+		elseif stn:find("sword") then
+			meta:set_string("formspec", enchanting.formspec(pos, "sword"))
+		elseif stn:find("chestplate") or stn:find("leggings") or stn:find("helmet") then
+			meta:set_string("formspec", enchanting.formspec(pos, "armor"))
+		elseif stn:find("boots") then
+			meta:set_string("formspec", enchanting.formspec(pos, "boots"))
 		end
 	end
 end
@@ -110,13 +97,13 @@ xdecor.register("enchantment_table", {
 	sounds = default.node_sound_stone_defaults(),
 	on_rotate = screwdriver.rotate_simple,
 	can_dig = enchanting.dig,
-	on_construct = enchanting.default_fs,
+	on_construct = enchanting.formspec,
 	on_receive_fields = enchanting.fields,
 	on_metadata_inventory_put = enchanting.on_put,
 	allow_metadata_inventory_put = enchanting.put,
 	allow_metadata_inventory_move = function(...) return 0 end,
 	on_metadata_inventory_take = function(pos, listname, _, _, _)
-		if listname == "tool" then enchanting.default_fs(pos) end
+		if listname == "tool" then enchanting.formspec(pos, nil) end
 	end
 })
 
@@ -129,14 +116,12 @@ local damage_adder = 1
 local strenght_factor = 1.2
 
 local tools = {
-
-	--[[ Format :
+	--[[ Registration format :
 	 	[Mod name] = {
 	 		{materials},
 	 		{tool name, tool group, {enchantments}}
 		 }
 	--]]
-
 	["default"] = {
 		{"steel", "bronze", "mese", "diamond"},
 		{"axe", "choppy", {"durable", "fast"}}, 
