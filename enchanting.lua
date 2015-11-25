@@ -69,12 +69,14 @@ end
 
 function enchanting.put(_, listname, _, stack, _)
 	local toolstack = stack:get_name()
+	local toolname = toolstack:match("[%w_]+:([%w_]+)")
 	local count = stack:get_count()
+	local enchanted_tool = minetest.serialize(minetest.registered_tools):match("enchanted_"..toolname)
 
-	if listname == "mese" and
-		toolstack ~= "default:mese_crystal" then return 0
-	elseif listname == "tool" and not
-		minetest.registered_tools[toolstack] then return 0
+	if listname == "mese" and toolstack ~= "default:mese_crystal" then
+		return 0
+	elseif listname == "tool" and not enchanted_tool then
+		return 0 
 	end
 	return count
 end
