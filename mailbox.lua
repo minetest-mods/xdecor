@@ -102,8 +102,10 @@ function mailbox.formspec(pos, owner, num)
 			end
 		end
 
-		return "size[9.5,9]"..xbg..default.get_hotbar_bg(0.75,5.25)..
-			"label[0,0;Mailbox :]label[6,0;Last donators :]"..
+		return "size[9.5,9]"..xbg..
+			default.get_hotbar_bg(0.75,5.25)..
+			"label[0,0;Mailbox :]"..
+			"label[6,0;Last donators :]"..
 			"tablecolumns[color;text;image,"..
 				"1="..img_col(def_stack1)..","..
 				"2="..img_col(def_stack2)..","..
@@ -117,7 +119,8 @@ function mailbox.formspec(pos, owner, num)
 			"list[nodemeta:"..spos..";mailbox;0,0.75;6,4;]"..
 			"list[current_player;main;0.75,5.25;8,4;]"
 	else
-		return "size[8,5]"..xbg..default.get_hotbar_bg(0,1.25)..
+		return "size[8,5]"..xbg..
+			default.get_hotbar_bg(0,1.25)..
 			"label[0.5,0;Send your goods\nto "..owner.." :]"..
 			"list[nodemeta:"..spos..";drop;3.5,0;1,1;]"..
 			"list[current_player;main;0,1.25;8,4;]"

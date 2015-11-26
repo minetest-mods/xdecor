@@ -36,13 +36,18 @@ local def = { -- Nodebox name, yield, definition.
 
 function worktable.crafting()
 	return "size[8,7;]"..xbg..
-		"list[current_player;main;0,3.3;8,4;]image[5,1;1,1;gui_furnace_arrow_bg.png^[transformR270]list[current_player;craft;2,0;3,3;]list[current_player;craftpreview;6,1;1,1;]"
+		"list[current_player;main;0,3.3;8,4;]"..
+		"image[5,1;1,1;gui_furnace_arrow_bg.png^[transformR270]"..
+		"list[current_player;craft;2,0;3,3;]"..
+		"list[current_player;craftpreview;6,1;1,1;]"
 end
 
 function worktable.storage(pos)
 	local inv = minetest.get_meta(pos):get_inventory()
 	inv:set_size("storage", 8*2)
-	return "size[8,7]"..xbg.."list[context;storage;0,0;8,2;]list[current_player;main;0,3.25;8,4;]"
+	return "size[8,7]"..xbg..
+		"list[context;storage;0,0;8,2;]"..
+		"list[current_player;main;0,3.25;8,4;]"
 end
 
 function worktable.construct(pos)
@@ -50,7 +55,20 @@ function worktable.construct(pos)
 	local inv = meta:get_inventory()
 
 	local formspec = "size[8,7;]"..xbg..
-		"list[context;forms;4,0;4,3;]label[0.95,1.23;Cut]box[-0.05,1;2.05,0.9;#555555]image[3,1;1,1;gui_furnace_arrow_bg.png^[transformR270]label[0.95,2.23;Repair]box[-0.05,2;2.05,0.9;#555555]image[0,1;1,1;worktable_saw.png]image[0,2;1,1;worktable_anvil.png]image[3,2;1,1;hammer_layout.png]list[context;input;2,1;1,1;]list[context;tool;2,2;1,1;]list[context;hammer;3,2;1,1;]button[0,0;2,1;craft;Crafting]button[2,0;2,1;storage;Storage]list[current_player;main;0,3.25;8,4;]"
+			"list[context;forms;4,0;4,3;]"..
+			"label[0.95,1.23;Cut]"..
+			"box[-0.05,1;2.05,0.9;#555555]"..
+			"image[3,1;1,1;gui_furnace_arrow_bg.png^[transformR270]"..
+			"label[0.95,2.23;Repair]box[-0.05,2;2.05,0.9;#555555]"..
+			"image[0,1;1,1;worktable_saw.png]"..
+			"image[0,2;1,1;worktable_anvil.png]"..
+			"image[3,2;1,1;hammer_layout.png]"..
+			"list[context;input;2,1;1,1;]"..
+			"list[context;tool;2,2;1,1;]"..
+			"list[context;hammer;3,2;1,1;]"..
+			"button[0,0;2,1;craft;Crafting]"..
+			"button[2,0;2,1;storage;Storage]"..
+			"list[current_player;main;0,3.25;8,4;]"
 
 	inv:set_size("forms", 4*3)
 	inv:set_size("input", 1)
