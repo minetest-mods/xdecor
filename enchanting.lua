@@ -80,18 +80,25 @@ function enchanting.dig(pos, _)
 	return inv:is_empty("tool") and inv:is_empty("mese")
 end
 
+local function allowed(tool)
+	for item, _ in pairs(minetest.registered_tools) do
+	for t in item:gmatch("enchanted_"..tool) do
+		if t then return true end
+	end
+	end
+	return false
+end
+
 function enchanting.put(_, listname, _, stack, _)
 	local toolstack = stack:get_name()
 	local toolname = toolstack:match("[%w_]+:([%w_]+)")
-	local count = stack:get_count()
-	local enchanted_tool = minetest.serialize(minetest.registered_tools):match("enchanted_"..toolname)
 
 	if listname == "mese" and toolstack ~= "default:mese_crystal" then
 		return 0
-	elseif listname == "tool" and not enchanted_tool then
+	elseif listname == "tool" and not allowed(toolname) then
 		return 0 
 	end
-	return count
+	return 1
 end
 
 xdecor.register("enchantment_table", {
