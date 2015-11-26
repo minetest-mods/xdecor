@@ -70,15 +70,11 @@ xdecor.register("mailbox", {
 
 local function img_col(stack)
 	if not stack then return "" end
-	if stack.type == "node" then
-		if stack.inventory_image ~= "" then
-			return stack.inventory_image:match("([%w_]+)%.png")..".png"
-		else
-			return stack.tiles[1]:match("([%w_]+)%.png")..".png"
-		end
-	elseif stack.type == "tool" or stack.type == "craft" then
+	if stack.inventory_image ~= "" then
 		return stack.inventory_image:match("([%w_]+)%.png")..".png"
-	else return "" end
+	else
+		return stack.tiles[1]:match("([%w_]+)%.png")..".png"
+	end
 end
 
 function mailbox.formspec(pos, owner, num)
