@@ -81,20 +81,16 @@ function mailbox.formspec(pos, owner, num)
 	local xbg = default.gui_bg..default.gui_bg_img..default.gui_slots
 	local spos = pos.x..","..pos.y..","..pos.z
 	local meta = minetest.get_meta(pos)
-	local giver = ""
-	local def_stack1 = minetest.registered_items[meta:get_string("stack1"):match("([%w_]+:[%w_]+)")]
-	local def_stack2 = minetest.registered_items[meta:get_string("stack2"):match("([%w_]+:[%w_]+)")]
-	local def_stack3 = minetest.registered_items[meta:get_string("stack3"):match("([%w_]+:[%w_]+)")]
-	local def_stack4 = minetest.registered_items[meta:get_string("stack4"):match("([%w_]+:[%w_]+)")]
-	local def_stack5 = minetest.registered_items[meta:get_string("stack5"):match("([%w_]+:[%w_]+)")]
-	local def_stack6 = minetest.registered_items[meta:get_string("stack6"):match("([%w_]+:[%w_]+)")]
-	local def_stack7 = minetest.registered_items[meta:get_string("stack7"):match("([%w_]+:[%w_]+)")]
+	local giver, img = "", ""
 
 	if num == 1 then
 		for i = 1, 7 do
 			if meta:get_string("giver"..i) ~= "" then
 				giver = giver.."#FFFF00,"..meta:get_string("giver"..i):sub(1, 12)..
 					","..i..",#FFFFFF,x "..meta:get_string("stack"..i):match("%s(%d+)")..","
+
+				img = img..i.."="..img_col(minetest.registered_items[
+					meta:get_string("stack"..i):match("([%w_]+:[%w_]+)")])..","
 			end
 		end
 
@@ -103,14 +99,7 @@ function mailbox.formspec(pos, owner, num)
 			"label[0,0;Mailbox :]"..
 			"label[6,0;Last donators :]"..
 			"box[6,0.72;3.3,3.5;#555555]"..
-			"tablecolumns[color;text;image,"..
-				"1="..img_col(def_stack1)..","..
-				"2="..img_col(def_stack2)..","..
-				"3="..img_col(def_stack3)..","..
-				"4="..img_col(def_stack4)..","..
-				"5="..img_col(def_stack5)..","..
-				"6="..img_col(def_stack6)..","..
-				"7="..img_col(def_stack7)..";color;text]"..
+			"tablecolumns[color;text;image,"..img.."0;color;text]"..
 			"tableoptions[background=#00000000;highlight=#00000000;border=false]"..
 			"table[6,0.75;3.3,4;givers;"..giver.."]"..
 			"list[nodemeta:"..spos..";mailbox;0,0.75;6,4;]"..
