@@ -72,12 +72,12 @@ local function img_col(stack)
 	if not stack then return "" end
 	if stack.type == "node" then
 		if stack.inventory_image ~= "" then
-			return string.match(stack.inventory_image, "([%w_]+)")..".png"
+			return stack.inventory_image:match("([%w_]+)%.png")..".png"
 		else
-			return string.match(stack.tiles[1], "([%w_]+)")..".png"
+			return stack.tiles[1]:match("([%w_]+)%.png")..".png"
 		end
 	elseif stack.type == "tool" or stack.type == "craft" then
-		return string.match(stack.inventory_image, "([%w_]+)")..".png"
+		return stack.inventory_image:match("([%w_]+)%.png")..".png"
 	else return "" end
 end
 
