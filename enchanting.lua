@@ -50,15 +50,11 @@ function enchanting.fields(pos, _, fields, _)
 
 	if mese > 0 and fields[ench] then
 		local enchanted_tool = modname..":enchanted_"..toolname.."_"..ench
-		local tdef = minetest.registered_tools[enchanted_tool]
-
-		if tdef then
-			toolstack:replace(enchanted_tool)
-			toolstack:add_wear(toolwear)
-			mesestack:take_item()
-			inv:set_stack("mese", 1, mesestack)
-			inv:set_stack("tool", 1, toolstack)
-		end
+		toolstack:replace(enchanted_tool)
+		toolstack:add_wear(toolwear)
+		mesestack:take_item()
+		inv:set_stack("mese", 1, mesestack)
+		inv:set_stack("tool", 1, toolstack)
 	end
 end
 
