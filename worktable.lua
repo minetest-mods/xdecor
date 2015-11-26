@@ -3,7 +3,7 @@ screwdriver = screwdriver or {}
 local xbg = default.gui_bg..default.gui_bg_img..default.gui_slots..default.get_hotbar_bg(0,3.25)
 
 local nodes = { -- Nodes allowed to be cut. Mod name = {node name}.
-	default = {"wood", "junglewood", "pine_wood", "acacia_wood",
+	["default"] = {"wood", "junglewood", "pine_wood", "acacia_wood",
 		"tree", "jungletree", "pine_tree", "acacia_tree",
 		"cobble", "mossycobble", "desert_cobble",
 		"stone", "sandstone", "desert_stone", "obsidian",
@@ -12,11 +12,11 @@ local nodes = { -- Nodes allowed to be cut. Mod name = {node name}.
 		"bronzeblock", "mese", "diamondblock",
 		"brick", "cactus", "ice", "meselamp", "glass", "obsidian_glass"},
 
-	xdecor = {"coalstone_tile", "desertstone_tile", "stone_rune", "stone_tile",
+	["xdecor"] = {"coalstone_tile", "desertstone_tile", "stone_rune", "stone_tile",
 		"cactusbrick", "hard_clay", "packed_ice", "moonbrick",
 		"woodframed_glass", "wood_tile"},
 
-	oresplus = {"emerald_block", "glowstone"},
+	["oresplus"] = {"emerald_block", "glowstone"},
 }
 
 local def = { -- Nodebox name, yield, definition.
@@ -112,7 +112,7 @@ end
 function worktable.put(_, listname, _, stack, _)
 	local stn = stack:get_name()
 	local count = stack:get_count()
-	local mod, node = stn:match("([%a_]+):([%a_]+)")
+	local mod, node = stn:match("([%w_]+):([%w_]+)")
 	local tdef = minetest.registered_tools[stn]
 	local twear = stack:get_wear()
 
@@ -132,7 +132,7 @@ function worktable.take(pos, listname, _, stack, player)
 	local inv = minetest.get_meta(pos):get_inventory()
 	local user_inv = player:get_inventory()
 	local inputstack = inv:get_stack("input", 1):get_name()
-	local mod, node = inputstack:match("([%a_]+):([%a_]+)")
+	local mod, node = inputstack:match("([%w_]+):([%w_]+)")
 
 	if listname == "forms" then
 		if worktable.contains(nodes[mod], node) and
@@ -156,7 +156,7 @@ local function update_inventory(inv, inputstack)
 	for _, n in pairs(def) do
 		local mat = inputstack:get_name()
 		local input = inv:get_stack("input", 1)
-		local mod, node = mat:match("([%a_]+):([%a_]+)")
+		local mod, node = mat:match("([%w_]+):([%w_]+)")
 		local count = math.min(n[2] * input:get_count(), inputstack:get_stack_max())
 
 		if not worktable.contains(nodes[mod], node) then return end
