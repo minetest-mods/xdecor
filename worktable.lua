@@ -39,7 +39,9 @@ function worktable.crafting()
 		"list[current_player;main;0,3.3;8,4;]"..
 		"image[5,1;1,1;gui_furnace_arrow_bg.png^[transformR270]"..
 		"list[current_player;craft;2,0;3,3;]"..
-		"list[current_player;craftpreview;6,1;1,1;]"
+		"list[current_player;craftpreview;6,1;1,1;]"..
+		"listring[current_player;main]"..
+		"listring[current_player;craft]"
 end
 
 function worktable.storage(pos)
@@ -47,7 +49,9 @@ function worktable.storage(pos)
 	inv:set_size("storage", 8*2)
 	return "size[8,7]"..xbg..
 		"list[context;storage;0,0;8,2;]"..
-		"list[current_player;main;0,3.25;8,4;]"
+		"list[current_player;main;0,3.25;8,4;]"..
+		"listring[context;storage]"..
+		"listring[current_player;main]"
 end
 
 function worktable.construct(pos)

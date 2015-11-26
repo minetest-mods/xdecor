@@ -12,22 +12,30 @@ local default_inventory_formspecs = {
 	["8"] = "size[8,6]"..xbg..
 	"list[context;main;0,0;8,1;]"..
 	"list[current_player;main;0,2;8,4;]"..
+	"listring[current_player;main]"..
+	"listring[context;main]"..
 	default.get_hotbar_bg(0, 2),
 
 	["16"] = "size[8,7]"..xbg..
 	"list[context;main;0,0;8,2;]"..
 	"list[current_player;main;0,3;8,4;]"..
+	"listring[current_player;main]"..
+	"listring[context;main]"..
 	default.get_hotbar_bg(0, 3),
 
 	["24"] = "size[8,8]"..xbg..
 	"list[context;main;0,0;8,3;]"..
 	"list[current_player;main;0,4;8,4;]"..
+	"listring[current_player;main]"..
+	"listring[context;main]"..
 	default.get_hotbar_bg(0, 4),
 
 	["32"] = "size[8,9]"..xbg..
 	"list[context;main;0,0.3;8,4;]"..
 	"list[current_player;main;0,4.85;8,1;]"..
 	"list[current_player;main;0,6.08;8,3;8]"..
+	"listring[current_player;main]"..
+	"listring[context;main]"..
 	default.get_hotbar_bg(0, 4.85)
 }
 

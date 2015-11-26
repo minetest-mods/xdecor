@@ -106,7 +106,7 @@ function mailbox.formspec(pos, owner, num)
 			default.get_hotbar_bg(0.75,5.25)..
 			"label[0,0;Mailbox :]"..
 			"label[6,0;Last donators :]"..
-			"box[6,0.72;3.3,3.92;#555555]"..
+			"box[6,0.72;3.3,3.5;#555555]"..
 			"tablecolumns[color;text;image,"..
 				"1="..img_col(def_stack1)..","..
 				"2="..img_col(def_stack2)..","..
@@ -118,7 +118,9 @@ function mailbox.formspec(pos, owner, num)
 			"tableoptions[background=#00000000;highlight=#00000000;border=false]"..
 			"table[6,0.75;3.3,4;givers;"..giver.."]"..
 			"list[nodemeta:"..spos..";mailbox;0,0.75;6,4;]"..
-			"list[current_player;main;0.75,5.25;8,4;]"
+			"list[current_player;main;0.75,5.25;8,4;]"..
+			"listring[nodemeta:"..spos..";mailbox]"..
+			"listring[current_player;main]"
 	else
 		return "size[8,5]"..xbg..
 			default.get_hotbar_bg(0,1.25)..
