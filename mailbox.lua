@@ -98,7 +98,7 @@ function mailbox.formspec(pos, owner, num)
 		for i = 1, 7 do
 			if meta:get_string("giver"..i) ~= "" then
 				giver = giver.."#FFFF00,"..meta:get_string("giver"..i):sub(1, 12)..
-					","..i..",#FFFFFF,x "..meta:get_string("stack"..i):sub(-3):match("%d+")..","
+					","..i..",#FFFFFF,x "..meta:get_string("stack"..i):match("%s(%d+)")..","
 			end
 		end
 
