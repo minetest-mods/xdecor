@@ -9,8 +9,8 @@ function enchanting.formspec(pos, tooltype)
 			"background[0,0;9,9;ench_ui.png]"..
 			"list[context;tool;0.9,2.9;1,1;]"..
 			"list[context;mese;2,2.9;1,1;]"..
-			"image[2,2.9;1,1;mese_layout.png]"..
 			"list[current_player;main;0.5,4.5;8,4;]"..
+			"image[2,2.9;1,1;mese_layout.png]"..
 			"tooltip[sharp;Your sword kills faster]"..
 			"tooltip[durable;Your tool lasts longer]"..
 			"tooltip[fast;Your tool digs faster]"..

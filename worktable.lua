@@ -59,20 +59,21 @@ function worktable.construct(pos)
 	local inv = meta:get_inventory()
 
 	local formspec = "size[8,7;]"..xbg..
-			"list[context;forms;4,0;4,3;]"..
-			"label[0.95,1.23;Cut]"..
+			"label[0.9,1.23;Cut]"..
+			"label[0.9,2.23;Repair]"..
 			"box[-0.05,1;2.05,0.9;#555555]"..
+			"box[-0.05,2;2.05,0.9;#555555]"..
 			"image[3,1;1,1;gui_furnace_arrow_bg.png^[transformR270]"..
-			"label[0.95,2.23;Repair]box[-0.05,2;2.05,0.9;#555555]"..
 			"image[0,1;1,1;worktable_saw.png]"..
 			"image[0,2;1,1;worktable_anvil.png]"..
 			"image[3,2;1,1;hammer_layout.png]"..
 			"list[context;input;2,1;1,1;]"..
 			"list[context;tool;2,2;1,1;]"..
 			"list[context;hammer;3,2;1,1;]"..
+			"list[context;forms;4,0;4,3;]"..
+			"list[current_player;main;0,3.25;8,4;]"..
 			"button[0,0;2,1;craft;Crafting]"..
-			"button[2,0;2,1;storage;Storage]"..
-			"list[current_player;main;0,3.25;8,4;]"
+			"button[2,0;2,1;storage;Storage]"
 
 	inv:set_size("forms", 4*3)
 	inv:set_size("input", 1)
