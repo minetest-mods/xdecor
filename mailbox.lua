@@ -58,12 +58,14 @@ xdecor.register("mailbox", {
 			meta:set_string("stack1", stack_name)
 		end
 	end,
-	allow_metadata_inventory_put = function(pos, listname, _, stack, _)
+	allow_metadata_inventory_put = function(pos, listname, _, stack, player)
+		local player_name = player:get_player_name()
 		if listname == "drop" then
 			local meta = minetest.get_meta(pos)
 			local inv = meta:get_inventory()
 			if inv:room_for_item("mailbox", stack) then return -1 end
 		end
+		minetest.chat_send_player(player_name, "The mailbox is full.")
 		return 0
 	end
 })
