@@ -359,13 +359,14 @@ function worktable.move(pos, from_list, from_index, to_list, to_index, count, _)
 						def = "default:"..def:sub(7, string.len(def))
 					end
 				end
-
 				if stack_type == "cooking" then
 					inv:set_stack("craft_output_recipe", 5, def)
 				else
 					inv:set_stack("craft_output_recipe", k, def)
 				end
 			end
+		elseif stack_type == "cooking" then
+			inv:set_stack("craft_output_recipe", 5, craft[1])
 		end
 
 		worktable.craft_output_recipe(pos, start_i, start_i / (8*4) + 1, stackname)
