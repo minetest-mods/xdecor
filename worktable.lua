@@ -38,7 +38,8 @@ function worktable.craft_output_recipe(pos, start_i, pagenum, stackname)
 	local meta = minetest.get_meta(pos)
 	local inv = meta:get_inventory()
 	pagenum = math.floor(pagenum)
-	local pagemax = math.floor((meta:get_int("inventory_size")-1) / (8*4) + 1) or 0
+	local inventory_size = meta:get_int("inventory_size")
+	local pagemax = math.floor((inventory_size-1) / (8*4) + 1) or 0
 
 	local formspec = "size[8,8;]"..xbg..
 			"list[context;inv_items_list;0,1;8,4;"..tostring(start_i).."]"..
@@ -50,15 +51,15 @@ function worktable.craft_output_recipe(pos, start_i, pagenum, stackname)
 			"table[6.1,0.2;1.1,0.5;pagenum;#FFFF00,"..tostring(pagenum)..",#FFFFFF,/ "..tostring(pagemax).."]"..
 			"button[5.5,0;0.8,1;prev;<<]"..
 			"button[7.2,0;0.8,1;next;>>]"..
-			"button[4.35,0.18;0.6,0.6;search;?]"..
-			"button[4.8,0.18;0.6,0.6;clearfilter;X]"..
+			"button[4,0.2;0.7,0.5;search;?]"..
+			"button[4.6,0.2;0.7,0.5;clearfilter;X]"..
 			"button[0,0;1.5,1;backcraft;< Back]"..
 			"button[0.7,6.35;1.5,1;trash;Clear]"..
 			"tooltip[search;Search]"..
 			"tooltip[clearfilter;Reset]"..
 			"label[2.5,5.8;Input]" ..
 			"box[0.1,7.5;4,0.45;#555555]"..
-			"field[1.8,0.32;3,1;filter;;]"
+			"field[1.8,0.32;2.6,1;filter;;]"
 	
 	if stackname then
 		meta:set_string("item", stackname)
@@ -169,6 +170,7 @@ function worktable.fields(pos, _, fields, sender)
 	local inv = meta:get_inventory()
 	local inputstack = inv:get_stack("item_craft_input", 1):get_name()
 	local start_i = meta:get_int("start_i")
+	local inventory_size = meta:get_int("inventory_size")
 	start_i = tonumber(start_i) or 0
 
 	if fields.storage then
@@ -184,7 +186,7 @@ function worktable.fields(pos, _, fields, sender)
 	elseif fields.trash then
 		inv:set_list("item_craft_input", {})
 		inv:set_list("craft_output_recipe", {})
-		worktable.craft_output_recipe(pos, meta:get_string("start_i"), meta:get_int("start_i") / (8*4) + 1, nil)
+		worktable.craft_output_recipe(pos, start_i, start_i / (8*4) + 1, nil)
 	elseif fields.search then
 		worktable.craftguide_update(pos, fields.filter)
 		worktable.craft_output_recipe(pos, 0, 1, nil)
@@ -202,9 +204,9 @@ function worktable.fields(pos, _, fields, sender)
 
 		if start_i < 0 then
 			start_i = start_i + 8*4
-		elseif start_i >= meta:get_int("inventory_size") then
+		elseif start_i >= inventory_size then
 			start_i = start_i - 8*4
-		elseif start_i < 0 or start_i >= meta:get_int("inventory_size") then
+		elseif start_i < 0 or start_i >= inventory_size then
 			start_i = 0
 		end
 
@@ -269,7 +271,9 @@ function worktable.move(pos, from_list, from_index, to_list, to_index, count, _)
 	local inv = minetest.get_meta(pos):get_inventory()
 	local stackname = inv:get_stack(from_list, from_index):get_name()
 	local meta = minetest.get_meta(pos)
+	local start_i = meta:get_int("start_i")
 	local craft = {}
+	local dye_color = ""
 
 	if from_list == "storage" and to_list == "storage" then
 		return count
@@ -298,8 +302,12 @@ function worktable.move(pos, from_list, from_index, to_list, to_index, count, _)
 				elseif craft[i] == "group:wool" then
 					craft[i] = "wool:white"
 				elseif craft[i]:find("group:dye") then
-					craft[i] = "dye:white" -- TODO: display respective dye color
-				else
+					dye_color = craft[i]:match("group:dye,%w+_([%w_]+)")
+					craft[i] = "dye:"..dye_color
+				elseif craft[i]:match("group:stone") or craft[i]:match("group:wood") or
+						craft[i]:match("group:leaves") or craft[i]:match("group:stick") or
+						craft[i]:match("group:sand") or craft[i]:match("group:tree") or
+						craft[i]:match("group:sapling") then
 					craft[i] = "default:"..craft[i]:sub(7, string.len(craft[i]))
 				end
 			end
@@ -334,21 +342,24 @@ function worktable.move(pos, from_list, from_index, to_list, to_index, count, _)
 				inv:add_item("item_craft_input", stackname.." "..stack_count-1)
 			end
 			for k, def in pairs(stack_items) do
-				for i = 1, 9 do
-					if def and def:sub(1, 6) == "group:" then
-						if def == "group:liquid" then
-							def = "default:water_source"
-						elseif def == "group:vessel" then
-							def = "vessels:glass_bottle"
-						elseif def == "group:wool" then
-							def = "wool:white"
-						elseif def:find("group:dye") then
-							def = "dye:white" -- TODO: display respective dye color
-						else
-							def = "default:"..def:sub(7, string.len(def))
-						end
+				if def and def:sub(1, 6) == "group:" then
+					if def == "group:liquid" then
+						def = "default:water_source"
+					elseif def == "group:vessel" then
+						def = "vessels:glass_bottle"
+					elseif def == "group:wool" then
+						def = "wool:white"
+					elseif def:find("group:dye") then
+						dye_color = def:match("group:dye,%w+_([%w_]+)")
+						def = "dye:"..dye_color
+					elseif def:match("group:stone") or def:match("group:wood") or
+							def:match("group:leaves") or def:match("group:stick") or
+							def:match("group:sand") or def:match("group:tree") or
+							def:match("group:sapling") then
+						def = "default:"..def:sub(7, string.len(def))
 					end
 				end
+
 				if stack_type == "cooking" then
 					inv:set_stack("craft_output_recipe", 5, def)
 				else
@@ -357,9 +368,10 @@ function worktable.move(pos, from_list, from_index, to_list, to_index, count, _)
 			end
 		end
 
-		minetest.after(0.1, function()
-			inv:set_stack("inv_items_list", from_index, stackname)
-			worktable.craft_output_recipe(pos, meta:get_int("start_i"), meta:get_int("start_i") / (8*4) + 1, stackname)
+		worktable.craft_output_recipe(pos, start_i, start_i / (8*4) + 1, stackname)
+
+		minetest.after(0, function()
+			inv:set_stack(from_list, from_index, stackname)
 		end)
 
 		return 1
