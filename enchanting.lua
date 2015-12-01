@@ -82,6 +82,7 @@ local function allowed(tool)
 		if t then return true end
 	end
 	end
+
 	return false
 end
 
@@ -94,6 +95,7 @@ function enchanting.put(_, listname, _, stack, _)
 	elseif listname == "tool" and not allowed(toolname) then
 		return 0 
 	end
+
 	return 1
 end
 
@@ -123,7 +125,9 @@ xdecor.register("enchantment_table", {
 	allow_metadata_inventory_put = enchanting.put,
 	allow_metadata_inventory_move = function(...) return 0 end,
 	on_metadata_inventory_take = function(pos, listname, _, _, _)
-		if listname == "tool" then enchanting.formspec(pos, nil) end
+		if listname == "tool" then
+			enchanting.formspec(pos, nil)
+		end
 	end
 })
 

@@ -113,7 +113,8 @@ function worktable.craft_output_recipe(pos, start_i, pagenum, stackname)
 					def = "default:"..def:sub(7, string.len(def))
 				end
 			end
-			inv:set_stack("craft_output_recipe", k, def)	
+
+			inv:set_stack("craft_output_recipe", k, def)
 		end
 
 		formspec = formspec.."image[4,6.3;1,1;gui_furnace_arrow_bg.png^[transformR90]"..
@@ -131,9 +132,9 @@ function worktable.craftguide_update(pos, filter)
 	local inv_items_list = {}
 
 	for name, def in pairs(minetest.registered_items) do
-		if not (def.groups.not_in_creative_inventory == 1) and def.name ~= "unknown"
-				and def.description and def.description ~= "" then
-
+		if not (def.groups.not_in_creative_inventory == 1) and
+				minetest.get_craft_recipe(name).items and
+				def.description and def.description ~= "" then
 			if filter and def.name:find(filter) then
 				inv_items_list[#inv_items_list+1] = name
 			elseif filter == "all" then
@@ -196,6 +197,7 @@ function worktable.main(pos)
 			"list[current_player;main;0,3.25;8,4;]"..
 			"button[0,0;2,1;craft;Crafting]"..
 			"button[2,0;2,1;storage;Storage]"
+
 	meta:set_string("formspec", formspec)
 	return formspec
 end
@@ -226,11 +228,9 @@ function worktable.fields(pos, _, fields, sender)
 
 	if fields.storage then
 		worktable.storage(pos)
-	elseif fields.craft then
-		worktable.crafting(pos)
 	elseif fields.back then
 		worktable.main(pos)
-	elseif fields.backcraft then
+	elseif fields.backcraft or fields.craft then
 		worktable.crafting(pos)
 	elseif fields.craft_output_recipe then
 		worktable.craft_output_recipe(pos, 0, 1)
@@ -256,6 +256,7 @@ function worktable.fields(pos, _, fields, sender)
 
 			worktable.craft_output_recipe(pos, start_i, start_i / (8*4) + 1, nil)
 		end
+
 		inv:set_list("item_craft_input", {})
 		inv:set_list("craft_output_recipe", {})
 	end
@@ -270,9 +271,12 @@ end
 function worktable.contains(table, element)
 	if table then
 		for _, value in pairs(table) do
-			if value == element then return true end
+			if value == element then
+				return true
+			end
 		end
 	end
+
 	return false
 end
 
@@ -283,15 +287,16 @@ function worktable.put(_, listname, _, stack, _)
 	local tdef = minetest.registered_tools[stn]
 	local twear = stack:get_wear()
 
-	if listname == "input" and
-		worktable.contains(nodes[mod], node) then return count
-	elseif listname == "hammer" and
-		stn == "xdecor:hammer" then return 1
+	if listname == "input" and worktable.contains(nodes[mod], node) then
+		return count
+	elseif listname == "hammer" and stn == "xdecor:hammer" then
+		return 1
 	elseif listname == "tool" and tdef and twear > 0 then
 		return 1
 	elseif listname == "storage" then
 		return count
 	end
+
 	return 0
 end
 
@@ -303,14 +308,15 @@ function worktable.take(pos, listname, _, stack, player)
 
 	if listname == "forms" then
 		if worktable.contains(nodes[mod], node) and
-			user_inv:room_for_item("main", stack:get_name()) then
+				user_inv:room_for_item("main", stack:get_name()) then
 			return -1
 		end
 		return 0
 	elseif listname == "inv_items_list" or listname == "item_craft_input" or
-		listname == "craft_output_recipe" then
+			listname == "craft_output_recipe" then
 		return 0
 	end
+
 	return stack:get_count()
 end
 
@@ -322,9 +328,8 @@ function worktable.move(pos, from_list, from_index, to_list, to_index, count, _)
 
 	if from_list == "storage" and to_list == "storage" then
 		return count
-	end
-	if minetest.get_craft_recipe(stackname).items and inv:is_empty("item_craft_input") and
-		from_list == "inv_items_list" and to_list == "item_craft_input" then
+	elseif inv:is_empty("item_craft_input") and from_list == "inv_items_list" and
+			to_list == "item_craft_input" then
 		--print(dump(minetest.get_craft_recipe(stackname)))
 		worktable.craft_output_recipe(pos, start_i, start_i / (8*4) + 1, stackname)
 
@@ -334,6 +339,7 @@ function worktable.move(pos, from_list, from_index, to_list, to_index, count, _)
 
 		return 1
 	end
+
 	return 0
 end
 
@@ -350,6 +356,7 @@ local function update_inventory(inv, inputstack)
 		if not worktable.contains(nodes[mod], node) then return end
 		output[#output+1] = mat.."_"..n[1].." "..count
 	end
+
 	inv:set_list("forms", output)
 end
 
@@ -434,7 +441,9 @@ minetest.register_abm({
 		local hammer = inv:get_stack("hammer", 1)
 		local wear = tool:get_wear()
 
-		if tool:is_empty() or hammer:is_empty() or wear == 0 then return end
+		if tool:is_empty() or hammer:is_empty() or wear == 0 then
+			return
+		end
 
 		-- Wear : 0-65535 | 0 = new condition.
 		tool:add_wear(-500)
