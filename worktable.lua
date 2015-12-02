@@ -239,7 +239,7 @@ function worktable.fields(pos, _, fields, sender)
 		if fields.trash then
 			worktable.craft_output_recipe(pos, start_i, start_i / (8*4) + 1, nil)
 		elseif fields.search then
-			worktable.craftguide_update(pos, fields.filter)
+			worktable.craftguide_update(pos, fields.filter:lower())
 			worktable.craft_output_recipe(pos, 0, 1, nil)
 		elseif fields.clearfilter then
 			worktable.craftguide_update(pos, "all")
