@@ -68,8 +68,16 @@ function worktable.craft_output_recipe(pos, start_i, pagenum, stackname)
 		if stack_count and inv:is_empty("item_craft_input") then
 			inv:add_item("item_craft_input", stackname.." "..stack_count-1)
 		end
-
-		if stack_width == 0 or stack_width == 1 then
+		
+		if stack_width == 0 then
+			if #stack_items <= 4 then
+				formspec = formspec.."list[context;craft_output_recipe;5,5.3;2,2;]"
+				inv:set_size("craft_output_recipe", 2*2)
+			else
+				formspec = formspec.."list[context;craft_output_recipe;5,5.3;3,3;]"
+				inv:set_size("craft_output_recipe", 3*3)
+			end
+		elseif stack_width == 1 then
 			if #stack_items == 1 then
 				formspec = formspec.."list[context;craft_output_recipe;5,6.3;1,1;]"
 			else
