@@ -483,19 +483,39 @@ for _, f in pairs(flowers) do
 	})
 end
 
-xdecor.register("painting", {
+xdecor.register("painting_1", {
 	description = "Painting",
 	drawtype = "signlike",
-	tiles = {"xdecor_painting.png"},
-	inventory_image = "xdecor_painting.png",
+	tiles = {"xdecor_painting_1.png"},
+	inventory_image = "xdecor_painting_1.png",
 	paramtype2 = "wallmounted",
 	legacy_wallmounted = true,
 	walkable = false,
 	on_rotate = screwdriver.rotate_simple,
-	wield_image = "xdecor_painting.png",
+	wield_image = "xdecor_painting_1.png",
 	selection_box = {type="wallmounted"},
-	groups = {dig_immediate=3, flammable=3, attached_node=1}
+	groups = {dig_immediate=3, flammable=3, attached_node=1},
+	after_place_node = function(pos, _, _, _)
+		local node = minetest.get_node(pos)
+		minetest.set_node(pos, {name = "xdecor:painting_"..math.random(1,4), param2 = node.param2})
+	end
 })
+
+minetest.register_alias("xdecor:painting", "xdecor:painting_1")
+
+for i = 2, 4 do
+	xdecor.register("painting_"..i, {
+		drawtype = "signlike",
+		tiles = {"xdecor_painting_"..i..".png"},
+		paramtype2 = "wallmounted",
+		legacy_wallmounted = true,
+		walkable = false,
+		on_rotate = screwdriver.rotate_simple,
+		drop = "xdecor:painting_1",
+		selection_box = {type="wallmounted"},
+		groups = {dig_immediate=3, flammable=3, attached_node=1, not_in_creative_inventory=1}
+	})
+end
 
 for _, b in pairs({{"cactus", "cactus"}, {"moon", "stone"}}) do
 	xdecor.register(b[1].."brick", {
