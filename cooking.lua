@@ -1,11 +1,22 @@
 minetest.register_alias("xdecor:cauldron", "xdecor:cauldron_empty")
 
+local cauldron_cbox = {
+	type = "fixed",
+	fixed = {
+		{-0.5, -0.5, -0.5, 0.5, 0.5, -0.5},
+		{-0.5, -0.5, 0.5, 0.5, 0.5, 0.5},
+		{-0.5, -0.5, -0.5, -0.5, 0.5, 0.5},
+		{0.5, -0.5, -0.5, 0.5, 0.5, 0.5},
+		{-0.5, -0.5, -0.5, 0.5, 0, 0.5}
+	}
+}
+
 xdecor.register("cauldron_empty", {
 	description = "Cauldron",
 	groups = {cracky=2, oddly_breakable_by_hand=1},
 	on_rotate = screwdriver.rotate_simple,
 	tiles = {"xdecor_cauldron_top_empty.png", "xdecor_cauldron_sides.png"},
-	infotext = "Empty Cauldron",
+	infotext = "Cauldron (empty)",
 	on_rightclick = function(pos, node, clicker, itemstack, _)
 		local wield_item = clicker:get_wielded_item():get_name()
 		if wield_item == "bucket:bucket_water" or
@@ -13,7 +24,8 @@ xdecor.register("cauldron_empty", {
 			minetest.set_node(pos, {name="xdecor:cauldron_idle", param2=node.param2})
 			itemstack:replace("bucket:bucket_empty")
 		end
-	end
+	end,
+	collision_box = cauldron_cbox
 })
 
 xdecor.register("cauldron_idle", {
@@ -22,42 +34,35 @@ xdecor.register("cauldron_idle", {
 	tiles = {"xdecor_cauldron_top_idle.png", "xdecor_cauldron_sides.png"},
 	drop = "xdecor:cauldron_empty",
 	infotext = "Cauldron (idle)",
+	collision_box = cauldron_cbox
 })
 
 xdecor.register("cauldron_boiling_water", {
 	groups = {cracky=2, oddly_breakable_by_hand=1, not_in_creative_inventory=1},
 	on_rotate = screwdriver.rotate_simple,
 	drop = "xdecor:cauldron_empty",
-	infotext = "Drop foods inside to make a soup",
+	infotext = "Cauldron (active) - Drop foods inside to make a soup",
 	damage_per_second = 2,
 	tiles = {
 		{ name = "xdecor_cauldron_top_anim_boiling_water.png",
 			animation = {type="vertical_frames", length=3.0} },
 		"xdecor_cauldron_sides.png"
 	},
-	collision_box = {
-		type = "fixed",
-		fixed = {
-			{-0.5, -0.5, -0.5, 0.5, 0.5, -0.5},
-			{-0.5, -0.5, 0.5, 0.5, 0.5, 0.5},
-			{-0.5, -0.5, -0.5, -0.5, 0.5, 0.5},
-			{0.5, -0.5, -0.5, 0.5, 0.5, 0.5},
-			{-0.5, -0.5, -0.5, 0.5, 0, 0.5}
-		}
-	}
+	collision_box = cauldron_cbox
 })
 
 xdecor.register("cauldron_soup", {
 	groups = {cracky=2, oddly_breakable_by_hand=1, not_in_creative_inventory=1},
 	on_rotate = screwdriver.rotate_simple,
 	drop = "xdecor:cauldron_empty",
-	infotext = "The soup is ready, use a bowl to eat it",
+	infotext = "Cauldron (active) - Use a bowl to eat the soup",
 	damage_per_second = 2,
 	tiles = {
 		{ name = "xdecor_cauldron_top_anim_soup.png",
 			animation = {type="vertical_frames", length=3.0} },
 		"xdecor_cauldron_sides.png"
 	},
+	collision_box = cauldron_cbox,
 	on_rightclick = function(pos, node, clicker, itemstack, _)
 		local inv = clicker:get_inventory()
 		if clicker:get_wielded_item():get_name() == "xdecor:bowl" then
@@ -91,7 +96,7 @@ minetest.register_abm({
 	action = function(pos, node, _, _)
 		local objs = nil
 		local ingredients = {}
-		objs = minetest.get_objects_inside_radius(pos, .5)
+		objs = minetest.get_objects_inside_radius(pos, 0.5)
 		if not objs then return end
 
 		for _, obj in pairs(objs) do

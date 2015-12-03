@@ -35,7 +35,7 @@ minetest.register_entity("xdecor:f_item", {
 
 local remove_item = function(pos, node)
 	local objs = nil
-	objs = minetest.get_objects_inside_radius(pos, .5)
+	objs = minetest.get_objects_inside_radius(pos, 0.5)
 	if not objs then return end
 
 	for _, obj in pairs(objs) do
