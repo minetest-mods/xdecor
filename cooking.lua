@@ -29,6 +29,7 @@ xdecor.register("cauldron_boiling_water", {
 	on_rotate = screwdriver.rotate_simple,
 	drop = "xdecor:cauldron_empty",
 	infotext = "Drop foods inside to make a soup",
+	damage_per_second = 2,
 	tiles = {
 		{ name = "xdecor_cauldron_top_anim_boiling_water.png",
 			animation = {type="vertical_frames", length=3.0} },
@@ -51,6 +52,7 @@ xdecor.register("cauldron_soup", {
 	on_rotate = screwdriver.rotate_simple,
 	drop = "xdecor:cauldron_empty",
 	infotext = "The soup is ready, use a bowl to eat it",
+	damage_per_second = 2,
 	tiles = {
 		{ name = "xdecor_cauldron_top_anim_soup.png",
 			animation = {type="vertical_frames", length=3.0} },

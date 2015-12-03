@@ -339,7 +339,7 @@ xdecor.register("fire", {
 		{ name = "xdecor_fire_anim.png",
 		animation = {type="vertical_frames", length=1.5} }
 	},
-	damage_per_second = 2,
+	damage_per_second = 4,
 	drop = "",
 	selection_box = {
 		type = "fixed", fixed = {-0.3, -0.5, -0.3, 0.3, -0.3, 0.3}
