@@ -43,7 +43,9 @@ xdecor.register("cauldron_empty", {
 	},
 	collision_box = cauldron_cbox,
 	on_rightclick = function(pos, node, clicker, itemstack, _)
-		if clicker:get_wielded_item():get_name() == "bucket:bucket_water" then
+		local wield_item = clicker:get_wielded_item():get_name()
+		if wield_item == "bucket:bucket_water" or
+				wield_item == "bucket:bucket_river_water" then
 			minetest.set_node(pos, {name="xdecor:cauldron_idle", param2=node.param2})
 			itemstack:replace("bucket:bucket_empty")
 		end	
@@ -78,7 +80,7 @@ xdecor.register("cauldron_boiling_water", {
 		type = "fixed",
 		fixed = {{-0.5, -0.5, -0.5, 0.5, 0.5, 0.5}}
 	},
-	infotext = "Drop some foods inside to make a soup"
+	infotext = "Drop foods inside to make a soup"
 })
 
 xdecor.register("cauldron_soup", {
@@ -96,7 +98,7 @@ xdecor.register("cauldron_soup", {
 		type = "fixed",
 		fixed = {{-0.5, -0.5, -0.5, 0.5, 0.5, 0.5}}
 	},
-	infotext = "Your soup is ready, use an empty bowl to eat it",
+	infotext = "The soup is ready, use a bowl to eat it",
 	on_rightclick = function(pos, node, clicker, itemstack, _)
 		local inv = clicker:get_inventory()
 		if clicker:get_wielded_item():get_name() == "xdecor:bowl" then
@@ -105,7 +107,8 @@ xdecor.register("cauldron_soup", {
 				inv:add_item("main", "xdecor:bowl_soup 1")
 				minetest.set_node(pos, {name="xdecor:cauldron_empty", param2=node.param2})
 			else
-				minetest.chat_send_player(clicker:get_player_name(), "No room in your inventory to add a bowl of soup!")
+				minetest.chat_send_player(clicker:get_player_name(),
+						"No room in your inventory to add a bowl of soup!")
 			end
 			return itemstack
 		end
@@ -124,27 +127,38 @@ minetest.register_abm({
 })
 
 minetest.register_abm({
-	nodenames = {"xdecor:cauldron_boiling_water", "xdecor:cauldron_soup"},
+	nodenames = {"xdecor:cauldron_boiling_water"},
 	interval = 3, chance = 1,
 	action = function(pos, node, _, _)
+		local objs = nil
+		local ingredients = {}
+		objs = minetest.get_objects_inside_radius(pos, .5)
+		if not objs then return end
+
+		for _, obj in pairs(objs) do
+			if obj and obj:get_luaentity() then
+				local itemstring = obj:get_luaentity().itemstring:match("([%w_:]+)%s")
+				if itemstring and not minetest.serialize(ingredients):find(itemstring) and
+						(itemstring:find("apple") or itemstring:find("mushroom") or
+						itemstring:find("honey") or itemstring:find("pumpkin")) then	
+					ingredients[#ingredients+1] = itemstring
+				end
+			end
+		end
+
+		if #ingredients >= 2 then
+			for _, obj in pairs(objs) do
+				if obj and obj:get_luaentity() then
+					obj:remove()
+				end
+			end
+			minetest.set_node(pos, {name="xdecor:cauldron_soup", param2=node.param2})
+		end
+
 		local below_node = {x=pos.x, y=pos.y-1, z=pos.z}
 		if not minetest.get_node(below_node).name:find("fire") then
 			minetest.set_node(pos, {name="xdecor:cauldron_idle", param2=node.param2})
 		end
 	end
 })
-
-local old_on_step = minetest.registered_entities["__builtin:item"].on_step
-
-minetest.registered_entities["__builtin:item"].on_step = function(self, dtime)
-	if minetest.get_node(self.object:getpos()).name == "xdecor:cauldron_boiling_water" then
-		local itemname = self.object:get_luaentity().itemstring
-		if itemname:match("default:apple%s%d%d") or
-				itemname:match("flowers:mushroom_brown%s%d%d") then
-			self.object:remove()
-			minetest.set_node(vector.round(self.object:getpos()), {name="xdecor:cauldron_soup"})
-		end
-	end
-	old_on_step(self, dtime)
-end
 

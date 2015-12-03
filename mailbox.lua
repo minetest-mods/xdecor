@@ -92,7 +92,7 @@ function mailbox.formspec(pos, owner, num)
 					","..i..",#FFFFFF,x "..meta:get_string("stack"..i):match("%s(%d+)")..","
 
 				img = img..i.."="..img_col(minetest.registered_items[
-					meta:get_string("stack"..i):match("([%w_]+:[%w_]+)")])..","
+					meta:get_string("stack"..i):match("([%w_:]+)")])..","
 			end
 		end
 
