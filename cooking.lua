@@ -1,25 +1,3 @@
-local cauldron_model = {
-	type = "fixed",
-	fixed = {
-		{-0.5, -0.5, -0.5, 0.5, 0.5, -0.3125},
-		{-0.5, -0.5, 0.3125, 0.5, 0.5, 0.5},
-		{-0.5, -0.5, -0.5, -0.3125, 0.5, 0.5},
-		{0.3125, -0.5, -0.5, 0.5, 0.5, 0.5},
-		{-0.5, -0.5, -0.5, 0.5, 0.4375, 0.5}
-	}
-}
-
-local cauldron_cbox = {
-	type = "fixed",
-	fixed = {
-		{-0.5, -0.5, -0.5, 0.5, 0.5, -0.5},
-		{-0.5, -0.5, 0.5, 0.5, 0.5, 0.5},
-		{-0.5, -0.5, -0.5, -0.5, 0.5, 0.5},
-		{0.5, -0.5, -0.5, 0.5, 0.5, 0.5},
-		{-0.5, -0.5, -0.5, 0.5, 0, 0.5}
-	}
-}
-
 minetest.register_alias("xdecor:cauldron", "xdecor:cauldron_empty")
 
 xdecor.register("cauldron_empty", {
@@ -27,28 +5,14 @@ xdecor.register("cauldron_empty", {
 	groups = {cracky=2, oddly_breakable_by_hand=1},
 	on_rotate = screwdriver.rotate_simple,
 	tiles = {"xdecor_cauldron_top_empty.png", "xdecor_cauldron_sides.png"},
-	node_box = {
-		type = "fixed",
-		fixed = {
-			{-0.5, -0.5, -0.5, 0.5, 0.5, -0.3125},
-			{-0.5, -0.5, 0.3125, 0.5, 0.5, 0.5},
-			{-0.5, -0.5, -0.5, -0.3125, 0.5, 0.5},
-			{0.3125, -0.5, -0.5, 0.5, 0.5, 0.5},
-			{-0.5, -0.5, -0.5, 0.5, -0.125, 0.5}
-		}
-	},
-	selection_box = {
-		type = "fixed",
-		fixed = {{-0.5, -0.5, -0.5, 0.5, 0.5, 0.5}}
-	},
-	collision_box = cauldron_cbox,
+	infotext = "Empty Cauldron",
 	on_rightclick = function(pos, node, clicker, itemstack, _)
 		local wield_item = clicker:get_wielded_item():get_name()
 		if wield_item == "bucket:bucket_water" or
 				wield_item == "bucket:bucket_river_water" then
 			minetest.set_node(pos, {name="xdecor:cauldron_idle", param2=node.param2})
 			itemstack:replace("bucket:bucket_empty")
-		end	
+		end
 	end
 })
 
@@ -57,48 +21,41 @@ xdecor.register("cauldron_idle", {
 	on_rotate = screwdriver.rotate_simple,
 	tiles = {"xdecor_cauldron_top_idle.png", "xdecor_cauldron_sides.png"},
 	drop = "xdecor:cauldron_empty",
-	node_box = cauldron_model,
-	collision_box = cauldron_cbox,
-	selection_box = {
-		type = "fixed",
-		fixed = {{-0.5, -0.5, -0.5, 0.5, 0.5, 0.5}}
-	}
+	infotext = "Cauldron (idle)",
 })
 
 xdecor.register("cauldron_boiling_water", {
 	groups = {cracky=2, oddly_breakable_by_hand=1, not_in_creative_inventory=1},
 	on_rotate = screwdriver.rotate_simple,
 	drop = "xdecor:cauldron_empty",
+	infotext = "Drop foods inside to make a soup",
 	tiles = {
 		{ name = "xdecor_cauldron_top_anim_boiling_water.png",
 			animation = {type="vertical_frames", length=3.0} },
 		"xdecor_cauldron_sides.png"
 	},
-	node_box = cauldron_model,
-	collision_box = cauldron_cbox,
-	selection_box = {
+	collision_box = {
 		type = "fixed",
-		fixed = {{-0.5, -0.5, -0.5, 0.5, 0.5, 0.5}}
-	},
-	infotext = "Drop foods inside to make a soup"
+		fixed = {
+			{-0.5, -0.5, -0.5, 0.5, 0.5, -0.5},
+			{-0.5, -0.5, 0.5, 0.5, 0.5, 0.5},
+			{-0.5, -0.5, -0.5, -0.5, 0.5, 0.5},
+			{0.5, -0.5, -0.5, 0.5, 0.5, 0.5},
+			{-0.5, -0.5, -0.5, 0.5, 0, 0.5}
+		}
+	}
 })
 
 xdecor.register("cauldron_soup", {
 	groups = {cracky=2, oddly_breakable_by_hand=1, not_in_creative_inventory=1},
 	on_rotate = screwdriver.rotate_simple,
 	drop = "xdecor:cauldron_empty",
+	infotext = "The soup is ready, use a bowl to eat it",
 	tiles = {
 		{ name = "xdecor_cauldron_top_anim_soup.png",
 			animation = {type="vertical_frames", length=3.0} },
 		"xdecor_cauldron_sides.png"
 	},
-	node_box = cauldron_model,
-	collision_box = cauldron_cbox,
-	selection_box = {
-		type = "fixed",
-		fixed = {{-0.5, -0.5, -0.5, 0.5, 0.5, 0.5}}
-	},
-	infotext = "The soup is ready, use a bowl to eat it",
 	on_rightclick = function(pos, node, clicker, itemstack, _)
 		local inv = clicker:get_inventory()
 		if clicker:get_wielded_item():get_name() == "xdecor:bowl" then
