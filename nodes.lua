@@ -123,38 +123,6 @@ xdecor.register("candle", {
 	}
 })
 
-xdecor.register("cauldron", {
-	description = "Cauldron",
-	groups = {cracky=2, oddly_breakable_by_hand=1},
-	on_rotate = screwdriver.rotate_simple,
-	tiles = {
-		{ name = "xdecor_cauldron_top_anim.png",
-			animation = {type="vertical_frames", length=3.0} },
-		"xdecor_cauldron_sides.png"
-	}
-})
-
-if minetest.get_modpath("bucket") then
-	local original_bucket_on_use = minetest.registered_items["bucket:bucket_empty"].on_use
-	minetest.override_item("bucket:bucket_empty", {
-		on_use = function(itemstack, user, pointed_thing)
-			local inv = user:get_inventory()
-			if pointed_thing.type == "node" and minetest.get_node(pointed_thing.under).name == "xdecor:cauldron" then
-				if inv:room_for_item("main", "bucket:bucket_water 1") then
-					itemstack:take_item()
-					inv:add_item("main", "bucket:bucket_water 1")
-				else
-					minetest.chat_send_player(user:get_player_name(), "No room in your inventory to add a filled bucket!")
-				end
-				return itemstack
-			else if original_bucket_on_use then
-				return original_bucket_on_use(itemstack, user, pointed_thing)
-			end
-		end
-	end
-	})
-end
-
 xpanes.register_pane("chainlink", {
 	description = "Chain Link",
 	tiles = {"xdecor_chainlink.png"},
@@ -492,12 +460,12 @@ xdecor.register("painting_1", {
 	legacy_wallmounted = true,
 	walkable = false,
 	on_rotate = screwdriver.rotate_simple,
-	wield_image = "xdecor_painting_1.png",
+	wield_image = "xdecor_painting_empty.png",
 	selection_box = {type="wallmounted"},
 	groups = {dig_immediate=3, flammable=3, attached_node=1},
 	after_place_node = function(pos, _, _, _)
 		local node = minetest.get_node(pos)
-		minetest.set_node(pos, {name = "xdecor:painting_"..math.random(1,4), param2 = node.param2})
+		minetest.set_node(pos, {name="xdecor:painting_"..math.random(1,4), param2=node.param2})
 	end
 })
 

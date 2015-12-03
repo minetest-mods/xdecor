@@ -16,6 +16,26 @@ minetest.register_craft({
 	}
 })
 
+minetest.register_craft({
+	output = "xdecor:bowl 3",
+	recipe = {
+		{"group:wood", "", "group:wood"},
+		{"", "group:wood", ""}
+	}
+})
+
+minetest.register_craftitem("xdecor:bowl", {
+	description = "Bowl",
+	inventory_image = "xdecor_bowl.png"
+})
+
+minetest.register_craftitem("xdecor:bowl_soup", {
+	description = "Bowl of soup",
+	inventory_image = "xdecor_bowl_soup.png",
+	groups = {not_in_creative_inventory = 1},
+	on_use = minetest.item_eat(30)
+})
+
 minetest.register_craft({ 
 	output = "xdecor:candle",
 	recipe = {
@@ -47,10 +67,10 @@ minetest.register_craft({
 })
 
 minetest.register_craft({
-	output = "xdecor:cauldron",
+	output = "xdecor:cauldron_empty",
 	recipe = {
-		{"default:iron_lump", "bucket:bucket_water", "default:iron_lump"},
-		{"default:iron_lump", "bucket:bucket_water", "default:iron_lump"},
+		{"default:iron_lump", "", "default:iron_lump"},
+		{"default:iron_lump", "", "default:iron_lump"},
 		{"default:iron_lump", "default:iron_lump", "default:iron_lump"}
 	}
 })
