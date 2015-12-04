@@ -26,12 +26,14 @@ minetest.register_craft({
 
 minetest.register_craftitem("xdecor:bowl", {
 	description = "Bowl",
-	inventory_image = "xdecor_bowl.png"
+	inventory_image = "xdecor_bowl.png",
+	wield_image = "xdecor_bowl.png"
 })
 
 minetest.register_craftitem("xdecor:bowl_soup", {
 	description = "Bowl of soup",
 	inventory_image = "xdecor_bowl_soup.png",
+	wield_image = "xdecor_bowl_soup.png",
 	groups = {not_in_creative_inventory = 1},
 	on_use = minetest.item_eat(30)
 })
@@ -205,6 +207,7 @@ minetest.register_craft({
 minetest.register_craftitem("xdecor:honey", {
 	description = "Honey",
 	inventory_image = "xdecor_honey.png",
+	wield_image = "xdecor_honey.png",
 	groups = {not_in_creative_inventory=1},
 	on_use = minetest.item_eat(2)
 })

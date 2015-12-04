@@ -352,9 +352,12 @@ function worktable.move(pos, from_list, from_index, to_list, to_index, count, _)
 end
 
 local function update_inventory(inv, inputstack)
-	if inv:is_empty("input") then inv:set_list("forms", {}) return end
-	local output = {}
+	if inv:is_empty("input") then
+		inv:set_list("forms", {})
+		return
+	end
 
+	local output = {}
 	for _, n in pairs(def) do
 		local mat = inputstack:get_name()
 		local input = inv:get_stack("input", 1)
