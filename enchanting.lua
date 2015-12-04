@@ -89,14 +89,15 @@ end
 function enchanting.put(_, listname, _, stack, _)
 	local toolstack = stack:get_name()
 	local toolname = toolstack:match("[%w_]+:([%w_]+)")
+	local count = stack:get_count()
 
-	if listname == "mese" and toolstack ~= "default:mese_crystal" then
-		return 0
-	elseif listname == "tool" and not allowed(toolname) then
-		return 0 
+	if listname == "mese" and toolstack == "default:mese_crystal" then
+		return count
+	elseif listname == "tool" and allowed(toolname) then
+		return 1 
 	end
 
-	return 1
+	return 0
 end
 
 xdecor.register("enchantment_table", {
@@ -218,7 +219,8 @@ for _, ench in pairs(tooldef[3]) do
 
 			minetest.register_tool(":"..mod..":enchanted_"..tool.."_"..material.."_"..enchant, {
 				description = string.format("Enchanted %s %s (%s)", cap(material), cap(tool), cap(enchant)),
-				inventory_image = original_tool.inventory_image.."^[colorize:blue:20",
+				inventory_image = original_tool.inventory_image,
+				texture = "3d_armor_"..tool.."_"..material,
 				wield_image = original_tool.wield_image,
 				groups = armorcaps,
 				wear = 0
