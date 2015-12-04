@@ -352,16 +352,20 @@ end
 
 xdecor.register("painting_1", {
 	description = "Painting",
-	drawtype = "signlike",
 	tiles = {"xdecor_painting_1.png"},
-	inventory_image = "xdecor_painting_1.png",
+	inventory_image = "xdecor_painting_empty.png",
+	wield_image = "xdecor_painting_empty.png",
 	paramtype2 = "wallmounted",
 	legacy_wallmounted = true,
-	walkable = false,
-	on_rotate = screwdriver.rotate_simple,
 	wield_image = "xdecor_painting_empty.png",
-	selection_box = {type="wallmounted"},
-	groups = {dig_immediate=3, flammable=3, attached_node=1},
+	sunlight_propagates = true,
+	groups = {choppy=3, oddly_breakable_by_hand=2, flammable=3, attached_node=1},
+	node_box = {
+		type = "wallmounted",
+		wall_top = {-0.4375, 0.4375, -0.3125, 0.4375, 0.5, 0.3125},
+		wall_bottom = {-0.4375, -0.5, -0.3125, 0.4375, -0.4375, 0.3125},
+		wall_side = {-0.5, -0.3125, -0.4375, -0.4375, 0.3125, 0.4375}
+	},
 	after_place_node = function(pos, _, _, _)
 		local node = minetest.get_node(pos)
 		minetest.set_node(pos, {name="xdecor:painting_"..math.random(1,4), param2=node.param2})
@@ -372,15 +376,18 @@ minetest.register_alias("xdecor:painting", "xdecor:painting_1")
 
 for i = 2, 4 do
 	xdecor.register("painting_"..i, {
-		drawtype = "signlike",
 		tiles = {"xdecor_painting_"..i..".png"},
 		paramtype2 = "wallmounted",
 		legacy_wallmounted = true,
-		walkable = false,
-		on_rotate = screwdriver.rotate_simple,
 		drop = "xdecor:painting_1",
-		selection_box = {type="wallmounted"},
-		groups = {dig_immediate=3, flammable=3, attached_node=1, not_in_creative_inventory=1}
+		sunlight_propagates = true,
+		groups = {choppy=3, oddly_breakable_by_hand=2, flammable=3, attached_node=1, not_in_creative_inventory=1},
+		node_box = {
+			type = "wallmounted",
+			wall_top = {-0.4375, 0.4375, -0.3125, 0.4375, 0.5, 0.3125},
+			wall_bottom = {-0.4375, -0.5, -0.3125, 0.4375, -0.4375, 0.3125},
+			wall_side = {-0.5, -0.3125, -0.4375, -0.4375, 0.3125, 0.4375}
+		}
 	})
 end
 
