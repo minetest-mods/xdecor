@@ -360,6 +360,7 @@ xdecor.register("painting_1", {
 	wield_image = "xdecor_painting_empty.png",
 	sunlight_propagates = true,
 	groups = {choppy=3, oddly_breakable_by_hand=2, flammable=3, attached_node=1},
+	sounds = default.node_sound_wood_defaults(),
 	node_box = {
 		type = "wallmounted",
 		wall_top = {-0.4375, 0.4375, -0.3125, 0.4375, 0.5, 0.3125},
@@ -382,6 +383,7 @@ for i = 2, 4 do
 		drop = "xdecor:painting_1",
 		sunlight_propagates = true,
 		groups = {choppy=3, oddly_breakable_by_hand=2, flammable=3, attached_node=1, not_in_creative_inventory=1},
+		sounds = default.node_sound_wood_defaults(),
 		node_box = {
 			type = "wallmounted",
 			wall_top = {-0.4375, 0.4375, -0.3125, 0.4375, 0.5, 0.3125},
