@@ -65,9 +65,11 @@ function worktable.craft_output_recipe(pos, start_i, pagenum, stackname)
 		local stack_type = minetest.get_all_craft_recipes(stackname)[recipe_num]["type"]
 		local stack_output = minetest.get_all_craft_recipes(stackname)[recipe_num]["output"]
 		local stack_count = stack_output:match("%s(%d+)")
+		local items_num = #minetest.get_all_craft_recipes(stackname)
 
-		if #minetest.get_all_craft_recipes(stackname) > 1 then
-			formspec = formspec.."button[1.2,5.5;1.6,1;alternate;Alternate]"
+		if items_num > 1 then
+			formspec = formspec.."button[0,5.7;1.6,1;alternate;Alternate]"..
+					"label[0,5.2;Recipe "..recipe_num.." of "..items_num.."]"
 		end
 
 		if stack_count then
@@ -159,8 +161,8 @@ function worktable.craft_output_recipe(pos, start_i, pagenum, stackname)
 		end
 
 		formspec = formspec.."image[4,6.3;1,1;gui_furnace_arrow_bg.png^[transformR90]"..
-				"button[1.2,6.35;1.6,1;trash;Clear]"..
-				"label["..(12/string.len(stackname))..",7.5;"..stackname:sub(1,30).."]"
+				"button[0,6.5;1.6,1;trash;Clear]"..
+				"label[0,7.5;"..stackname:sub(1,30).."]"
 	end
 
 	meta:set_int("start_i", tostring(start_i))
@@ -178,7 +180,7 @@ function worktable.craftguide_update(pos, filter)
 				def.description and def.description ~= "" then
 			if filter and def.name:find(filter) then
 				inv_items_list[#inv_items_list+1] = name
-			elseif filter == "all" then
+			elseif not filter then
 				inv_items_list[#inv_items_list+1] = name
 			end
 		end
@@ -193,15 +195,15 @@ end
 function worktable.crafting(pos)
 	local meta = minetest.get_meta(pos)
 	local formspec = "size[8,7;]"..xbg..
-		default.get_hotbar_bg(0,3.3)..
-		"list[current_player;main;0,3.3;8,4;]"..
-		"image[5,1;1,1;gui_furnace_arrow_bg.png^[transformR270]"..
-		"button[0,0;1.5,1;back;< Back]"..
-		"button[0,1;1.5,1;craftguide;Guide]"..
-		"list[current_player;craft;2,0;3,3;]"..
-		"list[current_player;craftpreview;6,1;1,1;]"..
-		"listring[current_player;main]"..
-		"listring[current_player;craft]"
+			default.get_hotbar_bg(0,3.3)..
+			"list[current_player;main;0,3.3;8,4;]"..
+			"image[5,1;1,1;gui_furnace_arrow_bg.png^[transformR270]"..
+			"button[0,0;1.5,1;back;< Back]"..
+			"button[0,1;1.5,1;craftguide;Guide]"..
+			"list[current_player;craft;2,0;3,3;]"..
+			"list[current_player;craftpreview;6,1;1,1;]"..
+			"listring[current_player;main]"..
+			"listring[current_player;craft]"
 
 	meta:set_string("formspec", formspec)
 end
@@ -209,12 +211,12 @@ end
 function worktable.storage(pos)
 	local meta = minetest.get_meta(pos)
 	local formspec = "size[8,7]"..xbg..
-		default.get_hotbar_bg(0,3.25)..
-		"list[context;storage;0,1;8,2;]"..
-		"list[current_player;main;0,3.25;8,4;]"..
-		"listring[context;storage]"..
-		"listring[current_player;main]"..
-		"button[0,0;1.5,1;back;< Back]"
+			default.get_hotbar_bg(0,3.25)..
+			"list[context;storage;0,1;8,2;]"..
+			"list[current_player;main;0,3.25;8,4;]"..
+			"listring[context;storage]"..
+			"listring[current_player;main]"..
+			"button[0,0;1.5,1;back;< Back]"
 
 	meta:set_string("formspec", formspec)
 end
@@ -258,7 +260,7 @@ function worktable.construct(pos)
 	meta:set_int("start_i", 0)
 	meta:set_string("infotext", "Work Table")
 	worktable.main(pos)
-	worktable.craftguide_update(pos, "all")
+	worktable.craftguide_update(pos, nil)
 end
 
 function worktable.fields(pos, _, fields, sender)
@@ -298,7 +300,7 @@ function worktable.fields(pos, _, fields, sender)
 			worktable.craftguide_update(pos, fields.filter:lower())
 			worktable.craft_output_recipe(pos, 0, 1, nil)
 		elseif fields.clearfilter then
-			worktable.craftguide_update(pos, "all")
+			worktable.craftguide_update(pos, nil)
 			worktable.craft_output_recipe(pos, 0, 1, nil)
 		elseif fields.prev or fields.next then
 			if fields.prev or start_i >= inventory_size then
