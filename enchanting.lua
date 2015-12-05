@@ -82,7 +82,6 @@ local function allowed(tool)
 		if t then return true end
 	end
 	end
-
 	return false
 end
 

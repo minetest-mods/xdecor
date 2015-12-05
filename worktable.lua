@@ -39,8 +39,9 @@ function worktable.craft_output_recipe(pos, start_i, pagenum, stackname)
 	local inv = meta:get_inventory()
 	pagenum = math.floor(pagenum)
 	local inventory_size = meta:get_int("inventory_size")
+	local recipe_num = meta:get_int("recipe_num")
 	local pagemax = math.floor((inventory_size-1) / (8*4) + 1) or 0
-	local craft, dye_color = {}, ""
+	local craft, dye_color, flower_color = {}, "", ""
 
 	local formspec = "size[8,8;]"..xbg..
 			"list[context;inv_items_list;0,1;8,4;"..tostring(start_i).."]"..
@@ -59,18 +60,27 @@ function worktable.craft_output_recipe(pos, start_i, pagenum, stackname)
 			"field[1.8,0.32;2.6,1;filter;;]"
 
 	if stackname then
-		local stack_width = minetest.get_craft_recipe(stackname).width
-		local stack_items = minetest.get_craft_recipe(stackname).items
-		local stack_type = minetest.get_craft_recipe(stackname).type
-		local stack_output = minetest.get_craft_recipe(stackname).output
+		local stack_width = minetest.get_all_craft_recipes(stackname)[recipe_num]["width"]
+		local stack_items = minetest.get_all_craft_recipes(stackname)[recipe_num]["items"]
+		local stack_type = minetest.get_all_craft_recipes(stackname)[recipe_num]["type"]
+		local stack_output = minetest.get_all_craft_recipes(stackname)[recipe_num]["output"]
 		local stack_count = stack_output:match("%s(%d+)")
 
-		if stack_count and inv:is_empty("item_craft_input") then
-			inv:add_item("item_craft_input", stackname.." "..stack_count-1)
+		if #minetest.get_all_craft_recipes(stackname) > 1 then
+			formspec = formspec.."button[1.2,5.5;1.6,1;alternate;Alternate]"
 		end
-		
+
+		if stack_count then
+			inv:set_stack("item_craft_input", 1, stackname.." "..stack_count)
+		else
+			inv:set_stack("item_craft_input", 1, stackname)
+		end
+
 		if stack_width == 0 then
-			if #stack_items <= 4 then
+			if #stack_items <= 2 then
+				formspec = formspec.."list[context;craft_output_recipe;5,6.3;2,1;]"
+				inv:set_size("craft_output_recipe", 2)
+			elseif #stack_items > 2 and #stack_items <= 4 then
 				formspec = formspec.."list[context;craft_output_recipe;5,5.3;2,2;]"
 				inv:set_size("craft_output_recipe", 2*2)
 			else
@@ -85,8 +95,16 @@ function worktable.craft_output_recipe(pos, start_i, pagenum, stackname)
 			end
 			inv:set_size("craft_output_recipe", 1 * #stack_items)
 		elseif stack_width == 2 then
-			formspec = formspec.."list[context;craft_output_recipe;5,5.3;2,3;]"
-			inv:set_size("craft_output_recipe", 2*3)
+			if #stack_items <= 2 then
+				formspec = formspec.."list[context;craft_output_recipe;5,6.3;2,1;]"
+				inv:set_size("craft_output_recipe", 2)
+			elseif #stack_items > 2 and #stack_items <= 4 then
+				formspec = formspec.."list[context;craft_output_recipe;5,5.3;2,2;]"
+				inv:set_size("craft_output_recipe", 2*2)
+			else
+				formspec = formspec.."list[context;craft_output_recipe;5,5.3;2,3;]"
+				inv:set_size("craft_output_recipe", 2*3)
+			end
 		elseif stack_width == 3 then
 			if stack_type == "cooking" then
 				formspec = formspec.."list[context;craft_output_recipe;5,6.3;1,1;]"..
@@ -114,6 +132,21 @@ function worktable.craft_output_recipe(pos, start_i, pagenum, stackname)
 				elseif def:find("group:dye") then
 					dye_color = def:match("group:dye,%w+_([%w_]+)")
 					def = "dye:"..dye_color
+				elseif def:find("group:flower") then
+					flower_color = def:match("group:flower,%w+_([%w_]+)")
+					if flower_color == "red" then
+						def = "flowers:rose"
+					elseif flower_color == "yellow" then
+						def = "flowers:dandelion_yellow"
+					elseif flower_color == "white" then
+						def = "flowers:dandelion_white"
+					elseif flower_color == "blue" then
+						def = "flowers:geranium"
+					elseif flower_color == "orange" then
+						def = "flowers:tulip"
+					else
+						def = "flowers:rose"
+					end
 				elseif def:match("group:stone") or def:match("group:wood") or
 						def:match("group:leaves") or def:match("group:stick") or
 						def:match("group:sand") or def:match("group:tree") or
@@ -126,7 +159,7 @@ function worktable.craft_output_recipe(pos, start_i, pagenum, stackname)
 		end
 
 		formspec = formspec.."image[4,6.3;1,1;gui_furnace_arrow_bg.png^[transformR90]"..
-				"button[1.2,6.35;1.5,1;trash;Clear]"..
+				"button[1.2,6.35;1.6,1;trash;Clear]"..
 				"label["..(12/string.len(stackname))..",7.5;"..stackname:sub(1,30).."]"
 	end
 
@@ -164,7 +197,7 @@ function worktable.crafting(pos)
 		"list[current_player;main;0,3.3;8,4;]"..
 		"image[5,1;1,1;gui_furnace_arrow_bg.png^[transformR270]"..
 		"button[0,0;1.5,1;back;< Back]"..
-		"button[0,1;1.5,1;craft_output_recipe;Guide]"..
+		"button[0,1;1.5,1;craftguide;Guide]"..
 		"list[current_player;craft;2,0;3,3;]"..
 		"list[current_player;craftpreview;6,1;1,1;]"..
 		"listring[current_player;main]"..
@@ -220,7 +253,8 @@ function worktable.construct(pos)
 	inv:set_size("hammer", 1)
 	inv:set_size("storage", 8*2)
 	inv:set_size("item_craft_input", 1)
-
+	
+	meta:set_int("recipe_num", 1)
 	meta:set_int("start_i", 0)
 	meta:set_string("infotext", "Work Table")
 	worktable.main(pos)
@@ -232,6 +266,7 @@ function worktable.fields(pos, _, fields, sender)
 	local inv = meta:get_inventory()
 	local start_i = meta:get_int("start_i")
 	local inventory_size = meta:get_int("inventory_size")
+	local inputstack = inv:get_stack("item_craft_input", 1):get_name()
 	start_i = tonumber(start_i) or 0
 
 	if fields.storage then
@@ -239,9 +274,22 @@ function worktable.fields(pos, _, fields, sender)
 	elseif fields.back then
 		worktable.main(pos)
 	elseif fields.backcraft or fields.craft then
+		if fields.backcraft then
+			meta:set_int("recipe_num", 1)
+			inv:set_list("item_craft_input", {})
+			inv:set_list("craft_output_recipe", {})
+		end
 		worktable.crafting(pos)
-	elseif fields.craft_output_recipe then
-		worktable.craft_output_recipe(pos, 0, 1)
+	elseif fields.craftguide then
+		worktable.craft_output_recipe(pos, 0, 1, nil)
+	elseif fields.alternate then
+		inv:set_list("craft_output_recipe", {})
+		if meta:get_int("recipe_num") >= #minetest.get_all_craft_recipes(inputstack) then
+			meta:set_int("recipe_num", 1)
+		else
+			meta:set_int("recipe_num", meta:get_int("recipe_num") + 1)
+		end
+		worktable.craft_output_recipe(pos, start_i, start_i / (8*4) + 1, inputstack)
 	elseif fields.trash or fields.search or fields.clearfilter or
 			fields.prev or fields.next then
 		if fields.trash then
@@ -265,6 +313,7 @@ function worktable.fields(pos, _, fields, sender)
 			worktable.craft_output_recipe(pos, start_i, start_i / (8*4) + 1, nil)
 		end
 
+		meta:set_int("recipe_num", 1)
 		inv:set_list("item_craft_input", {})
 		inv:set_list("craft_output_recipe", {})
 	end
@@ -284,7 +333,6 @@ function worktable.contains(table, element)
 			end
 		end
 	end
-
 	return false
 end
 
@@ -338,14 +386,12 @@ function worktable.move(pos, from_list, from_index, to_list, to_index, count, _)
 		return count
 	elseif inv:is_empty("item_craft_input") and from_list == "inv_items_list" and
 			to_list == "item_craft_input" then
-		--print(dump(minetest.get_craft_recipe(stackname)))
+		--print(dump(minetest.get_all_craft_recipes(stackname)))
 		worktable.craft_output_recipe(pos, start_i, start_i / (8*4) + 1, stackname)
 
 		minetest.after(0, function()
 			inv:set_stack(from_list, from_index, stackname)
 		end)
-
-		return 1
 	end
 
 	return 0
