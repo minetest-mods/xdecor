@@ -131,13 +131,17 @@ xdecor.register("enchantment_table", {
 	end
 })
 
-local function cap(str) return str:gsub("^%l", string.upper) end
+local function cap(str)
+	return str:gsub("^%l", string.upper)
+end
 
  -- Higher number = stronger enchant.
 local use_factor = 1.2
 local times_subtractor = 0.1
 local damage_adder = 1
-local strenght_factor = 1.2
+local strength_factor = 1.2
+local speed_factor = 0.2
+local jump_factor = 0.2
 
 local tools = {
 	--[[ Registration format :
@@ -168,6 +172,7 @@ for _, tooldef in next, defs, 1 do
 for _, ench in pairs(tooldef[3]) do
 	local tool, group, material, enchant = tooldef[1], tooldef[2], mat, ench
 	local original_tool = minetest.registered_tools[mod..":"..tool.."_"..material]
+	local ceil = math.ceil
 
 	if original_tool then
 		if mod == "default" then
@@ -179,7 +184,7 @@ for _, ench in pairs(tooldef[3]) do
 			local max_drop_level = original_tool.tool_capabilities.max_drop_level
 
 			if enchant == "durable" then
-				groupcaps[group].uses = math.ceil(original_groupcaps[group].uses * use_factor)
+				groupcaps[group].uses = ceil(original_groupcaps[group].uses * use_factor)
 			elseif enchant == "fast" then
 				for i = 1, 3 do
 					groupcaps[group].times[i] = original_groupcaps[group].times[i] - times_subtractor
@@ -189,7 +194,7 @@ for _, ench in pairs(tooldef[3]) do
 			end
 
 			minetest.register_tool(":"..mod..":enchanted_"..tool.."_"..material.."_"..enchant, {
-				description = string.format("Enchanted %s %s (%s)", cap(material), cap(tool), cap(enchant)),
+				description = "Enchanted "..cap(material).." "..cap(tool).." ("..cap(enchant)..")",
 				inventory_image = original_tool.inventory_image.."^[colorize:violet:50",
 				wield_image = original_tool.wield_image,
 				groups = {not_in_creative_inventory=1},
@@ -208,16 +213,16 @@ for _, ench in pairs(tooldef[3]) do
 
 			for armor_group, value in pairs(original_armor_groups) do
 				if enchant == "strong" then
-					armorcaps[armor_group] = math.ceil(value * 1.2)
+					armorcaps[armor_group] = ceil(value * strength_factor)
 				elseif enchant == "speed" then
 					armorcaps[armor_group] = value
-					armorcaps.physics_speed = 0.3
-					armorcaps.physics_jump = 0.2
+					armorcaps.physics_speed = speed_factor
+					armorcaps.physics_jump = jump_factor
 				end
 			end
 
 			minetest.register_tool(":"..mod..":enchanted_"..tool.."_"..material.."_"..enchant, {
-				description = string.format("Enchanted %s %s (%s)", cap(material), cap(tool), cap(enchant)),
+				description = "Enchanted "..cap(material).." "..cap(tool).." ("..cap(enchant)..")",
 				inventory_image = original_tool.inventory_image,
 				texture = "3d_armor_"..tool.."_"..material,
 				wield_image = original_tool.wield_image,
