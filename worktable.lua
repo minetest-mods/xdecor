@@ -38,7 +38,7 @@ function worktable.craft_output_recipe(pos, start_i, pagenum, stackname)
 	local meta = minetest.get_meta(pos)
 	local inv = meta:get_inventory()
 	local floor = math.floor
-	pagenum = floor(pagenum)
+	pagenum = floor(pagenum) or 0
 	local inventory_size = meta:get_int("inventory_size")
 	local recipe_num = meta:get_int("recipe_num")
 	local filter = meta:get_string("filter") or ""
@@ -62,10 +62,10 @@ function worktable.craft_output_recipe(pos, start_i, pagenum, stackname)
 			"field[1.8,0.32;2.6,1;filter;;"..filter.."]"
 
 	if stackname then
-		local stack_width = minetest.get_all_craft_recipes(stackname)[recipe_num]["width"]
-		local stack_items = minetest.get_all_craft_recipes(stackname)[recipe_num]["items"]
-		local stack_type = minetest.get_all_craft_recipes(stackname)[recipe_num]["type"]
-		local stack_output = minetest.get_all_craft_recipes(stackname)[recipe_num]["output"]
+		local stack_width = minetest.get_all_craft_recipes(stackname)[recipe_num].width
+		local stack_items = minetest.get_all_craft_recipes(stackname)[recipe_num].items
+		local stack_type = minetest.get_all_craft_recipes(stackname)[recipe_num].type
+		local stack_output = minetest.get_all_craft_recipes(stackname)[recipe_num].output
 		local stack_count = stack_output:match("%s(%d+)")
 		local items_num = #minetest.get_all_craft_recipes(stackname)
 
