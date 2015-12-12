@@ -350,7 +350,8 @@ function worktable.put(_, listname, _, stack, _)
 		return count
 	elseif listname == "hammer" and stn == "xdecor:hammer" then
 		return 1
-	elseif listname == "tool" and tdef and twear > 0 then
+	elseif listname == "tool" and tdef and twear > 0 and
+			stn ~= "xdecor:hammer" then
 		return 1
 	elseif listname == "storage" then
 		return count
@@ -511,7 +512,7 @@ minetest.register_abm({
 
 		-- Wear : 0-65535 | 0 = new condition.
 		tool:add_wear(-500)
-		hammer:add_wear(300)
+		hammer:add_wear(800)
 
 		inv:set_stack("tool", 1, tool)
 		inv:set_stack("hammer", 1, hammer)
