@@ -1,3 +1,4 @@
+--local t = os.clock()
 xdecor = {}
 local modpath = minetest.get_modpath("xdecor")
 
@@ -15,4 +16,5 @@ dofile(modpath.."/nodes.lua")
 dofile(modpath.."/sitting.lua")
 dofile(modpath.."/worktable.lua")
 dofile(modpath.."/xwall.lua")
+--print(string.format("xdecor loaded in %.2f ms", (os.clock()-t)*1000))
 

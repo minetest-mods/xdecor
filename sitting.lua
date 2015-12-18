@@ -46,7 +46,7 @@ xdecor.register("chair", {
 			{-0.3125, -0.125, -0.3125, 0.3125, 0, 0.1875}}
 	},
 	on_rightclick = function(pos, node, clicker)
-		local objs = minetest.get_objects_inside_radius(pos, 0.5)
+		local objs = minetest.get_objects_inside_radius(pos, 0.1)
 		for _, p in pairs(objs) do
 			if p:get_player_name() ~= clicker:get_player_name() then return end
 		end
@@ -56,7 +56,7 @@ xdecor.register("chair", {
 	end,
 	can_dig = function(pos, player)
 		local pname = player:get_player_name()
-		local objs = minetest.get_objects_inside_radius(pos, 0.5)
+		local objs = minetest.get_objects_inside_radius(pos, 0.1)
 
 		for _, p in pairs(objs) do
 			if not player or not player:is_player() or
@@ -77,7 +77,7 @@ xdecor.register("cushion", {
 	on_place = minetest.rotate_node,
 	node_box = xdecor.nodebox.slab_y(-0.5, 0.5),
 	on_rightclick = function(pos, node, clicker)
-		local objs = minetest.get_objects_inside_radius(pos, 0.5)
+		local objs = minetest.get_objects_inside_radius(pos, 0.1)
 		for _, p in pairs(objs) do
 			if p:get_player_name() ~= clicker:get_player_name() then return end
 		end
@@ -87,7 +87,7 @@ xdecor.register("cushion", {
 	end,
 	can_dig = function(pos, player)
 		local pname = player:get_player_name()
-		local objs = minetest.get_objects_inside_radius(pos, 0.5)
+		local objs = minetest.get_objects_inside_radius(pos, 0.1)
 
 		for _, p in pairs(objs) do
 			if not player or not player:is_player() or

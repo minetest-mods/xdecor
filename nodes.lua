@@ -367,7 +367,7 @@ xdecor.register("painting_1", {
 		wall_bottom = {-0.4375, -0.5, -0.3125, 0.4375, -0.4375, 0.3125},
 		wall_side = {-0.5, -0.3125, -0.4375, -0.4375, 0.3125, 0.4375}
 	},
-	after_place_node = function(pos, _, _, _)
+	on_construct = function(pos)
 		local node = minetest.get_node(pos)
 		minetest.set_node(pos, {name="xdecor:painting_"..math.random(1,4), param2=node.param2})
 	end

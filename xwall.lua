@@ -20,8 +20,8 @@ for i = 1, #profiles do
 end
 
 local directions = {
-	{x = 1, y = 0, z = 0}, {x = 0, y = 0, z = 1},
-	{x = -1, y = 0, z = 0}, {x = 0, y = 0, z = -1}
+	{x=1, y=0, z=0}, {x=0, y=0, z=1},
+	{x=-1, y=0, z=0}, {x=0, y=0, z=-1}
 }
 
 function xwall.update_one_node(pos, name, digged)
@@ -72,34 +72,6 @@ function xwall.update(pos, name, active, has_been_digged)
 	end
 end
 
-function xwall.register(name, def, node_box_data)
-	for k, v in pairs(node_box_data) do
-		def.drawtype = "nodebox"
-		def.paramtype = "light"
-		def.paramtype2 = "facedir"
-		def.drop = name.."_ln"
-		def.node_box = {type = "fixed", fixed = node_box_data[k]}
-
-		if not def.tiles then def.tiles = def.textures end
-		if not def.groups then
-			def.groups = {xwall=1, cracky=3}
-		else def.groups.xwall = 1 end
-
-		local newdef = table.copy(def)
-		if k == "ln" then
-			newdef.on_construct = function(pos)
-				return xwall.update(pos, name.."_ln", true, nil)
-			end
-		else newdef.groups.not_in_creative_inventory = 1 end
-
-		newdef.after_dig_node = function(pos, _, _, _)
-			return xwall.update(pos, name.."_ln", true, true)
-		end
-
-		minetest.register_node(name.."_"..k, newdef)
-	end
-end
-
 function xwall.construct_node_box_data(node_box_list, center_node_box_list, node_box_line)
 	local res = {}
 	res.c0, res.c1, res.c2, res.c3, res.c4 = {}, {}, {}, {}, {}
@@ -134,32 +106,56 @@ function xwall.construct_node_box_data(node_box_list, center_node_box_list, node
 		res.c4[#res.c4+1] = v
 	end	
 
-	if #res.c0 < 1 then res.c0 = nil end
+	if #res.c0 < 1 then
+		res.c0 = nil
+	end
 
 	res.ln = node_box_line
 	return res
 end
 
-function xwall.register_wall(name, tiles, def)
+function xwall.register_wall(name, tiles)
+	local groups, def = {}, {}
 	local node_box_data = xwall.construct_node_box_data(
-		{{-.1875,-.6875,0,.1875,.3125,.5}},{{-.25,-.6875,-.25,.25,.5,.25}},
+		{{-.1875,-.6875,0,.1875,.3125,.5}},
+		{{-.25,-.6875,-.25,.25,.5,.25}},
 		{{-.1875,-.6875,-.5,.1875,.3125,.5}}
 	)
 
-	if def then return end
-	def = { 
-		description = string.sub(name:gsub("%l", string.upper, 7), 8, -6).." Wall",
-		textures = {tiles, tiles, tiles, tiles},
-		sounds = default.node_sound_stone_defaults(),
-		groups = {cracky=3, stone=1, pane=1},
-		sunlight_propagates = true,
-		on_rotate = screwdriver.disallow,
-		collision_box = {
-			type = "fixed",
-			fixed = {-.5, -.5, -.25, .5, 1, .25}
+	local function group(k)
+		groups = {xwall=1, cracky=3}
+		if k ~= "ln" then
+			groups.not_in_creative_inventory=1
+		end
+		return groups
+	end
+
+	for k, v in pairs(node_box_data) do
+		def = { 
+			description = name:match("[%w_]+:(%a+)"):gsub("^%l", string.upper).." Wall",
+			drawtype = "nodebox",
+			paramtype = "light",
+			paramtype2 = "facedir",
+			tiles = {tiles},
+			drop = name.."_ln",
+			node_box = {type = "fixed", fixed = node_box_data[k]},
+			sounds = default.node_sound_stone_defaults(),
+			groups = group(k),
+			sunlight_propagates = true,
+			on_rotate = screwdriver.disallow,
+			collision_box = {
+				type = "fixed",
+				fixed = {-.5, -.5, -.25, .5, 1, .25}
+			},
+			on_construct = function(pos)
+				return xwall.update(pos, name.."_ln", true, nil)
+			end,
+			after_dig_node = function(pos, _, _, _)
+				return xwall.update(pos, name.."_ln", true, true)
+			end
 		}
-	}
-	xwall.register(name, def, node_box_data)
+		minetest.register_node(name.."_"..k, def)
+	end
 end
 
 xwall.register_wall("xdecor:cobble_wall", "default_cobble.png")
