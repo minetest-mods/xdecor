@@ -179,10 +179,9 @@ function worktable.craftguide_update(pos, filter)
 	for name, def in pairs(minetest.registered_items) do
 		if not (def.groups.not_in_creative_inventory == 1) and
 				minetest.get_craft_recipe(name).items and
-				def.description and def.description ~= "" then
-			if (filter and def.name:find(filter, 1, true)) or not filter then
-				inv_items_list[#inv_items_list+1] = name
-			end
+				def.description and def.description ~= "" and
+				((filter and def.name:find(filter, 1, true)) or not filter) then
+			inv_items_list[#inv_items_list+1] = name
 		end
 	end
 	table.sort(inv_items_list)

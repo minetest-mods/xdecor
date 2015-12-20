@@ -63,9 +63,13 @@ xdecor.register("mailbox", {
 		if listname == "drop" then
 			local meta = minetest.get_meta(pos)
 			local inv = meta:get_inventory()
-			if inv:room_for_item("mailbox", stack) then return -1 end
+			if inv:room_for_item("mailbox", stack) then
+				return -1
+			else
+				minetest.chat_send_player(player_name, "The mailbox is full")
+			end
 		end
-		minetest.chat_send_player(player_name, "The mailbox is full.")
+
 		return 0
 	end
 })
@@ -98,8 +102,8 @@ function mailbox.formspec(pos, owner, num)
 
 		return "size[9.5,9]"..xbg..
 			default.get_hotbar_bg(0.75,5.25)..
-			"label[0,0;Mailbox :]"..
-			"label[6,0;Last donators :]"..
+			"label[0,0;Mailbox]"..
+			"label[6,0;Last donators]"..
 			"box[6,0.72;3.3,3.5;#555555]"..
 			"tablecolumns[color;text;image,"..img.."0;color;text]"..
 			"tableoptions[background=#00000000;highlight=#00000000;border=false]"..
@@ -111,7 +115,9 @@ function mailbox.formspec(pos, owner, num)
 	else
 		return "size[8,5]"..xbg..
 			default.get_hotbar_bg(0,1.25)..
-			"label[0.5,0;Send your goods\nto "..owner.." :]"..
+			"tablecolumns[color;text;color;text]"..
+			"tableoptions[background=#00000000;highlight=#00000000;border=false]"..
+			"table[0,0;3,1;sendform;#FFFFFF,Send your goods to,,,#FFFF00,"..owner.."]"..
 			"list[nodemeta:"..spos..";drop;3.5,0;1,1;]"..
 			"list[current_player;main;0,1.25;8,4;]"
 	end
