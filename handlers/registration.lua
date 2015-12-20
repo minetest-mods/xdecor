@@ -1,13 +1,13 @@
-local default_can_dig = function(pos, _)
+--[[ local default_can_dig = function(pos, _)
 	local meta = minetest.get_meta(pos)
 	local inv = meta:get_inventory()
 
 	return inv:is_empty("main")
-end
+end --]]
 
 local xbg = default.gui_bg..default.gui_bg_img..default.gui_slots
-
 local default_inventory_size = 32
+
 local default_inventory_formspecs = {
 	["8"] = "size[8,6]"..xbg..
 	"list[context;main;0,0;8,1;]"..
@@ -44,7 +44,7 @@ local function get_formspec_by_size(size)
 	return formspec or default_inventory_formspecs
 end
 
-local function drop_chest_stuff() -- thanks to LNJplus for this function
+local function drop_stuff() -- thanks to LNJplus for this function
 	local random = math.random
 	return function(pos, oldnode, oldmetadata, digger)
 		local meta = minetest.get_meta(pos)
@@ -68,10 +68,10 @@ function xdecor.register(name, def)
 	def.drawtype = def.drawtype or (def.node_box and "nodebox")
 	def.paramtype = def.paramtype or "light"
 	def.sounds = def.sounds or default.node_sound_defaults()
-	
-	if not (def.drawtype == "glasslike_framed" or
-			def.drawtype == "glasslike_framed_optional" or def.drawtype == "plantlike" or
-			def.drawtype == "signlike" or def.drawtype == "normal") then
+
+	if not (def.drawtype == "normal" or def.drawtype == "signlike" or
+			def.drawtype == "plantlike" or def.drawtype == "glasslike_framed" or
+			def.drawtype == "glasslike_framed_optional") then
 		def.paramtype2 = def.paramtype2 or "facedir"
 	end
 
@@ -90,12 +90,13 @@ function xdecor.register(name, def)
 			if infotext then
 				meta:set_string("infotext", infotext)
 			end
+
 			local size = inventory.size or default_inventory_size
 			local inv = meta:get_inventory()
 			inv:set_size("main", size)
 			meta:set_string("formspec", inventory.formspec or get_formspec_by_size(size))
 		end
-		def.after_dig_node = def.after_dig_node or drop_chest_stuff()
+		def.after_dig_node = def.after_dig_node or drop_stuff()
 		--def.can_dig = def.can_dig or default_can_dig
 	elseif infotext and not def.on_construct then
 		def.on_construct = function(pos)
