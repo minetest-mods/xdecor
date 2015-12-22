@@ -37,19 +37,18 @@ local def = { -- Nodebox name, yield, definition.
 function worktable.craft_output_recipe(pos, start_i, pagenum, stackname, filter)
 	local meta = minetest.get_meta(pos)
 	local inv = meta:get_inventory()
-	local floor = math.floor
-	pagenum = floor(pagenum) or 0
-	local inventory_size = #meta:to_table().inventory.inv_items_list or 0
+	pagenum = math.floor(pagenum)
+	local inventory_size = #meta:to_table().inventory.inv_items_list
 	local recipe_num = meta:get_int("recipe_num")
-	local pagemax = floor((inventory_size - 1) / (8*4) + 1) or 0
+	local pagemax = math.floor((inventory_size - 1) / (8*4) + 1)
 	local craft, dye_color, flower_color = {}, "", ""
 
 	local formspec = "size[8,8;]"..xbg..
-			"list[context;inv_items_list;0,1;8,4;"..start_i.."]"..
+			"list[context;inv_items_list;0,1;8,4;"..tostring(start_i).."]"..
 			"list[context;item_craft_input;3,6.3;1,1;]"..
 			"tablecolumns[color;text;color;text]"..
 			"tableoptions[background=#00000000;highlight=#00000000;border=false]"..
-			"table[6.1,0.2;1.1,0.5;pagenum;#FFFF00,"..pagenum..",#FFFFFF,/ "..pagemax.."]"..
+			"table[6.1,0.2;1.1,0.5;pagenum;#FFFF00,"..tostring(pagenum)..",#FFFFFF,/ "..tostring(pagemax).."]"..
 			"button[5.5,0;0.7,1;prev;<]"..
 			"button[7.3,0;0.7,1;next;>]"..
 			"button[4,0.2;0.7,0.5;search;?]"..
@@ -266,10 +265,11 @@ function worktable.fields(pos, _, fields, sender)
 	local start_i = tonumber(formspec:match("inv_items_list;.*;(%d+)%]")) or 0
 	local inputstack = inv:get_stack("item_craft_input", 1):get_name()
 	local recipe_num = meta:get_int("recipe_num")
+	local inventory_size = 0
 
 	if meta:to_table().inventory.inv_items_list then
-		local inventory_size = #meta:to_table().inventory.inv_items_list or 0
-	end
+		inventory_size = #meta:to_table().inventory.inv_items_list
+	else return end
 
 	if fields.storage then
 		worktable.storage(pos)
@@ -409,13 +409,11 @@ local function update_inventory(inv, inputstack)
 	end
 
 	local output = {}
-	local min = math.min
-
 	for _, n in pairs(def) do
 		local mat = inputstack:get_name()
 		local input = inv:get_stack("input", 1)
 		local mod, node = mat:match("([%w_]+):([%w_]+)")
-		local count = min(n[2] * input:get_count(), inputstack:get_stack_max())
+		local count = math.min(n[2] * input:get_count(), inputstack:get_stack_max())
 
 		if not worktable.contains(nodes[mod], node) then return end
 		output[#output+1] = mat.."_"..n[1].." "..count
@@ -433,13 +431,11 @@ end
 
 function worktable.on_take(pos, listname, index, stack, _)
 	local inv = minetest.get_meta(pos):get_inventory()
-	local ceil = math.ceil
-
 	if listname == "input" then
 		update_inventory(inv, stack)
 	elseif listname == "forms" then
 		local inputstack = inv:get_stack("input", 1)
-		inputstack:take_item(ceil(stack:get_count() / def[index][2]))
+		inputstack:take_item(math.ceil(stack:get_count() / def[index][2]))
 		inv:set_stack("input", 1, inputstack)
 		update_inventory(inv, inputstack)
 	end
