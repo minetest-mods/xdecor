@@ -264,9 +264,12 @@ function worktable.fields(pos, _, fields, sender)
 	local formspec = meta:to_table().fields.formspec
 	local filter = formspec:match("filter;;([%w_:]+)") or ""
 	local start_i = tonumber(formspec:match("inv_items_list;.*;(%d+)%]")) or 0
-	local inventory_size = #meta:to_table().inventory.inv_items_list or 0
 	local inputstack = inv:get_stack("item_craft_input", 1):get_name()
 	local recipe_num = meta:get_int("recipe_num")
+
+	if meta:to_table().inventory.inv_items_list then
+		local inventory_size = #meta:to_table().inventory.inv_items_list or 0
+	end
 
 	if fields.storage then
 		worktable.storage(pos)
