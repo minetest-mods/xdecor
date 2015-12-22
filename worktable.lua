@@ -39,7 +39,6 @@ function worktable.craft_output_recipe(pos, start_i, pagenum, stackname, filter)
 	local inv = meta:get_inventory()
 	pagenum = math.floor(pagenum)
 	local inventory_size = #meta:to_table().inventory.inv_items_list
-	local recipe_num = meta:get_int("recipe_num")
 	local pagemax = math.floor((inventory_size - 1) / (8*4) + 1)
 	local craft, dye_color, flower_color = {}, "", ""
 
@@ -60,6 +59,7 @@ function worktable.craft_output_recipe(pos, start_i, pagenum, stackname, filter)
 			"field[1.8,0.32;2.6,1;filter;;"..filter.."]"
 
 	if stackname then
+		local recipe_num = meta:get_int("recipe_num")
 		local stack_width = minetest.get_all_craft_recipes(stackname)[recipe_num].width
 		local stack_items = minetest.get_all_craft_recipes(stackname)[recipe_num].items
 		local stack_type = minetest.get_all_craft_recipes(stackname)[recipe_num].type
@@ -244,15 +244,16 @@ function worktable.construct(pos)
 	local meta = minetest.get_meta(pos)
 	local inv = meta:get_inventory()
 
-	inv:set_size("forms", 4*3)
-	inv:set_size("input", 1)
 	inv:set_size("tool", 1)
+	inv:set_size("input", 1)
 	inv:set_size("hammer", 1)
+	inv:set_size("forms", 4*3)
 	inv:set_size("storage", 8*2)
 	inv:set_size("item_craft_input", 1)
 
 	meta:set_int("recipe_num", 1)
 	meta:set_string("infotext", "Work Table")
+
 	worktable.main(pos)
 	worktable.craftguide_update(pos, nil)
 end
@@ -263,13 +264,6 @@ function worktable.fields(pos, _, fields, sender)
 	local formspec = meta:to_table().fields.formspec
 	local filter = formspec:match("filter;;([%w_:]+)") or ""
 	local start_i = tonumber(formspec:match("inv_items_list;.*;(%d+)%]")) or 0
-	local inputstack = inv:get_stack("item_craft_input", 1):get_name()
-	local recipe_num = meta:get_int("recipe_num")
-	local inventory_size = 0
-
-	if meta:to_table().inventory.inv_items_list then
-		inventory_size = #meta:to_table().inventory.inv_items_list
-	else return end
 
 	if fields.storage then
 		worktable.storage(pos)
@@ -283,9 +277,13 @@ function worktable.fields(pos, _, fields, sender)
 		end
 		worktable.crafting(pos)
 	elseif fields.craftguide then
+		if not meta:to_table().inventory.inv_items_list then return end
 		worktable.craft_output_recipe(pos, 0, 1, nil, "")
 	elseif fields.alternate then
 		inv:set_list("craft_output_recipe", {})
+		local recipe_num = meta:get_int("recipe_num")
+		local inputstack = inv:get_stack("item_craft_input", 1):get_name()
+
 		if recipe_num >= #minetest.get_all_craft_recipes(inputstack) then
 			meta:set_int("recipe_num", 1)
 		else
@@ -303,6 +301,7 @@ function worktable.fields(pos, _, fields, sender)
 			worktable.craftguide_update(pos, nil)
 			worktable.craft_output_recipe(pos, 0, 1, nil, "")
 		elseif fields.prev or fields.next then
+			local inventory_size = #meta:to_table().inventory.inv_items_list
 			if fields.prev or start_i >= inventory_size then
 				start_i = start_i - 8*4
 			elseif fields.next or start_i < 0 then
