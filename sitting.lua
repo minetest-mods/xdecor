@@ -1,5 +1,13 @@
 local function sit(pos, node, clicker)
 	local player = clicker:get_player_name()
+	local objs = minetest.get_objects_inside_radius(pos, 0.1)
+
+	for _, p in pairs(objs) do
+		if p:get_player_name() ~= clicker:get_player_name() then
+			return
+		end
+	end
+
 	if default.player_attached[player] == true then
 		pos.y = pos.y - 0.5
 		clicker:setpos(pos)
@@ -30,6 +38,20 @@ local function sit(pos, node, clicker)
 	end
 end
 
+local function dig(pos, player)
+	local pname = player:get_player_name()
+	local objs = minetest.get_objects_inside_radius(pos, 0.1)
+
+	for _, p in pairs(objs) do
+		if not player or not player:is_player() or p:get_player_name() ~= nil or
+				default.player_attached[pname] == true then
+			return false
+		end
+	end
+
+	return true
+end
+
 xdecor.register("chair", {
 	description = "Chair",
 	tiles = {"xdecor_wood.png"},
@@ -45,28 +67,10 @@ xdecor.register("chair", {
 			{0.1875, -0.5, -0.3125, 0.3125, -0.125, -0.1875},
 			{-0.3125, -0.125, -0.3125, 0.3125, 0, 0.1875}}
 	},
+	can_dig = dig,
 	on_rightclick = function(pos, node, clicker)
-		local objs = minetest.get_objects_inside_radius(pos, 0.1)
-		for _, p in pairs(objs) do
-			if p:get_player_name() ~= clicker:get_player_name() then return end
-		end
-
 		pos.y = pos.y + 0  -- Sitting position.
 		sit(pos, node, clicker)
-	end,
-	can_dig = function(pos, player)
-		local pname = player:get_player_name()
-		local objs = minetest.get_objects_inside_radius(pos, 0.1)
-
-		for _, p in pairs(objs) do
-			if not player or not player:is_player() or
-					p:get_player_name() ~= nil or
-					default.player_attached[pname] == true then
-				return false
-			end
-		end
-
-		return true
 	end
 })
 
@@ -76,28 +80,10 @@ xdecor.register("cushion", {
 	groups = {snappy=3, flammable=3, fall_damage_add_percent=-50},
 	on_place = minetest.rotate_node,
 	node_box = xdecor.nodebox.slab_y(-0.5, 0.5),
+	can_dig = dig,
 	on_rightclick = function(pos, node, clicker)
-		local objs = minetest.get_objects_inside_radius(pos, 0.1)
-		for _, p in pairs(objs) do
-			if p:get_player_name() ~= clicker:get_player_name() then return end
-		end
-
-		pos.y = pos.y + 0
+		pos.y = pos.y + 0  -- Sitting position.
 		sit(pos, node, clicker)
-	end,
-	can_dig = function(pos, player)
-		local pname = player:get_player_name()
-		local objs = minetest.get_objects_inside_radius(pos, 0.1)
-
-		for _, p in pairs(objs) do
-			if not player or not player:is_player() or
-					p:get_player_name() ~= nil or
-					default.player_attached[pname] == true then
-				return false
-			end
-		end
-
-		return true
 	end
 })
 
