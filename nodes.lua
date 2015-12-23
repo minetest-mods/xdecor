@@ -373,7 +373,7 @@ xdecor.register("painting_1", {
 	end
 })
 
-minetest.register_alias("xdecor:painting", "xdecor:painting_1")
+minetest.register_alias("xdecor:painting", "xdecor:painting_1") -- legacy code
 
 for i = 2, 4 do
 	xdecor.register("painting_"..i, {

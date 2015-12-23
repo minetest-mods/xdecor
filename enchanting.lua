@@ -172,7 +172,6 @@ for _, tooldef in next, defs, 1 do
 for _, ench in pairs(tooldef[3]) do
 	local tool, group, material, enchant = tooldef[1], tooldef[2], mat, ench
 	local original_tool = minetest.registered_tools[mod..":"..tool.."_"..material]
-	local ceil = math.ceil
 
 	if original_tool then
 		if mod == "default" then
@@ -184,7 +183,7 @@ for _, ench in pairs(tooldef[3]) do
 			local max_drop_level = original_tool.tool_capabilities.max_drop_level
 
 			if enchant == "durable" then
-				groupcaps[group].uses = ceil(original_groupcaps[group].uses * use_factor)
+				groupcaps[group].uses = math.ceil(original_groupcaps[group].uses * use_factor)
 			elseif enchant == "fast" then
 				for i = 1, 3 do
 					groupcaps[group].times[i] = original_groupcaps[group].times[i] - times_subtractor
@@ -213,7 +212,7 @@ for _, ench in pairs(tooldef[3]) do
 
 			for armor_group, value in pairs(original_armor_groups) do
 				if enchant == "strong" then
-					armorcaps[armor_group] = ceil(value * strength_factor)
+					armorcaps[armor_group] = math.ceil(value * strength_factor)
 				elseif enchant == "speed" then
 					armorcaps[armor_group] = value
 					armorcaps.physics_speed = speed_factor
@@ -231,7 +230,8 @@ for _, ench in pairs(tooldef[3]) do
 			})
 		end
 	end
-	minetest.register_alias("xdecor:enchanted_"..tool.."_"..material.."_"..enchant, mod..":enchanted_"..tool.."_"..material.."_"..enchant)
+	minetest.register_alias("xdecor:enchanted_"..tool.."_"..material.."_"..enchant, mod..
+			":enchanted_"..tool.."_"..material.."_"..enchant) -- legacy code
 end
 end
 end

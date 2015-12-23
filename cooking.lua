@@ -1,4 +1,4 @@
-minetest.register_alias("xdecor:cauldron", "xdecor:cauldron_empty")
+minetest.register_alias("xdecor:cauldron", "xdecor:cauldron_empty") -- legacy code
 
 local cauldron_cbox = {
 	type = "fixed",

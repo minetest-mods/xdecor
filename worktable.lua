@@ -277,7 +277,7 @@ function worktable.fields(pos, _, fields, sender)
 		end
 		worktable.crafting(pos)
 	elseif fields.craftguide then
-		if not meta:to_table().inventory.inv_items_list then return end
+		if not meta:to_table().inventory.inv_items_list then return end -- legacy code
 		worktable.craft_output_recipe(pos, 0, 1, nil, "")
 	elseif fields.alternate then
 		inv:set_list("craft_output_recipe", {})
@@ -488,7 +488,7 @@ for _, name in pairs(n) do
 			on_place = minetest.rotate_node
 		})
 	end
-	minetest.register_alias("xdecor:"..d[1].."_"..name, mod..":"..name.."_"..d[1])
+	minetest.register_alias("xdecor:"..d[1].."_"..name, mod..":"..name.."_"..d[1]) -- legacy code
 end
 end
 end
