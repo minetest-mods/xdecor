@@ -34,7 +34,7 @@ local def = { -- Nodebox name, yield, definition.
 	{"innerstair", 1, {{-.5,-.5,-.5,.5,0,.5},{-.5,0,0,.5,.5,.5},{-.5,0,-.5,0,.5,0}}}
 }
 
-function worktable.craft_output_recipe(pos, start_i, pagenum, stackname, filter)
+function worktable.craft_output_recipe(pos, start_i, pagenum, stackname, recipe_num, filter)
 	local meta = minetest.get_meta(pos)
 	local inv = meta:get_inventory()
 	pagenum = math.floor(pagenum)
@@ -59,7 +59,6 @@ function worktable.craft_output_recipe(pos, start_i, pagenum, stackname, filter)
 			"field[1.8,0.32;2.6,1;filter;;"..filter.."]"
 
 	if stackname then
-		local recipe_num = meta:get_int("recipe_num")
 		local stack_width = minetest.get_all_craft_recipes(stackname)[recipe_num].width
 		local stack_items = minetest.get_all_craft_recipes(stackname)[recipe_num].items
 		local stack_type = minetest.get_all_craft_recipes(stackname)[recipe_num].type
@@ -247,8 +246,6 @@ function worktable.construct(pos)
 	inv:set_size("forms", 4*3)
 	inv:set_size("storage", 8*2)
 	inv:set_size("item_craft_input", 1)
-
-	meta:set_int("recipe_num", 1)
 	meta:set_string("infotext", "Work Table")
 
 	worktable.main(pos)
@@ -268,35 +265,34 @@ function worktable.fields(pos, _, fields, sender)
 		worktable.main(pos)
 	elseif fields.backcraft or fields.craft then
 		if fields.backcraft then
-			meta:set_int("recipe_num", 1)
 			inv:set_list("item_craft_input", {})
 			inv:set_list("craft_output_recipe", {})
 		end
 		worktable.crafting(pos)
 	elseif fields.craftguide then
 		if not meta:to_table().inventory.inv_items_list then return end -- legacy code
-		worktable.craft_output_recipe(pos, 0, 1, nil, "")
+		worktable.craft_output_recipe(pos, 0, 1, nil, 1, "")
 	elseif fields.alternate then
 		inv:set_list("craft_output_recipe", {})
-		local recipe_num = meta:get_int("recipe_num")
 		local inputstack = inv:get_stack("item_craft_input", 1):get_name()
+		local recipe_num = tonumber(formspec:match("Recipe%s(%d+)"))
 
 		if recipe_num >= #minetest.get_all_craft_recipes(inputstack) then
-			meta:set_int("recipe_num", 1)
+			recipe_num = 1
 		else
-			meta:set_int("recipe_num", recipe_num + 1)
+			recipe_num = recipe_num + 1
 		end
-		worktable.craft_output_recipe(pos, start_i, start_i / (8*4) + 1, inputstack, filter)
+		worktable.craft_output_recipe(pos, start_i, start_i / (8*4) + 1, inputstack, recipe_num, filter)
 	elseif fields.trash or fields.search or fields.clearfilter or
 			fields.prev or fields.next then
 		if fields.trash then
-			worktable.craft_output_recipe(pos, start_i, start_i / (8*4) + 1, nil, filter)
+			worktable.craft_output_recipe(pos, start_i, start_i / (8*4) + 1, nil, 1, filter)
 		elseif fields.search then
 			worktable.craftguide_update(pos, fields.filter:lower())
-			worktable.craft_output_recipe(pos, 0, 1, nil, fields.filter:lower())
+			worktable.craft_output_recipe(pos, 0, 1, nil, 1, fields.filter:lower())
 		elseif fields.clearfilter then
 			worktable.craftguide_update(pos, nil)
-			worktable.craft_output_recipe(pos, 0, 1, nil, "")
+			worktable.craft_output_recipe(pos, 0, 1, nil, 1, "")
 		elseif fields.prev or fields.next then
 			local inventory_size = #meta:to_table().inventory.inv_items_list
 			if fields.prev or start_i >= inventory_size then
@@ -308,10 +304,9 @@ function worktable.fields(pos, _, fields, sender)
 				start_i = 0
 			end
 
-			worktable.craft_output_recipe(pos, start_i, start_i / (8*4) + 1, nil, filter)
+			worktable.craft_output_recipe(pos, start_i, start_i / (8*4) + 1, nil, 1, filter)
 		end
 
-		meta:set_int("recipe_num", 1)
 		inv:set_list("item_craft_input", {})
 		inv:set_list("craft_output_recipe", {})
 	end
@@ -341,15 +336,12 @@ function worktable.put(_, listname, _, stack, _)
 	local tdef = minetest.registered_tools[stn]
 	local twear = stack:get_wear()
 
-	if listname == "input" and worktable.contains(nodes[mod], node) then
+	if (listname == "input" and worktable.contains(nodes[mod], node)) or
+			listname == "storage" then
 		return count
-	elseif listname == "hammer" and stn == "xdecor:hammer" then
+	elseif (listname == "hammer" and stn == "xdecor:hammer") or
+			(listname == "tool" and tdef and twear > 0) then
 		return 1
-	elseif listname == "tool" and tdef and twear > 0 and
-			stn ~= "xdecor:hammer" then
-		return 1
-	elseif listname == "storage" then
-		return count
 	end
 
 	return 0
@@ -388,7 +380,7 @@ function worktable.move(pos, from_list, from_index, to_list, to_index, count, _)
 	elseif inv:is_empty("item_craft_input") and from_list == "inv_items_list" and
 			to_list == "item_craft_input" then
 		--print(dump(minetest.get_all_craft_recipes(stackname)))
-		worktable.craft_output_recipe(pos, start_i, start_i / (8*4) + 1, stackname, filter)
+		worktable.craft_output_recipe(pos, start_i, start_i / (8*4) + 1, stackname, 1, filter)
 
 		minetest.after(0, function()
 			inv:set_stack(from_list, from_index, stackname)
