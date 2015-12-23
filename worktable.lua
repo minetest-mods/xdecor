@@ -462,8 +462,8 @@ for mod, n in pairs(nodes) do
 for _, name in pairs(n) do
 	local ndef = minetest.registered_nodes[mod..":"..name]
 	if ndef then
-		local groups = {}
-		groups.not_in_creative_inventory=1
+		local groups, tiles, light = {}, {}
+		groups.not_in_creative_inventory = 1
 
 		for k, v in pairs(ndef.groups) do
 			if k ~= "wood" and k ~= "stone" and k ~= "level" then
@@ -471,14 +471,24 @@ for _, name in pairs(n) do
 			end
 		end
 
+		if #ndef.tiles > 1 and not ndef.drawtype:find("glass") then
+			tiles = ndef.tiles
+		else
+			tiles = {ndef.tiles[1]}
+		end
+
+		if ndef.light_source > 3 then
+			light = ndef.light_source - 1
+		end
+
 		minetest.register_node(":"..mod..":"..name.."_"..d[1], {
 			description = ndef.description.." "..d[1]:gsub("^%l", string.upper),
 			paramtype = "light",
 			paramtype2 = "facedir",
 			drawtype = "nodebox",
-			light_source = ndef.light_source,
+			light_source = light,
 			sounds = ndef.sounds,
-			tiles = {ndef.tiles[1]},
+			tiles = tiles,
 			groups = groups,
 			node_box = {type = "fixed", fixed = d[3]},
 			sunlight_propagates = true,
