@@ -123,8 +123,7 @@ function worktable.craft_output_recipe(pos, start_i, pagenum, stackname, recipe_
 			inv:set_size("craft_output_recipe", 1)
 		end
 
-		local craft, dye_color, flower_color = {}, "", ""
-
+		local craft = {}
 		for k, def in pairs(stack_items) do
 			craft[#craft+1] = def
 			if def and def:find("^group:") then
@@ -135,10 +134,10 @@ function worktable.craft_output_recipe(pos, start_i, pagenum, stackname, recipe_
 				elseif def:find("wool$") then
 					def = "wool:white"
 				elseif def:find("dye$") then
-					dye_color = def:match(".*_([%w_]+)")
+					local dye_color = def:match(".*_([%w_]+)")
 					def = "dye:"..dye_color
 				elseif def:find("^group:flower") then
-					flower_color = def:match(".*_([%w_]+)")
+					local flower_color = def:match(".*_([%w_]+)")
 					if flower_color == "red" then
 						def = "flowers:rose"
 					elseif flower_color == "yellow" then
@@ -299,13 +298,17 @@ function worktable.fields(pos, _, fields, sender)
 			worktable.craft_output_recipe(pos, 0, 1, nil, 1, "")
 		elseif fields.prev or fields.next then
 			local inventory_size = #meta:to_table().inventory.inv_items_list
+
 			if fields.prev or start_i >= inventory_size then
 				start_i = start_i - 8*4
 			elseif fields.next or start_i < 0 then
 				start_i = start_i + 8*4
 			end
-			if start_i < 0 or start_i >= inventory_size then
+
+			if start_i >= inventory_size then
 				start_i = 0
+			elseif start_i < 0 then
+				start_i = inventory_size - (inventory_size % (8*4))
 			end
 
 			worktable.craft_output_recipe(pos, start_i, start_i / (8*4) + 1, nil, 1, filter)
