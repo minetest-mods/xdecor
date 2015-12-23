@@ -124,18 +124,18 @@ function worktable.craft_output_recipe(pos, start_i, pagenum, stackname, filter)
 
 		for k, def in pairs(stack_items) do
 			craft[#craft+1] = def
-			if def and def:sub(1, 6) == "group:" then
-				if def == "group:liquid" then
+			if def and def:find("^group:") then
+				if def:find("liquid$") then
 					def = "default:water_source"
-				elseif def == "group:vessel" then
+				elseif def:find("vessel$") then
 					def = "vessels:glass_bottle"
-				elseif def == "group:wool" then
+				elseif def:find("wool$") then
 					def = "wool:white"
-				elseif def:find("group:dye") then
-					dye_color = def:match("group:dye,%w+_([%w_]+)")
+				elseif def:find("dye$") then
+					dye_color = def:match(".*_([%w_]+)")
 					def = "dye:"..dye_color
-				elseif def:find("group:flower") then
-					flower_color = def:match("group:flower,%w+_([%w_]+)")
+				elseif def:find("^group:flower") then
+					flower_color = def:match(".*_([%w_]+)")
 					if flower_color == "red" then
 						def = "flowers:rose"
 					elseif flower_color == "yellow" then
@@ -149,11 +149,8 @@ function worktable.craft_output_recipe(pos, start_i, pagenum, stackname, filter)
 					else
 						def = "flowers:rose"
 					end
-				elseif def:match("group:stone") or def:match("group:wood") or
-						def:match("group:leaves") or def:match("group:stick") or
-						def:match("group:sand") or def:match("group:tree") or
-						def:match("group:sapling") or def:match("group:book") then
-					def = "default:"..def:sub(7, def:len())
+				else
+					def = def:gsub("group", "default")
 				end
 			end
 
@@ -162,7 +159,7 @@ function worktable.craft_output_recipe(pos, start_i, pagenum, stackname, filter)
 
 		formspec = formspec.."image[4,6.3;1,1;gui_furnace_arrow_bg.png^[transformR90]"..
 				"button[0,6.5;1.6,1;trash;Clear]"..
-				"label[0,7.5;"..stackname:sub(1,30).."]"
+				"label[0,7.5;"..stackname:sub(1, 30).."]"
 	end
 
 	meta:set_string("formspec", formspec)
