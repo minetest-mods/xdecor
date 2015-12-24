@@ -11,6 +11,15 @@ local cauldron_cbox = {
 	}
 }
 
+local function fill_water_bucket(pos, node, clicker, itemstack, _)
+	local wield_item = clicker:get_wielded_item():get_name()
+	if wield_item == "bucket:bucket_empty" then
+		minetest.set_node(pos, {name="xdecor:cauldron_empty", param2=node.param2})
+		itemstack:replace("bucket:bucket_water")
+	end
+end
+	
+
 xdecor.register("cauldron_empty", {
 	description = "Cauldron",
 	groups = {cracky=2, oddly_breakable_by_hand=1},
@@ -34,7 +43,8 @@ xdecor.register("cauldron_idle", {
 	tiles = {"xdecor_cauldron_top_idle.png", "xdecor_cauldron_sides.png"},
 	drop = "xdecor:cauldron_empty",
 	infotext = "Cauldron (idle)",
-	collision_box = cauldron_cbox
+	collision_box = cauldron_cbox,
+	on_rightclick = fill_water_bucket
 })
 
 xdecor.register("cauldron_boiling_water", {
@@ -48,7 +58,8 @@ xdecor.register("cauldron_boiling_water", {
 			animation = {type="vertical_frames", length=3.0} },
 		"xdecor_cauldron_sides.png"
 	},
-	collision_box = cauldron_cbox
+	collision_box = cauldron_cbox,
+	on_rightclick = fill_water_bucket
 })
 
 xdecor.register("cauldron_soup", {
