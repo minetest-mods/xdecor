@@ -106,7 +106,7 @@ minetest.register_abm({
 			if obj and obj:get_luaentity() then
 				local itemstring = obj:get_luaentity().itemstring:match("([%w_:]+)%s")
 				for _, ing in pairs(ingredients_list) do
-					if itemstring and ing == itemstring:match(ing) 
+					if itemstring and itemstring:match(ing)
 							and not minetest.serialize(ingredients):find(itemstring) then
 						ingredients[#ingredients+1] = itemstring
 					end
