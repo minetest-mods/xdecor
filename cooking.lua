@@ -94,18 +94,22 @@ minetest.register_abm({
 	nodenames = {"xdecor:cauldron_boiling_water"},
 	interval = 3, chance = 1,
 	action = function(pos, node, _, _)
-		local objs = nil
-		local ingredients = {}
-		objs = minetest.get_objects_inside_radius(pos, 0.5)
+		local objs = minetest.get_objects_inside_radius(pos, 0.5)
 		if not objs then return end
+
+		local ingredients = {}
+		local ingredients_list = {  -- Add more ingredients here that make a soup.
+			"apple", "mushroom", "honey", "pumpkin"
+		}
 
 		for _, obj in pairs(objs) do
 			if obj and obj:get_luaentity() then
 				local itemstring = obj:get_luaentity().itemstring:match("([%w_:]+)%s")
-				if itemstring and not minetest.serialize(ingredients):find(itemstring) and
-						(itemstring:find("apple") or itemstring:find("mushroom") or
-						itemstring:find("honey") or itemstring:find("pumpkin")) then	
-					ingredients[#ingredients+1] = itemstring
+				for _, ing in pairs(ingredients_list) do
+					if itemstring and ing == itemstring:match(ing) 
+							and not minetest.serialize(ingredients):find(itemstring) then
+						ingredients[#ingredients+1] = itemstring
+					end
 				end
 			end
 		end
