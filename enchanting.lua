@@ -79,7 +79,7 @@ function enchanting.dig(pos, _)
 end
 
 local function allowed(tool)
-	for item, _ in pairs(minetest.registered_tools) do
+	for item in pairs(minetest.registered_tools) do
 		if item:match("enchanted_"..tool) then
 			return true
 		end

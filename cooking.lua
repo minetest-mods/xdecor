@@ -110,12 +110,13 @@ minetest.register_abm({
 
 		local ingredients = {}
 		local ingredients_list = {  -- Add more ingredients here that make a soup.
-			"apple", "mushroom", "honey", "pumpkin"
+			"apple", "mushroom", "honey", "pumpkin", "egg", "bread",
+			"meat", "chicken"
 		}
 
 		for _, obj in pairs(objs) do
 			if obj and obj:get_luaentity() then
-				local itemstring = obj:get_luaentity().itemstring:match("([%w_:]+)%s")
+				local itemstring = obj:get_luaentity().itemstring:match("[%w_]+:([%w_]+)")
 				for _, ing in pairs(ingredients_list) do
 					if itemstring and itemstring:match(ing)
 							and not minetest.serialize(ingredients):find(itemstring) then
