@@ -355,16 +355,16 @@ function worktable.put(_, listname, _, stack, _)
 end
 
 function worktable.take(pos, listname, _, stack, player)
-	local inv = minetest.get_meta(pos):get_inventory()
-	local user_inv = player:get_inventory()
-	local inputstack = inv:get_stack("input", 1):get_name()
-	local mod, node = inputstack:match("([%w_]+):([%w_]+)")
-
 	if listname == "forms" then
-		if worktable.contains(nodes[mod], node) and
+		local inv = minetest.get_meta(pos):get_inventory()
+		local user_inv = player:get_inventory()
+		local inputstack = inv:get_stack("input", 1):get_name()
+
+		if inputstack == stack:get_name():match("^([%w_:]+)%_%w+$") and
 				user_inv:room_for_item("main", stack:get_name()) then
 			return -1
 		end
+
 		return 0
 	elseif listname == "inv_items_list" or listname == "item_craft_input" or
 			listname == "craft_output_recipe" then
@@ -406,14 +406,15 @@ local function update_inventory(inv, inputstack)
 
 	local output = {}
 	for _, n in pairs(def) do
-		local mat = inputstack:get_name()
 		local input = inv:get_stack("input", 1)
-		local mod, node = mat:match("([%w_]+):([%w_]+)")
-		local count = math.min(n[2] * input:get_count(), inputstack:get_stack_max())
+		local count = math.min(n[2] * input:get_count(), input:get_stack_max())
+		local mat = inputstack:get_name()
+		local out = inv:get_stack("forms", 1):get_name()
 
-		if not worktable.contains(nodes[mod], node) then
+		if out ~= "" and mat ~= out:match("^([%w_:]+)%_%w+$") then
 			return
 		end
+
 		output[#output+1] = mat.."_"..n[1].." "..count
 	end
 
