@@ -338,14 +338,13 @@ end
 
 function worktable.put(_, listname, _, stack, _)
 	local stn = stack:get_name()
-	local count = stack:get_count()
 	local mod, node = stn:match("([%w_]+):([%w_]+)")
 	local tdef = minetest.registered_tools[stn]
 	local twear = stack:get_wear()
 
 	if (listname == "input" and worktable.contains(nodes[mod], node)) or
 			listname == "storage" then
-		return count
+		return stack:get_count()
 	elseif (listname == "hammer" and stn == "xdecor:hammer") or
 			(listname == "tool" and tdef and twear > 0) then
 		return 1
@@ -356,15 +355,10 @@ end
 
 function worktable.take(pos, listname, _, stack, player)
 	if listname == "forms" then
-		local inv = minetest.get_meta(pos):get_inventory()
 		local user_inv = player:get_inventory()
-		local inputstack = inv:get_stack("input", 1):get_name()
-
-		if inputstack == stack:get_name():match("^([%w_:]+)%_%w+$") and
-				user_inv:room_for_item("main", stack:get_name()) then
+		if user_inv:room_for_item("main", stack:get_name()) then
 			return -1
 		end
-
 		return 0
 	elseif listname == "inv_items_list" or listname == "item_craft_input" or
 			listname == "craft_output_recipe" then
@@ -382,8 +376,8 @@ function worktable.move(pos, from_list, from_index, to_list, to_index, count, _)
 		return count
 	elseif inv:is_empty("item_craft_input") and from_list == "inv_items_list" and
 			to_list == "item_craft_input" then
-		--print(dump(minetest.get_all_craft_recipes(stackname)))
 		local stackname = inv:get_stack(from_list, from_index):get_name()
+		--print(dump(minetest.get_all_craft_recipes(stackname)))
 		local formspec = meta:to_table().fields.formspec
 		local filter = formspec:match("filter;;([%w_:]+)") or ""
 		local start_i = tonumber(formspec:match("inv_items_list;.*;(%d+)%]")) or 0
@@ -405,17 +399,11 @@ local function update_inventory(inv, inputstack)
 	end
 
 	local output = {}
+	local input = inv:get_stack("input", 1)
+
 	for _, n in pairs(def) do
-		local input = inv:get_stack("input", 1)
 		local count = math.min(n[2] * input:get_count(), input:get_stack_max())
-		local mat = inputstack:get_name()
-		local out = inv:get_stack("forms", 1):get_name()
-
-		if out ~= "" and mat ~= out:match("^([%w_:]+)%_%w+$") then
-			return
-		end
-
-		output[#output+1] = mat.."_"..n[1].." "..count
+		output[#output+1] = inputstack:get_name().."_"..n[1].." "..count
 	end
 
 	inv:set_list("forms", output)
@@ -431,7 +419,11 @@ end
 function worktable.on_take(pos, listname, index, stack, _)
 	local inv = minetest.get_meta(pos):get_inventory()
 	if listname == "input" then
-		update_inventory(inv, stack)
+		if stack:get_name() == inv:get_stack("input", 1):get_name() then
+			update_inventory(inv, stack)
+		else
+			inv:set_list("forms", {})
+		end
 	elseif listname == "forms" then
 		local inputstack = inv:get_stack("input", 1)
 		inputstack:take_item(math.ceil(stack:get_count() / def[index][2]))
