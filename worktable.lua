@@ -61,12 +61,16 @@ function worktable.craft_output_recipe(pos, start_i, pagenum, stackname, filter)
 			"field[1.8,0.32;2.6,1;filter;;"..filter.."]"
 
 	if stackname then
+		local items_num = #minetest.get_all_craft_recipes(stackname)
+		if recipe_num > items_num then
+			recipe_num = 1
+		end
+
 		local stack_width = minetest.get_all_craft_recipes(stackname)[recipe_num].width
 		local stack_items = minetest.get_all_craft_recipes(stackname)[recipe_num].items
 		local stack_type = minetest.get_all_craft_recipes(stackname)[recipe_num].type
 		local stack_output = minetest.get_all_craft_recipes(stackname)[recipe_num].output
 		local stack_count = stack_output:match("%s(%d+)")
-		local items_num = #minetest.get_all_craft_recipes(stackname)
 
 		if items_num > 1 then
 			formspec = formspec..
@@ -151,7 +155,9 @@ function worktable.craft_output_recipe(pos, start_i, pagenum, stackname, filter)
 						def = "flowers:geranium"
 					elseif flower_color == "orange" then
 						def = "flowers:tulip"
-					else
+					elseif flower_color == "violet" then
+						def = "flowers:viola"
+					elseif def:find("^group:flower$") then
 						def = "flowers:rose"
 					end
 				else
@@ -161,11 +167,13 @@ function worktable.craft_output_recipe(pos, start_i, pagenum, stackname, filter)
 						for node, definition in pairs(minetest.registered_items) do
 							for group in pairs(definition.groups) do
 								if group == def:match("^group:([%w_]+)$") and not
-										minetest.serialize(group_nodes):match(node) then
+										minetest.serialize(group_nodes):match(node) and
+										#group_nodes < 10 then
 									group_nodes[#group_nodes+1] = node
 								end
 							end
 						end
+
 						def = group_nodes[group_num]
 					end
 				end
@@ -299,12 +307,7 @@ function worktable.fields(pos, _, fields, sender)
 	elseif fields.alternate then
 		inv:set_list("craft_output_recipe", {})
 		local inputstack = inv:get_stack("item_craft_input", 1):get_name()
-
-		if recipe_num >= #minetest.get_all_craft_recipes(inputstack) then
-			recipe_num = 1
-		else
-			recipe_num = recipe_num + 1
-		end
+		recipe_num = recipe_num + 1
 		worktable.craft_output_recipe(pos, start_i, start_i / (8*4) + 1, inputstack, filter)
 	elseif fields.alternate_group then
 		inv:set_list("craft_output_recipe", {})
