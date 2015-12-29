@@ -57,14 +57,15 @@ function enchanting.fields(pos, _, fields, _)
 	local toolstack = inv:get_stack("tool", 1)
 	local toolstack_name = toolstack:get_name()
 	local mesestack = inv:get_stack("mese", 1)
-	local modname, toolname = toolstack_name:match("([%w_]+):([%w_]+)")
+	local mod, tool = toolstack_name:match("([%w_]+):([%w_]+)")
 	local toolwear = toolstack:get_wear()
 	local mese = mesestack:get_count()
 	local ench = dump(fields):match("%w+")
 	if ench == "quit" then return end
+	local enchanted_tool = mod..":enchanted_"..tool.."_"..ench
 
-	if mese > 0 and fields[ench] then
-		local enchanted_tool = modname..":enchanted_"..toolname.."_"..ench
+	if mese > 0 and fields[ench] and
+			minetest.registered_tools[enchanted_tool] then
 		toolstack:replace(enchanted_tool)
 		toolstack:add_wear(toolwear)
 		mesestack:take_item()
@@ -91,10 +92,9 @@ end
 function enchanting.put(_, listname, _, stack, _)
 	local toolstack = stack:get_name()
 	local toolname = toolstack:match("[%w_]+:([%w_]+)")
-	local count = stack:get_count()
 
 	if listname == "mese" and toolstack == "default:mese_crystal" then
-		return count
+		return stack:get_count()
 	elseif listname == "tool" and allowed(toolname) then
 		return 1 
 	end
