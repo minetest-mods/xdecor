@@ -35,7 +35,13 @@ minetest.register_craftitem("xdecor:bowl_soup", {
 	inventory_image = "xdecor_bowl_soup.png",
 	wield_image = "xdecor_bowl_soup.png",
 	groups = {not_in_creative_inventory = 1},
-	on_use = minetest.item_eat(30)
+	stack_max = 1,
+	on_use = function(itemstack, user, _)
+		local inv = user:get_inventory()
+		itemstack:replace("xdecor:bowl 1")
+		minetest.item_eat(30)
+		return itemstack
+	end
 })
 
 minetest.register_craft({ 
