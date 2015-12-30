@@ -215,11 +215,12 @@ xdecor.register("enderchest", {
 	on_rotate = screwdriver.rotate_simple,
 	on_construct = function(pos)
 		local meta = minetest.get_meta(pos)
-		meta:set_string("formspec", "size[8,9]"..xbg..default.get_hotbar_bg(0,5)..
-				"list[current_player;enderchest;0,0;8,4;]"..
-				"list[current_player;main;0,5;8,4;]"..
-				"listring[current_player;enderchest]"..
-				"listring[current_player;main]")
+		meta:set_string("formspec", [[ size[8,9]
+				list[current_player;enderchest;0,0;8,4;]
+				list[current_player;main;0,5;8,4;]
+				listring[current_player;enderchest]
+				listring[current_player;main] ]]
+				..xbg..default.get_hotbar_bg(0,5))
 		meta:set_string("infotext", "Ender Chest")
 	end
 })

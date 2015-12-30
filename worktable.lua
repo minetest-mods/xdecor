@@ -97,18 +97,10 @@ function worktable.craft_output_recipe(pos, start_i, pagenum, stackname, recipe_
 			else
 				formspec = formspec.."list[context;craft_output_recipe;5,5.3;1,"..#stack_items..";]"
 			end
-			inv:set_size("craft_output_recipe", 1 * #stack_items)
+			inv:set_size("craft_output_recipe", #stack_items)
 		elseif stack_width == 2 then
-			if #stack_items <= 2 then
-				formspec = formspec.."list[context;craft_output_recipe;5,6.3;2,1;]"
-				inv:set_size("craft_output_recipe", 2)
-			elseif #stack_items > 2 and #stack_items <= 4 then
-				formspec = formspec.."list[context;craft_output_recipe;5,5.3;2,2;]"
-				inv:set_size("craft_output_recipe", 2*2)
-			else
-				formspec = formspec.."list[context;craft_output_recipe;5,5.3;2,3;]"
-				inv:set_size("craft_output_recipe", 2*3)
-			end
+			formspec = formspec.."list[context;craft_output_recipe;5,5.3;2,3;]"
+			inv:set_size("craft_output_recipe", 2*3)
 		elseif stack_width == 3 then
 			if stack_type == "cooking" then
 				formspec = formspec..[[ list[context;craft_output_recipe;5,6.3;1,1;]
@@ -125,13 +117,11 @@ function worktable.craft_output_recipe(pos, start_i, pagenum, stackname, recipe_
 			inv:set_size("craft_output_recipe", 1)
 		end
 
-		local craft = {}
+		local craft, group_nodes = {}, {}
 		for k, def in pairs(stack_items) do
 			craft[#craft+1] = def
 			if def and def:find("^group:") then
-				if def:find("liquid") then
-					def = "default:water_source"
-				elseif def:find("wool") then
+				if def:find("wool") then
 					def = "wool:white"
 				elseif def:find("dye") then
 					local dye_color = def:match(".*_([%w_]+)")
@@ -154,13 +144,25 @@ function worktable.craft_output_recipe(pos, start_i, pagenum, stackname, recipe_
 						def = "flowers:rose"
 					end
 				else
-					if minetest.registered_items["default:"..def:match("^group:([%w_]+)$")] then
+					if minetest.registered_items["default:"..def:match("^group:([%w_,]+)$")] then
 						def = def:gsub("group", "default")
 					else
 						for node, definition in pairs(minetest.registered_items) do
 						for group in pairs(definition.groups) do
-							if def:match("^group:"..group.."$") then
-								inv:set_stack("craft_output_recipe", k, node)
+							if def:match("^group:"..group) then
+								if node:find("^default:") then
+									if not minetest.serialize(group_nodes):match(node) then
+										group_nodes[#group_nodes+1] = node
+									end
+
+									for _, n in pairs(group_nodes) do
+										inv:set_stack("craft_output_recipe", k, n)
+									end
+								end
+
+								if inv:get_stack("craft_output_recipe", k):is_empty() then
+									inv:set_stack("craft_output_recipe", k, node)
+								end
 							end
 						end
 						end
