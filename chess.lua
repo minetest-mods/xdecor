@@ -17,18 +17,17 @@ end
 function realchess.init(pos)
 	local meta = minetest.get_meta(pos)
 	local inv = meta:get_inventory()
-	local slots = "listcolors[#00000000;#00000000;#00000000;#30434C;#FFF]"
-	local formspec
 
 	inv:set_size("board", 64)
+	
+	local formspec = [[ size[8,8.6;]
+			bgcolor[#080808BB;true]
+			background[0,0;8,8;chess_bg.png]
+			button[3.1,7.8;2,2;new;New game]
+			list[context;board;0,0;8,8;]
+			listcolors[#00000000;#00000000;#00000000;#30434C;#FFF] ]]
 
-	meta:set_string("formspec",
-		"size[8,8.6;]"..
-		"bgcolor[#080808BB;true]"..
-		"background[0,0;8,8;chess_bg.png]"..
-		"button[3.1,7.8;2,2;new;New game]"..
-		"list[context;board;0,0;8,8;]"..
-		slots)
+	meta:set_string("formspec", formspec)
 
 	meta:set_string("infotext", "Chess Board")
 	meta:set_string("playerBlack", "")

@@ -5,14 +5,15 @@ function hive.construct(pos)
 	local inv = meta:get_inventory()
 	local xbg = default.gui_bg..default.gui_bg_img..default.gui_slots..default.get_hotbar_bg(0,1.35)
 
-	local formspec = "size[8,5;]"..xbg..
-			"label[1.35,0;Bees are making honey\nwith pollen around...]"..
-			"image[6,0;1,1;hive_bee.png]"..
-			"image[5,0;1,1;hive_layout.png]"..
-			"list[context;honey;5,0;1,1;]"..
-			"list[current_player;main;0,1.35;8,4;]"
+	local formspec = [[ size[8,5;]
+			label[1.35,0;Bees are making honey]
+			label[1.35,0.5;with pollen around...]
+			image[6,0;1,1;hive_bee.png]
+			image[5,0;1,1;hive_layout.png]
+			list[context;honey;5,0;1,1;]
+			list[current_player;main;0,1.35;8,4;] ]]
 
-	meta:set_string("formspec", formspec)
+	meta:set_string("formspec", formspec..xbg)
 	meta:set_string("infotext", "Artificial Hive")
 	inv:set_size("honey", 1)
 end
@@ -40,7 +41,7 @@ xdecor.register("hive", {
 		local health = clicker:get_hp()
 		clicker:set_hp(health - 1)
 	end,
-	allow_metadata_inventory_put = function(...) return 0 end
+	allow_metadata_inventory_put = function() return 0 end
 })
 
 minetest.register_abm({

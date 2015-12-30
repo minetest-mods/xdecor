@@ -9,34 +9,34 @@ local xbg = default.gui_bg..default.gui_bg_img..default.gui_slots
 local default_inventory_size = 32
 
 local default_inventory_formspecs = {
-	["8"] = "size[8,6]"..xbg..
-	"list[context;main;0,0;8,1;]"..
-	"list[current_player;main;0,2;8,4;]"..
-	"listring[current_player;main]"..
-	"listring[context;main]"..
-	default.get_hotbar_bg(0, 2),
+	["8"] = [[ size[8,6]
+		list[context;main;0,0;8,1;]
+		list[current_player;main;0,2;8,4;]
+		listring[current_player;main]
+		listring[context;main] ]] ..
+		xbg..default.get_hotbar_bg(0,2),
 
-	["16"] = "size[8,7]"..xbg..
-	"list[context;main;0,0;8,2;]"..
-	"list[current_player;main;0,3;8,4;]"..
-	"listring[current_player;main]"..
-	"listring[context;main]"..
-	default.get_hotbar_bg(0, 3),
+	["16"] = [[ size[8,7]
+		list[context;main;0,0;8,2;]
+		list[current_player;main;0,3;8,4;]
+		listring[current_player;main]
+		listring[context;main] ]] ..
+		xbg..default.get_hotbar_bg(0,3),
 
-	["24"] = "size[8,8]"..xbg..
-	"list[context;main;0,0;8,3;]"..
-	"list[current_player;main;0,4;8,4;]"..
-	"listring[current_player;main]"..
-	"listring[context;main]"..
-	default.get_hotbar_bg(0, 4),
+	["24"] = [[ size[8,8]
+		list[context;main;0,0;8,3;]
+		list[current_player;main;0,4;8,4;]
+		listring[current_player;main]
+		listring[context;main]" ]] ..
+		xbg..default.get_hotbar_bg(0,4),
 
-	["32"] = "size[8,9]"..xbg..
-	"list[context;main;0,0.3;8,4;]"..
-	"list[current_player;main;0,4.85;8,1;]"..
-	"list[current_player;main;0,6.08;8,3;8]"..
-	"listring[current_player;main]"..
-	"listring[context;main]"..
-	default.get_hotbar_bg(0, 4.85)
+	["32"] = [[ size[8,9]
+		list[context;main;0,0.3;8,4;]
+		list[current_player;main;0,4.85;8,1;]
+		list[current_player;main;0,6.08;8,3;8]
+		listring[current_player;main]
+		listring[context;main] ]] ..
+		xbg..default.get_hotbar_bg(0,4.85)
 }
 
 local function get_formspec_by_size(size)
@@ -45,7 +45,6 @@ local function get_formspec_by_size(size)
 end
 
 local function drop_stuff() -- thanks to LNJplus for this function
-	local random = math.random
 	return function(pos, oldnode, oldmetadata, digger)
 		local meta = minetest.get_meta(pos)
 		meta:from_table(oldmetadata)
@@ -55,9 +54,10 @@ local function drop_stuff() -- thanks to LNJplus for this function
 			local stack = inv:get_stack("main", i)
 			if not stack:is_empty() then
 				local p = {
-					x = pos.x + random(0,5) / 5 - 0.5,
+					x = pos.x + math.random(0,5) / 5 - 0.5,
 					y = pos.y,
-					z = pos.z + random(0,5) / 5 - 0.5}
+					z = pos.z + math.random(0,5) / 5 - 0.5
+				}
 				minetest.add_item(p, stack)
 			end
 		end

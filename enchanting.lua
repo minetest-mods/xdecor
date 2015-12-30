@@ -15,6 +15,7 @@ function enchanting.formspec(pos, tooltype)
 			tooltip[fast;Your tool digs faster]
 			tooltip[strong;Your armor is more resistant]
 			tooltip[speed;Your speed is increased] ]]
+			..default.gui_slots..default.get_hotbar_bg(0.5,4.5)
 
 	if tooltype == "sword" then
 		formspec = formspec.."image_button[3.9,2.9;4,0.92;bg_btn.png;sharp;Sharpness]"
@@ -30,7 +31,7 @@ function enchanting.formspec(pos, tooltype)
 				image_button[3.9,1.77;4,1.12;bg_btn.png;speed;Speed] ]]
 	end
 
-	meta:set_string("formspec", formspec..default.gui_slots..default.get_hotbar_bg(0.5,4.5))
+	meta:set_string("formspec", formspec)
 	return formspec
 end
 
@@ -125,7 +126,7 @@ xdecor.register("enchantment_table", {
 	on_receive_fields = enchanting.fields,
 	on_metadata_inventory_put = enchanting.on_put,
 	allow_metadata_inventory_put = enchanting.put,
-	allow_metadata_inventory_move = function(...) return 0 end,
+	allow_metadata_inventory_move = function() return 0 end,
 	on_metadata_inventory_take = function(pos, listname, _, _, _)
 		if listname == "tool" then
 			enchanting.formspec(pos, nil)

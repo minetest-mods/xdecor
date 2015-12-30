@@ -100,26 +100,26 @@ function mailbox.formspec(pos, owner, num)
 			end
 		end
 
-		return "size[9.5,9]"..xbg..
-			default.get_hotbar_bg(0.75,5.25)..
-			"label[0,0;Mailbox]"..
-			"label[6,0;Last donators]"..
-			"box[6,0.72;3.3,3.5;#555555]"..
+		return [[ size[9.5,9]
+			label[0,0;Mailbox]
+			label[6,0;Last donators]
+			box[6,0.72;3.3,3.5;#555555]
+			listring[current_player;main]
+			list[current_player;main;0.75,5.25;8,4;]
+			tableoptions[background=#00000000;highlight=#00000000;border=false] ]]..
 			"tablecolumns[color;text;image,"..img.."0;color;text]"..
-			"tableoptions[background=#00000000;highlight=#00000000;border=false]"..
 			"table[6,0.75;3.3,4;givers;"..giver.."]"..
 			"list[nodemeta:"..spos..";mailbox;0,0.75;6,4;]"..
-			"list[current_player;main;0.75,5.25;8,4;]"..
 			"listring[nodemeta:"..spos..";mailbox]"..
-			"listring[current_player;main]"
+			xbg..default.get_hotbar_bg(0.75,5.25)
 	else
-		return "size[8,5]"..xbg..
-			default.get_hotbar_bg(0,1.25)..
-			"tablecolumns[color;text;color;text]"..
-			"tableoptions[background=#00000000;highlight=#00000000;border=false]"..
+		return [[ size[8,5]
+			list[current_player;main;0,1.25;8,4;]
+			tablecolumns[color;text;color;text]
+			tableoptions[background=#00000000;highlight=#00000000;border=false] ]]..
 			"table[0,0;3,1;sendform;#FFFFFF,Send your goods to,,,#FFFF00,"..owner.."]"..
 			"list[nodemeta:"..spos..";drop;3.5,0;1,1;]"..
-			"list[current_player;main;0,1.25;8,4;]"
+			xbg..default.get_hotbar_bg(0,1.25)
 	end
 end
 

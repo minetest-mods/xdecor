@@ -40,22 +40,22 @@ function worktable.craft_output_recipe(pos, start_i, pagenum, stackname, recipe_
 	local inventory_size = #meta:to_table().inventory.inv_items_list
 	local pagemax = math.floor((inventory_size - 1) / (8*4) + 1)
 
-	local formspec = "size[8,8;]"..xbg..
+	local formspec = [[ size[8,8;]
+			list[context;item_craft_input;3,6.3;1,1;]
+			tablecolumns[color;text;color;text]
+			tableoptions[background=#00000000;highlight=#00000000;border=false]
+			button[5.5,0;0.7,1;prev;<]
+			button[7.3,0;0.7,1;next;>]
+			button[4,0.2;0.7,0.5;search;?]
+			button[4.6,0.2;0.7,0.5;clearfilter;X]
+			button[0,0;1.5,1;backcraft;< Back]
+			tooltip[search;Search]
+			tooltip[clearfilter;Reset]
+			label[3,5.8;Input] ]]..
 			"list[context;inv_items_list;0,1;8,4;"..tostring(start_i).."]"..
-			"list[context;item_craft_input;3,6.3;1,1;]"..
-			"tablecolumns[color;text;color;text]"..
-			"tableoptions[background=#00000000;highlight=#00000000;border=false]"..
 			"table[6.1,0.2;1.1,0.5;pagenum;#FFFF00,"..tostring(math.floor(pagenum))..
 			",#FFFFFF,/ "..tostring(pagemax).."]"..
-			"button[5.5,0;0.7,1;prev;<]"..
-			"button[7.3,0;0.7,1;next;>]"..
-			"button[4,0.2;0.7,0.5;search;?]"..
-			"button[4.6,0.2;0.7,0.5;clearfilter;X]"..
-			"button[0,0;1.5,1;backcraft;< Back]"..
-			"tooltip[search;Search]"..
-			"tooltip[clearfilter;Reset]"..
-			"label[3,5.8;Input]"..
-			"field[1.8,0.32;2.6,1;filter;;"..filter.."]"
+			"field[1.8,0.32;2.6,1;filter;;"..filter.."]"..xbg
 
 	if stackname then
 		local items_num = #minetest.get_all_craft_recipes(stackname)
@@ -70,8 +70,7 @@ function worktable.craft_output_recipe(pos, start_i, pagenum, stackname, recipe_
 		local stack_count = stack_output:match("%s(%d+)")
 
 		if items_num > 1 then
-			formspec = formspec..
-					"button[0,5.7;1.6,1;alternate;Alternate]"..
+			formspec = formspec.."button[0,5.7;1.6,1;alternate;Alternate]"..
 					"label[0,5.2;Recipe "..recipe_num.." of "..items_num.."]"
 		end
 
@@ -112,17 +111,16 @@ function worktable.craft_output_recipe(pos, start_i, pagenum, stackname, recipe_
 			end
 		elseif stack_width == 3 then
 			if stack_type == "cooking" then
-				formspec = formspec.."list[context;craft_output_recipe;5,6.3;1,1;]"..
-						"image[4.25,5.9;0.5,0.5;default_furnace_fire_fg.png]"
+				formspec = formspec..[[ list[context;craft_output_recipe;5,6.3;1,1;]
+							image[4.25,5.9;0.5,0.5;default_furnace_fire_fg.png] ]]
 				inv:set_size("craft_output_recipe", 1)
 			else
 				formspec = formspec.."list[context;craft_output_recipe;5,5.3;3,3;]"
 				inv:set_size("craft_output_recipe", 3*3)
 			end
 		elseif stack_type == "cooking" and stack_width > 3 then
-			formspec = formspec..
-					"list[context;craft_output_recipe;5,6.3;1,1;]"..
-					"image[4.25,5.9;0.5,0.5;default_furnace_fire_fg.png]"
+			formspec = formspec..[[ list[context;craft_output_recipe;5,6.3;1,1;]
+						image[4.25,5.9;0.5,0.5;default_furnace_fire_fg.png] ]]
 
 			inv:set_size("craft_output_recipe", 1)
 		end
@@ -160,11 +158,11 @@ function worktable.craft_output_recipe(pos, start_i, pagenum, stackname, recipe_
 						def = def:gsub("group", "default")
 					else
 						for node, definition in pairs(minetest.registered_items) do
-							for group in pairs(definition.groups) do
-								if group == def:match("^group:([%w_]+)$") then
-									inv:set_stack("craft_output_recipe", k, node)
-								end
+						for group in pairs(definition.groups) do
+							if def:match("^group:"..group.."$") then
+								inv:set_stack("craft_output_recipe", k, node)
 							end
+						end
 						end
 					end
 				end
@@ -175,10 +173,9 @@ function worktable.craft_output_recipe(pos, start_i, pagenum, stackname, recipe_
 			end
 		end
 
-		formspec = formspec..
-				"image[4,6.3;1,1;gui_furnace_arrow_bg.png^[transformR90]"..
-				"button[0,6.5;1.6,1;trash;Clear]"..
-				"label[0,7.5;"..stackname:sub(1,30).."]"
+		formspec = formspec..[[ image[4,6.3;1,1;gui_furnace_arrow_bg.png^[transformR90]
+					button[0,6.5;1.6,1;trash;Clear] ]]..
+					"label[0,7.5;"..stackname:sub(1,30).."]"
 	end
 
 	meta:set_string("formspec", formspec)
@@ -214,8 +211,9 @@ function worktable.crafting(pos)
 			list[current_player;craftpreview;6,1;1,1;]
 			listring[current_player;main]
 			listring[current_player;craft] ]]
+			..xbg..default.get_hotbar_bg(0,3.3)
 
-	meta:set_string("formspec", formspec..xbg..default.get_hotbar_bg(0,3.3))
+	meta:set_string("formspec", formspec)
 end
 
 function worktable.storage(pos)
@@ -226,8 +224,9 @@ function worktable.storage(pos)
 			listring[context;storage]
 			listring[current_player;main]
 			button[0,0;1.5,1;back;< Back] ]]
+			..xbg..default.get_hotbar_bg(0,3.25)
 
-	meta:set_string("formspec", formspec..xbg..default.get_hotbar_bg(0,3.25))
+	meta:set_string("formspec", formspec)
 end
 
 function worktable.main(pos)
@@ -248,8 +247,9 @@ function worktable.main(pos)
 			list[current_player;main;0,3.25;8,4;]
 			button[0,0;2,1;craft;Crafting]
 			button[2,0;2,1;storage;Storage] ]]
+			..xbg..default.get_hotbar_bg(0,3.25)
 
-	meta:set_string("formspec", formspec..xbg..default.get_hotbar_bg(0,3.25))
+	meta:set_string("formspec", formspec)
 end
 
 function worktable.construct(pos)
