@@ -3,35 +3,34 @@ screwdriver = screwdriver or {}
 
 function enchanting.formspec(pos, tooltype)
 	local meta = minetest.get_meta(pos)
-	local formspec = "size[9,9;]"..
-			default.gui_slots..default.get_hotbar_bg(0.5,4.5)..
-			"bgcolor[#080808BB;true]"..
-			"background[0,0;9,9;ench_ui.png]"..
-			"list[context;tool;0.9,2.9;1,1;]"..
-			"list[context;mese;2,2.9;1,1;]"..
-			"list[current_player;main;0.5,4.5;8,4;]"..
-			"image[2,2.9;1,1;mese_layout.png]"..
-			"tooltip[sharp;Your sword kills faster]"..
-			"tooltip[durable;Your tool lasts longer]"..
-			"tooltip[fast;Your tool digs faster]"..
-			"tooltip[strong;Your armor is more resistant]"..
-			"tooltip[speed;Your speed is increased]"
+	local formspec = [[ size[9,9;]
+			bgcolor[#080808BB;true]
+			background[0,0;9,9;ench_ui.png]
+			list[context;tool;0.9,2.9;1,1;]
+			list[context;mese;2,2.9;1,1;]
+			list[current_player;main;0.5,4.5;8,4;]
+			image[2,2.9;1,1;mese_layout.png]
+			tooltip[sharp;Your sword kills faster]
+			tooltip[durable;Your tool lasts longer]
+			tooltip[fast;Your tool digs faster]
+			tooltip[strong;Your armor is more resistant]
+			tooltip[speed;Your speed is increased] ]]
 
 	if tooltype == "sword" then
 		formspec = formspec.."image_button[3.9,2.9;4,0.92;bg_btn.png;sharp;Sharpness]"
 	elseif tooltype == "tool" then
 		formspec = formspec..
-				"image_button[3.9,0.85;4,0.92;bg_btn.png;fast;Efficiency]"..
-				"image_button[3.9,1.77;4,1.12;bg_btn.png;durable;Durability]"
+				[[ image_button[3.9,0.85;4,0.92;bg_btn.png;fast;Efficiency]
+				image_button[3.9,1.77;4,1.12;bg_btn.png;durable;Durability] ]]
 	elseif tooltype == "armor" then
 		formspec = formspec.."image_button[3.9,0.85;4,0.92;bg_btn.png;strong;Strength]"
 	elseif tooltype == "boots" then
 		formspec = formspec..
-				"image_button[3.9,0.85;4,0.92;bg_btn.png;strong;Strength]"..
-				"image_button[3.9,1.77;4,1.12;bg_btn.png;speed;Speed]"
+				[[ image_button[3.9,0.85;4,0.92;bg_btn.png;strong;Strength]
+				image_button[3.9,1.77;4,1.12;bg_btn.png;speed;Speed] ]]
 	end
 
-	meta:set_string("formspec", formspec)
+	meta:set_string("formspec", formspec..default.gui_slots..default.get_hotbar_bg(0.5,4.5))
 	return formspec
 end
 

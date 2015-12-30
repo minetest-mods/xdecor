@@ -17,7 +17,7 @@ minetest.register_craft({
 })
 
 minetest.register_craft({
-	output = "xdecor:bowl",
+	output = "xdecor:bowl 3",
 	recipe = {
 		{"group:wood", "", "group:wood"},
 		{"", "group:wood", ""}
