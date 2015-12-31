@@ -63,6 +63,7 @@ function worktable.craft_output_recipe(pos, start_i, pagenum, stackname, recipe_
 			recipe_num = 1
 		end
 
+		--print(dump(minetest.get_all_craft_recipes(stackname)))
 		local stack_width = minetest.get_all_craft_recipes(stackname)[recipe_num].width
 		local stack_items = minetest.get_all_craft_recipes(stackname)[recipe_num].items
 		local stack_type = minetest.get_all_craft_recipes(stackname)[recipe_num].type
@@ -117,7 +118,7 @@ function worktable.craft_output_recipe(pos, start_i, pagenum, stackname, recipe_
 			inv:set_size("craft_output_recipe", 1)
 		end
 
-		local craft, group_nodes = {}, {}
+		local craft = {}
 		for k, def in pairs(stack_items) do
 			craft[#craft+1] = def
 			if def and def:find("^group:") then
@@ -150,17 +151,8 @@ function worktable.craft_output_recipe(pos, start_i, pagenum, stackname, recipe_
 						for node, definition in pairs(minetest.registered_items) do
 						for group in pairs(definition.groups) do
 							if def:match("^group:"..group) then
-								if node:find("^default:") then
-									if not minetest.serialize(group_nodes):match(node) then
-										group_nodes[#group_nodes+1] = node
-									end
-
-									for _, n in pairs(group_nodes) do
-										inv:set_stack("craft_output_recipe", k, n)
-									end
-								end
-
-								if inv:get_stack("craft_output_recipe", k):is_empty() then
+								if inv:get_stack("craft_output_recipe", k):is_empty() or
+										node:find("^default:") then
 									inv:set_stack("craft_output_recipe", k, node)
 								end
 							end
@@ -388,7 +380,6 @@ function worktable.move(pos, from_list, from_index, to_list, to_index, count, _)
 	elseif inv:is_empty("item_craft_input") and from_list == "inv_items_list" and
 			to_list == "item_craft_input" then
 		local stackname = inv:get_stack(from_list, from_index):get_name()
-		--print(dump(minetest.get_all_craft_recipes(stackname)))
 		local formspec = meta:to_table().fields.formspec
 		local filter = formspec:match("filter;;([%w_:]+)") or ""
 		local start_i = tonumber(formspec:match("inv_items_list;.*;(%d+)%]")) or 0
