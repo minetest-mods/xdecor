@@ -50,14 +50,13 @@ function worktable.craft_output_recipe(pos, start_i, pagenum, stackname, recipe_
 			button[4.6,0.2;0.7,0.5;clearfilter;X]
 			button[0,0;1.5,1;backcraft;< Back]
 			tooltip[search;Search]
-			tooltip[clearfilter;Reset]
-			label[3,5.8;Input] ]]..
+			tooltip[clearfilter;Reset] ]]..
 			"list[context;inv_items_list;0,1;8,4;"..tostring(start_i).."]"..
 			"table[6.1,0.2;1.1,0.5;pagenum;#FFFF00,"..tostring(math.floor(pagenum))..
 			",#FFFFFF,/ "..tostring(pagemax).."]"..
 			"field[1.8,0.32;2.6,1;filter;;"..filter.."]"..xbg
 
-	if stackname then
+	if stackname and minetest.registered_items[stackname] then
 		local items_num = #minetest.get_all_craft_recipes(stackname)
 		if recipe_num > items_num then
 			recipe_num = 1
@@ -88,10 +87,17 @@ function worktable.craft_output_recipe(pos, start_i, pagenum, stackname, recipe_
 			formspec = formspec.."list[context;craft_output_recipe;5,6.3;1,1;]"
 		else
 			if stack_width == 0 then
-				formspec = formspec.."list[context;craft_output_recipe;5,5.3;3,3;]"
+				local rows, r = math.ceil(#stack_items / math.min(3, #stack_items))
+				if rows == 3 then r = 2 else r = rows end
+
+				formspec = formspec.."list[context;craft_output_recipe;5,"..(7.3-r)..
+						";"..math.min(3, #stack_items)..","..rows..";]"
 			else
-				formspec = formspec.."list[context;craft_output_recipe;5,5.3;"..stack_width..
-						","..math.ceil(table.maxn(stack_items) / stack_width)..";]"
+				local rows, r = math.ceil(table.maxn(stack_items) / stack_width)
+				if rows == 3 then r = 2 else r = rows end
+
+				formspec = formspec.."list[context;craft_output_recipe;5,"..(7.3-r)..
+						";"..stack_width..","..rows..";]"
 			end
 		end
 
@@ -236,6 +242,7 @@ function worktable.fields(pos, _, fields, sender)
 		worktable.crafting(pos)
 	elseif fields.craftguide then
 		if not meta:to_table().inventory.inv_items_list then return end -- legacy code
+		worktable.craftguide_update(pos, nil)
 		worktable.craft_output_recipe(pos, 0, 1, nil, 1, "")
 	elseif fields.alternate then
 		inv:set_list("craft_output_recipe", {})
