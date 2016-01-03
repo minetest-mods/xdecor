@@ -39,7 +39,7 @@ xdecor.register("hive", {
 
 minetest.register_abm({
 	nodenames = {"xdecor:hive"},
-	interval = 20, chance = 10,
+	interval = 30, chance = 10,
 	action = function(pos, _, _, _)
 		local inv = minetest.get_meta(pos):get_inventory()
 		local honeystack = inv:get_stack("honey", 1)

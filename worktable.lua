@@ -122,39 +122,20 @@ function worktable.craft_output_recipe(pos, start_i, pagenum, stackname, recipe_
 		for k, def in pairs(stack_items) do
 			craft[#craft+1] = def
 			if def and def:find("^group:") then
-				if def:find("wool") then
+				if def:find("wool$") then
 					def = "wool:white"
-				elseif def:find("dye") then
-					local dye_color = def:match(".*_([%w_]+)")
-					def = "dye:"..dye_color
-				elseif def:find("flower") then
-					local flower_color = def:match(".*_([%w_]+)")
-					if flower_color == "red" then
-						def = "flowers:rose"
-					elseif flower_color == "yellow" then
-						def = "flowers:dandelion_yellow"
-					elseif flower_color == "white" then
-						def = "flowers:dandelion_white"
-					elseif flower_color == "blue" then
-						def = "flowers:geranium"
-					elseif flower_color == "orange" then
-						def = "flowers:tulip"
-					elseif flower_color == "violet" then
-						def = "flowers:viola"
-					elseif def:find("^group:flower$") then
-						def = "flowers:rose"
-					end
+				elseif def:find("dye$") then
+					def = "dye:white"
 				else
-					if minetest.registered_items["default:"..def:match("^group:([%w_,]+)$")] then
+					if minetest.registered_items["default:"..def:match("^group:([%w_]+)$")] then
 						def = def:gsub("group", "default")
 					else
 						for node, definition in pairs(minetest.registered_items) do
 						for group in pairs(definition.groups) do
-							if def:match("^group:"..group) then
-								if inv:get_stack("craft_output_recipe", k):is_empty() or
-										node:find("^default:") then
-									inv:set_stack("craft_output_recipe", k, node)
-								end
+							if def:match("^group:"..group.."$") or
+									((def:find("dye") or def:find("flower")) and
+									group == def:match("^group:.*,("..group..")")) then
+								def = node
 							end
 						end
 						end
@@ -162,9 +143,7 @@ function worktable.craft_output_recipe(pos, start_i, pagenum, stackname, recipe_
 				end
 			end
 
-			if not def:find("^group:") then
-				inv:set_stack("craft_output_recipe", k, def)
-			end
+			inv:set_stack("craft_output_recipe", k, def)
 		end
 
 		formspec = formspec..[[ image[4,6.3;1,1;gui_furnace_arrow_bg.png^[transformR90]
