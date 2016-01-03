@@ -81,53 +81,25 @@ function worktable.craft_output_recipe(pos, start_i, pagenum, stackname, recipe_
 			inv:set_stack("item_craft_input", 1, stackname)
 		end
 
-		if stack_width == 0 then
-			if #stack_items <= 2 then
-				formspec = formspec.."list[context;craft_output_recipe;5,6.3;2,1;]"
-				inv:set_size("craft_output_recipe", 2)
-			elseif #stack_items > 2 and #stack_items <= 4 then
-				formspec = formspec.."list[context;craft_output_recipe;5,5.3;2,2;]"
-				inv:set_size("craft_output_recipe", 2*2)
-			else
-				formspec = formspec.."list[context;craft_output_recipe;5,5.3;3,3;]"
-				inv:set_size("craft_output_recipe", 3*3)
-			end
-		elseif stack_width == 1 then
-			if #stack_items == 1 then
-				formspec = formspec.."list[context;craft_output_recipe;5,6.3;1,1;]"
-			else
-				formspec = formspec.."list[context;craft_output_recipe;5,5.3;1,"..#stack_items..";]"
-			end
-			inv:set_size("craft_output_recipe", #stack_items)
-		elseif stack_width == 2 then
-			formspec = formspec.."list[context;craft_output_recipe;5,5.3;2,3;]"
-			inv:set_size("craft_output_recipe", 2*3)
-		elseif stack_width == 3 then
-			if stack_type == "cooking" then
-				formspec = formspec..[[ list[context;craft_output_recipe;5,6.3;1,1;]
-							image[4.25,5.9;0.5,0.5;default_furnace_fire_fg.png] ]]
-				inv:set_size("craft_output_recipe", 1)
-			else
-				formspec = formspec.."list[context;craft_output_recipe;5,5.3;3,3;]"
-				inv:set_size("craft_output_recipe", 3*3)
-			end
-		elseif stack_type == "cooking" and stack_width > 3 then
+		if stack_type == "cooking" then
 			formspec = formspec..[[ list[context;craft_output_recipe;5,6.3;1,1;]
 						image[4.25,5.9;0.5,0.5;default_furnace_fire_fg.png] ]]
-
-			inv:set_size("craft_output_recipe", 1)
+		else
+			if stack_width == 0 then
+				formspec = formspec.."list[context;craft_output_recipe;5,5.3;3,3;]"
+			else
+				formspec = formspec.."list[context;craft_output_recipe;5,5.3;"..stack_width..",3;]"
+			end
 		end
 
 		local craft = {}
 		for k, def in pairs(stack_items) do
 			craft[#craft+1] = def
 			if def and def:find("^group:") then
-				if def:find("wool$") then
-					def = "wool:white"
-				elseif def:find("dye$") then
-					def = "dye:white"
+				if def:find("wool$") or def:find("dye$") then
+					def = def:match(":([%w_]+)")..":white"
 				else
-					if minetest.registered_items["default:"..def:match("^group:([%w_]+)$")] then
+					if minetest.registered_items["default:"..def:match("^group:([%w_,]+)$")] then
 						def = def:gsub("group", "default")
 					else
 						for node, definition in pairs(minetest.registered_items) do
@@ -235,6 +207,7 @@ function worktable.construct(pos)
 	inv:set_size("forms", 4*3)
 	inv:set_size("storage", 8*2)
 	inv:set_size("item_craft_input", 1)
+	inv:set_size("craft_output_recipe", 3*3)
 	meta:set_string("infotext", "Work Table")
 
 	worktable.main(pos)
