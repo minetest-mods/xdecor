@@ -39,7 +39,7 @@ minetest.register_craftitem("xdecor:bowl_soup", {
 	on_use = function(itemstack, user, _)
 		local inv = user:get_inventory()
 		itemstack:replace("xdecor:bowl 1")
-		minetest.item_eat(30)
+		user:set_hp(20)
 		return itemstack
 	end
 })
