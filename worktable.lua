@@ -81,14 +81,17 @@ function worktable.craft_output_recipe(pos, start_i, pagenum, stackname, recipe_
 			inv:set_stack("item_craft_input", 1, stackname)
 		end
 
-		if stack_type == "cooking" then
-			formspec = formspec..[[ list[context;craft_output_recipe;5,6.3;1,1;]
-						image[4.25,5.9;0.5,0.5;default_furnace_fire_fg.png] ]]
+		if stack_type == "cooking" or table.maxn(stack_items) == 1 then
+			if stack_type == "cooking" then
+				formspec = formspec.."image[4.25,5.9;0.5,0.5;default_furnace_fire_fg.png]"
+			end
+			formspec = formspec.."list[context;craft_output_recipe;5,6.3;1,1;]"
 		else
 			if stack_width == 0 then
 				formspec = formspec.."list[context;craft_output_recipe;5,5.3;3,3;]"
 			else
-				formspec = formspec.."list[context;craft_output_recipe;5,5.3;"..stack_width..",3;]"
+				formspec = formspec.."list[context;craft_output_recipe;5,5.3;"..stack_width..
+						","..math.ceil(table.maxn(stack_items) / stack_width)..";]"
 			end
 		end
 
