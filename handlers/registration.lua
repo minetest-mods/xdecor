@@ -44,7 +44,7 @@ local function get_formspec_by_size(size)
 	return formspec or default_inventory_formspecs
 end
 
-local function drop_stuff() -- thanks to LNJplus for this function
+local function drop_stuff()
 	return function(pos, oldnode, oldmetadata, digger)
 		local meta = minetest.get_meta(pos)
 		meta:from_table(oldmetadata)
