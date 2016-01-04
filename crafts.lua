@@ -37,9 +37,12 @@ minetest.register_craftitem("xdecor:bowl_soup", {
 	groups = {not_in_creative_inventory = 1},
 	stack_max = 1,
 	on_use = function(itemstack, user, _)
-		local inv = user:get_inventory()
 		itemstack:replace("xdecor:bowl 1")
-		user:set_hp(20)
+		if minetest.get_modpath("hunger") then
+			minetest.item_eat(20)
+		else
+			user:set_hp(20)
+		end
 		return itemstack
 	end
 })
