@@ -97,9 +97,7 @@ function worktable.craft_output_recipe(pos, start_i, pagenum, stackname, recipe_
 			end
 		end
 
-		local craft = {}
 		for k, def in pairs(stack_items) do
-			craft[#craft+1] = def
 			if def and def:find("^group:") then
 				if def:find("wool$") or def:find("dye$") then
 					def = def:match(":([%w_]+)")..":white"
@@ -446,7 +444,6 @@ for _, name in pairs(n) do
 			on_place = minetest.rotate_node
 		})
 	end
-	minetest.register_alias("xdecor:"..d[1].."_"..name, mod..":"..name.."_"..d[1]) -- legacy code
 end
 end
 end

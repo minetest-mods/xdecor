@@ -16,7 +16,5 @@ dofile(modpath.."/nodes.lua")
 dofile(modpath.."/sitting.lua")
 dofile(modpath.."/worktable.lua")
 dofile(modpath.."/xwall.lua")
-
 --print(string.format("xdecor loaded in %.2f ms", (os.clock()-t)*1000))
---TODO: remove the legacy code in ~6 months.
 
