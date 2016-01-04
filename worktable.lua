@@ -67,17 +67,13 @@ function worktable.craft_output_recipe(pos, start_i, pagenum, stackname, recipe_
 		local stack_items = minetest.get_all_craft_recipes(stackname)[recipe_num].items
 		local stack_type = minetest.get_all_craft_recipes(stackname)[recipe_num].type
 		local stack_output = minetest.get_all_craft_recipes(stackname)[recipe_num].output
-		local stack_count = stack_output:match("%s(%d+)")
+		local stack_count = stack_output:match("%s(%d+)") or 1
+
+		inv:set_stack("item_craft_input", 1, stackname.." "..stack_count)
 
 		if items_num > 1 then
 			formspec = formspec.."button[0,5.7;1.6,1;alternate;Alternate]"..
 					"label[0,5.2;Recipe "..recipe_num.." of "..items_num.."]"
-		end
-
-		if stack_count then
-			inv:set_stack("item_craft_input", 1, stackname.." "..stack_count)
-		else
-			inv:set_stack("item_craft_input", 1, stackname)
 		end
 
 		if stack_type == "cooking" or table.maxn(stack_items) == 1 then
@@ -107,19 +103,17 @@ function worktable.craft_output_recipe(pos, start_i, pagenum, stackname, recipe_
 			if def and def:find("^group:") then
 				if def:find("wool$") or def:find("dye$") then
 					def = def:match(":([%w_]+)")..":white"
+				elseif minetest.registered_items["default:"..def:match("^group:([%w_,]+)$")] then
+					def = def:gsub("group", "default")
 				else
-					if minetest.registered_items["default:"..def:match("^group:([%w_,]+)$")] then
-						def = def:gsub("group", "default")
-					else
-						for node, definition in pairs(minetest.registered_items) do
-						for group in pairs(definition.groups) do
-							if def:match("^group:"..group.."$") or
-									((def:find("dye") or def:find("flower")) and
-									group == def:match("^group:.*,("..group..")")) then
-								def = node
-							end
+					for node, definition in pairs(minetest.registered_items) do
+					for group in pairs(definition.groups) do
+						if def:match("^group:"..group.."$") or
+								((def:find("dye") or def:find("flower")) and
+								group == def:match("^group:.*,("..group..")")) then
+							def = node
 						end
-						end
+					end
 					end
 				end
 			end
@@ -220,7 +214,6 @@ function worktable.construct(pos)
 	meta:set_string("infotext", "Work Table")
 
 	worktable.main(pos)
-	worktable.craftguide_update(pos, nil)
 end
 
 function worktable.fields(pos, _, fields, sender)
@@ -241,7 +234,6 @@ function worktable.fields(pos, _, fields, sender)
 		end
 		worktable.crafting(pos)
 	elseif fields.craftguide then
-		if not meta:to_table().inventory.inv_items_list then return end -- legacy code
 		worktable.craftguide_update(pos, nil)
 		worktable.craft_output_recipe(pos, 0, 1, nil, 1, "")
 	elseif fields.alternate then

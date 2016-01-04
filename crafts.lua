@@ -403,7 +403,7 @@ minetest.register_craft({
 	output = "xdecor:wood_tile 2",
 	recipe = {
 		{"", "group:wood", ""},
-		{"group:wood", "group:wood", "group:wood"},
+		{"group:wood", "", "group:wood"},
 		{"", "group:wood", ""}
 	}
 })
