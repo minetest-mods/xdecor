@@ -103,7 +103,7 @@ function worktable.craft_output_recipe(pos, start_i, pagenum, stackname, recipe_
 				if def:find("wool$") or def:find("dye$") then
 					def = def:match(":([%w_]+)")..":white"
 				elseif minetest.registered_items["default:"..def:match("^group:([%w_,]+)$")] then
-					def = def:gsub("group", "default")
+					def = def:gsub("group:", "default:")
 				else
 					for node, definition in pairs(minetest.registered_items) do
 					for group in pairs(definition.groups) do
@@ -338,10 +338,6 @@ function worktable.move(pos, from_list, from_index, to_list, to_index, count, _)
 		local start_i = tonumber(formspec:match("inv_items_list;.*;(%d+)%]")) or 0
 
 		worktable.craft_output_recipe(pos, start_i, start_i / (8*4) + 1, stackname, 1, filter)
-
-		minetest.after(0, function()
-			inv:set_stack(from_list, from_index, stackname)
-		end)
 	end
 
 	return 0
