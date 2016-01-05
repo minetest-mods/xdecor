@@ -1,5 +1,4 @@
 screwdriver = screwdriver or {}
-local xbg = default.gui_bg..default.gui_bg_img..default.gui_slots
 
 xpanes.register_pane("bamboo_frame", {
 	description = "Bamboo Frame",

@@ -15,6 +15,7 @@ local function sit(pos, node, clicker)
 		clicker:set_physics_override(1, 1, 1)
 		default.player_attached[player] = false
 		default.player_set_animation(clicker, "stand", 30)
+
 	elseif default.player_attached[player] ~= true and node.param2 <= 3 and
 			clicker:get_player_velocity().x == 0 and
 			clicker:get_player_velocity().y == 0 and
@@ -82,7 +83,7 @@ xdecor.register("cushion", {
 	node_box = xdecor.nodebox.slab_y(-0.5, 0.5),
 	can_dig = dig,
 	on_rightclick = function(pos, node, clicker)
-		pos.y = pos.y + 0  -- Sitting position.
+		pos.y = pos.y + 0
 		sit(pos, node, clicker)
 	end
 })

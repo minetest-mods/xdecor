@@ -20,14 +20,12 @@ function enchanting.formspec(pos, tooltype)
 	if tooltype == "sword" then
 		formspec = formspec.."image_button[3.9,2.9;4,0.92;bg_btn.png;sharp;Sharpness]"
 	elseif tooltype == "tool" then
-		formspec = formspec..
-				[[ image_button[3.9,0.85;4,0.92;bg_btn.png;fast;Efficiency]
+		formspec = formspec..[[ image_button[3.9,0.85;4,0.92;bg_btn.png;fast;Efficiency]
 				image_button[3.9,1.77;4,1.12;bg_btn.png;durable;Durability] ]]
 	elseif tooltype == "armor" then
 		formspec = formspec.."image_button[3.9,0.85;4,0.92;bg_btn.png;strong;Strength]"
 	elseif tooltype == "boots" then
-		formspec = formspec..
-				[[ image_button[3.9,0.85;4,0.92;bg_btn.png;strong;Strength]
+		formspec = formspec..[[ image_button[3.9,0.85;4,0.92;bg_btn.png;strong;Strength]
 				image_button[3.9,1.77;4,1.12;bg_btn.png;speed;Speed] ]]
 	end
 
@@ -53,6 +51,7 @@ function enchanting.on_put(pos, listname, _, stack, _)
 end
 
 function enchanting.fields(pos, _, fields, _)
+	if fields.quit then return end
 	local inv = minetest.get_meta(pos):get_inventory()
 	local toolstack = inv:get_stack("tool", 1)
 	local toolstack_name = toolstack:get_name()
@@ -61,7 +60,6 @@ function enchanting.fields(pos, _, fields, _)
 	local toolwear = toolstack:get_wear()
 	local mese = mesestack:get_count()
 	local ench = dump(fields):match("%w+")
-	if ench == "quit" then return end
 	local enchanted_tool = mod..":enchanted_"..tool.."_"..ench
 
 	if mese > 0 and fields[ench] and
@@ -85,7 +83,6 @@ local function allowed(tool)
 			return true
 		end
 	end
-
 	return false
 end
 

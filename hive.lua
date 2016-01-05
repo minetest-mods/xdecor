@@ -3,7 +3,6 @@ local hive = {}
 function hive.construct(pos)
 	local meta = minetest.get_meta(pos)
 	local inv = meta:get_inventory()
-	local xbg = default.gui_bg..default.gui_bg_img..default.gui_slots
 
 	local formspec = [[ size[8,5;]
 			label[1.35,0;Bees are making honey]

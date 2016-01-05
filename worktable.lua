@@ -1,6 +1,5 @@
 local worktable = {}
 screwdriver = screwdriver or {}
-local xbg = default.gui_bg..default.gui_bg_img..default.gui_slots
 
 local nodes = { -- Nodes allowed to be cut. Mod name = {node name}.
 	["default"] = {"wood", "junglewood", "pine_wood", "acacia_wood",
@@ -15,8 +14,6 @@ local nodes = { -- Nodes allowed to be cut. Mod name = {node name}.
 	["xdecor"] = {"coalstone_tile", "desertstone_tile", "stone_rune", "stone_tile",
 		"cactusbrick", "hard_clay", "packed_ice", "moonbrick",
 		"woodframed_glass", "wood_tile"},
-
-	["oresplus"] = {"emerald_block", "glowstone"},
 }
 
 local def = { -- Nodebox name, yield, definition.
@@ -34,11 +31,39 @@ local def = { -- Nodebox name, yield, definition.
 	{"innerstair", 1, {{-.5,-.5,-.5,.5,0,.5},{-.5,0,0,.5,.5,.5},{-.5,0,-.5,0,.5,0}}}
 }
 
-function worktable.craft_output_recipe(pos, start_i, pagenum, stackname, recipe_num, filter)
-	local meta = minetest.get_meta(pos)
+function worktable.craftguide_output_lists(meta, num, items, stackname)
 	local inv = meta:get_inventory()
-	local inventory_size = #meta:to_table().inventory.inv_items_list
-	local pagemax = math.floor((inventory_size - 1) / (8*4) + 1)
+	local output = minetest.get_all_craft_recipes(stackname)[num].output
+	local yield = output:match("%s(%d+)") or 1
+	inv:set_stack("item_craft_input", 1, stackname.." "..yield)
+
+	for k, def in pairs(items) do
+		if def and def:find("^group:") then
+			if def:find("wool$") or def:find("dye$") then
+				def = def:match(":([%w_]+)")..":white"
+			elseif minetest.registered_items["default:"..def:match("^group:([%w_,]+)$")] then
+				def = def:gsub("group:", "default:")
+			else
+				for node, definition in pairs(minetest.registered_items) do
+				for group in pairs(definition.groups) do
+					if def:match("^group:"..group.."$") or
+							((def:find("dye") or def:find("flower")) and
+							group == def:match("^group:.*,("..group..")")) then
+						def = node
+					end
+				end
+				end
+			end
+		end
+
+		inv:set_stack("craft_output_recipe", k, def)
+	end
+end
+
+function worktable.craftguide_formspec(pos, start_i, pagenum, stackname, recipe_num, filter)
+	local meta = minetest.get_meta(pos)
+	local inv_size = #meta:to_table().inventory.inv_items_list
+	local pagemax = math.floor((inv_size - 1) / (8*4) + 1)
 
 	local formspec = [[ size[8,8;]
 			list[context;item_craft_input;3,6.3;1,1;]
@@ -51,8 +76,8 @@ function worktable.craft_output_recipe(pos, start_i, pagenum, stackname, recipe_
 			button[0,0;1.5,1;backcraft;< Back]
 			tooltip[search;Search]
 			tooltip[clearfilter;Reset]
-			label[3,5.8;Input] ]]..
-			"list[context;inv_items_list;0,1;8,4;"..tostring(start_i).."]"..
+			label[3,5.8;Input] ]]
+			.."list[context;inv_items_list;0,1;8,4;"..tostring(start_i).."]"..
 			"table[6.1,0.2;1.1,0.5;pagenum;#FFFF00,"..tostring(math.floor(pagenum))..
 			",#FFFFFF,/ "..tostring(pagemax).."]"..
 			"field[1.8,0.32;2.6,1;filter;;"..filter.."]"..xbg
@@ -64,71 +89,47 @@ function worktable.craft_output_recipe(pos, start_i, pagenum, stackname, recipe_
 		end
 
 		--print(dump(minetest.get_all_craft_recipes(stackname)))
-		local stack_width = minetest.get_all_craft_recipes(stackname)[recipe_num].width
-		local stack_items = minetest.get_all_craft_recipes(stackname)[recipe_num].items
-		local stack_type = minetest.get_all_craft_recipes(stackname)[recipe_num].type
-		local stack_output = minetest.get_all_craft_recipes(stackname)[recipe_num].output
-		local stack_count = stack_output:match("%s(%d+)") or 1
-
-		inv:set_stack("item_craft_input", 1, stackname.." "..stack_count)
+		local items = minetest.get_all_craft_recipes(stackname)[recipe_num].items
+		local width = minetest.get_all_craft_recipes(stackname)[recipe_num].width
+		local type = minetest.get_all_craft_recipes(stackname)[recipe_num].type
 
 		if items_num > 1 then
 			formspec = formspec.."button[0,5.7;1.6,1;alternate;Alternate]"..
 					"label[0,5.2;Recipe "..recipe_num.." of "..items_num.."]"
 		end
 
-		if stack_type == "cooking" or table.maxn(stack_items) == 1 then
-			if stack_type == "cooking" then
+		if type == "cooking" or table.maxn(items) == 1 then
+			if type == "cooking" then
 				formspec = formspec.."image[4.25,5.9;0.5,0.5;default_furnace_fire_fg.png]"
 			end
 			formspec = formspec.."list[context;craft_output_recipe;5,6.3;1,1;]"
 		else
-			if stack_width == 0 then
-				local rows, r = math.ceil(#stack_items / math.min(3, #stack_items))
+			if width == 0 then
+				local rows, r = math.ceil(#items / math.min(3, #items))
 				if rows == 3 then r = 2 else r = rows end
 
-				formspec = formspec.."list[context;craft_output_recipe;5,"..(7.3-r)..
-						";"..math.min(3, #stack_items)..","..rows..";]"
+				formspec = formspec.."list[context;craft_output_recipe;5,"..
+						(7.3-r)..";"..math.min(3, #items)..","..rows..";]"
 			else
-				local rows, r = math.ceil(table.maxn(stack_items) / stack_width)
+				local rows, r = math.ceil(table.maxn(items) / width)
 				if rows == 3 then r = 2 else r = rows end
 
-				formspec = formspec.."list[context;craft_output_recipe;5,"..(7.3-r)..
-						";"..stack_width..","..rows..";]"
+				formspec = formspec.."list[context;craft_output_recipe;5,"..
+						(7.3-r)..";"..width..","..rows..";]"
 			end
-		end
-
-		for k, def in pairs(stack_items) do
-			if def and def:find("^group:") then
-				if def:find("wool$") or def:find("dye$") then
-					def = def:match(":([%w_]+)")..":white"
-				elseif minetest.registered_items["default:"..def:match("^group:([%w_,]+)$")] then
-					def = def:gsub("group:", "default:")
-				else
-					for node, definition in pairs(minetest.registered_items) do
-					for group in pairs(definition.groups) do
-						if def:match("^group:"..group.."$") or
-								((def:find("dye") or def:find("flower")) and
-								group == def:match("^group:.*,("..group..")")) then
-							def = node
-						end
-					end
-					end
-				end
-			end
-
-			inv:set_stack("craft_output_recipe", k, def)
 		end
 
 		formspec = formspec..[[ image[4,6.3;1,1;gui_furnace_arrow_bg.png^[transformR90]
-					button[0,6.5;1.6,1;trash;Clear] ]]..
-					"label[0,7.5;"..stackname:sub(1,30).."]"
+					button[0,6.5;1.6,1;trash;Clear] ]]
+					.."label[0,7.5;"..stackname:sub(1, 30).."]"
+
+		worktable.craftguide_output_lists(meta, recipe_num, items, stackname)
 	end
 
 	meta:set_string("formspec", formspec)
 end
 
-function worktable.craftguide_update(pos, filter)
+function worktable.craftguide_main_list(pos, filter)
 	local meta = minetest.get_meta(pos)
 	local inv = meta:get_inventory()
 	local inv_items_list = {}
@@ -147,8 +148,7 @@ function worktable.craftguide_update(pos, filter)
 	inv:set_list("inv_items_list", inv_items_list)
 end
 
-function worktable.crafting(pos)
-	local meta = minetest.get_meta(pos)
+function worktable.crafting(meta)
 	local formspec = [[ size[8,7;]
 			list[current_player;main;0,3.3;8,4;]
 			image[5,1;1,1;gui_furnace_arrow_bg.png^[transformR270]
@@ -163,8 +163,7 @@ function worktable.crafting(pos)
 	meta:set_string("formspec", formspec)
 end
 
-function worktable.storage(pos)
-	local meta = minetest.get_meta(pos)
+function worktable.storage(meta)
 	local formspec = [[ size[8,7]
 			list[context;storage;0,1;8,2;]
 			list[current_player;main;0,3.25;8,4;]
@@ -176,8 +175,7 @@ function worktable.storage(pos)
 	meta:set_string("formspec", formspec)
 end
 
-function worktable.main(pos)
-	local meta = minetest.get_meta(pos)
+function worktable.main(meta)
 	local formspec = [[ size[8,7;]
 			label[0.9,1.23;Cut]
 			label[0.9,2.23;Repair]
@@ -212,10 +210,11 @@ function worktable.construct(pos)
 	inv:set_size("craft_output_recipe", 3*3)
 	meta:set_string("infotext", "Work Table")
 
-	worktable.main(pos)
+	worktable.main(meta)
 end
 
-function worktable.fields(pos, _, fields, sender)
+function worktable.fields(pos, _, fields, _)
+	if fields.quit then return end
 	local meta = minetest.get_meta(pos)
 	local inv = meta:get_inventory()
 	local formspec = meta:to_table().fields.formspec
@@ -223,51 +222,43 @@ function worktable.fields(pos, _, fields, sender)
 	local start_i = tonumber(formspec:match("inv_items_list;.*;(%d+)%]")) or 0
 
 	if fields.storage then
-		worktable.storage(pos)
+		worktable.storage(meta)
 	elseif fields.back then
-		worktable.main(pos)
-	elseif fields.backcraft or fields.craft then
-		if fields.backcraft then
-			inv:set_list("item_craft_input", {})
-			inv:set_list("craft_output_recipe", {})
-		end
-		worktable.crafting(pos)
-	elseif fields.craftguide then
-		worktable.craftguide_update(pos, nil)
-		worktable.craft_output_recipe(pos, 0, 1, nil, 1, "")
+		worktable.main(meta)
+	elseif fields.craft then
+		worktable.crafting(meta)
 	elseif fields.alternate then
 		inv:set_list("craft_output_recipe", {})
 		local inputstack = inv:get_stack("item_craft_input", 1):get_name()
 		local recipe_num = tonumber(formspec:match("Recipe%s(%d+)")) or 1
-
 		recipe_num = recipe_num + 1
-		worktable.craft_output_recipe(pos, start_i, start_i / (8*4) + 1, inputstack, recipe_num, filter)
-	elseif fields.trash or fields.search or fields.clearfilter or
-			fields.prev or fields.next then
-		if fields.trash then
-			worktable.craft_output_recipe(pos, start_i, start_i / (8*4) + 1, nil, 1, filter)
+		worktable.craftguide_formspec(pos, start_i, start_i / (8*4) + 1, inputstack, recipe_num, filter)
+	else
+		if fields.backcraft then
+			worktable.crafting(meta)
 		elseif fields.search then
-			worktable.craftguide_update(pos, fields.filter:lower())
-			worktable.craft_output_recipe(pos, 0, 1, nil, 1, fields.filter:lower())
-		elseif fields.clearfilter then
-			worktable.craftguide_update(pos, nil)
-			worktable.craft_output_recipe(pos, 0, 1, nil, 1, "")
-		elseif fields.prev or fields.next then
-			local inventory_size = #meta:to_table().inventory.inv_items_list
+			worktable.craftguide_main_list(pos, fields.filter:lower())
+			worktable.craftguide_formspec(pos, 0, 1, nil, 1, fields.filter:lower())
+		elseif fields.craftguide or fields.clearfilter then
+			worktable.craftguide_main_list(pos, nil)
+			worktable.craftguide_formspec(pos, 0, 1, nil, 1, "")
+		else
+			if fields.prev or fields.next then
+				local inv_size = #meta:to_table().inventory.inv_items_list
+				if fields.prev or start_i >= inv_size then
+					start_i = start_i - 8*4
+				elseif fields.next or start_i < 0 then
+					start_i = start_i + 8*4
+				end
 
-			if fields.prev or start_i >= inventory_size then
-				start_i = start_i - 8*4
-			elseif fields.next or start_i < 0 then
-				start_i = start_i + 8*4
+				if start_i >= inv_size then
+					start_i = 0
+				elseif start_i < 0 then
+					start_i = inv_size - (inv_size % (8*4))
+				end
 			end
 
-			if start_i >= inventory_size then
-				start_i = 0
-			elseif start_i < 0 then
-				start_i = inventory_size - (inventory_size % (8*4))
-			end
-
-			worktable.craft_output_recipe(pos, start_i, start_i / (8*4) + 1, nil, 1, filter)
+			worktable.craftguide_formspec(pos, start_i, start_i / (8*4) + 1, nil, 1, filter)
 		end
 
 		inv:set_list("item_craft_input", {})
@@ -337,13 +328,13 @@ function worktable.move(pos, from_list, from_index, to_list, to_index, count, _)
 		local filter = formspec:match("filter;;([%w_:]+)") or ""
 		local start_i = tonumber(formspec:match("inv_items_list;.*;(%d+)%]")) or 0
 
-		worktable.craft_output_recipe(pos, start_i, start_i / (8*4) + 1, stackname, 1, filter)
+		worktable.craftguide_formspec(pos, start_i, start_i / (8*4) + 1, stackname, 1, filter)
 	end
 
 	return 0
 end
 
-local function update_inventory(inv, inputstack)
+function worktable.update_inventory(inv, inputstack)
 	if inv:is_empty("input") then
 		inv:set_list("forms", {})
 		return
@@ -363,7 +354,7 @@ end
 function worktable.on_put(pos, listname, _, stack, _)
 	if listname == "input" then
 		local inv = minetest.get_meta(pos):get_inventory()
-		update_inventory(inv, stack)
+		worktable.update_inventory(inv, stack)
 	end
 end
 
@@ -371,7 +362,7 @@ function worktable.on_take(pos, listname, index, stack, _)
 	local inv = minetest.get_meta(pos):get_inventory()
 	if listname == "input" then
 		if stack:get_name() == inv:get_stack("input", 1):get_name() then
-			update_inventory(inv, stack)
+			worktable.update_inventory(inv, stack)
 		else
 			inv:set_list("forms", {})
 		end
@@ -379,7 +370,7 @@ function worktable.on_take(pos, listname, index, stack, _)
 		local inputstack = inv:get_stack("input", 1)
 		inputstack:take_item(math.ceil(stack:get_count() / def[index][2]))
 		inv:set_stack("input", 1, inputstack)
-		update_inventory(inv, inputstack)
+		worktable.update_inventory(inv, inputstack)
 	end
 end
 

@@ -84,7 +84,6 @@ local function img_col(stack)
 end
 
 function mailbox.formspec(pos, owner, num)
-	local xbg = default.gui_bg..default.gui_bg_img..default.gui_slots
 	local spos = pos.x..","..pos.y..","..pos.z
 	local meta = minetest.get_meta(pos)
 	local giver, img = "", ""
@@ -106,8 +105,8 @@ function mailbox.formspec(pos, owner, num)
 			box[6,0.72;3.3,3.5;#555555]
 			listring[current_player;main]
 			list[current_player;main;0.75,5.25;8,4;]
-			tableoptions[background=#00000000;highlight=#00000000;border=false] ]]..
-			"tablecolumns[color;text;image,"..img.."0;color;text]"..
+			tableoptions[background=#00000000;highlight=#00000000;border=false] ]]
+			.."tablecolumns[color;text;image,"..img.."0;color;text]"..
 			"table[6,0.75;3.3,4;givers;"..giver.."]"..
 			"list[nodemeta:"..spos..";mailbox;0,0.75;6,4;]"..
 			"listring[nodemeta:"..spos..";mailbox]"..
@@ -116,8 +115,8 @@ function mailbox.formspec(pos, owner, num)
 		return [[ size[8,5]
 			list[current_player;main;0,1.25;8,4;]
 			tablecolumns[color;text;color;text]
-			tableoptions[background=#00000000;highlight=#00000000;border=false] ]]..
-			"table[0,0;3,1;sendform;#FFFFFF,Send your goods to,,,#FFFF00,"..owner.."]"..
+			tableoptions[background=#00000000;highlight=#00000000;border=false] ]]
+			.."table[0,0;3,1;sendform;#FFFFFF,Send your goods to,,,#FFFF00,"..owner.."]"..
 			"list[nodemeta:"..spos..";drop;3.5,0;1,1;]"..
 			xbg..default.get_hotbar_bg(0,1.25)
 	end

@@ -5,7 +5,7 @@
 	return inv:is_empty("main")
 end --]]
 
-local xbg = default.gui_bg..default.gui_bg_img..default.gui_slots
+xbg = default.gui_bg..default.gui_bg_img..default.gui_slots
 local default_inventory_size = 32
 
 local default_inventory_formspecs = {
@@ -13,30 +13,30 @@ local default_inventory_formspecs = {
 		list[context;main;0,0;8,1;]
 		list[current_player;main;0,2;8,4;]
 		listring[current_player;main]
-		listring[context;main] ]] ..
-		xbg..default.get_hotbar_bg(0,2),
+		listring[context;main] ]]
+		..default.get_hotbar_bg(0,2),
 
 	["16"] = [[ size[8,7]
 		list[context;main;0,0;8,2;]
 		list[current_player;main;0,3;8,4;]
 		listring[current_player;main]
-		listring[context;main] ]] ..
-		xbg..default.get_hotbar_bg(0,3),
+		listring[context;main] ]]
+		..default.get_hotbar_bg(0,3),
 
 	["24"] = [[ size[8,8]
 		list[context;main;0,0;8,3;]
 		list[current_player;main;0,4;8,4;]
 		listring[current_player;main]
-		listring[context;main]" ]] ..
-		xbg..default.get_hotbar_bg(0,4),
+		listring[context;main]" ]]
+		..default.get_hotbar_bg(0,4),
 
 	["32"] = [[ size[8,9]
 		list[context;main;0,0.3;8,4;]
 		list[current_player;main;0,4.85;8,1;]
 		list[current_player;main;0,6.08;8,3;8]
 		listring[current_player;main]
-		listring[context;main] ]] ..
-		xbg..default.get_hotbar_bg(0,4.85)
+		listring[context;main] ]]
+		..default.get_hotbar_bg(0,4.85)
 }
 
 local function get_formspec_by_size(size)
@@ -94,7 +94,7 @@ function xdecor.register(name, def)
 			local size = inventory.size or default_inventory_size
 			local inv = meta:get_inventory()
 			inv:set_size("main", size)
-			meta:set_string("formspec", inventory.formspec or get_formspec_by_size(size))
+			meta:set_string("formspec", (inventory.formspec or get_formspec_by_size(size))..xbg)
 		end
 		def.after_dig_node = def.after_dig_node or drop_stuff()
 		--def.can_dig = def.can_dig or default_can_dig
@@ -105,5 +105,5 @@ function xdecor.register(name, def)
 		end
 	end
 
-	minetest.register_node("xdecor:".. name, def)
+	minetest.register_node("xdecor:"..name, def)
 end
