@@ -47,8 +47,7 @@ function worktable.craftguide_output_lists(meta, num, items, stackname)
 				for node, definition in pairs(minetest.registered_items) do
 				for group in pairs(definition.groups) do
 					if def:match("^group:"..group.."$") or
-							((def:find("dye") or def:find("flower")) and
-							group == def:match("^group:.*,("..group..")")) then
+							def:match(".*,"..group.."$") then
 						def = node
 					end
 				end
