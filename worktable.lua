@@ -334,7 +334,7 @@ function worktable.move(pos, from_list, from_index, to_list, to_index, count, _)
 	return 0
 end
 
-function worktable.update_inventory(inv, inputstack)
+function worktable.get_output(inv, inputstack)
 	if inv:is_empty("input") then
 		inv:set_list("forms", {})
 		return
@@ -354,7 +354,7 @@ end
 function worktable.on_put(pos, listname, _, stack, _)
 	if listname == "input" then
 		local inv = minetest.get_meta(pos):get_inventory()
-		worktable.update_inventory(inv, stack)
+		worktable.get_output(inv, stack)
 	end
 end
 
@@ -362,7 +362,7 @@ function worktable.on_take(pos, listname, index, stack, _)
 	local inv = minetest.get_meta(pos):get_inventory()
 	if listname == "input" then
 		if stack:get_name() == inv:get_stack("input", 1):get_name() then
-			worktable.update_inventory(inv, stack)
+			worktable.get_output(inv, stack)
 		else
 			inv:set_list("forms", {})
 		end
@@ -370,7 +370,7 @@ function worktable.on_take(pos, listname, index, stack, _)
 		local inputstack = inv:get_stack("input", 1)
 		inputstack:take_item(math.ceil(stack:get_count() / def[index][2]))
 		inv:set_stack("input", 1, inputstack)
-		worktable.update_inventory(inv, inputstack)
+		worktable.get_output(inv, inputstack)
 	end
 end
 
