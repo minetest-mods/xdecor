@@ -10,9 +10,9 @@ function enchanting.formspec(pos, tooltype)
 			list[context;mese;2,2.9;1,1;]
 			list[current_player;main;0.5,4.5;8,4;]
 			image[2,2.9;1,1;mese_layout.png]
-			tooltip[sharp;Your sword kills faster]
-			tooltip[durable;Your tool lasts longer]
-			tooltip[fast;Your tool digs faster]
+			tooltip[sharp;Your sword inflicts more damage]
+			tooltip[durable;Your tool is more resistant]
+			tooltip[fast;Your tool is more powerful]
 			tooltip[strong;Your armor is more resistant]
 			tooltip[speed;Your speed is increased] ]]
 			..default.gui_slots..default.get_hotbar_bg(0.5,4.5)
@@ -30,22 +30,19 @@ function enchanting.formspec(pos, tooltype)
 	end
 
 	meta:set_string("formspec", formspec)
-	return formspec
 end
 
 function enchanting.on_put(pos, listname, _, stack, _)
-	local stn = stack:get_name()
-	local meta = minetest.get_meta(pos)
-
 	if listname == "tool" then
+		local stn = stack:get_name()
 		if stn:find("pick") or stn:find("axe") or stn:find("shovel") then
-			meta:set_string("formspec", enchanting.formspec(pos, "tool"))
+			enchanting.formspec(pos, "tool")
 		elseif stn:find("sword") then
-			meta:set_string("formspec", enchanting.formspec(pos, "sword"))
+			enchanting.formspec(pos, "sword")
 		elseif stn:find("chestplate") or stn:find("leggings") or stn:find("helmet") then
-			meta:set_string("formspec", enchanting.formspec(pos, "armor"))
+			enchanting.formspec(pos, "armor")
 		elseif stn:find("boots") then
-			meta:set_string("formspec", enchanting.formspec(pos, "boots"))
+			enchanting.formspec(pos, "boots")
 		end
 	end
 end
@@ -59,11 +56,10 @@ function enchanting.fields(pos, _, fields, _)
 	local mod, tool = toolstack_name:match("([%w_]+):([%w_]+)")
 	local toolwear = toolstack:get_wear()
 	local mese = mesestack:get_count()
-	local ench = dump(fields):match("%w+")
+	local ench = next(fields)
 	local enchanted_tool = mod..":enchanted_"..tool.."_"..ench
 
-	if mese > 0 and fields[ench] and
-			minetest.registered_tools[enchanted_tool] then
+	if mese > 0 and minetest.registered_tools[enchanted_tool] then
 		toolstack:replace(enchanted_tool)
 		toolstack:add_wear(toolwear)
 		mesestack:take_item()
@@ -99,6 +95,22 @@ function enchanting.put(_, listname, _, stack, _)
 	return 0
 end
 
+function enchanting.on_take(pos, listname, _, _, _)
+	if listname == "tool" then
+		enchanting.formspec(pos, nil)
+	end
+end
+
+function enchanting.construct(pos)
+	local meta = minetest.get_meta(pos)
+	meta:set_string("infotext", "Enchantment Table")
+	enchanting.formspec(pos, nil)
+
+	local inv = meta:get_inventory()
+	inv:set_size("tool", 1)
+	inv:set_size("mese", 1)
+end
+
 xdecor.register("enchantment_table", {
 	description = "Enchantment Table",
 	tiles = {
@@ -110,25 +122,12 @@ xdecor.register("enchantment_table", {
 	sounds = default.node_sound_stone_defaults(),
 	on_rotate = screwdriver.rotate_simple,
 	can_dig = enchanting.dig,
-	on_construct = function(pos)
-		local meta = minetest.get_meta(pos)
-		enchanting.formspec(pos, nil)
-		meta:set_string("infotext", "Enchantment Table")
-
-		local inv = meta:get_inventory()
-		inv:set_size("tool", 1)
-		inv:set_size("mese", 1)
-	end,
-	enchanting.formspec,
+	on_construct = enchanting.construct,
 	on_receive_fields = enchanting.fields,
 	on_metadata_inventory_put = enchanting.on_put,
+	on_metadata_inventory_take = enchanting.on_take,
 	allow_metadata_inventory_put = enchanting.put,
-	allow_metadata_inventory_move = function() return 0 end,
-	on_metadata_inventory_take = function(pos, listname, _, _, _)
-		if listname == "tool" then
-			enchanting.formspec(pos, nil)
-		end
-	end
+	allow_metadata_inventory_move = function() return 0 end
 })
 
 local function cap(str)

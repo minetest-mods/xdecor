@@ -117,9 +117,14 @@ minetest.register_abm({
 		for _, obj in pairs(objs) do
 			if obj and obj:get_luaentity() then
 				local itemstring = obj:get_luaentity().itemstring:match("[%w_]+:([%w_]+)")
+				if not next(ingredients) then
+					for _, rep in pairs(ingredients) do
+						if itemstring == rep then return end
+					end
+				end
+
 				for _, ing in pairs(ingredients_list) do
-					if itemstring and itemstring:match(ing)
-							and not minetest.serialize(ingredients):find(itemstring) then
+					if itemstring and itemstring:match(ing) then
 						ingredients[#ingredients+1] = itemstring
 					end
 				end
