@@ -32,7 +32,7 @@ function enchanting.formspec(pos, tooltype)
 	meta:set_string("formspec", formspec)
 end
 
-function enchanting.on_put(pos, listname, _, stack, _)
+function enchanting.on_put(pos, listname, _, stack)
 	if listname == "tool" then
 		local stn = stack:get_name()
 		if stn:find("pick") or stn:find("axe") or stn:find("shovel") then
@@ -47,7 +47,7 @@ function enchanting.on_put(pos, listname, _, stack, _)
 	end
 end
 
-function enchanting.fields(pos, _, fields, _)
+function enchanting.fields(pos, _, fields)
 	if fields.quit then return end
 	local inv = minetest.get_meta(pos):get_inventory()
 	local toolstack = inv:get_stack("tool", 1)
@@ -68,7 +68,7 @@ function enchanting.fields(pos, _, fields, _)
 	end
 end
 
-function enchanting.dig(pos, _)
+function enchanting.dig(pos)
 	local inv = minetest.get_meta(pos):get_inventory()
 	return inv:is_empty("tool") and inv:is_empty("mese")
 end
@@ -82,7 +82,7 @@ local function allowed(tool)
 	return false
 end
 
-function enchanting.put(_, listname, _, stack, _)
+function enchanting.put(_, listname, _, stack)
 	local toolstack = stack:get_name()
 	local toolname = toolstack:match("[%w_]+:([%w_]+)")
 
@@ -95,7 +95,7 @@ function enchanting.put(_, listname, _, stack, _)
 	return 0
 end
 
-function enchanting.on_take(pos, listname, _, _, _)
+function enchanting.on_take(pos, listname)
 	if listname == "tool" then
 		enchanting.formspec(pos, nil)
 	end

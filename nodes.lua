@@ -134,7 +134,7 @@ for _, c in pairs({"red"}) do  -- Add more curtains colors simply here.
 		paramtype2 = "wallmounted",
 		groups = {dig_immediate=3, flammable=3},
 		selection_box = {type="wallmounted"},
-		on_rightclick = function(pos, node, _, _)
+		on_rightclick = function(pos, node)
 			minetest.set_node(pos, {name="xdecor:curtain_open_"..c, param2=node.param2})
 		end
 	})
@@ -147,7 +147,7 @@ for _, c in pairs({"red"}) do  -- Add more curtains colors simply here.
 		groups = {dig_immediate=3, flammable=3, not_in_creative_inventory=1},
 		selection_box = {type="wallmounted"},
 		drop = "xdecor:curtain_"..c,
-		on_rightclick = function(pos, node, _, _)
+		on_rightclick = function(pos, node)
 			minetest.set_node(pos, {name="xdecor:curtain_"..c, param2=node.param2})
 		end
 	})
@@ -272,7 +272,7 @@ minetest.register_tool("xdecor:hammer", {
 	description = "Hammer",
 	inventory_image = "xdecor_hammer.png",
 	wield_image = "xdecor_hammer.png",
-	on_use = function(...) do return end end
+	on_use = function() do return end end
 })
 
 xdecor.register("ivy", {
@@ -453,14 +453,13 @@ xdecor.register("stonepath", {
 	selection_box = xdecor.nodebox.slab_y(0.05)
 })
 
-local stonish = {"desertstone_tile", "stone_tile", "stone_rune", "coalstone_tile",
-		"hard_clay"}
+local stonish = {"desertstone_tile", "stone_tile", "stone_rune",
+		"coalstone_tile", "hard_clay"}
 
 for _, t in pairs(stonish) do
 	xdecor.register(t, {
 		drawtype = "normal",
-		description = string.sub(t:gsub("^%l", string.upper), 1, -6)
-				.." "..t:sub(-4):gsub("^%l", string.upper),
+		description = string.gsub(" "..t, "%W%l", string.upper):sub(2):gsub("_", " "),
 		tiles = {"xdecor_"..t..".png"},
 		groups = {cracky=1},
 		sounds = default.node_sound_stone_defaults()

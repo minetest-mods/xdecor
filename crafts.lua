@@ -36,7 +36,7 @@ minetest.register_craftitem("xdecor:bowl_soup", {
 	wield_image = "xdecor_bowl_soup.png",
 	groups = {not_in_creative_inventory = 1},
 	stack_max = 1,
-	on_use = function(itemstack, user, _)
+	on_use = function(itemstack, user)
 		itemstack:replace("xdecor:bowl 1")
 		if minetest.get_modpath("hunger") then
 			minetest.item_eat(20)

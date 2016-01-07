@@ -11,7 +11,7 @@ local cauldron_cbox = {
 	}
 }
 
-local function fill_water_bucket(pos, node, clicker, itemstack, _)
+local function fill_water_bucket(pos, node, clicker, itemstack)
 	local wield_item = clicker:get_wielded_item():get_name()
 	if wield_item == "bucket:bucket_empty" then
 		minetest.set_node(pos, {name="xdecor:cauldron_empty", param2=node.param2})
@@ -74,7 +74,7 @@ xdecor.register("cauldron_soup", {
 		"xdecor_cauldron_sides.png"
 	},
 	collision_box = cauldron_cbox,
-	on_rightclick = function(pos, node, clicker, itemstack, _)
+	on_rightclick = function(pos, node, clicker, itemstack)
 		local inv = clicker:get_inventory()
 		if clicker:get_wielded_item():get_name() == "xdecor:bowl" then
 			if inv:room_for_item("main", "xdecor:bowl_soup 1") then
@@ -93,7 +93,7 @@ xdecor.register("cauldron_soup", {
 minetest.register_abm({
 	nodenames = {"xdecor:cauldron_idle"},
 	interval = 15, chance = 1,
-	action = function(pos, node, _, _)
+	action = function(pos, node)
 		local below_node = {x=pos.x, y=pos.y-1, z=pos.z}
 		if minetest.get_node(below_node).name:find("fire") then
 			minetest.set_node(pos, {name="xdecor:cauldron_boiling_water", param2=node.param2})
@@ -104,7 +104,7 @@ minetest.register_abm({
 minetest.register_abm({
 	nodenames = {"xdecor:cauldron_boiling_water"},
 	interval = 3, chance = 1,
-	action = function(pos, node, _, _)
+	action = function(pos, node)
 		local objs = minetest.get_objects_inside_radius(pos, 0.5)
 		if not objs then return end
 

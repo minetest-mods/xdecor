@@ -207,7 +207,7 @@ function worktable.construct(pos)
 	worktable.main(meta)
 end
 
-function worktable.fields(pos, _, fields, _)
+function worktable.fields(pos, _, fields)
 	if fields.quit then return end
 	local meta = minetest.get_meta(pos)
 	local inv = meta:get_inventory()
@@ -260,7 +260,7 @@ function worktable.fields(pos, _, fields, _)
 	end
 end
 
-function worktable.dig(pos, _)
+function worktable.dig(pos)
 	local inv = minetest.get_meta(pos):get_inventory()
 	return inv:is_empty("input") and inv:is_empty("hammer") and
 		inv:is_empty("tool") and inv:is_empty("storage")
@@ -277,7 +277,7 @@ function worktable.contains(table, element)
 	return false
 end
 
-function worktable.put(_, listname, _, stack, _)
+function worktable.put(_, listname, _, stack)
 	local stackname = stack:get_name()
 	local mod, node = stackname:match("([%w_]+):([%w_]+)")
 
@@ -306,7 +306,7 @@ function worktable.take(pos, listname, _, stack, player)
 	return stack:get_count()
 end
 
-function worktable.move(pos, from_list, from_index, to_list, to_index, count, _)
+function worktable.move(pos, from_list, from_index, to_list, to_index, count)
 	local meta = minetest.get_meta(pos)
 	local inv = meta:get_inventory()
 
@@ -340,14 +340,14 @@ function worktable.get_output(inv, stack)
 	inv:set_list("forms", output)
 end
 
-function worktable.on_put(pos, listname, _, stack, _)
+function worktable.on_put(pos, listname, _, stack)
 	if listname == "input" then
 		local inv = minetest.get_meta(pos):get_inventory()
 		worktable.get_output(inv, stack)
 	end
 end
 
-function worktable.on_take(pos, listname, index, stack, _)
+function worktable.on_take(pos, listname, index, stack)
 	local inv = minetest.get_meta(pos):get_inventory()
 	local inputstack = inv:get_stack("input", 1)
 
@@ -429,13 +429,12 @@ end
 minetest.register_abm({
 	nodenames = {"xdecor:worktable"},
 	interval = 3, chance = 1,
-	action = function(pos, _, _, _)
+	action = function(pos)
 		local inv = minetest.get_meta(pos):get_inventory()
 		local tool = inv:get_stack("tool", 1)
 		local hammer = inv:get_stack("hammer", 1)
-		local wear = tool:get_wear()
 
-		if tool:is_empty() or hammer:is_empty() or wear == 0 then
+		if tool:is_empty() or hammer:is_empty() or tool:get_wear() == 0 then
 			return
 		end
 

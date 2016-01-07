@@ -27,7 +27,7 @@ xdecor.register("hive", {
 	},
 	groups = {choppy=3, oddly_breakable_by_hand=2, flammable=1},
 	on_construct = hive.construct,
-	can_dig = function(pos, _)
+	can_dig = function(pos)
 		return minetest.get_meta(pos):get_inventory():is_empty("honey")
 	end,
 	on_punch = function(_, _, puncher)
@@ -39,7 +39,7 @@ xdecor.register("hive", {
 minetest.register_abm({
 	nodenames = {"xdecor:hive"},
 	interval = 30, chance = 10,
-	action = function(pos, _, _, _)
+	action = function(pos)
 		local inv = minetest.get_meta(pos):get_inventory()
 		local honeystack = inv:get_stack("honey", 1)
 		local honey = honeystack:get_count()

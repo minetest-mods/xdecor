@@ -10,7 +10,7 @@ xdecor.register("mailbox", {
 	},
 	groups = {cracky=3, oddly_breakable_by_hand=1},
 	on_rotate = screwdriver.rotate_simple,
-	after_place_node = function(pos, placer, _)
+	after_place_node = function(pos, placer)
 		local meta = minetest.get_meta(pos)
 		local player_name = placer:get_player_name()
 
@@ -21,7 +21,7 @@ xdecor.register("mailbox", {
 		inv:set_size("mailbox", 6*4)
 		inv:set_size("drop", 1)
 	end,
-	on_rightclick = function(pos, _, clicker, _)
+	on_rightclick = function(pos, _, clicker)
 		local meta = minetest.get_meta(pos)
 		local player = clicker:get_player_name()
 		local owner = meta:get_string("owner")
