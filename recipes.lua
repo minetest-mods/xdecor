@@ -24,29 +24,6 @@ minetest.register_craft({
 	}
 })
 
-minetest.register_craftitem("xdecor:bowl", {
-	description = "Bowl",
-	inventory_image = "xdecor_bowl.png",
-	wield_image = "xdecor_bowl.png"
-})
-
-minetest.register_craftitem("xdecor:bowl_soup", {
-	description = "Bowl of soup",
-	inventory_image = "xdecor_bowl_soup.png",
-	wield_image = "xdecor_bowl_soup.png",
-	groups = {not_in_creative_inventory = 1},
-	stack_max = 1,
-	on_use = function(itemstack, user)
-		itemstack:replace("xdecor:bowl 1")
-		if minetest.get_modpath("hunger") then
-			minetest.item_eat(20)
-		else
-			user:set_hp(20)
-		end
-		return itemstack
-	end
-})
-
 minetest.register_craft({ 
 	output = "xdecor:candle",
 	recipe = {
@@ -68,6 +45,14 @@ minetest.register_craft({
 	recipe = {
 		{"xdecor:cabinet"}
 	}
+})
+
+minetest.register_craft({ 
+	output = "realchess:chessboard",
+	recipe = {
+		{"dye:black", "dye:white", "dye:black"},
+		{"stairs:slab_wood", "stairs:slab_wood", "stairs:slab_wood"}
+	} 
 })
 
 minetest.register_craft({
@@ -211,14 +196,6 @@ minetest.register_craft({
 		{"default:paper", "default:paper", "default:paper"},
 		{"group:stick", "group:stick", "group:stick"}
 	}
-})
-
-minetest.register_craftitem("xdecor:honey", {
-	description = "Honey",
-	inventory_image = "xdecor_honey.png",
-	wield_image = "xdecor_honey.png",
-	groups = {not_in_creative_inventory=1},
-	on_use = minetest.item_eat(2)
 })
 
 minetest.register_craft({

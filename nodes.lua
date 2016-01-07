@@ -246,35 +246,6 @@ xdecor.register("fire", {
 	groups = {dig_immediate=3, hot=3, not_in_creative_inventory=1}
 })
 
-minetest.register_tool("xdecor:flint_steel", {
-	description = "Flint & Steel",
-	inventory_image = "xdecor_flint_steel.png",
-	tool_capabilities = {
-		groupcaps = { igniter = {uses=10, maxlevel=1} }
-	},
-	on_use = function(itemstack, user, pointed_thing)
-		local player = user:get_player_name()
-		if pointed_thing.type == "node" and
-				minetest.get_node(pointed_thing.above).name == "air" then
-			if not minetest.is_protected(pointed_thing.above, player) then
-				minetest.set_node(pointed_thing.above, {name="xdecor:fire"})
-			else
-				minetest.chat_send_player(player, "This area is protected.")
-			end
-		end
-
-		itemstack:add_wear(1000)
-		return itemstack
-	end
-})
-
-minetest.register_tool("xdecor:hammer", {
-	description = "Hammer",
-	inventory_image = "xdecor_hammer.png",
-	wield_image = "xdecor_hammer.png",
-	on_use = function() do return end end
-})
-
 xdecor.register("ivy", {
 	description = "Ivy",
 	drawtype = "signlike",

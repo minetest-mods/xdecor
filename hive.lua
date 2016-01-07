@@ -31,7 +31,7 @@ xdecor.register("hive", {
 		return minetest.get_meta(pos):get_inventory():is_empty("honey")
 	end,
 	on_punch = function(_, _, puncher)
-		puncher:set_hp(puncher:get_hp()-4)
+		puncher:set_hp(puncher:get_hp() - 2)
 	end,
 	allow_metadata_inventory_put = function() return 0 end
 })

@@ -594,10 +594,6 @@ function realchess.on_move(pos, from_list, from_index, to_list, to_index, count,
 	return false
 end
 
-function realchess.take(pos, listname, index, stack, player)
-	return 0
-end
-
 minetest.register_node(":realchess:chessboard", {
 	description = "Chess Board",
 	drawtype = "nodebox",
@@ -616,7 +612,7 @@ minetest.register_node(":realchess:chessboard", {
 	on_receive_fields = realchess.fields,
 	allow_metadata_inventory_move = realchess.move,
 	on_metadata_inventory_move = realchess.on_move,
-	allow_metadata_inventory_take = realchess.take
+	allow_metadata_inventory_take = function() return 0 end
 })
 
 local function register_piece(name, count)
@@ -647,12 +643,4 @@ register_piece("knight", 2)
 register_piece("bishop", 2)
 register_piece("queen")
 register_piece("king")
-
-minetest.register_craft({ 
-	output = "realchess:chessboard",
-	recipe = {
-		{"dye:black", "dye:white", "dye:black"},
-		{"stairs:slab_wood", "stairs:slab_wood", "stairs:slab_wood"}
-	} 
-})
 

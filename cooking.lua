@@ -26,7 +26,7 @@ xdecor.register("cauldron_empty", {
 	on_rotate = screwdriver.rotate_simple,
 	tiles = {"xdecor_cauldron_top_empty.png", "xdecor_cauldron_sides.png"},
 	infotext = "Cauldron (empty)",
-	on_rightclick = function(pos, node, clicker, itemstack, _)
+	on_rightclick = function(pos, node, clicker, itemstack)
 		local wield_item = clicker:get_wielded_item():get_name()
 		if wield_item == "bucket:bucket_water" or
 				wield_item == "bucket:bucket_river_water" then
