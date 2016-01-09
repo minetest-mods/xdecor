@@ -1,8 +1,7 @@
 local enchanting = {}
 screwdriver = screwdriver or {}
 
-function enchanting.formspec(pos, tooltype)
-	local meta = minetest.get_meta(pos)
+function enchanting.formspec(pos, tool)
 	local formspec = [[ size[9,9;]
 			bgcolor[#080808BB;true]
 			background[0,0;9,9;ench_ui.png]
@@ -17,32 +16,36 @@ function enchanting.formspec(pos, tooltype)
 			tooltip[speed;Your speed is increased] ]]
 			..default.gui_slots..default.get_hotbar_bg(0.5,4.5)
 
-	if tooltype == "sword" then
-		formspec = formspec.."image_button[3.9,2.9;4,0.92;bg_btn.png;sharp;Sharpness]"
-	elseif tooltype == "tool" then
-		formspec = formspec..[[ image_button[3.9,0.85;4,0.92;bg_btn.png;fast;Efficiency]
-				image_button[3.9,1.77;4,1.12;bg_btn.png;durable;Durability] ]]
-	elseif tooltype == "armor" then
-		formspec = formspec.."image_button[3.9,0.85;4,0.92;bg_btn.png;strong;Strength]"
-	elseif tooltype == "boots" then
-		formspec = formspec..[[ image_button[3.9,0.85;4,0.92;bg_btn.png;strong;Strength]
-				image_button[3.9,1.77;4,1.12;bg_btn.png;speed;Speed] ]]
+	local tool_fs = {
+		["tool"] = [[ image_button[3.9,0.85;4,0.92;bg_btn.png;fast;Efficiency]
+			image_button[3.9,1.77;4,1.12;bg_btn.png;durable;Durability] ]],
+		["armor"] = "image_button[3.9,0.85;4,0.92;bg_btn.png;strong;Strength]",
+		["sword"] = "image_button[3.9,2.9;4,0.92;bg_btn.png;sharp;Sharpness]",
+		["boots"] = [[ image_button[3.9,0.85;4,0.92;bg_btn.png;strong;Strength]
+				image_button[3.9,1.77;4,1.12;bg_btn.png;speed;Speed] ]] }
+
+	for cat in pairs(tool_fs) do
+		if tool == cat then
+			formspec = formspec..tool_fs[cat]
+		end
 	end
 
-	meta:set_string("formspec", formspec)
+	minetest.get_meta(pos):set_string("formspec", formspec)
 end
 
 function enchanting.on_put(pos, listname, _, stack)
 	if listname == "tool" then
-		local stn = stack:get_name()
-		if stn:find("pick") or stn:find("axe") or stn:find("shovel") then
-			enchanting.formspec(pos, "tool")
-		elseif stn:find("sword") then
-			enchanting.formspec(pos, "sword")
-		elseif stn:find("chestplate") or stn:find("leggings") or stn:find("helmet") then
-			enchanting.formspec(pos, "armor")
-		elseif stn:find("boots") then
-			enchanting.formspec(pos, "boots")
+		local tools_cat = {
+			["tool"] = {"pick", "axe", "shovel"},
+			["armor"] = {"chestplate", "leggings", "helmet"},
+			["sword"] = {"sword"}, ["boots"] = {"boots"} }
+
+		for cat, name in pairs(tools_cat) do
+		for _, n in pairs(name) do
+			if stack:get_name():find(n) then
+				enchanting.formspec(pos, cat)
+			end
+		end
 		end
 	end
 end
@@ -50,21 +53,18 @@ end
 function enchanting.fields(pos, _, fields)
 	if fields.quit then return end
 	local inv = minetest.get_meta(pos):get_inventory()
-	local toolstack = inv:get_stack("tool", 1)
-	local toolstack_name = toolstack:get_name()
-	local mesestack = inv:get_stack("mese", 1)
-	local mod, tool = toolstack_name:match("([%w_]+):([%w_]+)")
-	local toolwear = toolstack:get_wear()
-	local mese = mesestack:get_count()
-	local ench = next(fields)
-	local enchanted_tool = mod..":enchanted_"..tool.."_"..ench
+	local tool = inv:get_stack("tool", 1)
+	local mese = inv:get_stack("mese", 1)
+	local orig_wear = tool:get_wear()
+	local mod, name = tool:get_name():match("([%w_]+):([%w_]+)")
+	local enchanted_tool = mod..":enchanted_"..name.."_"..next(fields)
 
-	if mese > 0 and minetest.registered_tools[enchanted_tool] then
-		toolstack:replace(enchanted_tool)
-		toolstack:add_wear(toolwear)
-		mesestack:take_item()
-		inv:set_stack("mese", 1, mesestack)
-		inv:set_stack("tool", 1, toolstack)
+	if mese:get_count() > 0 and minetest.registered_tools[enchanted_tool] then
+		tool:replace(enchanted_tool)
+		tool:add_wear(orig_wear)
+		mese:take_item()
+		inv:set_stack("mese", 1, mese)
+		inv:set_stack("tool", 1, tool)
 	end
 end
 
@@ -83,12 +83,10 @@ local function allowed(tool)
 end
 
 function enchanting.put(_, listname, _, stack)
-	local toolstack = stack:get_name()
-	local toolname = toolstack:match(":([%w_]+)")
-
-	if listname == "mese" and toolstack == "default:mese_crystal" then
+	local item = stack:get_name():match(":([%w_]+)")
+	if listname == "mese" and item == "mese_crystal" then
 		return stack:get_count()
-	elseif listname == "tool" and allowed(toolname) then
+	elseif listname == "tool" and allowed(item) then
 		return 1 
 	end
 
