@@ -116,7 +116,7 @@ minetest.register_abm({
 
 		for _, obj in pairs(objs) do
 			if obj and obj:get_luaentity() then
-				local itemstring = obj:get_luaentity().itemstring:match("[%w_]+:([%w_]+)")
+				local itemstring = obj:get_luaentity().itemstring:match(":([%w_]+)")
 				if not next(ingredients) then
 					for _, rep in pairs(ingredients) do
 						if itemstring == rep then return end

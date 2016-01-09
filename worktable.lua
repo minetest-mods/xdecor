@@ -85,35 +85,25 @@ function worktable.craftguide_formspec(meta, start_i, pagenum, stackname, recipe
 			recipe_num = 1
 		end
 
-		--print(dump(minetest.get_all_craft_recipes(stackname)))
-		local items = minetest.get_all_craft_recipes(stackname)[recipe_num].items
-		local width = minetest.get_all_craft_recipes(stackname)[recipe_num].width
-		local type = minetest.get_all_craft_recipes(stackname)[recipe_num].type
-
 		if items_num > 1 then
 			formspec = formspec.."button[0,5.7;1.6,1;alternate;Alternate]"..
 					"label[0,5.2;Recipe "..recipe_num.." of "..items_num.."]"
 		end
 
-		if type == "cooking" or table.maxn(items) == 1 then
-			if type == "cooking" then
-				formspec = formspec.."image[4.25,5.9;0.5,0.5;default_furnace_fire_fg.png]"
-			end
-			formspec = formspec.."list[context;craft_output_recipe;5,6.3;1,1;]"
+		--print(dump(minetest.get_all_craft_recipes(stackname)))
+		local items = minetest.get_all_craft_recipes(stackname)[recipe_num].items
+		local type = minetest.get_all_craft_recipes(stackname)[recipe_num].type
+
+		if type == "cooking" then
+			formspec = formspec..[[ list[context;craft_output_recipe;5,6.3;1,1;]
+					image[4.25,5.9;0.5,0.5;default_furnace_fire_fg.png] ]]
 		else
-			if width == 0 then
-				local rows, r = math.ceil(#items / math.min(3, #items))
-				if rows == 3 then r = 2 else r = rows end
+			local width = minetest.get_all_craft_recipes(stackname)[recipe_num].width
+			if width == 0 then width = math.min(3, #items) end
+			local rows = math.ceil(table.maxn(items) / width)			
 
-				formspec = formspec.."list[context;craft_output_recipe;5,"..
-						(7.3-r)..";"..math.min(3, #items)..","..rows..";]"
-			else
-				local rows, r = math.ceil(table.maxn(items) / width)
-				if rows == 3 then r = 2 else r = rows end
-
-				formspec = formspec.."list[context;craft_output_recipe;5,"..
-						(7.3-r)..";"..width..","..rows..";]"
-			end
+			formspec = formspec.."list[context;craft_output_recipe;5,"..
+					(7.3 - math.min(2, rows))..";"..width..","..rows..";]"
 		end
 
 		formspec = formspec..[[ image[4,6.3;1,1;gui_furnace_arrow_bg.png^[transformR90]

@@ -84,7 +84,7 @@ end
 
 function enchanting.put(_, listname, _, stack)
 	local toolstack = stack:get_name()
-	local toolname = toolstack:match("[%w_]+:([%w_]+)")
+	local toolname = toolstack:match(":([%w_]+)")
 
 	if listname == "mese" and toolstack == "default:mese_crystal" then
 		return stack:get_count()
