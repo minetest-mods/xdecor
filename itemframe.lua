@@ -84,6 +84,7 @@ xdecor.register("frame", {
 	sounds = default.node_sound_wood_defaults(),
 	on_rotate = screwdriver.disallow,
 	sunlight_propagates = true,
+	inventory_image = "xdecor_frame.png",
 	node_box = {
 		type = "fixed",
 		fixed = {-0.5, -0.5, 0.4375, 0.5, 0.5, 0.5}
@@ -91,8 +92,7 @@ xdecor.register("frame", {
 	tiles = {
 		"xdecor_wood.png", "xdecor_wood.png", "xdecor_wood.png",
 		"xdecor_wood.png", "xdecor_wood.png", "xdecor_frame.png"
-	}, 
-	inventory_image = "xdecor_frame.png",
+	},
 	after_place_node = function(pos, placer, itemstack)
 		local meta = minetest.get_meta(pos)
 		local name = placer:get_player_name()
@@ -132,13 +132,7 @@ xdecor.register("frame", {
 
 		return true
 	end,
-	on_destruct = function(pos)
-		local meta = minetest.get_meta(pos)
-		local node = minetest.get_node(pos)
-
-		if meta:get_string("item") == "" then return end
-		drop_item(pos, node)
-	end
+	after_destruct = remove_item
 })
 
 minetest.register_abm({
