@@ -189,9 +189,6 @@ function worktable.construct(pos)
 	inv:set_size("input", 1)
 	inv:set_size("hammer", 1)
 	inv:set_size("forms", 4*3)
-	inv:set_size("storage", 8*2)
-	inv:set_size("item_craft_input", 1)
-	inv:set_size("craft_output_recipe", 3*3)
 	meta:set_string("infotext", "Work Table")
 
 	worktable.main(meta)
@@ -205,12 +202,18 @@ function worktable.fields(pos, _, fields)
 	local filter = formspec:match("filter;;([%w_:]+)") or ""
 	local start_i = tonumber(formspec:match("inv_items_list;.*;(%d+)%]")) or 0
 
-	if fields.storage then
-		worktable.storage(meta)
-	elseif fields.back then
+	if fields.back then
 		worktable.main(meta)
 	elseif fields.craft then
 		worktable.crafting(meta)
+	elseif fields.storage then
+		inv:set_size("storage", 8*2)
+		worktable.storage(meta)
+	elseif fields.craftguide then
+		inv:set_size("item_craft_input", 1)
+		inv:set_size("craft_output_recipe", 3*3)
+		worktable.craftguide_main_list(inv, nil)
+		worktable.craftguide_formspec(meta, 0, 1, nil, 1, "")
 	elseif fields.alternate then
 		inv:set_list("craft_output_recipe", {})
 		local inputstack = inv:get_stack("item_craft_input", 1):get_name()
@@ -223,7 +226,7 @@ function worktable.fields(pos, _, fields)
 		elseif fields.search then
 			worktable.craftguide_main_list(inv, fields.filter:lower())
 			worktable.craftguide_formspec(meta, 0, 1, nil, 1, fields.filter:lower())
-		elseif fields.craftguide or fields.clearfilter then
+		elseif fields.clearfilter then
 			worktable.craftguide_main_list(inv, nil)
 			worktable.craftguide_formspec(meta, 0, 1, nil, 1, "")
 		else
