@@ -61,7 +61,6 @@ end
 function worktable.craftguide_formspec(meta, start_i, pagenum, stackname, recipe_num, filter, tab_id)
 	local inv_size = #meta:to_table().inventory.inv_items_list
 	local pagemax = math.floor((inv_size - 1) / (8*4) + 1)
-	tab_id = tab_id or 1
 
 	local formspec = [[ size[8,8;]
 			list[context;item_craft_input;3,6.3;1,1;]
@@ -120,10 +119,10 @@ end
 
 local function tab_category(tab_id)
 	local id_category = {
-		[1] = minetest.registered_items,
-		[2] = minetest.registered_nodes,
-		[3] = minetest.registered_tools,
-		[4] = minetest.registered_craftitems
+		minetest.registered_items,
+		minetest.registered_nodes,
+		minetest.registered_tools,
+		minetest.registered_craftitems
 	}
 
 	return id_category[tab_id] or id_category[1]
@@ -145,8 +144,9 @@ function worktable.craftguide_main_list(inv, filter, tab_id)
 	inv:set_list("inv_items_list", inv_items_list)
 end
 
-function worktable.crafting(meta)
-	local formspec = [[ size[8,7;]
+worktable.formspecs = {
+	crafting = function(meta)
+		meta:set_string("formspec", [[ size[8,7;]
 			list[current_player;main;0,3.3;8,4;]
 			image[5,1;1,1;gui_furnace_arrow_bg.png^[transformR270]
 			button[0,0;1.5,1;back;< Back]
@@ -155,25 +155,19 @@ function worktable.crafting(meta)
 			list[current_player;craftpreview;6,1;1,1;]
 			listring[current_player;main]
 			listring[current_player;craft] ]]
-			..xbg..default.get_hotbar_bg(0,3.3)
-
-	meta:set_string("formspec", formspec)
-end
-
-function worktable.storage(meta)
-	local formspec = [[ size[8,7]
+			..xbg..default.get_hotbar_bg(0,3.3))
+	end,
+	storage = function(meta)
+		meta:set_string("formspec", [[ size[8,7]
 			list[context;storage;0,1;8,2;]
 			list[current_player;main;0,3.25;8,4;]
 			listring[context;storage]
 			listring[current_player;main]
 			button[0,0;1.5,1;back;< Back] ]]
-			..xbg..default.get_hotbar_bg(0,3.25)
-
-	meta:set_string("formspec", formspec)
-end
-
-function worktable.main(meta)
-	local formspec = [[ size[8,7;]
+			..xbg..default.get_hotbar_bg(0,3.25))
+	end,
+	main = function(meta)
+		meta:set_string("formspec", [[ size[8,7;]
 			label[0.9,1.23;Cut]
 			label[0.9,2.23;Repair]
 			box[-0.05,1;2.05,0.9;#555555]
@@ -189,10 +183,9 @@ function worktable.main(meta)
 			list[current_player;main;0,3.25;8,4;]
 			button[0,0;2,1;craft;Crafting]
 			button[2,0;2,1;storage;Storage] ]]
-			..xbg..default.get_hotbar_bg(0,3.25)
-
-	meta:set_string("formspec", formspec)
-end
+			..xbg..default.get_hotbar_bg(0,3.25))
+	end
+}
 
 function worktable.construct(pos)
 	local meta = minetest.get_meta(pos)
@@ -204,7 +197,7 @@ function worktable.construct(pos)
 	inv:set_size("forms", 4*3)
 	meta:set_string("infotext", "Work Table")
 
-	worktable.main(meta)
+	worktable.formspecs.main(meta)
 end
 
 function worktable.fields(pos, _, fields)
@@ -214,15 +207,15 @@ function worktable.fields(pos, _, fields)
 	local formspec = meta:to_table().fields.formspec
 	local filter = formspec:match("filter;;([%w_:]+)") or ""
 	local start_i = tonumber(formspec:match("inv_items_list;.*;(%d+)%]")) or 0
-	local current_tab_id = tonumber(formspec:match("tabheader%[.*;(%d+)%;.*]"))
+	local current_tab_id = tonumber(formspec:match("tabheader%[.*;(%d+)%;.*]")) or 1
 
 	if fields.back then
-		worktable.main(meta)
+		worktable.formspecs.main(meta)
 	elseif fields.craft then
-		worktable.crafting(meta)
+		worktable.formspecs.crafting(meta)
 	elseif fields.storage then
 		inv:set_size("storage", 8*2)
-		worktable.storage(meta)
+		worktable.formspecs.storage(meta)
 	elseif fields.tabs then
 		worktable.craftguide_main_list(inv, nil, tonumber(fields.tabs))
 		worktable.craftguide_formspec(meta, 0, 1, nil, 1, "", tonumber(fields.tabs))
@@ -239,7 +232,7 @@ function worktable.fields(pos, _, fields)
 		worktable.craftguide_formspec(meta, start_i, start_i / (8*4) + 1, inputstack, recipe_num, filter, current_tab_id)
 	else
 		if fields.backcraft then
-			worktable.crafting(meta)
+			worktable.formspecs.crafting(meta)
 		elseif fields.search then
 			worktable.craftguide_main_list(inv, fields.filter:lower(), current_tab_id)
 			worktable.craftguide_formspec(meta, 0, 1, nil, 1, fields.filter:lower(), current_tab_id)
@@ -247,18 +240,16 @@ function worktable.fields(pos, _, fields)
 			worktable.craftguide_main_list(inv, nil, 1)
 			worktable.craftguide_formspec(meta, 0, 1, nil, 1, "", 1)
 		else
-			if fields.prev or fields.next then
-				local inv_size = #meta:to_table().inventory.inv_items_list
-				if fields.prev or start_i >= inv_size then
-					start_i = start_i - 8*4
-				elseif fields.next or start_i < 0 then
-					start_i = start_i + 8*4
+			local inv_size = #meta:to_table().inventory.inv_items_list
+			if fields.prev then
+				start_i = start_i - 8*4
+				if start_i < 0 then
+					start_i = inv_size - (inv_size % (8*4))
 				end
-
+			elseif fields.next then
+				start_i = start_i + 8*4
 				if start_i >= inv_size then
 					start_i = 0
-				elseif start_i < 0 then
-					start_i = inv_size - (inv_size % (8*4))
 				end
 			end
 
