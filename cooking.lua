@@ -76,15 +76,23 @@ xdecor.register("cauldron_soup", {
 	collision_box = cauldron_cbox,
 	on_rightclick = function(pos, node, clicker, itemstack)
 		local inv = clicker:get_inventory()
-		if clicker:get_wielded_item():get_name() == "xdecor:bowl" then
-			if inv:room_for_item("main", "xdecor:bowl_soup 1") then
-				itemstack:take_item()
-				inv:add_item("main", "xdecor:bowl_soup 1")
-				minetest.set_node(pos, {name="xdecor:cauldron_empty", param2=node.param2})
-			else
-				minetest.chat_send_player(clicker:get_player_name(),
+		local wield_item = clicker:get_wielded_item()
+
+		if wield_item:get_name() == "xdecor:bowl" then
+			if wield_item:get_count() > 1 then
+				if inv:room_for_item("main", "xdecor:bowl_soup 1") then
+					itemstack:take_item()
+					inv:add_item("main", "xdecor:bowl_soup 1")
+				else
+					minetest.chat_send_player(clicker:get_player_name(),
 						"No room in your inventory to add a bowl of soup!")
+					return
+				end
+			else
+				itemstack:replace("xdecor:bowl_soup 1")
 			end
+
+			minetest.set_node(pos, {name="xdecor:cauldron_empty", param2=node.param2})
 			return itemstack
 		end
 	end
