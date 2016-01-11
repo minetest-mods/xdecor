@@ -111,7 +111,7 @@ minetest.register_abm({
 
 minetest.register_abm({
 	nodenames = {"xdecor:cauldron_boiling_water"},
-	interval = 3, chance = 1,
+	interval = 5, chance = 1,
 	action = function(pos, node)
 		local objs = minetest.get_objects_inside_radius(pos, 0.5)
 		if not objs then return end
@@ -124,7 +124,7 @@ minetest.register_abm({
 
 		for _, obj in pairs(objs) do
 			if obj and obj:get_luaentity() then
-				local itemstring = obj:get_luaentity().itemstring:match(":([%w_]+)")
+				local itemstring = obj:get_luaentity().itemstring:match("[^:]+$")
 				if not next(ingredients) then
 					for _, rep in pairs(ingredients) do
 						if itemstring == rep then return end

@@ -34,16 +34,14 @@ local def = { -- Nodebox name, yield, definition.
 function worktable.get_recipe(item)
 	if item:find("^group:") then
 		if item:find("wool$") or item:find("dye$") then
-			item = item:match(":([%w_]+)")..":white"
-		elseif minetest.registered_items["default:"..item:match(":([%w_,]+)")] then
+			item = item:match("[^,:]+$")..":white"
+		elseif minetest.registered_items["default:"..item:match("[^,:]+$")] then
 			item = item:gsub("group:", "default:")
 		else
 			for node, definition in pairs(minetest.registered_items) do
-			for group in pairs(definition.groups) do
-				if item:match(".*"..group.."$") then
+				if definition.groups[item:match("[^,:]+$")] then
 					item = node
 				end
-			end
 			end
 		end
 	end
@@ -274,9 +272,9 @@ function worktable.put(_, listname, _, stack)
 	local stackname = stack:get_name()
 	local mod, node = stackname:match("([%w_]+):([%w_]+)")
 
-	if (listname == "input" and worktable.contains(nodes[mod], node)) or
+	if (listname == "tool" and stack:get_wear() > 0 and stackname ~= "xdecor:hammer") or
+			(listname == "input" and worktable.contains(nodes[mod], node)) or
 			(listname == "hammer" and stackname == "xdecor:hammer") or
-			(listname == "tool" and stack:get_wear() > 0) or
 			listname == "storage" then
 		return stack:get_count()
 	end

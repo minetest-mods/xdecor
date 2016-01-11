@@ -83,7 +83,7 @@ local function allowed(tool)
 end
 
 function enchanting.put(_, listname, _, stack)
-	local item = stack:get_name():match(":([%w_]+)")
+	local item = stack:get_name():match("[^:]+$")
 	if listname == "mese" and item == "mese_crystal" then
 		return stack:get_count()
 	elseif listname == "tool" and allowed(item) then
