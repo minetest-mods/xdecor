@@ -52,7 +52,8 @@ end
 
 function worktable.craftguide_formspec(meta, pagenum, item, recipe_num, filter, tab_id)
 	local inv_size = meta:get_int("inv_size")
-	local pagemax = math.floor((inv_size - 1) / (8*3) + 1)
+	local npp, i, s = 8*3, 0, 0
+	local pagemax = math.floor((inv_size - 1) / npp + 1)
 
 	if pagenum > pagemax then
 		pagenum = 1
@@ -75,7 +76,6 @@ function worktable.craftguide_formspec(meta, pagenum, item, recipe_num, filter, 
 			",#FFFFFF,/ "..tostring(pagemax).."]"..
 			"field[1.8,0.32;2.6,1;filter;;"..filter.."]"..xbg
 
-	local npp, i, s = 8*3, 0, 0
 	for _, name in pairs(worktable.craftguide_main_list(meta, filter, tab_id)) do
 		if s < (pagenum - 1) * npp then
 			s = s + 1
@@ -93,13 +93,13 @@ function worktable.craftguide_formspec(meta, pagenum, item, recipe_num, filter, 
 		if recipe_num > items_num then recipe_num = 1 end
 
 		if items_num > 1 then
-			formspec = formspec.."button[0,5;1.6,1;alternate;Alternate]"..
-					"label[0,4.5;Recipe "..recipe_num.." of "..items_num.."]"
+			formspec = formspec.."button[0,6;1.6,1;alternate;Alternate]"..
+					"label[0,5.5;Recipe "..recipe_num.." of "..items_num.."]"
 		end
 		
 		local type = minetest.get_all_craft_recipes(item)[recipe_num].type
 		if type == "cooking" then
-			formspec = formspec.."image[4.25,4.6;0.5,0.5;default_furnace_fire_fg.png]"
+			formspec = formspec.."image[3.75,4.6;0.5,0.5;default_furnace_fire_fg.png]"
 		end
 
 		local items = minetest.get_all_craft_recipes(item)[recipe_num].items
@@ -113,14 +113,13 @@ function worktable.craftguide_formspec(meta, pagenum, item, recipe_num, filter, 
 		end
 
 		for i, v in pairs(items) do
-			formspec = formspec.."item_image_button["..((i-1) % width + 5)..","..
+			formspec = formspec.."item_image_button["..((i-1) % width + 4.5)..","..
 				(math.floor((i-1) / width + (6 - math.min(2, rows))))..";1,1;"..
 				worktable.get_recipe(v)..";"..worktable.get_recipe(v)..";"..is_group(v).."]"
 		end
 
-		formspec = formspec.."image[4,5;1,1;gui_furnace_arrow_bg.png^[transformR90]"..
-				"item_image_button[3,5;1,1;"..item..";"..item..";]"..
-				"label[0,6.1;"..item:sub(1,30).."]"
+		formspec = formspec.."item_image[2.5,5;1,1;"..item.."]"..
+				"image[3.5,5;1,1;gui_furnace_arrow_bg.png^[transformR90]"
 	end
 
 	meta:set_string("formspec", formspec)
@@ -215,8 +214,7 @@ function worktable.fields(pos, _, fields)
 	local formspec = meta:to_table().fields.formspec
 	local filter = formspec:match("filter;;([%w_:]+)") or ""
 	local pagenum = tonumber(formspec:match("#FFFF00,(%d+)")) or 1
-	local current_item = formspec:match("item_image_button%[3,5;1,1;([%w_:]+)") or ""
-	local current_tab_id = tonumber(formspec:match("tabheader%[.*;(%d+)%;.*]")) or 1
+	local tab_id = tonumber(formspec:match("tabheader%[.*;(%d+)%;.*]")) or 1
 
 	if fields.back then
 		worktable.formspecs.main(meta)
@@ -228,12 +226,13 @@ function worktable.fields(pos, _, fields)
 		worktable.craftguide_main_list(meta, nil, 1)
 		worktable.craftguide_formspec(meta, 1, nil, 1, "", 1)
 	elseif fields.alternate then
+		local item = formspec:match("item_image%[.*;([%w_:]+)%]") or ""
 		local recipe_num = tonumber(formspec:match("Recipe%s(%d+)")) or 1
 		recipe_num = recipe_num + 1
-		worktable.craftguide_formspec(meta, pagenum, current_item, recipe_num, filter, current_tab_id)
+		worktable.craftguide_formspec(meta, pagenum, item, recipe_num, filter, tab_id)
 	elseif fields.search then
-		worktable.craftguide_main_list(meta, fields.filter:lower(), current_tab_id)
-		worktable.craftguide_formspec(meta, 1, nil, 1, fields.filter:lower(), current_tab_id)
+		worktable.craftguide_main_list(meta, fields.filter:lower(), tab_id)
+		worktable.craftguide_formspec(meta, 1, nil, 1, fields.filter:lower(), tab_id)
 	elseif fields.tabs then
 		worktable.craftguide_main_list(meta, filter, tonumber(fields.tabs))
 		worktable.craftguide_formspec(meta, 1, nil, 1, filter, tonumber(fields.tabs))
@@ -243,11 +242,12 @@ function worktable.fields(pos, _, fields)
 		else
 			pagenum = pagenum + 1
 		end
-		worktable.craftguide_formspec(meta, pagenum, nil, 1, filter, current_tab_id)
+		worktable.craftguide_formspec(meta, pagenum, nil, 1, filter, tab_id)
 	else
 		for item in pairs(fields) do
-			if item:match("[%w_]+:[%w_]+") then
-				worktable.craftguide_formspec(meta, pagenum, item, 1, filter, current_tab_id)
+			if item:match("[%w_]+:[%w_]+") and
+					minetest.get_craft_recipe(item).items then
+				worktable.craftguide_formspec(meta, pagenum, item, 1, filter, tab_id)
 			end
 		end
 	end
