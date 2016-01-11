@@ -50,12 +50,17 @@ function worktable.get_recipe(item)
 	return item
 end
 
-function worktable.craftguide_formspec(meta, start_i, pagenum, stackname, recipe_num, filter, tab_id)
-	local inv_size = #meta:to_table().inventory.inv_items_list
+function worktable.craftguide_formspec(meta, pagenum, item, recipe_num, filter, tab_id)
+	local inv_size = meta:get_int("inv_size")
 	local pagemax = math.floor((inv_size - 1) / (8*3) + 1)
 
+	if pagenum > pagemax then
+		pagenum = 1
+	elseif pagenum == 0 then
+		pagenum = pagemax
+	end
+
 	local formspec = [[ size[8,6.6;]
-			list[context;item_craft_input;3,5;1,1;]
 			tablecolumns[color;text;color;text]
 			tableoptions[background=#00000000;highlight=#00000000;border=false]
 			button[5.5,0;0.7,1;prev;<]
@@ -64,31 +69,41 @@ function worktable.craftguide_formspec(meta, start_i, pagenum, stackname, recipe
 			button[4.6,0.2;0.7,0.5;clearfilter;X]
 			button[0,0;1.5,1;backcraft;< Back]
 			tooltip[search;Search]
-			tooltip[clearfilter;Reset]
-			label[3,4.5;Input] ]]
+			tooltip[clearfilter;Reset] ]]
 			.."tabheader[0,0;tabs;All,Nodes,Tools,Items;"..tostring(tab_id)..";true;false]"..
-			"list[context;inv_items_list;0,1;8,3;"..tostring(start_i).."]"..
-			"table[6.1,0.2;1.1,0.5;pagenum;#FFFF00,"..tostring(math.floor(pagenum))..
+			"table[6.1,0.2;1.1,0.5;pagenum;#FFFF00,"..tostring(pagenum)..
 			",#FFFFFF,/ "..tostring(pagemax).."]"..
 			"field[1.8,0.32;2.6,1;filter;;"..filter.."]"..xbg
 
-	if stackname and minetest.registered_items[stackname] then
-		--print(dump(minetest.get_all_craft_recipes(stackname)))
-		local items_num = #minetest.get_all_craft_recipes(stackname)
+	local npp, i, s = 8*3, 0, 0
+	for _, name in pairs(worktable.craftguide_main_list(meta, filter, tab_id)) do
+		if s < (pagenum - 1) * npp then
+			s = s + 1
+		else
+			if i >= npp then break end
+			formspec = formspec.."item_image_button["..(i%8)..","..
+					(math.floor(i/8)+1)..";1,1;"..name..";"..name..";]"
+			i = i + 1
+		end
+	end
+
+	if item and minetest.registered_items[item] then
+		--print(dump(minetest.get_all_craft_recipes(item)))
+		local items_num = #minetest.get_all_craft_recipes(item)
 		if recipe_num > items_num then recipe_num = 1 end
 
 		if items_num > 1 then
-			formspec = formspec.."button[0,4.7;1.6,1;alternate;Alternate]"..
-					"label[0,4.2;Recipe "..recipe_num.." of "..items_num.."]"
+			formspec = formspec.."button[0,5;1.6,1;alternate;Alternate]"..
+					"label[0,4.5;Recipe "..recipe_num.." of "..items_num.."]"
 		end
 		
-		local type = minetest.get_all_craft_recipes(stackname)[recipe_num].type
+		local type = minetest.get_all_craft_recipes(item)[recipe_num].type
 		if type == "cooking" then
 			formspec = formspec.."image[4.25,4.6;0.5,0.5;default_furnace_fire_fg.png]"
 		end
 
-		local items = minetest.get_all_craft_recipes(stackname)[recipe_num].items
-		local width = minetest.get_all_craft_recipes(stackname)[recipe_num].width
+		local items = minetest.get_all_craft_recipes(item)[recipe_num].items
+		local width = minetest.get_all_craft_recipes(item)[recipe_num].width
 		if width == 0 then width = math.min(3, #items) end
 		local rows = math.ceil(table.maxn(items) / width)
 
@@ -97,19 +112,15 @@ function worktable.craftguide_formspec(meta, start_i, pagenum, stackname, recipe
 			return ""
 		end
 
-		for i, item in pairs(items) do
+		for i, v in pairs(items) do
 			formspec = formspec.."item_image_button["..((i-1) % width + 5)..","..
 				(math.floor((i-1) / width + (6 - math.min(2, rows))))..";1,1;"..
-				worktable.get_recipe(item)..";"..worktable.get_recipe(item)..";"..is_group(item).."]"
+				worktable.get_recipe(v)..";"..worktable.get_recipe(v)..";"..is_group(v).."]"
 		end
 
-		formspec = formspec..[[ image[4,5;1,1;gui_furnace_arrow_bg.png^[transformR90]
-					button[0,5.5;1.6,1;trash;Clear] ]]
-					.."label[0,6.4;"..stackname:sub(1, 30).."]"
-
-		local output = minetest.get_all_craft_recipes(stackname)[recipe_num].output
-		local yield = output:match("%s(%d+)") or 1
-		meta:get_inventory():set_stack("item_craft_input", 1, stackname.." "..yield)
+		formspec = formspec.."image[4,5;1,1;gui_furnace_arrow_bg.png^[transformR90]"..
+				"item_image_button[3,5;1,1;"..item..";"..item..";]"..
+				"label[0,6.1;"..item:sub(1,30).."]"
 	end
 
 	meta:set_string("formspec", formspec)
@@ -120,26 +131,25 @@ local function tab_category(tab_id)
 		minetest.registered_items,
 		minetest.registered_nodes,
 		minetest.registered_tools,
-		minetest.registered_craftitems
-	}
+		minetest.registered_craftitems }
 
 	return id_category[tab_id] or id_category[1]
 end
 
-function worktable.craftguide_main_list(inv, filter, tab_id)
-	local inv_items_list = {}
+function worktable.craftguide_main_list(meta, filter, tab_id)
+	local items_list = {}
 	for name, def in pairs(tab_category(tab_id)) do
 		if not (def.groups.not_in_creative_inventory == 1) and
 				minetest.get_craft_recipe(name).items and
 				def.description and def.description ~= "" and
 				(not filter or def.name:find(filter, 1, true)) then
-			inv_items_list[#inv_items_list+1] = name
+			items_list[#items_list+1] = name
 		end
 	end
 
-	table.sort(inv_items_list)
-	inv:set_size("inv_items_list", #inv_items_list)
-	inv:set_list("inv_items_list", inv_items_list)
+	meta:set_int("inv_size", #items_list)
+	table.sort(items_list)
+	return items_list
 end
 
 worktable.formspecs = {
@@ -193,6 +203,7 @@ function worktable.construct(pos)
 	inv:set_size("input", 1)
 	inv:set_size("hammer", 1)
 	inv:set_size("forms", 4*3)
+	inv:set_size("storage", 8*2)
 	meta:set_string("infotext", "Work Table")
 
 	worktable.formspecs.main(meta)
@@ -201,58 +212,44 @@ end
 function worktable.fields(pos, _, fields)
 	if fields.quit then return end
 	local meta = minetest.get_meta(pos)
-	local inv = meta:get_inventory()
 	local formspec = meta:to_table().fields.formspec
 	local filter = formspec:match("filter;;([%w_:]+)") or ""
-	local start_i = tonumber(formspec:match("inv_items_list;.*;(%d+)%]")) or 0
+	local pagenum = tonumber(formspec:match("#FFFF00,(%d+)")) or 1
+	local current_item = formspec:match("item_image_button%[3,5;1,1;([%w_:]+)") or ""
 	local current_tab_id = tonumber(formspec:match("tabheader%[.*;(%d+)%;.*]")) or 1
 
 	if fields.back then
 		worktable.formspecs.main(meta)
-	elseif fields.craft then
+	elseif fields.craft or fields.backcraft then
 		worktable.formspecs.crafting(meta)
 	elseif fields.storage then
-		inv:set_size("storage", 8*2)
 		worktable.formspecs.storage(meta)
-	elseif fields.craftguide then
-		inv:set_size("item_craft_input", 1)
-		worktable.craftguide_main_list(inv, nil, 1)
-		worktable.craftguide_formspec(meta, 0, 1, nil, 1, "", 1)
+	elseif fields.craftguide or fields.clearfilter then
+		worktable.craftguide_main_list(meta, nil, 1)
+		worktable.craftguide_formspec(meta, 1, nil, 1, "", 1)
 	elseif fields.alternate then
-		local inputstack = inv:get_stack("item_craft_input", 1):get_name()
 		local recipe_num = tonumber(formspec:match("Recipe%s(%d+)")) or 1
 		recipe_num = recipe_num + 1
-		worktable.craftguide_formspec(meta, start_i, start_i / (8*3) + 1, inputstack, recipe_num, filter, current_tab_id)
-	else
-		if fields.backcraft then
-			worktable.formspecs.crafting(meta)
-		elseif fields.search then
-			worktable.craftguide_main_list(inv, fields.filter:lower(), current_tab_id)
-			worktable.craftguide_formspec(meta, 0, 1, nil, 1, fields.filter:lower(), current_tab_id)
-		elseif fields.clearfilter then
-			worktable.craftguide_main_list(inv, nil, 1)
-			worktable.craftguide_formspec(meta, 0, 1, nil, 1, "", 1)
-		elseif fields.tabs then
-			worktable.craftguide_main_list(inv, nil, tonumber(fields.tabs))
-			worktable.craftguide_formspec(meta, 0, 1, nil, 1, "", tonumber(fields.tabs))
+		worktable.craftguide_formspec(meta, pagenum, current_item, recipe_num, filter, current_tab_id)
+	elseif fields.search then
+		worktable.craftguide_main_list(meta, fields.filter:lower(), current_tab_id)
+		worktable.craftguide_formspec(meta, 1, nil, 1, fields.filter:lower(), current_tab_id)
+	elseif fields.tabs then
+		worktable.craftguide_main_list(meta, filter, tonumber(fields.tabs))
+		worktable.craftguide_formspec(meta, 1, nil, 1, filter, tonumber(fields.tabs))
+	elseif fields.prev or fields.next then
+		if fields.prev then
+			pagenum = pagenum - 1
 		else
-			local inv_size = #meta:to_table().inventory.inv_items_list
-			if fields.prev then
-				start_i = start_i - 8*3
-				if start_i < 0 then
-					start_i = inv_size - (inv_size % (8*3))
-				end
-			elseif fields.next then
-				start_i = start_i + 8*3
-				if start_i >= inv_size then
-					start_i = 0
-				end
-			end
-
-			worktable.craftguide_formspec(meta, start_i, start_i / (8*3) + 1, nil, 1, filter, current_tab_id)
+			pagenum = pagenum + 1
 		end
-
-		inv:set_list("item_craft_input", {})
+		worktable.craftguide_formspec(meta, pagenum, nil, 1, filter, current_tab_id)
+	else
+		for item in pairs(fields) do
+			if item:match("[%w_]+:[%w_]+") then
+				worktable.craftguide_formspec(meta, pagenum, item, 1, filter, current_tab_id)
+			end
+		end
 	end
 end
 
@@ -283,7 +280,6 @@ function worktable.put(_, listname, _, stack)
 			listname == "storage" then
 		return stack:get_count()
 	end
-
 	return 0
 end
 
@@ -294,30 +290,14 @@ function worktable.take(pos, listname, _, stack, player)
 			return -1
 		end
 		return 0
-	elseif listname == "inv_items_list" or listname == "item_craft_input" then
-		return 0
 	end
-
 	return stack:get_count()
 end
 
-function worktable.move(pos, from_list, from_index, to_list, to_index, count)
-	local meta = minetest.get_meta(pos)
-	local inv = meta:get_inventory()
-
+function worktable.move(_, from_list, _, to_list, _, count)
 	if from_list == "storage" and to_list == "storage" then
 		return count
-	elseif inv:is_empty("item_craft_input") and from_list == "inv_items_list" and
-			to_list == "item_craft_input" then
-		local stackname = inv:get_stack(from_list, from_index):get_name()
-		local formspec = meta:to_table().fields.formspec
-		local filter = formspec:match("filter;;([%w_:]+)") or ""
-		local start_i = tonumber(formspec:match("inv_items_list;.*;(%d+)%]")) or 0
-		local current_tab_id = tonumber(formspec:match("tabheader%[.*;(%d+)%;.*]"))
-
-		worktable.craftguide_formspec(meta, start_i, start_i / (8*3) + 1, stackname, 1, filter, current_tab_id)
 	end
-
 	return 0
 end
 
