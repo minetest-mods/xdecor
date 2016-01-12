@@ -152,10 +152,12 @@ end
 worktable.formspecs = {
 	crafting = function(meta)
 		meta:set_string("formspec", [[ size[8,7;]
-			list[current_player;main;0,3.3;8,4;]
 			image[5,1;1,1;gui_furnace_arrow_bg.png^[transformR270]
+			image[0.06,2.12;0.8,0.8;trash_icon.png]
 			button[0,0;1.5,1;back;< Back]
-			button[0,1;1.5,1;craftguide;Guide]
+			button[0,0.85;1.5,1;craftguide;Guide]
+			list[context;trash;0,2;1,1;]
+			list[current_player;main;0,3.3;8,4;]
 			list[current_player;craft;2,0;3,3;]
 			list[current_player;craftpreview;6,1;1,1;]
 			listring[current_player;main]
@@ -164,6 +166,8 @@ worktable.formspecs = {
 	end,
 	storage = function(meta)
 		meta:set_string("formspec", [[ size[8,7]
+			image[7.06,0.12;0.8,0.8;trash_icon.png]
+			list[context;trash;7,0;1,1;]
 			list[context;storage;0,1;8,2;]
 			list[current_player;main;0,3.25;8,4;]
 			listring[context;storage]
@@ -197,6 +201,7 @@ function worktable.construct(pos)
 	local inv = meta:get_inventory()
 
 	inv:set_size("tool", 1)
+	inv:set_size("trash", 1)
 	inv:set_size("input", 1)
 	inv:set_size("hammer", 1)
 	inv:set_size("forms", 4*3)
@@ -268,16 +273,25 @@ function worktable.contains(table, element)
 	return false
 end
 
-function worktable.put(_, listname, _, stack)
+local function trash_delete(pos)
+	local inv = minetest.get_meta(pos):get_inventory()
+	minetest.after(0, function()
+		inv:set_stack("trash", 1, "")
+	end)
+end
+
+function worktable.put(pos, listname, _, stack)
 	local stackname = stack:get_name()
 	local mod, node = stackname:match("([%w_]+):([%w_]+)")
 
 	if (listname == "tool" and stack:get_wear() > 0 and stackname ~= "xdecor:hammer") or
 			(listname == "input" and worktable.contains(nodes[mod], node)) or
 			(listname == "hammer" and stackname == "xdecor:hammer") or
-			listname == "storage" then
+			listname == "storage" or listname == "trash" then
+		if listname == "trash" then trash_delete(pos) end
 		return stack:get_count()
 	end
+
 	return 0
 end
 
@@ -292,8 +306,9 @@ function worktable.take(pos, listname, _, stack, player)
 	return stack:get_count()
 end
 
-function worktable.move(_, from_list, _, to_list, _, count)
-	if from_list == "storage" and to_list == "storage" then
+function worktable.move(pos, from_list, _, to_list, _, count)
+	if (from_list == "storage" and to_list == "storage") or to_list == "trash" then
+		if to_list == "trash" then trash_delete(pos) end
 		return count
 	end
 	return 0
