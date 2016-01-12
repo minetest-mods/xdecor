@@ -77,9 +77,9 @@ xdecor.register("mailbox", {
 local function img_col(stack)
 	if not stack then return "" end
 	if stack.inventory_image ~= "" then
-		return stack.inventory_image:match("([%w_]+)%.png")..".png"
+		return stack.inventory_image:match("(.*)%.png")..".png"
 	else
-		return stack.tiles[1]:match("([%w_]+)%.png")..".png"
+		return stack.tiles[1]:match("(.*)%.png")..".png"
 	end
 end
 
@@ -95,7 +95,7 @@ function mailbox.formspec(pos, owner, num)
 					","..i..",#FFFFFF,x "..meta:get_string("stack"..i):match("%s(%d+)")..","
 
 				img = img..i.."="..img_col(minetest.registered_items[
-					meta:get_string("stack"..i):match("([%w_:]+)")])..","
+					meta:get_string("stack"..i):match("(.*)%s")])..","
 			end
 		end
 

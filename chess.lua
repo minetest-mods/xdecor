@@ -528,10 +528,10 @@ function realchess.move(pos, from_list, from_index, to_list, to_index, count, pl
 
 	if meta:get_string("lastMove") == "black" then
 		minetest.chat_send_player(playerWhite, "["..os.date("%H:%M:%S").."] "..
-				playerName.." has moved a "..pieceFrom:match("%a+:(%a+)")..", it's now your turn.")
+				playerName.." has moved a "..pieceFrom:match(":(.-)%_")..", it's now your turn.")
 	elseif meta:get_string("lastMove") == "white" then
 		minetest.chat_send_player(playerBlack, "["..os.date("%H:%M:%S").."] "..
-				playerName.." has moved a "..pieceFrom:match("%a+:(%a+)")..", it's now your turn.")
+				playerName.." has moved a "..pieceFrom:match(":(.-)%_")..", it's now your turn.")
 	end
 
 	if pieceTo:find("king") then

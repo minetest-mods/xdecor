@@ -34,8 +34,8 @@ local def = { -- Nodebox name, yield, definition.
 function worktable.get_recipe(item)
 	if item:find("^group:") then
 		if item:find("wool$") or item:find("dye$") then
-			item = item:match("[^,:]+$")..":white"
-		elseif minetest.registered_items["default:"..item:match("[^,:]+$")] then
+			item = item:sub(7)..":white"
+		elseif minetest.registered_items["default:"..item:sub(7)] then
 			item = item:gsub("group:", "default:")
 		else
 			for node, definition in pairs(minetest.registered_items) do
@@ -217,7 +217,7 @@ function worktable.fields(pos, _, fields)
 	local formspec = meta:to_table().fields.formspec
 	local filter = formspec:match("filter;;([%w_:]+)") or ""
 	local pagenum = tonumber(formspec:match("#FFFF00,(%d+)")) or 1
-	local tab_id = tonumber(formspec:match("tabheader%[.*;(%d+)%;.*]")) or 1
+	local tab_id = tonumber(formspec:match("tabheader%[.*;(%d+)%;.*%]")) or 1
 
 	if fields.back then
 		worktable.formspecs.main(meta)
@@ -248,8 +248,7 @@ function worktable.fields(pos, _, fields)
 		worktable.craftguide_formspec(meta, pagenum, nil, 1, filter, tab_id)
 	else
 		for item in pairs(fields) do
-			if item:match("[%w_]+:[%w_]+") and
-					minetest.get_craft_recipe(item).items then
+			if item:match(".-:") and minetest.get_craft_recipe(item).items then
 				worktable.craftguide_formspec(meta, pagenum, item, 1, filter, tab_id)
 			end
 		end
@@ -262,7 +261,7 @@ function worktable.dig(pos)
 		inv:is_empty("tool") and inv:is_empty("storage")
 end
 
-function worktable.contains(table, element)
+function worktable.allowed(table, element)
 	if table then
 		for _, value in pairs(table) do
 			if value == element then
@@ -282,10 +281,10 @@ end
 
 function worktable.put(pos, listname, _, stack)
 	local stackname = stack:get_name()
-	local mod, node = stackname:match("([%w_]+):([%w_]+)")
+	local mod, node = stackname:match("(.*):(.*)")
 
 	if (listname == "tool" and stack:get_wear() > 0 and stackname ~= "xdecor:hammer") or
-			(listname == "input" and worktable.contains(nodes[mod], node)) or
+			(listname == "input" and worktable.allowed(nodes[mod], node)) or
 			(listname == "hammer" and stackname == "xdecor:hammer") or
 			listname == "storage" or listname == "trash" then
 		if listname == "trash" then trash_delete(pos) end
@@ -306,9 +305,11 @@ function worktable.take(pos, listname, _, stack, player)
 	return stack:get_count()
 end
 
-function worktable.move(pos, from_list, _, to_list, _, count)
-	if (from_list == "storage" and to_list == "storage") or to_list == "trash" then
-		if to_list == "trash" then trash_delete(pos) end
+function worktable.move(pos, _, _, to_list, _, count)
+	if to_list == "storage" then
+		return count
+	elseif to_list == "trash" then
+		trash_delete(pos)
 		return count
 	end
 	return 0
