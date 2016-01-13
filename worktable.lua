@@ -38,8 +38,8 @@ function worktable.get_recipe(item)
 		elseif minetest.registered_items["default:"..item:sub(7)] then
 			item = item:gsub("group:", "default:")
 		else
-			for node, definition in pairs(minetest.registered_items) do
-				if definition.groups[item:match("[^,:]+$")] then
+			for node, def in pairs(minetest.registered_items) do
+				if def.groups[item:match("[^,:]+$")] then
 					item = node
 				end
 			end
@@ -128,7 +128,8 @@ local function tab_category(tab_id)
 		minetest.registered_items,
 		minetest.registered_nodes,
 		minetest.registered_tools,
-		minetest.registered_craftitems }
+		minetest.registered_craftitems
+	}
 
 	return id_category[tab_id] or id_category[1]
 end
@@ -294,10 +295,10 @@ function worktable.put(pos, listname, _, stack)
 	return 0
 end
 
-function worktable.take(pos, listname, _, stack, player)
+function worktable.take(_, listname, _, stack, player)
 	if listname == "forms" then
-		local user_inv = player:get_inventory()
-		if user_inv:room_for_item("main", stack:get_name()) then
+		local inv = player:get_inventory()
+		if inv:room_for_item("main", stack:get_name()) then
 			return -1
 		end
 		return 0
