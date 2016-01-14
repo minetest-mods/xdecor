@@ -133,12 +133,12 @@ local function cap(str)
 end
 
  -- Higher number = stronger enchant.
-local use_factor = 1.2
-local times_subtractor = 0.1
-local damage_adder = 1
-local strength_factor = 1.2
-local speed_factor = 0.2
-local jump_factor = 0.2
+enchanting.uses = 1.2
+enchanting.times = 0.1
+enchanting.damages = 1
+enchanting.strength = 1.2
+enchanting.speed = 0.2
+enchanting.jump = 0.2
 
 local tools = {
 	--[[ Registration format :
@@ -180,13 +180,13 @@ for _, ench in pairs(tooldef[3]) do
 			local max_drop_level = original_tool.tool_capabilities.max_drop_level
 
 			if enchant == "durable" then
-				groupcaps[group].uses = math.ceil(original_groupcaps[group].uses * use_factor)
+				groupcaps[group].uses = math.ceil(original_groupcaps[group].uses * enchanting.uses)
 			elseif enchant == "fast" then
 				for i = 1, 3 do
-					groupcaps[group].times[i] = original_groupcaps[group].times[i] - times_subtractor
+					groupcaps[group].times[i] = original_groupcaps[group].times[i] - enchanting.times
 				end
 			elseif enchant == "sharp" then
-				fleshy = fleshy + damage_adder
+				fleshy = fleshy + enchanting.damages
 			end
 
 			minetest.register_tool(":"..mod..":enchanted_"..tool.."_"..material.."_"..enchant, {
@@ -205,15 +205,15 @@ for _, ench in pairs(tooldef[3]) do
 			local original_armor_groups = original_tool.groups
 			local armorcaps = table.copy(original_armor_groups)
 			local armorcaps = {}
-			armorcaps.not_in_creative_inventory=1
+			armorcaps.not_in_creative_inventory = 1
 
 			for armor_group, value in pairs(original_armor_groups) do
 				if enchant == "strong" then
-					armorcaps[armor_group] = math.ceil(value * strength_factor)
+					armorcaps[armor_group] = math.ceil(value * enchanting.strength)
 				elseif enchant == "speed" then
 					armorcaps[armor_group] = value
-					armorcaps.physics_speed = speed_factor
-					armorcaps.physics_jump = jump_factor
+					armorcaps.physics_speed = enchanting.speed
+					armorcaps.physics_jump = enchanting.jump
 				end
 			end
 
