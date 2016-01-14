@@ -227,8 +227,8 @@ function worktable.fields(pos, _, fields)
 	elseif fields.storage then
 		worktable.formspecs.storage(meta)
 	elseif fields.craftguide or fields.clearfilter then
-		worktable.craftguide_main_list(meta, nil, 1)
-		worktable.craftguide_formspec(meta, 1, nil, 1, "", 1)
+		worktable.craftguide_main_list(meta, nil, tab_id)
+		worktable.craftguide_formspec(meta, 1, nil, 1, "", tab_id)
 	elseif fields.alternate then
 		local item = formspec:match("item_image%[.*;([%w_:]+)%]") or ""
 		local recipe_num = tonumber(formspec:match("Recipe%s(%d+)")) or 1
@@ -262,13 +262,10 @@ function worktable.dig(pos)
 		inv:is_empty("tool") and inv:is_empty("storage")
 end
 
-function worktable.allowed(table, element)
-	if table then
-		for _, value in pairs(table) do
-			if value == element then
-				return true
-			end
-		end
+function worktable.allowed(mod, node)
+	if not mod then return end
+	for _, it in pairs(mod) do
+		if it == node then return true end
 	end
 	return false
 end

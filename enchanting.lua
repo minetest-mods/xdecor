@@ -75,9 +75,7 @@ end
 
 local function allowed(tool)
 	for item in pairs(minetest.registered_tools) do
-		if item:match("enchanted_"..tool) then
-			return true
-		end
+		if item:match("enchanted_"..tool) then return true end
 	end
 	return false
 end
