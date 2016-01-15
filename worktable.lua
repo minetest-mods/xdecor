@@ -2,18 +2,28 @@ local worktable = {}
 screwdriver = screwdriver or {}
 
 local nodes = { -- Nodes allowed to be cut. Mod name = {node name}.
-	["default"] = {"wood", "junglewood", "pine_wood", "acacia_wood",
-		"tree", "jungletree", "pine_tree", "acacia_tree",
-		"cobble", "mossycobble", "desert_cobble",
-		"stone", "sandstone", "desert_stone", "obsidian",
-		"stonebrick", "sandstonebrick", "desert_stonebrick", "obsidianbrick",
-		"coalblock", "copperblock", "steelblock", "goldblock", 
-		"bronzeblock", "mese", "diamondblock",
-		"brick", "cactus", "ice", "meselamp", "glass", "obsidian_glass"},
+	["default"] = {
+		"wood",		"tree",		"cobble",	 "desert_stone",
+		"junglewood",	"jungletree",	"mossycobble",	 "stonebrick",
+		"pine_wood",	"pine_tree",	"desert_cobble", "sandstonebrick",
+		"acacia_wood",	"acacia_tree",	"stone",	 "desert_stonebrick",
+		"aspen_wood",	"aspen_tree",	"sandstone",	 "obsidianbrick",
 
-	["xdecor"] = {"coalstone_tile", "desertstone_tile", "stone_rune", "stone_tile",
-		"cactusbrick", "hard_clay", "packed_ice", "moonbrick",
-		"woodframed_glass", "wood_tile"},
+		"coalblock",	"mese",		"obsidian",
+		"copperblock",	"brick",	"obsidian_glass",
+		"steelblock",	"cactus",
+		"goldblock",	"ice",
+		"bronzeblock",	"meselamp",
+		"diamondblock",	"glass",
+	},
+
+	["xdecor"] = {
+		"coalstone_tile",	"hard_clay",
+		"desertstone_tile",	"packed_ice",
+		"stone_rune",		"moonbrick",
+		"stone_tile",		"woodframed_glass",
+		"cactusbrick",		"wood_tile",
+	},
 }
 
 local def = { -- Nodebox name, yield, definition.
