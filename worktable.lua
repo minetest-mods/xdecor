@@ -1,29 +1,29 @@
 local worktable = {}
 screwdriver = screwdriver or {}
 
-local nodes = { -- Nodes allowed to be cut. Mod name = {node name}.
-	["default"] = {
-		"wood",		"tree",		"cobble",	 "desert_stone",
-		"junglewood",	"jungletree",	"mossycobble",	 "stonebrick",
-		"pine_wood",	"pine_tree",	"desert_cobble", "sandstonebrick",
-		"acacia_wood",	"acacia_tree",	"stone",	 "desert_stonebrick",
-		"aspen_wood",	"aspen_tree",	"sandstone",	 "obsidianbrick",
+local nodes = { -- Nodes allowed to be cut. Registration format: [mod name] = [[ node names ]].
+	["default"] = [[
+		wood		tree		cobble		 desert_stone
+		junglewood	jungletree	mossycobble	 stonebrick
+		pine_wood	pine_tree	desert_cobble	 sandstonebrick
+		acacia_wood	acacia_tree	stone		 desert_stonebrick
+		aspen_wood	aspen_tree	sandstone	 obsidianbrick
 
-		"coalblock",	"mese",		"obsidian",
-		"copperblock",	"brick",	"obsidian_glass",
-		"steelblock",	"cactus",
-		"goldblock",	"ice",
-		"bronzeblock",	"meselamp",
-		"diamondblock",	"glass",
-	},
+		coalblock	mese		obsidian
+		copperblock	brick		obsidian_glass
+		steelblock	cactus
+		goldblock	ice
+		bronzeblock	meselamp
+		diamondblock	glass
+	]],
 
-	["xdecor"] = {
-		"coalstone_tile",	"hard_clay",
-		"desertstone_tile",	"packed_ice",
-		"stone_rune",		"moonbrick",
-		"stone_tile",		"woodframed_glass",
-		"cactusbrick",		"wood_tile",
-	},
+	["xdecor"] = [[
+		coalstone_tile		hard_clay
+		desertstone_tile	packed_ice
+		stone_rune		moonbrick
+		stone_tile		woodframed_glass
+		cactusbrick		wood_tile
+	]],
 }
 
 local def = { -- Nodebox name, yield, definition.
@@ -274,7 +274,7 @@ end
 
 function worktable.allowed(mod, node)
 	if not mod then return end
-	for _, it in pairs(mod) do
+	for it in mod:gmatch("[%w_]+") do
 		if it == node then return true end
 	end
 	return false
@@ -384,7 +384,7 @@ xdecor.register("worktable", {
 
 for _, d in pairs(def) do
 for mod, n in pairs(nodes) do
-for _, name in pairs(n) do
+for name in n:gmatch("[%w_]+") do
 	local ndef = minetest.registered_nodes[mod..":"..name]
 	if ndef then
 		local groups, tiles, light = {}, {}

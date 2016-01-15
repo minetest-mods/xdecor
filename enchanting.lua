@@ -139,7 +139,7 @@ enchanting.speed = 0.2
 enchanting.jump = 0.2
 
 local tools = {
-	--[[ Registration format :
+	--[[ Registration format:
 	 	[Mod name] = {
 	 		{materials},
 	 		{tool name, tool group, {enchantments}}
