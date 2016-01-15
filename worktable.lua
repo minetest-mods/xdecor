@@ -26,19 +26,19 @@ local nodes = { -- Nodes allowed to be cut. Registration format: [mod name] = [[
 	]],
 }
 
-local def = { -- Nodebox name, yield, definition.
-	{"nanoslab", 16, {-.5,-.5,-.5,0,-.4375,0}},
-	{"micropanel", 16, {-.5,-.5,-.5,.5,-.4375,0}},
-	{"microslab", 8, {-.5,-.5,-.5,.5,-.4375,.5}},
-	{"thinstair", 8, {{-.5,-.0625,-.5,.5,0,0},{-.5,.4375,0,.5,.5,.5}}},
-	{"cube", 4, {-.5,-.5,0,0,0,.5}},
-	{"panel", 4, {-.5,-.5,-.5,.5,0,0}},
-	{"slab", 2, {-.5,-.5,-.5,.5,0,.5}},
-	{"doublepanel", 2, {{-.5,-.5,-.5,.5,0,0},{-.5,0,0,.5,.5,.5}}},
-	{"halfstair", 2, {{-.5,-.5,-.5,0,0,.5},{-.5,0,0,0,.5,.5}}},
-	{"outerstair", 1, {{-.5,-.5,-.5,.5,0,.5},{-.5,0,0,0,.5,.5}}},
-	{"stair", 1, {{-.5,-.5,-.5,.5,0,.5},{-.5,0,0,.5,.5,.5}}},
-	{"innerstair", 1, {{-.5,-.5,-.5,.5,0,.5},{-.5,0,0,.5,.5,.5},{-.5,0,-.5,0,.5,0}}}
+local defs = { -- Nodebox name, yield, definition.
+	{"nanoslab",	16, {-.5,-.5,-.5,0,-.4375,0}},
+	{"micropanel",	16, {-.5,-.5,-.5,.5,-.4375,0}},
+	{"microslab",	8,  {-.5,-.5,-.5,.5,-.4375,.5}},
+	{"thinstair",	8,  {{-.5,-.0625,-.5,.5,0,0},{-.5,.4375,0,.5,.5,.5}}},
+	{"cube", 	4,  {-.5,-.5,0,0,0,.5}},
+	{"panel",	4,  {-.5,-.5,-.5,.5,0,0}},
+	{"slab", 	2,  {-.5,-.5,-.5,.5,0,.5}},
+	{"doublepanel", 2,  {{-.5,-.5,-.5,.5,0,0},{-.5,0,0,.5,.5,.5}}},
+	{"halfstair",	2,  {{-.5,-.5,-.5,0,0,.5},{-.5,0,0,0,.5,.5}}},
+	{"outerstair",	1,  {{-.5,-.5,-.5,.5,0,.5},{-.5,0,0,0,.5,.5}}},
+	{"stair",	1,  {{-.5,-.5,-.5,.5,0,.5},{-.5,0,0,.5,.5,.5}}},
+	{"innerstair",	1,  {{-.5,-.5,-.5,.5,0,.5},{-.5,0,0,.5,.5,.5},{-.5,0,-.5,0,.5,0}}}
 }
 
 function worktable.get_recipe(item)
@@ -330,7 +330,7 @@ function worktable.get_output(inv, stack)
 	end
 
 	local input, output = inv:get_stack("input", 1), {}
-	for _, n in pairs(def) do
+	for _, n in pairs(defs) do
 		local count = math.min(n[2] * input:get_count(), input:get_stack_max())
 		output[#output+1] = stack:get_name().."_"..n[1].." "..count
 	end
@@ -356,7 +356,7 @@ function worktable.on_take(pos, listname, index, stack)
 			inv:set_list("forms", {})
 		end
 	elseif listname == "forms" then
-		inputstack:take_item(math.ceil(stack:get_count() / def[index][2]))
+		inputstack:take_item(math.ceil(stack:get_count() / defs[index][2]))
 		inv:set_stack("input", 1, inputstack)
 		worktable.get_output(inv, inputstack)
 	end
@@ -382,7 +382,7 @@ xdecor.register("worktable", {
 	allow_metadata_inventory_move = worktable.move
 })
 
-for _, d in pairs(def) do
+for _, d in pairs(defs) do
 for mod, n in pairs(nodes) do
 for name in n:gmatch("[%w_]+") do
 	local ndef = minetest.registered_nodes[mod..":"..name]

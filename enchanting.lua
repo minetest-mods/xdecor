@@ -191,7 +191,7 @@ for enchant in tooldef[3]:gmatch("[%w_]+") do
 				description = "Enchanted "..cap(material).." "..cap(tool).." ("..cap(enchant)..")",
 				inventory_image = original_tool.inventory_image.."^[colorize:violet:50",
 				wield_image = original_tool.wield_image,
-				groups = {not_in_creative_inventory=0},
+				groups = {not_in_creative_inventory=1},
 				tool_capabilities = {
 					groupcaps = groupcaps, damage_groups = {fleshy = fleshy},
 					full_punch_interval = full_punch_interval, max_drop_level = max_drop_level
