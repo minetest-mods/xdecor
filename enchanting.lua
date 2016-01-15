@@ -36,12 +36,12 @@ end
 function enchanting.on_put(pos, listname, _, stack)
 	if listname == "tool" then
 		local tools_cat = {
-			["tool"] = {"pick", "axe", "shovel"},
-			["armor"] = {"chestplate", "leggings", "helmet"},
-			["sword"] = {"sword"}, ["boots"] = {"boots"} }
+			["tool"] = "pick, axe, shovel",
+			["armor"] = "chestplate, leggings, helmet",
+			["sword"] = "sword", ["boots"] = "boots" }
 
 		for cat, name in pairs(tools_cat) do
-		for _, n in pairs(name) do
+		for n in name:gmatch("[%w_]+") do
 			if stack:get_name():find(n) then
 				enchanting.formspec(pos, cat)
 			end
@@ -141,31 +141,31 @@ enchanting.jump = 0.2
 local tools = {
 	--[[ Registration format:
 	 	[Mod name] = {
-	 		{materials},
-	 		{tool name, tool group, {enchantments}}
+	 		materials,
+	 		{tool name, tool group, enchantments}
 		 }
 	--]]
 	["default"] = {
-		{"steel", "bronze", "mese", "diamond"},
-		{"axe", "choppy", {"durable", "fast"}}, 
-		{"pick", "cracky", {"durable", "fast"}}, 
-		{"shovel", "crumbly", {"durable", "fast"}},
-		{"sword", "fleshy", {"sharp"}}
+		"steel, bronze, mese, diamond",
+		{"axe", "choppy", "durable, fast"}, 
+		{"pick", "cracky", "durable, fast"}, 
+		{"shovel", "crumbly", "durable, fast"},
+		{"sword", "fleshy", "sharp"}
 	},
 	["3d_armor"] = {
-		{"steel", "bronze", "gold", "diamond"},
-		{"boots", nil, {"strong", "speed"}},
-		{"chestplate", nil, {"strong"}},
-		{"helmet", nil, {"strong"}},
-		{"leggings", nil, {"strong"}}
+		"steel, bronze, gold, diamond",
+		{"boots", nil, "strong, speed"},
+		{"chestplate", nil, "strong"},
+		{"helmet", nil, "strong"},
+		{"leggings", nil, "strong"}
 	}
 }
 
 for mod, defs in pairs(tools) do
-for _, mat in pairs(defs[1]) do
+for material in defs[1]:gmatch("[%w_]+") do
 for _, tooldef in next, defs, 1 do
-for _, ench in pairs(tooldef[3]) do
-	local tool, group, material, enchant = tooldef[1], tooldef[2], mat, ench
+for enchant in tooldef[3]:gmatch("[%w_]+") do
+	local tool, group = tooldef[1], tooldef[2]
 	local original_tool = minetest.registered_tools[mod..":"..tool.."_"..material]
 
 	if original_tool then
@@ -191,7 +191,7 @@ for _, ench in pairs(tooldef[3]) do
 				description = "Enchanted "..cap(material).." "..cap(tool).." ("..cap(enchant)..")",
 				inventory_image = original_tool.inventory_image.."^[colorize:violet:50",
 				wield_image = original_tool.wield_image,
-				groups = {not_in_creative_inventory=1},
+				groups = {not_in_creative_inventory=0},
 				tool_capabilities = {
 					groupcaps = groupcaps, damage_groups = {fleshy = fleshy},
 					full_punch_interval = full_punch_interval, max_drop_level = max_drop_level
