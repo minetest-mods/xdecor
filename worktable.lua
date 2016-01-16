@@ -27,26 +27,26 @@ local nodes = { -- Nodes allowed to be cut. Registration format: [mod name] = [[
 }
 
 local defs = {
-	--  Name       Yield   X   Y   Z   W   H   L
-	{"nanoslab",	16, {{ 0,  0,  0,  8,  1,  8  }}},
-	{"micropanel",	16, {{ 0,  0,  0,  16, 1,  8  }}},
-	{"microslab",	8,  {{ 0,  0,  0,  16, 1,  16 }}},
-	{"thinstair",	8,  {{ 0,  7,  0,  16, 8,  8  },{
-			       0,  15, 8,  16, 16, 16 }}},
-	{"cube", 	4,  {{ 0,  0,  8,  8,  8,  16 }}},
-	{"panel",	4,  {{ 0,  0,  0,  16, 8,  8  }}},
-	{"slab", 	2,  {{ 0,  0,  0,  16, 8,  16 }}},
-	{"doublepanel", 2,  {{ 0,  0,  0,  16, 8,  8  },{
-			       0,  8,  8,  16, 16, 16 }}},
-	{"halfstair",	2,  {{ 0,  0,  0,  8,  8,  16 },{
-			       0,  8,  8,  8,  16, 16 }}},
-	{"outerstair",	1,  {{ 0,  0,  0,  16, 8,  16 },{
-			       0,  8,  8,  8,  16, 16 }}},
-	{"stair",	1,  {{ 0,  0,  0,  16, 8,  16 },{
-			       0,  8,  8,  16, 16, 16 }}},
-	{"innerstair",	1,  {{ 0,  0,  0,  16, 8,  16 },{
-			       0,  8,  8,  16, 16, 16 },{
-			       0,  8,  0,  8,  16, 8  }}}
+	-- Name       Yield   X   Y   Z   W   H   L
+	{"nanoslab",	16, { 0,  0,  0,  8,  1,  8  }},
+	{"micropanel",	16, { 0,  0,  0,  16, 1,  8  }},
+	{"microslab",	8,  { 0,  0,  0,  16, 1,  16 }},
+	{"thinstair",	8,  { 0,  7,  0,  16, 8,  8  },
+			    { 0,  15, 8,  16, 16, 16 }},
+	{"cube", 	4,  { 0,  0,  8,  8,  8,  16 }},
+	{"panel",	4,  { 0,  0,  0,  16, 8,  8  }},
+	{"slab", 	2,  { 0,  0,  0,  16, 8,  16 }},
+	{"doublepanel", 2,  { 0,  0,  0,  16, 8,  8  },
+			    { 0,  8,  8,  16, 16, 16 }},
+	{"halfstair",	2,  { 0,  0,  0,  8,  8,  16 },
+			    { 0,  8,  8,  8,  16, 16 }},
+	{"outerstair",	1,  { 0,  0,  0,  16, 8,  16 },
+			    { 0,  8,  8,  8,  16, 16 }},
+	{"stair",	1,  { 0,  0,  0,  16, 8,  16 },
+			    { 0,  8,  8,  16, 16, 16 }},
+	{"innerstair",	1,  { 0,  0,  0,  16, 8,  16 },
+			    { 0,  8,  8,  16, 16, 16 },
+			    { 0,  8,  0,  8,  16, 8  }}
 }
 
 function worktable.get_recipe(item)
@@ -395,7 +395,7 @@ for mod, n in pairs(nodes) do
 for name in n:gmatch("[%w_]+") do
 	local ndef = minetest.registered_nodes[mod..":"..name]
 	if ndef then
-		local groups, tiles, light = {}, {}
+		local groups, tiles, light = {}, {}, 0
 		groups.not_in_creative_inventory = 1
 
 		for k, v in pairs(ndef.groups) do
@@ -423,7 +423,7 @@ for name in n:gmatch("[%w_]+") do
 			sounds = ndef.sounds,
 			tiles = tiles,
 			groups = groups,
-			node_box = xdecor.pixelnodebox(16, d[3]),
+			node_box = xdecor.pixelnodebox(16, {d[3], d[4], d[5]}),
 			sunlight_propagates = true,
 			on_place = minetest.rotate_node
 		})

@@ -181,7 +181,7 @@ local door_types = {
 
 for _, d in pairs(door_types) do
 	doors.register_door("xdecor:"..d[1].."_door", {
-		description = string.gsub(d[1]:gsub("^%l", string.upper), "_r", " R").." Door",
+		description = string.gsub(" "..d[1], "%W%l", string.upper):sub(2):gsub("_", " ").." Door",
 		inventory_image = "xdecor_"..d[1].."_door_inv.png",
 		groups = {choppy=3, cracky=3, oddly_breakable_by_hand=1, flammable=2, door=1},
 		tiles_bottom = {"xdecor_"..d[1].."_door_b.png", "xdecor_"..d[2]..".png"},
