@@ -281,13 +281,17 @@ xdecor.register("lantern", {
 	}
 })
 
-xdecor.register("lightbox", {
-	description = "Light Box",
-	tiles = {"xdecor_lightbox.png"},
-	groups = {cracky=3, choppy=3, oddly_breakable_by_hand=2},
-	light_source = 13,
-	sounds = default.node_sound_glass_defaults()
-})
+for _, l in pairs({"iron", "wooden"}) do
+	xdecor.register(l.."_lightbox", {
+		description = l:gsub("^%l", string.upper).." Light Box",
+		tiles = {"xdecor_"..l.."_lightbox.png"},
+		groups = {cracky=3, choppy=3, oddly_breakable_by_hand=2},
+		light_source = 13,
+		sounds = default.node_sound_glass_defaults()
+	})
+end
+
+minetest.register_alias("xdecor:lightbox", "xdecor:wooden_lightbox")
 
 xdecor.register("packed_ice", {
 	drawtype = "normal",
