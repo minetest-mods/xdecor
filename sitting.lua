@@ -17,6 +17,7 @@ local function sit(pos, node, clicker)
 		default.player_set_animation(clicker, "stand", 30)
 
 	elseif default.player_attached[player] ~= true and node.param2 <= 3 and
+			clicker:get_player_control().sneak == false and
 			clicker:get_player_velocity().x == 0 and
 			clicker:get_player_velocity().y == 0 and
 			clicker:get_player_velocity().z == 0 then
@@ -59,15 +60,14 @@ xdecor.register("chair", {
 	sounds = default.node_sound_wood_defaults(),
 	groups = {choppy=3, oddly_breakable_by_hand=2, flammable=3},
 	on_rotate = screwdriver.rotate_simple,
-	node_box = {
-		type = "fixed",
-		fixed = {{-0.3125, -0.5, 0.1875, -0.1875, 0.5, 0.3125},
-			{0.1875, -0.5, 0.1875, 0.3125, 0.5, 0.3125},
-			{-0.1875, 0.025, 0.22, 0.1875, 0.45, 0.28},
-			{-0.3125, -0.5, -0.3125, -0.1875, -0.125, -0.1875},
-			{0.1875, -0.5, -0.3125, 0.3125, -0.125, -0.1875},
-			{-0.3125, -0.125, -0.3125, 0.3125, 0, 0.1875}}
-	},
+	node_box = xdecor.pixelnodebox(16, {
+		{3,  0, 11,    5, 16, 13},
+		{11, 0, 11,   13, 16, 13},
+		{5,  9, 11.5, 11, 15, 12.5},
+		{3,  0,  3,    5,  6,  5},
+		{11, 0,  3,   13,  6,  5},
+		{3,  6,  3,   13,  8, 11}
+	}),
 	can_dig = dig,
 	on_rightclick = function(pos, node, clicker)
 		pos.y = pos.y + 0  -- Sitting position.
@@ -80,7 +80,7 @@ xdecor.register("cushion", {
 	tiles = {"xdecor_cushion.png"},
 	groups = {snappy=3, flammable=3, fall_damage_add_percent=-50},
 	on_place = minetest.rotate_node,
-	node_box = xdecor.nodebox.slab_y(-0.5, 0.5),
+	node_box = xdecor.nodebox.slab_y(0.5),
 	can_dig = dig,
 	on_rightclick = function(pos, node, clicker)
 		pos.y = pos.y + 0

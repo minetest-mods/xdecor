@@ -412,13 +412,12 @@ xdecor.register("stonepath", {
 	on_rotate = screwdriver.rotate_simple,
 	sounds = default.node_sound_stone_defaults(),
 	sunlight_propagates = true,
-	node_box = {
-		type = "fixed",
-		fixed = {{0, -0.5, 0, 0.375, -0.47, 0.375},
-			{-0.4375, -0.5, -0.4375, -0.0625, -0.47, -0.0625},
-			{-0.4375, -0.5, 0.125, -0.125, -0.47, 0.4375},
-			{0.125, -0.5, -0.375, 0.375, -0.47, -0.125}}
-	},
+	node_box = xdecor.pixelnodebox(16, {
+		{8,  0,  8, 14, 0.5, 14},
+		{1,  0,  1,  7, 0.5,  7},
+		{1,  0, 10,  6, 0.5, 15},
+		{10, 0,  2, 14, 0.5,  6}
+	}),
 	selection_box = xdecor.nodebox.slab_y(0.05)
 })
 
@@ -440,11 +439,9 @@ xdecor.register("table", {
 	tiles = {"xdecor_wood.png"},
 	groups = {choppy=3, oddly_breakable_by_hand=2, flammable=3},
 	sounds = default.node_sound_wood_defaults(),
-	node_box = {
-		type = "fixed",
-		fixed = {{-0.5, 0.4, -0.5, 0.5, 0.5, 0.5},
-			{-0.15, -0.5, -0.15, 0.15, 0.4, 0.15}}
-	}
+	node_box = xdecor.pixelnodebox(16, {
+		{0, 14, 0, 16, 16, 16}, {5.5, 0, 5.5, 10.5, 14, 10.5}
+	})
 })
 
 xdecor.register("tatami", {
@@ -452,9 +449,7 @@ xdecor.register("tatami", {
 	tiles = {"xdecor_tatami.png"},
 	wield_image = "xdecor_tatami.png",
 	groups = {snappy=3, flammable=3},
-	node_box = {
-		type = "fixed", fixed = {{-0.5, -0.5, -0.5, 0.5, -0.4375, 0.5}}
-	}
+	node_box = xdecor.nodebox.slab_y(0.0625)
 })
 
 xdecor.register("tv", {

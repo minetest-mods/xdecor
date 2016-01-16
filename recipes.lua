@@ -56,9 +56,9 @@ minetest.register_craft({
 })
 
 minetest.register_craft({
-	output = "xdecor:cushion 2",
+	output = "xdecor:cushion 3",
 	recipe = {
-		{"wool:red", "wool:red"}
+		{"wool:red", "wool:red", "wool:red"}
 	}
 })
 
