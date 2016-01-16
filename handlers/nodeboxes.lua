@@ -26,9 +26,9 @@ xdecor.pixelnodebox = function(size, boxes)
 			(x / size) - 0.5,
 			(y / size) - 0.5,
 			(z / size) - 0.5,
-			(w / size) - 0.5,
-			(h / size) - 0.5,
-			(l / size) - 0.5
+			((x + w) / size) - 0.5,
+			((y + h) / size) - 0.5,
+			((z + l) / size) - 0.5
 		}
 	end
 	return { type = "fixed", fixed = fixed }

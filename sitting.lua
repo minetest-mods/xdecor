@@ -61,12 +61,12 @@ xdecor.register("chair", {
 	groups = {choppy=3, oddly_breakable_by_hand=2, flammable=3},
 	on_rotate = screwdriver.rotate_simple,
 	node_box = xdecor.pixelnodebox(16, {
-		{3,  0, 11,    5, 16, 13},
-		{11, 0, 11,   13, 16, 13},
-		{5,  9, 11.5, 11, 15, 12.5},
-		{3,  0,  3,    5,  6,  5},
-		{11, 0,  3,   13,  6,  5},
-		{3,  6,  3,   13,  8, 11}
+		{3,  0, 11,   2, 16, 2},
+		{11, 0, 11,   2, 16, 2},
+		{5,  9, 11.5, 6,  6, 1},
+		{3,  0,  3,   2,  6, 2},
+		{11, 0,  3,   2,  6, 2},
+		{3,  6,  3,   10, 2, 8}
 	}),
 	can_dig = dig,
 	on_rightclick = function(pos, node, clicker)
