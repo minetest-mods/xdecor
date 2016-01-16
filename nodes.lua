@@ -340,7 +340,9 @@ xdecor.register("painting_1", {
 	},
 	on_construct = function(pos)
 		local node = minetest.get_node(pos)
-		minetest.set_node(pos, {name="xdecor:painting_"..math.random(1,4), param2=node.param2})
+		local random = math.random(4)
+		if random == 1 then return end
+		minetest.set_node(pos, {name="xdecor:painting_"..random, param2=node.param2})
 	end
 })
 
