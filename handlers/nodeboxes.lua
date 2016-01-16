@@ -18,6 +18,22 @@ xdecor.nodebox = {
 	null = { type = "fixed", fixed = { 0, 0, 0, 0, 0, 0 } }
 }
 
+xdecor.pixelnodebox = function(size, boxes)
+	local fixed = {}
+	for _, box in pairs(boxes) do
+		local x, y, z, w, h, l = unpack(box)
+		fixed[#fixed+1] = {
+			(x / size) - 0.5,
+			(y / size) - 0.5,
+			(z / size) - 0.5,
+			(w / size) - 0.5,
+			(h / size) - 0.5,
+			(l / size) - 0.5
+		}
+	end
+	return { type = "fixed", fixed = fixed }
+end
+
 local mt = {}
 mt.__index = function(table, key)
 	local ref = xdecor.box[key]
