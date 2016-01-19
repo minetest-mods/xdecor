@@ -1,12 +1,9 @@
 local cauldron_cbox = {
-	type = "fixed",
-	fixed = {
-		{-0.5, -0.5, -0.5, 0.5, 0.5, -0.5},
-		{-0.5, -0.5, 0.5, 0.5, 0.5, 0.5},
-		{-0.5, -0.5, -0.5, -0.5, 0.5, 0.5},
-		{0.5, -0.5, -0.5, 0.5, 0.5, 0.5},
-		{-0.5, -0.5, -0.5, 0.5, 0, 0.5}
-	}
+	{0,  0, 0,  16, 16, 0},
+	{0,  0, 16, 16, 16, 0},
+	{0,  0, 0,  0,  16, 16},
+	{16, 0, 0,  0,  16, 16},
+	{0,  0, 0,  16, 8,  16}
 }
 
 local function fill_water_bucket(pos, node, clicker, itemstack)
@@ -32,7 +29,7 @@ xdecor.register("cauldron_empty", {
 			itemstack:replace("bucket:bucket_empty")
 		end
 	end,
-	collision_box = cauldron_cbox
+	collision_box = xdecor.pixelnodebox(16, cauldron_cbox)
 })
 
 xdecor.register("cauldron_idle", {
@@ -41,7 +38,7 @@ xdecor.register("cauldron_idle", {
 	tiles = {"xdecor_cauldron_top_idle.png", "xdecor_cauldron_sides.png"},
 	drop = "xdecor:cauldron_empty",
 	infotext = "Cauldron (idle)",
-	collision_box = cauldron_cbox,
+	collision_box = xdecor.pixelnodebox(16, cauldron_cbox),
 	on_rightclick = fill_water_bucket
 })
 
@@ -56,7 +53,7 @@ xdecor.register("cauldron_boiling_water", {
 			animation = {type="vertical_frames", length=3.0} },
 		"xdecor_cauldron_sides.png"
 	},
-	collision_box = cauldron_cbox,
+	collision_box = xdecor.pixelnodebox(16, cauldron_cbox),
 	on_rightclick = fill_water_bucket
 })
 
@@ -71,7 +68,7 @@ xdecor.register("cauldron_soup", {
 			animation = {type="vertical_frames", length=3.0} },
 		"xdecor_cauldron_sides.png"
 	},
-	collision_box = cauldron_cbox,
+	collision_box = xdecor.pixelnodebox(16, cauldron_cbox),
 	on_rightclick = function(pos, node, clicker, itemstack)
 		local inv = clicker:get_inventory()
 		local wield_item = clicker:get_wielded_item()
