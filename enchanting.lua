@@ -1,7 +1,7 @@
 local enchanting = {}
 screwdriver = screwdriver or {}
 
-function enchanting.formspec(pos, tool)
+function enchanting.formspec(pos, num)
 	local formspec = [[ size[9,9;]
 			bgcolor[#080808BB;true]
 			background[0,0;9,9;ench_ui.png]
@@ -16,36 +16,26 @@ function enchanting.formspec(pos, tool)
 			tooltip[speed;Your speed is increased] ]]
 			..default.gui_slots..default.get_hotbar_bg(0.5,4.5)
 
-	local tool_fs = {
-		["tool"] = [[ image_button[3.9,0.85;4,0.92;bg_btn.png;fast;Efficiency]
-			image_button[3.9,1.77;4,1.12;bg_btn.png;durable;Durability] ]],
-		["armor"] = "image_button[3.9,0.85;4,0.92;bg_btn.png;strong;Strength]",
-		["sword"] = "image_button[3.9,2.9;4,0.92;bg_btn.png;sharp;Sharpness]",
-		["boots"] = [[ image_button[3.9,0.85;4,0.92;bg_btn.png;strong;Strength]
-				image_button[3.9,1.77;4,1.12;bg_btn.png;speed;Speed] ]] }
+	local tool_enchs = {
+		[[ image_button[3.9,0.85;4,0.92;bg_btn.png;fast;Efficiency]
+		image_button[3.9,1.77;4,1.12;bg_btn.png;durable;Durability] ]],
+		"image_button[3.9,0.85;4,0.92;bg_btn.png;strong;Strength]",
+		"image_button[3.9,2.9;4,0.92;bg_btn.png;sharp;Sharpness]",
+		[[ image_button[3.9,0.85;4,0.92;bg_btn.png;strong;Strength]
+		image_button[3.9,1.77;4,1.12;bg_btn.png;speed;Speed] ]] }
 
-	for cat in pairs(tool_fs) do
-		if tool == cat then
-			formspec = formspec..tool_fs[cat]
-		end
-	end
-
+	formspec = formspec..(tool_enchs[num] or "")
 	minetest.get_meta(pos):set_string("formspec", formspec)
 end
 
 function enchanting.on_put(pos, listname, _, stack)
 	if listname == "tool" then
-		local tools_cat = {
-			["tool"] = "pick, axe, shovel",
-			["armor"] = "chestplate, leggings, helmet",
-			["sword"] = "sword", ["boots"] = "boots" }
-
-		for cat, name in pairs(tools_cat) do
-		for n in name:gmatch("[%w_]+") do
-			if stack:get_name():find(n) then
-				enchanting.formspec(pos, cat)
+		for k, v in pairs({"axe, pick, shovel",
+				"chestplate, leggings, helmet",
+				"sword", "boots"}) do
+			if v:match(stack:get_name():match("([^:]+)%_")) then
+				enchanting.formspec(pos, k)
 			end
-		end
 		end
 	end
 end
@@ -87,7 +77,6 @@ function enchanting.put(_, listname, _, stack)
 	elseif listname == "tool" and allowed(item) then
 		return 1 
 	end
-
 	return 0
 end
 
