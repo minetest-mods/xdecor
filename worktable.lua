@@ -120,6 +120,7 @@ function worktable.craftguide_formspec(meta, pagenum, item, recipe_num, filter, 
 
 		local items = minetest.get_all_craft_recipes(item)[recipe_num].items
 		local width = minetest.get_all_craft_recipes(item)[recipe_num].width
+		local yield = minetest.get_all_craft_recipes(item)[recipe_num].output:match("%s(%d+)") or ""
 		if width == 0 then width = math.min(3, #items) end
 		local rows = math.ceil(table.maxn(items) / width)
 
@@ -134,7 +135,7 @@ function worktable.craftguide_formspec(meta, pagenum, item, recipe_num, filter, 
 				worktable.get_recipe(v)..";"..worktable.get_recipe(v)..";"..is_group(v).."]"
 		end
 
-		formspec = formspec.."item_image[2.5,5;1,1;"..item.."]"..
+		formspec = formspec.."item_image_button[2.5,5;1,1;"..item..";"..item..";"..yield.."]"..
 				"image[3.5,5;1,1;gui_furnace_arrow_bg.png^[transformR90]"
 	end
 
@@ -248,7 +249,7 @@ function worktable.fields(pos, _, fields)
 		worktable.craftguide_main_list(meta, nil, tab_id)
 		worktable.craftguide_formspec(meta, 1, nil, 1, "", tab_id)
 	elseif fields.alternate then
-		local item = formspec:match("item_image%[.*;([%w_:]+)%]") or ""
+		local item = formspec:match("item_image_button%[.*;([%w_:]+);.*%]") or ""
 		local recipe_num = tonumber(formspec:match("Recipe%s(%d+)")) or 1
 		recipe_num = recipe_num + 1
 		worktable.craftguide_formspec(meta, pagenum, item, recipe_num, filter, tab_id)
