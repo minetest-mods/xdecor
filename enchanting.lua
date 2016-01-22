@@ -33,7 +33,7 @@ function enchanting.on_put(pos, listname, _, stack)
 		for k, v in pairs({"axe, pick, shovel",
 				"chestplate, leggings, helmet",
 				"sword", "boots"}) do
-			if v:match(stack:get_name():match("([^:]+)%_")) then
+			if v:match(stack:get_name():match(":(.-)%_")) then
 				enchanting.formspec(pos, k)
 			end
 		end
