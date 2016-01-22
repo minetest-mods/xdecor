@@ -106,6 +106,8 @@ xpanes.register_pane("chainlink", {
 	}
 })
 
+-- The following nodedef is licensed under WTFPL for granting a possible re-use
+-- in Minetest Game (https://github.com/minetest/minetest_game). 
 xdecor.register("cobweb", {
 	description = "Cobweb",
 	drawtype = "plantlike",
