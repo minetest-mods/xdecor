@@ -299,9 +299,14 @@ end
 function worktable.put(pos, listname, _, stack)
 	local stackname = stack:get_name()
 	local mod, node = stackname:match("(.*):(.*)")
+	local allowed_tools = "pick, axe, shovel, sword, hoe, armor"
 
-	if (listname == "tool" and stack:get_wear() > 0 and stackname ~= "xdecor:hammer") or
-			(listname == "input" and worktable.allowed(nodes[mod], node)) or
+	for v in allowed_tools:gmatch("[%w_]+") do
+		if listname == "tool" and stack:get_wear() > 0 and stackname:find(v) then
+			return stack:get_count()
+		end
+	end
+	if (listname == "input" and worktable.allowed(nodes[mod], node)) or
 			(listname == "hammer" and stackname == "xdecor:hammer") or
 			listname == "storage" or listname == "trash" then
 		if listname == "trash" then trash_delete(pos) end
