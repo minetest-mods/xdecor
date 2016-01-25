@@ -1,4 +1,13 @@
-local function sit(pos, node, clicker)
+local function node_pointed_face(pointed_thing)
+	local ay = pointed_thing.above.y
+	local uy = pointed_thing.under.y
+
+	if     ay > uy then return 1	 -- Top face pointed.
+	elseif ay < uy then return 2 end -- Bottom face pointed.
+end
+
+local function sit(pos, node, clicker, pointed_thing)
+	if node_pointed_face(pointed_thing) == 2 then return end
 	local player = clicker:get_player_name()
 	local objs = minetest.get_objects_inside_radius(pos, 0.1)
 
@@ -50,7 +59,6 @@ local function dig(pos, player)
 			return false
 		end
 	end
-
 	return true
 end
 
@@ -69,9 +77,9 @@ xdecor.register("chair", {
 		{3,  6,  3,   10, 2, 8}
 	}),
 	can_dig = dig,
-	on_rightclick = function(pos, node, clicker)
+	on_rightclick = function(pos, node, clicker, itemstack, pointed_thing)
 		pos.y = pos.y + 0  -- Sitting position.
-		sit(pos, node, clicker)
+		sit(pos, node, clicker, pointed_thing)
 	end
 })
 
@@ -84,7 +92,7 @@ xdecor.register("cushion", {
 	can_dig = dig,
 	on_rightclick = function(pos, node, clicker, itemstack, pointed_thing)
 		pos.y = pos.y + 0
-		sit(pos, node, clicker)
+		sit(pos, node, clicker, pointed_thing)
 
 		local wield_item = clicker:get_wielded_item():get_name()
 		if wield_item == "xdecor:cushion" and clicker:get_player_control().sneak then
@@ -93,7 +101,13 @@ xdecor.register("cushion", {
 				minetest.record_protection_violation(pos, player_name)
 				return
 			end
-			minetest.set_node(pos, {name="xdecor:cushion_block", param2=node.param2})
+
+			if node_pointed_face(pointed_thing) == 1 then
+				minetest.set_node(pos, {name = "xdecor:cushion_block", param2 = node.param2})
+			else
+				minetest.set_node(pointed_thing.above, {name = wield_item, param2 = 20})
+			end
+
 			if not minetest.setting_getbool("creative_mode") then
 				itemstack:take_item()
 				return itemstack
