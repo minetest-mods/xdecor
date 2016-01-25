@@ -48,11 +48,12 @@ function enchanting.fields(pos, _, fields)
 	local orig_wear = tool:get_wear()
 	local mod, name = tool:get_name():match("(.*):(.*)")
 	local enchanted_tool = mod..":enchanted_"..name.."_"..next(fields)
+	local mese_cost = 1
 
-	if mese:get_count() > 0 and minetest.registered_tools[enchanted_tool] then
+	if mese:get_count() >= mese_cost and minetest.registered_tools[enchanted_tool] then
 		tool:replace(enchanted_tool)
 		tool:add_wear(orig_wear)
-		mese:take_item()
+		mese:take_item(mese_cost)
 		inv:set_stack("mese", 1, mese)
 		inv:set_stack("tool", 1, tool)
 	end
