@@ -172,6 +172,12 @@ xdecor.register("crate", {
 	sounds = default.node_sound_wood_defaults()
 })
 
+xdecor.register("cushion_block", {
+	tiles = {"xdecor_cushion.png"},
+	groups = {snappy=3, flammable=3, fall_damage_add_percent=-75, not_in_creative_inventory=1},
+	drop = "xdecor:cushion 2"
+})
+
 local function door_access(door)
 	return door:find("prison")
 end

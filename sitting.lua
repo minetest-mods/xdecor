@@ -82,9 +82,23 @@ xdecor.register("cushion", {
 	on_place = minetest.rotate_node,
 	node_box = xdecor.nodebox.slab_y(0.5),
 	can_dig = dig,
-	on_rightclick = function(pos, node, clicker)
+	on_rightclick = function(pos, node, clicker, itemstack, pointed_thing)
 		pos.y = pos.y + 0
 		sit(pos, node, clicker)
+
+		local wield_item = clicker:get_wielded_item():get_name()
+		if wield_item == "xdecor:cushion" and clicker:get_player_control().sneak then
+			local player_name = clicker:get_player_name()
+			if minetest.is_protected(pos, player_name) then
+				minetest.record_protection_violation(pos, player_name)
+				return
+			end
+			minetest.set_node(pos, {name="xdecor:cushion_block", param2=node.param2})
+			if not minetest.setting_getbool("creative_mode") then
+				itemstack:take_item()
+				return itemstack
+			end
+		end
 	end
 })
 
