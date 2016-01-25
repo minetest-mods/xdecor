@@ -33,7 +33,7 @@ local defs = {
 	{"microslab",	8,  { 0, 0,  0, 16, 1, 16 }},
 	{"thinstair",	8,  { 0, 7,  0, 16, 1, 8  },
 			    { 0, 15, 8, 16, 1, 8  }},
-	{"cube", 	4,  { 0, 0,  8, 8,  8, 8  }},
+	{"cube", 	4,  { 0, 0,  0, 8,  8, 8  }},
 	{"panel",	4,  { 0, 0,  0, 16, 8, 8  }},
 	{"slab", 	2,  { 0, 0,  0, 16, 8, 16 }},
 	{"doublepanel", 2,  { 0, 0,  0, 16, 8, 8  },
@@ -431,7 +431,63 @@ for name in n:gmatch("[%w_]+") do
 			groups = groups,
 			node_box = xdecor.pixelnodebox(16, {d[3], d[4], d[5]}),
 			sunlight_propagates = true,
-			on_place = minetest.rotate_node
+			on_place = minetest.rotate_node,
+			on_rightclick = function(pos, node, clicker, itemstack, pointed_thing)
+				local pointed_nodebox = minetest.get_node(pos).name:match("(%w+)$")
+				local wield_item = clicker:get_wielded_item():get_name()
+				local player_name = clicker:get_player_name()
+				local newnode = ""
+
+				if minetest.is_protected(pos, player_name) then
+					minetest.record_protection_violation(pos, player_name)
+					return
+				end
+
+				local T = {
+					{"nanoslab",   nil,	     2},
+					{"micropanel", nil,	     3},
+					{"cube",       nil,	     6},
+					{"cube",       "panel",      9},
+					{"cube",       "slab",	     10},
+					{"cube",       "outerstair", 11},
+					{"cube",       "stair",      12},
+					{"cube",       "halfstair",  7},
+					{"cube",       "innerstair", nil},
+					{"panel",      nil,          7},
+					{"panel",      "slab",       11},
+					{"panel",      "outerstair", 12},
+					{"panel",      "stair",      nil},
+					{"halfstair",  nil,	     11},
+					{"halfstair",  "slab",	     12},
+					{"slab",       nil,	     nil}
+				}
+
+				for _, x in pairs(T) do
+					if wield_item == mod..":"..name.."_"..x[1] then
+						if not x[2] then x[2] = x[1] end
+						if x[2] == pointed_nodebox then
+							if not x[3] then
+								newnode = mod..":"..name
+							else
+								newnode = mod..":"..name.."_"..defs[x[3]][1]
+							end
+						end
+					end
+				end
+
+				if clicker:get_player_control().sneak then
+					if not minetest.registered_nodes[newnode] then return end
+					minetest.set_node(pos, {name=newnode, param2=node.param2})
+				else
+					minetest.item_place_node(ItemStack(wield_item), clicker, pointed_thing)
+				end
+
+				if not minetest.setting_getbool("creative_mode") then
+					itemstack:take_item()
+				end
+
+				return itemstack
+			end
 		})
 	end
 end

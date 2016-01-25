@@ -1,13 +1,9 @@
-local function node_pointed_face(pointed_thing)
-	local ay = pointed_thing.above.y
-	local uy = pointed_thing.under.y
-
-	if     ay > uy then return 1	 -- Top face pointed.
-	elseif ay < uy then return 2 end -- Bottom face pointed.
+local function pointed_face(pointed_thing)
+	return pointed_thing.above.y > pointed_thing.under.y -- Top face pointed.
 end
 
 local function sit(pos, node, clicker, pointed_thing)
-	if node_pointed_face(pointed_thing) == 2 then return end
+	if not pointed_face(pointed_thing) then return end
 	local player = clicker:get_player_name()
 	local objs = minetest.get_objects_inside_radius(pos, 0.1)
 
@@ -102,16 +98,15 @@ xdecor.register("cushion", {
 				return
 			end
 
-			if node_pointed_face(pointed_thing) == 1 then
-				minetest.set_node(pos, {name = "xdecor:cushion_block", param2 = node.param2})
-			else
-				minetest.set_node(pointed_thing.above, {name = wield_item, param2 = 20})
+			if pointed_face(pointed_thing) then
+				minetest.set_node(pos, {name="xdecor:cushion_block", param2=node.param2})
 			end
 
 			if not minetest.setting_getbool("creative_mode") then
 				itemstack:take_item()
-				return itemstack
 			end
+
+			return itemstack
 		end
 	end
 })
