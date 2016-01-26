@@ -35,15 +35,14 @@ local defs = {
 			    { 0, 15, 8, 16, 1, 8  }},
 	{"cube", 	4,  { 0, 0,  0, 8,  8, 8  }},
 	{"panel",	4,  { 0, 0,  0, 16, 8, 8  }},
-	{"slab", 	2,  { 0, 0,  0, 16, 8, 16 }},
+	{"slab", 	2,  nil			  },
 	{"doublepanel", 2,  { 0, 0,  0, 16, 8, 8  },
 			    { 0, 8,  8, 16, 8, 8  }},
 	{"halfstair",	2,  { 0, 0,  0, 8,  8, 16 },
 			    { 0, 8,  8, 8,  8, 8  }},
 	{"outerstair",	1,  { 0, 0,  0, 16, 8, 16 },
 			    { 0, 8,  8, 8,  8, 8  }},
-	{"stair",	1,  { 0, 0,  0, 16, 8, 16 },
-			    { 0, 8,  8, 16, 8, 8  }},
+	{"stair",	1,  nil			  },
 	{"innerstair",	1,  { 0, 0,  0, 16, 8, 16 },
 			    { 0, 8,  8, 16, 8, 8  },
 			    { 0, 8,  0, 8,  8, 8  }}
@@ -343,10 +342,18 @@ function worktable.get_output(inv, stack)
 		return
 	end
 
-	local input, output = inv:get_stack("input", 1), {}
+	local input, output, itemstring = inv:get_stack("input", 1), {}, ""
 	for _, n in pairs(defs) do
+		local stackname = stack:get_name()
 		local count = math.min(n[2] * input:get_count(), input:get_stack_max())
-		output[#output+1] = stack:get_name().."_"..n[1].." "..count
+		local ndef = minetest.registered_nodes[stackname.."_"..n[1]]
+
+		if not ndef then
+			itemstring = "stairs:"..n[1].."_"..stackname:match(":(.*)")
+		else
+			itemstring = stackname.."_"..n[1]
+		end
+		output[#output+1] = itemstring.." "..count
 	end
 
 	inv:set_list("forms", output)
@@ -400,7 +407,9 @@ for _, d in pairs(defs) do
 for mod, n in pairs(nodes) do
 for name in n:gmatch("[%w_]+") do
 	local ndef = minetest.registered_nodes[mod..":"..name]
-	if ndef then
+	local ndef_stairs = minetest.registered_nodes["stairs:"..d[1].."_"..name]
+
+	if ndef and not ndef_stairs then
 		local groups, tiles, light = {}, {}, 0
 		groups.not_in_creative_inventory = 1
 
@@ -419,7 +428,12 @@ for name in n:gmatch("[%w_]+") do
 		if ndef.light_source > 3 then
 			light = ndef.light_source - 1
 		end
-
+		
+		stairs.register_stair_and_slab(name, mod..":"..name,
+			groups, tiles,
+			ndef.description.." Stair", ndef.description.." Slab",
+			ndef.sounds)
+		
 		minetest.register_node(":"..mod..":"..name.."_"..d[1], {
 			description = ndef.description.." "..d[1]:gsub("^%l", string.upper),
 			paramtype = "light",
@@ -490,6 +504,8 @@ for name in n:gmatch("[%w_]+") do
 			end
 		})
 	end
+	minetest.register_alias(mod..":"..name.."_stair", "stairs:stair_"..name)
+	minetest.register_alias(mod..":"..name.."_slab", "stairs:slab_"..name)
 end
 end
 end

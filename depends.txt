@@ -2,5 +2,6 @@ default
 doors
 xpanes
 bucket
+stairs
 oresplus?
 3d_armor?
