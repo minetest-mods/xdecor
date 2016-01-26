@@ -336,24 +336,19 @@ function worktable.move(pos, _, _, to_list, _, count)
 	return 0
 end
 
-function worktable.get_output(inv, stack)
+function worktable.get_output(inv, input, name)
 	if inv:is_empty("input") then
 		inv:set_list("forms", {})
 		return
 	end
 
-	local input, output, itemstring = inv:get_stack("input", 1), {}, ""
+	local output = {}
 	for _, n in pairs(defs) do
-		local stackname = stack:get_name()
 		local count = math.min(n[2] * input:get_count(), input:get_stack_max())
-		local ndef = minetest.registered_nodes[stackname.."_"..n[1]]
+		local item = name.."_"..n[1]
+		if not n[3] then item = "stairs:"..n[1].."_"..name:match(":(.*)") end
 
-		if not ndef then
-			itemstring = "stairs:"..n[1].."_"..stackname:match(":(.*)")
-		else
-			itemstring = stackname.."_"..n[1]
-		end
-		output[#output+1] = itemstring.." "..count
+		output[#output+1] = item.." "..count
 	end
 
 	inv:set_list("forms", output)
@@ -362,24 +357,25 @@ end
 function worktable.on_put(pos, listname, _, stack)
 	if listname == "input" then
 		local inv = minetest.get_meta(pos):get_inventory()
-		worktable.get_output(inv, stack)
+		local input = inv:get_stack("input", 1)
+		worktable.get_output(inv, input, stack:get_name())
 	end
 end
 
 function worktable.on_take(pos, listname, index, stack)
 	local inv = minetest.get_meta(pos):get_inventory()
-	local inputstack = inv:get_stack("input", 1)
+	local input = inv:get_stack("input", 1)
 
 	if listname == "input" then
-		if stack:get_name() == inputstack:get_name() then
-			worktable.get_output(inv, stack)
+		if stack:get_name() == input:get_name() then
+			worktable.get_output(inv, input, stack:get_name())
 		else
 			inv:set_list("forms", {})
 		end
 	elseif listname == "forms" then
-		inputstack:take_item(math.ceil(stack:get_count() / defs[index][2]))
-		inv:set_stack("input", 1, inputstack)
-		worktable.get_output(inv, inputstack)
+		input:take_item(math.ceil(stack:get_count() / defs[index][2]))
+		inv:set_stack("input", 1, input)
+		worktable.get_output(inv, input, input:get_name())
 	end
 end
 
@@ -407,9 +403,7 @@ for _, d in pairs(defs) do
 for mod, n in pairs(nodes) do
 for name in n:gmatch("[%w_]+") do
 	local ndef = minetest.registered_nodes[mod..":"..name]
-	local ndef_stairs = minetest.registered_nodes["stairs:"..d[1].."_"..name]
-
-	if ndef and not ndef_stairs then
+	if ndef and d[3] then
 		local groups, tiles, light = {}, {}, 0
 		groups.not_in_creative_inventory = 1
 
@@ -425,15 +419,15 @@ for name in n:gmatch("[%w_]+") do
 			tiles = {ndef.tiles[1]}
 		end
 
+		stairs.register_stair_and_slab(name, mod..":"..name, groups, tiles,
+			ndef.description.." Stair", ndef.description.." Slab", ndef.sounds)
+
 		if ndef.light_source > 3 then
 			light = ndef.light_source - 1
+			minetest.override_item("stairs:slab_"..name, {light_source=light})
+			minetest.override_item("stairs:stair_"..name, {light_source=light})
 		end
-		
-		stairs.register_stair_and_slab(name, mod..":"..name,
-			groups, tiles,
-			ndef.description.." Stair", ndef.description.." Slab",
-			ndef.sounds)
-		
+
 		minetest.register_node(":"..mod..":"..name.."_"..d[1], {
 			description = ndef.description.." "..d[1]:gsub("^%l", string.upper),
 			paramtype = "light",
@@ -462,18 +456,13 @@ for name in n:gmatch("[%w_]+") do
 					{"micropanel", nil,	     3},
 					{"cube",       nil,	     6},
 					{"cube",       "panel",      9},
-					{"cube",       "slab",	     10},
 					{"cube",       "outerstair", 11},
-					{"cube",       "stair",      12},
 					{"cube",       "halfstair",  7},
 					{"cube",       "innerstair", nil},
 					{"panel",      nil,          7},
-					{"panel",      "slab",       11},
 					{"panel",      "outerstair", 12},
-					{"panel",      "stair",      nil},
 					{"halfstair",  nil,	     11},
-					{"halfstair",  "slab",	     12},
-					{"slab",       nil,	     nil}
+					{"halfstair",  "outerstair", nil}
 				}
 
 				for _, x in pairs(T) do
@@ -504,8 +493,9 @@ for name in n:gmatch("[%w_]+") do
 			end
 		})
 	end
-	minetest.register_alias(mod..":"..name.."_stair", "stairs:stair_"..name)
-	minetest.register_alias(mod..":"..name.."_slab", "stairs:slab_"..name)
+	if not d[3] then
+		minetest.register_alias(mod..":"..name.."_"..d[1], "stairs:"..d[1].."_"..name)
+	end
 end
 end
 end
