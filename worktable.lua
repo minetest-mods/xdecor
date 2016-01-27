@@ -1,7 +1,8 @@
 local worktable = {}
 screwdriver = screwdriver or {}
 
--- Nodes allowed to be cut. Registration format: [mod name] = [[ node names ]].
+-- Nodes allowed to be cut.
+-- Registration format: [mod name] = [[ node names ]].
 worktable.nodes = {
 	["default"] = [[
 		wood		tree		cobble		 desert_stone

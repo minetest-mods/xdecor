@@ -13,26 +13,27 @@ enchanting.speed = 0.2
 enchanting.jump = 0.2
 
 -- Enchanted tools registration.
+-- Available enchantments: durable, fast, sharp, strong, speed.
 enchanting.tools = {
 	--[[ Registration format:
 	 	[Mod name] = {
 	 		materials,
-	 		{tool name, tool group, enchantments}
+	 		{tool name, enchantments}
 		 }
-	--]]
+	]]
 	["default"] = {
-		"steel bronze mese diamond",
-		{"axe",	   "choppy",  "durable, fast"}, 
-		{"pick",   "cracky",  "durable, fast"}, 
-		{"shovel", "crumbly", "durable, fast"},
-		{"sword",  "fleshy",  "sharp"}
+		"steel, bronze, mese, diamond",
+		{"axe",	   "durable, fast"}, 
+		{"pick",   "durable, fast"}, 
+		{"shovel", "durable, fast"},
+		{"sword",  "sharp"}
 	},
 	["3d_armor"] = {
-		"steel bronze gold diamond",
-		{"boots",      nil, "strong, speed"},
-		{"chestplate", nil, "strong"},
-		{"helmet",     nil, "strong"},
-		{"leggings",   nil, "strong"}
+		"steel, bronze, gold, diamond",
+		{"boots",      "strong, speed"},
+		{"chestplate", "strong"},
+		{"helmet",     "strong"},
+		{"leggings",   "strong"}
 	}
 }
 
@@ -155,18 +156,19 @@ local function cap(S) return S:gsub("^%l", string.upper) end
 for mod, defs in pairs(enchanting.tools) do
 for material in defs[1]:gmatch("[%w_]+") do
 for _, tooldef in next, defs, 1 do
-for enchant in tooldef[3]:gmatch("[%w_]+") do
-	local tool, group = tooldef[1], tooldef[2]
+for enchant in tooldef[2]:gmatch("[%w_]+") do
+	local tool, group = tooldef[1], ""
 	local original_tool = minetest.registered_tools[mod..":"..tool.."_"..material]
 
 	if original_tool then
-		if mod == "default" then
+		if original_tool.tool_capabilities then
 			local original_damage_groups = original_tool.tool_capabilities.damage_groups
 			local original_groupcaps = original_tool.tool_capabilities.groupcaps
 			local groupcaps = table.copy(original_groupcaps)
 			local fleshy = original_damage_groups.fleshy
 			local full_punch_interval = original_tool.tool_capabilities.full_punch_interval
 			local max_drop_level = original_tool.tool_capabilities.max_drop_level
+			group = tostring(next(original_groupcaps))
 
 			if enchant == "durable" then
 				groupcaps[group].uses = math.ceil(original_groupcaps[group].uses * enchanting.uses)
@@ -192,7 +194,6 @@ for enchant in tooldef[3]:gmatch("[%w_]+") do
 
 		if mod == "3d_armor" then
 			local original_armor_groups = original_tool.groups
-			local armorcaps = table.copy(original_armor_groups)
 			local armorcaps = {}
 			armorcaps.not_in_creative_inventory = 1
 
