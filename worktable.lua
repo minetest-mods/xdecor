@@ -1,7 +1,8 @@
 local worktable = {}
 screwdriver = screwdriver or {}
 
-local nodes = { -- Nodes allowed to be cut. Registration format: [mod name] = [[ node names ]].
+-- Nodes allowed to be cut. Registration format: [mod name] = [[ node names ]].
+worktable.nodes = {
 	["default"] = [[
 		wood		tree		cobble		 desert_stone
 		junglewood	jungletree	mossycobble	 stonebrick
@@ -26,7 +27,8 @@ local nodes = { -- Nodes allowed to be cut. Registration format: [mod name] = [[
 	]],
 }
 
-local defs = {
+-- Nodeboxes definitions.
+worktable.defs = {
 	-- Name       Yield   X  Y   Z  W   H  L
 	{"nanoslab",	16, { 0, 0,  0, 8,  1, 8  }},
 	{"micropanel",	16, { 0, 0,  0, 16, 1, 8  }},
@@ -305,7 +307,7 @@ function worktable.put(pos, listname, _, stack)
 			return stack:get_count()
 		end
 	end
-	if (listname == "input" and worktable.allowed(nodes[mod], node)) or
+	if (listname == "input" and worktable.allowed(worktable.nodes[mod], node)) or
 			(listname == "hammer" and stackname == "xdecor:hammer") or
 			listname == "storage" or listname == "trash" then
 		if listname == "trash" then trash_delete(pos) end
@@ -343,7 +345,7 @@ function worktable.get_output(inv, input, name)
 	end
 
 	local output = {}
-	for _, n in pairs(defs) do
+	for _, n in pairs(worktable.defs) do
 		local count = math.min(n[2] * input:get_count(), input:get_stack_max())
 		local item = name.."_"..n[1]
 		if not n[3] then item = "stairs:"..n[1].."_"..name:match(":(.*)") end
@@ -373,7 +375,7 @@ function worktable.on_take(pos, listname, index, stack)
 			inv:set_list("forms", {})
 		end
 	elseif listname == "forms" then
-		input:take_item(math.ceil(stack:get_count() / defs[index][2]))
+		input:take_item(math.ceil(stack:get_count() / worktable.defs[index][2]))
 		inv:set_stack("input", 1, input)
 		worktable.get_output(inv, input, input:get_name())
 	end
@@ -399,8 +401,8 @@ xdecor.register("worktable", {
 	allow_metadata_inventory_move = worktable.move
 })
 
-for _, d in pairs(defs) do
-for mod, n in pairs(nodes) do
+for _, d in pairs(worktable.defs) do
+for mod, n in pairs(worktable.nodes) do
 for name in n:gmatch("[%w_]+") do
 	local ndef = minetest.registered_nodes[mod..":"..name]
 	if ndef and d[3] then
@@ -472,7 +474,7 @@ for name in n:gmatch("[%w_]+") do
 							if not x[3] then
 								newnode = mod..":"..name
 							else
-								newnode = mod..":"..name.."_"..defs[x[3]][1]
+								newnode = mod..":"..name.."_"..worktable.defs[x[3]][1]
 							end
 						end
 					end

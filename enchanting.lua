@@ -1,6 +1,41 @@
 local enchanting = {}
 screwdriver = screwdriver or {}
 
+-- Cost in Mese crystal(s) for enchanting.
+local mese_cost = 1
+
+-- Force of the enchantments.
+enchanting.uses = 1.2
+enchanting.times = 0.1
+enchanting.damages = 1
+enchanting.strength = 1.2
+enchanting.speed = 0.2
+enchanting.jump = 0.2
+
+-- Enchanted tools registration.
+enchanting.tools = {
+	--[[ Registration format:
+	 	[Mod name] = {
+	 		materials,
+	 		{tool name, tool group, enchantments}
+		 }
+	--]]
+	["default"] = {
+		"steel bronze mese diamond",
+		{"axe",	   "choppy",  "durable, fast"}, 
+		{"pick",   "cracky",  "durable, fast"}, 
+		{"shovel", "crumbly", "durable, fast"},
+		{"sword",  "fleshy",  "sharp"}
+	},
+	["3d_armor"] = {
+		"steel bronze gold diamond",
+		{"boots",      nil, "strong, speed"},
+		{"chestplate", nil, "strong"},
+		{"helmet",     nil, "strong"},
+		{"leggings",   nil, "strong"}
+	}
+}
+
 function enchanting.formspec(pos, num)
 	local formspec = [[ size[9,9;]
 			bgcolor[#080808BB;true]
@@ -48,7 +83,6 @@ function enchanting.fields(pos, _, fields)
 	local orig_wear = tool:get_wear()
 	local mod, name = tool:get_name():match("(.*):(.*)")
 	local enchanted_tool = mod..":enchanted_"..name.."_"..next(fields)
-	local mese_cost = 1
 
 	if mese:get_count() >= mese_cost and minetest.registered_tools[enchanted_tool] then
 		tool:replace(enchanted_tool)
@@ -116,42 +150,9 @@ xdecor.register("enchantment_table", {
 	allow_metadata_inventory_move = function() return 0 end
 })
 
-local function cap(str)
-	return str:gsub("^%l", string.upper)
-end
+local function cap(S) return S:gsub("^%l", string.upper) end
 
- -- Higher number = stronger enchant.
-enchanting.uses = 1.2
-enchanting.times = 0.1
-enchanting.damages = 1
-enchanting.strength = 1.2
-enchanting.speed = 0.2
-enchanting.jump = 0.2
-
-local tools = {
-	--[[ Registration format:
-	 	[Mod name] = {
-	 		materials,
-	 		{tool name, tool group, enchantments}
-		 }
-	--]]
-	["default"] = {
-		"steel, bronze, mese, diamond",
-		{"axe", "choppy", "durable, fast"}, 
-		{"pick", "cracky", "durable, fast"}, 
-		{"shovel", "crumbly", "durable, fast"},
-		{"sword", "fleshy", "sharp"}
-	},
-	["3d_armor"] = {
-		"steel, bronze, gold, diamond",
-		{"boots", nil, "strong, speed"},
-		{"chestplate", nil, "strong"},
-		{"helmet", nil, "strong"},
-		{"leggings", nil, "strong"}
-	}
-}
-
-for mod, defs in pairs(tools) do
+for mod, defs in pairs(enchanting.tools) do
 for material in defs[1]:gmatch("[%w_]+") do
 for _, tooldef in next, defs, 1 do
 for enchant in tooldef[3]:gmatch("[%w_]+") do
