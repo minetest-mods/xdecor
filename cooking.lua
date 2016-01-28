@@ -114,12 +114,12 @@ minetest.register_abm({
 		local ingredients = {}
 		local ingredients_list = {  -- Add more ingredients here that make a soup.
 			"apple", "mushroom", "honey", "pumpkin", "egg", "bread",
-			"meat", "chicken"
+			"meat", "chicken", "carrot", "potato"
 		}
 
 		for _, obj in pairs(objs) do
 			if obj and obj:get_luaentity() then
-				local itemstring = obj:get_luaentity().itemstring:match("[^:]+$")
+				local itemstring = obj:get_luaentity().itemstring:match(":([%w_]+)")
 				if not next(ingredients) then
 					for _, rep in pairs(ingredients) do
 						if itemstring == rep then return end
@@ -136,15 +136,13 @@ minetest.register_abm({
 
 		if #ingredients >= 2 then
 			for _, obj in pairs(objs) do
-				if obj and obj:get_luaentity() then
-					obj:remove()
-				end
+				if obj and obj:get_luaentity() then obj:remove() end
 			end
 			minetest.set_node(pos, {name="xdecor:cauldron_soup", param2=node.param2})
 		end
 
-		local below_node = {x=pos.x, y=pos.y-1, z=pos.z}
-		if not minetest.get_node(below_node).name:find("fire") then
+		local node_under = {x=pos.x, y=pos.y-1, z=pos.z}
+		if not minetest.get_node(node_under).name:find("fire") then
 			minetest.set_node(pos, {name="xdecor:cauldron_idle", param2=node.param2})
 		end
 	end
