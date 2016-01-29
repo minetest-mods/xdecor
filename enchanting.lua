@@ -69,7 +69,7 @@ function enchanting.on_put(pos, listname, _, stack)
 		for k, v in pairs({"axe, pick, shovel",
 				"chestplate, leggings, helmet",
 				"sword", "boots"}) do
-			if v:match(stack:get_name():match(":(.-)%_")) then
+			if v:find(stack:get_name():match(":(%w+)")) then
 				enchanting.formspec(pos, k)
 			end
 		end
@@ -101,7 +101,7 @@ end
 
 local function allowed(tool)
 	for item in pairs(minetest.registered_tools) do
-		if item:match("enchanted_"..tool) then return true end
+		if item:find("enchanted_"..tool) then return true end
 	end
 	return false
 end

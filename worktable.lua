@@ -270,7 +270,7 @@ function worktable.fields(pos, _, fields)
 		worktable.craftguide_formspec(meta, pagenum, nil, 1, filter, tab_id)
 	else
 		for item in pairs(fields) do
-			if item:match(".-:") and minetest.get_craft_recipe(item).items then
+			if item:find(":") and minetest.get_craft_recipe(item).items then
 				worktable.craftguide_formspec(meta, pagenum, item, 1, filter, tab_id)
 			end
 		end

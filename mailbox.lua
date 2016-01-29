@@ -41,10 +41,8 @@ xdecor.register("mailbox", {
 		return inv:is_empty("mailbox") and player and player_name == owner
 	end,
 	on_metadata_inventory_put = function(pos, listname, _, stack, player)
-		local inv = minetest.get_meta(pos):get_inventory()
-		local player_name = player:get_player_name()
 		local meta = minetest.get_meta(pos)
-		local stack_name = stack:get_name().." "..stack:get_count()
+		local inv = meta:get_inventory()
 
 		if listname == "drop" and inv:room_for_item("mailbox", stack) then
 			inv:remove_item("drop", stack)
@@ -54,22 +52,20 @@ xdecor.register("mailbox", {
 				meta:set_string("giver"..i, meta:get_string("giver"..(i-1)))
 				meta:set_string("stack"..i, meta:get_string("stack"..(i-1)))
 			end
-			meta:set_string("giver1", player_name)
-			meta:set_string("stack1", stack_name)
+
+			meta:set_string("giver1", player:get_player_name())
+			meta:set_string("stack1", stack:get_name().." "..stack:get_count())
 		end
 	end,
 	allow_metadata_inventory_put = function(pos, listname, _, stack, player)
-		local player_name = player:get_player_name()
 		if listname == "drop" then
-			local meta = minetest.get_meta(pos)
-			local inv = meta:get_inventory()
+			local inv = minetest.get_meta(pos):get_inventory()
 			if inv:room_for_item("mailbox", stack) then
 				return -1
 			else
-				minetest.chat_send_player(player_name, "The mailbox is full")
+				minetest.chat_send_player(player:get_player_name(), "The mailbox is full")
 			end
 		end
-
 		return 0
 	end
 })

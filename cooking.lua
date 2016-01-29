@@ -1,3 +1,9 @@
+-- Add more ingredients here that make a soup.
+local ingredients_list = {
+	"apple", "mushroom", "honey", "pumpkin", "egg", "bread", "meat",
+	"chicken", "carrot", "potato"
+}
+
 local cauldron_cbox = {
 	{0,  0, 0,  16, 16, 0},
 	{0,  0, 16, 16, 16, 0},
@@ -112,11 +118,6 @@ minetest.register_abm({
 		if not objs then return end
 
 		local ingredients = {}
-		local ingredients_list = {  -- Add more ingredients here that make a soup.
-			"apple", "mushroom", "honey", "pumpkin", "egg", "bread",
-			"meat", "chicken", "carrot", "potato"
-		}
-
 		for _, obj in pairs(objs) do
 			if obj and obj:get_luaentity() then
 				local itemstring = obj:get_luaentity().itemstring:match(":([%w_]+)")
@@ -127,7 +128,7 @@ minetest.register_abm({
 				end
 
 				for _, ing in pairs(ingredients_list) do
-					if itemstring and itemstring:match(ing) then
+					if itemstring and itemstring:find(ing) then
 						ingredients[#ingredients+1] = itemstring
 					end
 				end
