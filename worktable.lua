@@ -285,10 +285,7 @@ end
 
 function worktable.allowed(mod, node)
 	if not mod then return end
-	for it in mod:gmatch("[%w_]+") do
-		if it == node then return true end
-	end
-	return false
+	return mod:find(node.."%f[^%w_]")
 end
 
 local function trash_delete(pos)
@@ -303,10 +300,9 @@ function worktable.put(pos, listname, _, stack)
 	local mod, node = stackname:match("(.*):(.*)")
 	local allowed_tools = "pick, axe, shovel, sword, hoe, armor"
 
-	for v in allowed_tools:gmatch("[%w_]+") do
-		if listname == "tool" and stack:get_wear() > 0 and stackname:find(v) then
-			return stack:get_count()
-		end
+	if listname == "tool" and stack:get_wear() > 0 and
+			allowed_tools:find(stackname:match(":(%w+)")) then
+		return stack:get_count()
 	end
 	if (listname == "input" and worktable.allowed(worktable.nodes[mod], node)) or
 			(listname == "hammer" and stackname == "xdecor:hammer") or
