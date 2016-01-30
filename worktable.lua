@@ -2,31 +2,14 @@ local worktable = {}
 screwdriver = screwdriver or {}
 
 -- Nodes allowed to be cut.
--- Registration format: [mod name] = [[ node names ]].
-worktable.nodes = {
-	["default"] = [[
-		wood		tree		cobble		 desert_stone
-		junglewood	jungletree	mossycobble	 stonebrick
-		pine_wood	pine_tree	desert_cobble	 sandstonebrick
-		acacia_wood	acacia_tree	stone		 desert_stonebrick
-		aspen_wood	aspen_tree	sandstone	 obsidianbrick
-
-		coalblock	mese		obsidian
-		copperblock	brick		obsidian_glass
-		steelblock	cactus
-		goldblock	ice
-		bronzeblock	meselamp
-		diamondblock	glass
-	]],
-
-	["xdecor"] = [[
-		coalstone_tile		hard_clay
-		desertstone_tile	packed_ice
-		stone_rune		moonbrick
-		stone_tile		woodframed_glass
-		cactusbrick		wood_tile
-	]],
-}
+-- Only the regular, solid blocks without formspec or explosivity can be cut.
+function worktable.nodes(ndef)
+	return (ndef.drawtype == "normal" or ndef.drawtype:find("glass")) and not
+		ndef.on_construct and not ndef.after_place_node and not
+		ndef.after_place_node and not ndef.on_rightclick and not
+		ndef.on_blast and not ndef.allow_metadata_inventory_take and
+		ndef.light_source == 0 and not ndef.groups["crumbly"]
+end
 
 -- Nodeboxes definitions.
 worktable.defs = {
@@ -289,11 +272,6 @@ function worktable.dig(pos)
 		inv:is_empty("tool") and inv:is_empty("storage")
 end
 
-function worktable.allowed(mod, node)
-	if not mod then return end
-	return mod:find(node.."%f[^%w_]")
-end
-
 local function trash_delete(pos)
 	local inv = minetest.get_meta(pos):get_inventory()
 	minetest.after(0, function()
@@ -303,13 +281,11 @@ end
 
 function worktable.put(pos, listname, _, stack)
 	local stackname = stack:get_name()
-	local mod, node = stackname:match("(.*):(.*)")
-
 	if listname == "tool" and stack:get_wear() > 0 and
 			worktable.repairable_tools:find(stackname:match(":(%w+)")) then
 		return stack:get_count()
 	end
-	if (listname == "input" and worktable.allowed(worktable.nodes[mod], node)) or
+	if (listname == "input" and worktable.nodes(minetest.registered_nodes[stackname])) or
 			(listname == "hammer" and stackname == "xdecor:hammer") or
 			listname == "storage" or listname == "trash" then
 		if listname == "trash" then trash_delete(pos) end
@@ -404,11 +380,10 @@ xdecor.register("worktable", {
 })
 
 for _, d in pairs(worktable.defs) do
-for mod, n in pairs(worktable.nodes) do
-for name in n:gmatch("[%w_]+") do
-	local ndef = minetest.registered_nodes[mod..":"..name]
-	if ndef and d[3] then
-		local groups, tiles, light = {}, {}, 0
+for node in pairs(minetest.registered_nodes) do
+	local ndef = minetest.registered_nodes[node]
+	if worktable.nodes(ndef) and d[3] then
+		local groups, tiles = {}, {}
 		groups.not_in_creative_inventory = 1
 
 		for k, v in pairs(ndef.groups) do
@@ -423,21 +398,14 @@ for name in n:gmatch("[%w_]+") do
 			tiles = {ndef.tiles[1]}
 		end
 
-		stairs.register_stair_and_slab(name, mod..":"..name, groups, tiles,
+		stairs.register_stair_and_slab(node:match(":(.*)"), node, groups, tiles,
 			ndef.description.." Stair", ndef.description.." Slab", ndef.sounds)
 
-		if ndef.light_source > 3 then
-			light = ndef.light_source - 1
-			minetest.override_item("stairs:slab_"..name, {light_source=light})
-			minetest.override_item("stairs:stair_"..name, {light_source=light})
-		end
-
-		minetest.register_node(":"..mod..":"..name.."_"..d[1], {
+		minetest.register_node(":"..node.."_"..d[1], {
 			description = ndef.description.." "..d[1]:gsub("^%l", string.upper),
 			paramtype = "light",
 			paramtype2 = "facedir",
 			drawtype = "nodebox",
-			light_source = light,
 			sounds = ndef.sounds,
 			tiles = tiles,
 			groups = groups,
@@ -470,13 +438,13 @@ for name in n:gmatch("[%w_]+") do
 				}
 
 				for _, x in pairs(T) do
-					if wield_item == mod..":"..name.."_"..x[1] then
+					if wield_item == ndef.name.."_"..x[1] then
 						if not x[2] then x[2] = x[1] end
 						if x[2] == pointed_nodebox then
 							if not x[3] then
-								newnode = mod..":"..name
+								newnode = ndef.name
 							else
-								newnode = mod..":"..name.."_"..worktable.defs[x[3]][1]
+								newnode = ndef.name.."_"..worktable.defs[x[3]][1]
 							end
 						end
 					end
@@ -497,10 +465,15 @@ for name in n:gmatch("[%w_]+") do
 			end
 		})
 	end
-	if not d[3] then
-		minetest.register_alias(mod..":"..name.."_"..d[1], "stairs:"..d[1].."_"..name)
+	if node:find("meselamp") then
+		if d[3] then
+			minetest.register_alias("default:meselamp_"..d[1], "default:glass_"..d[1])
+		else
+			minetest.register_alias("stairs:"..d[1].."_meselamp", "stairs:"..d[1].."_glass")
+		end
+	elseif worktable.nodes(ndef) and not d[3] then
+		minetest.register_alias(node.."_"..d[1], "stairs:"..d[1].."_"..node:match(":(.*)"))
 	end
-end
 end
 end
 
