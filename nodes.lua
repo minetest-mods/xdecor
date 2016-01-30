@@ -427,10 +427,10 @@ xdecor.register("stonepath", {
 	sounds = default.node_sound_stone_defaults(),
 	sunlight_propagates = true,
 	node_box = xdecor.pixelnodebox(16, {
-		{8,  0,  8, 6, 0.5, 6},
-		{1,  0,  1, 6, 0.5, 6},
-		{1,  0, 10, 5, 0.5, 5},
-		{10, 0,  2, 4, 0.5, 4}
+		{8,  0,  8, 6, .5, 6},
+		{1,  0,  1, 6, .5, 6},
+		{1,  0, 10, 5, .5, 5},
+		{10, 0,  2, 4, .5, 4}
 	}),
 	selection_box = xdecor.nodebox.slab_y(0.05)
 })

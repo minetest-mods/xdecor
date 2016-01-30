@@ -3,12 +3,14 @@ screwdriver = screwdriver or {}
 
 -- Nodes allowed to be cut.
 -- Only the regular, solid blocks without formspec or explosivity can be cut.
-function worktable.nodes(ndef)
-	return (ndef.drawtype == "normal" or ndef.drawtype:find("glass")) and not
-		ndef.on_construct and not ndef.after_place_node and not
-		ndef.after_place_node and not ndef.on_rightclick and not
-		ndef.on_blast and not ndef.allow_metadata_inventory_take and
-		ndef.light_source == 0 and not ndef.groups["crumbly"]
+function worktable.nodes(def)
+	return (def.drawtype == "normal" or def.drawtype:find("glass")) and not
+		def.on_construct and not def.after_place_node and not
+		def.after_place_node and not def.on_rightclick and not
+		def.on_blast and not def.allow_metadata_inventory_take and not
+		def.groups["crumbly"] and not def.groups["not_in_creative_inventory"] and not
+		def.description:find("Ore") and def.light_source == 0 and
+		def.description
 end
 
 -- Nodeboxes definitions.
@@ -381,35 +383,35 @@ xdecor.register("worktable", {
 
 for _, d in pairs(worktable.defs) do
 for node in pairs(minetest.registered_nodes) do
-	local ndef = minetest.registered_nodes[node]
-	if worktable.nodes(ndef) and d[3] then
+	local def = minetest.registered_nodes[node]
+	if worktable.nodes(def) and d[3] then
 		local groups, tiles = {}, {}
 		groups.not_in_creative_inventory = 1
 
-		for k, v in pairs(ndef.groups) do
+		for k, v in pairs(def.groups) do
 			if k ~= "wood" and k ~= "stone" and k ~= "level" then
 				groups[k] = v
 			end
 		end
 
-		if #ndef.tiles > 1 and not ndef.drawtype:find("glass") then
-			tiles = ndef.tiles
+		if #def.tiles > 1 and not def.drawtype:find("glass") then
+			tiles = def.tiles
 		else
-			tiles = {ndef.tiles[1]}
+			tiles = {def.tiles[1]}
 		end
 
 		stairs.register_stair_and_slab(node:match(":(.*)"), node, groups, tiles,
-			ndef.description.." Stair", ndef.description.." Slab", ndef.sounds)
+			def.description.." Stair", def.description.." Slab", def.sounds)
 
 		minetest.register_node(":"..node.."_"..d[1], {
-			description = ndef.description.." "..d[1]:gsub("^%l", string.upper),
+			description = def.description.." "..d[1]:gsub("^%l", string.upper),
 			paramtype = "light",
 			paramtype2 = "facedir",
 			drawtype = "nodebox",
-			sounds = ndef.sounds,
+			sounds = def.sounds,
 			tiles = tiles,
 			groups = groups,
-			node_box = xdecor.pixelnodebox(16, {d[3], d[4], d[5]}),
+			node_box = xdecor.pixelnodebox(16, {unpack(d, 3)}),
 			sunlight_propagates = true,
 			on_place = minetest.rotate_node,
 			on_rightclick = function(pos, node, clicker, itemstack, pointed_thing)
@@ -438,13 +440,13 @@ for node in pairs(minetest.registered_nodes) do
 				}
 
 				for _, x in pairs(T) do
-					if wield_item == ndef.name.."_"..x[1] then
+					if wield_item == def.name.."_"..x[1] then
 						if not x[2] then x[2] = x[1] end
 						if x[2] == pointed_nodebox then
 							if not x[3] then
-								newnode = ndef.name
+								newnode = def.name
 							else
-								newnode = ndef.name.."_"..worktable.defs[x[3]][1]
+								newnode = def.name.."_"..worktable.defs[x[3]][1]
 							end
 						end
 					end
@@ -471,7 +473,7 @@ for node in pairs(minetest.registered_nodes) do
 		else
 			minetest.register_alias("stairs:"..d[1].."_meselamp", "stairs:"..d[1].."_glass")
 		end
-	elseif worktable.nodes(ndef) and not d[3] then
+	elseif worktable.nodes(def) and not d[3] then
 		minetest.register_alias(node.."_"..d[1], "stairs:"..d[1].."_"..node:match(":(.*)"))
 	end
 end
