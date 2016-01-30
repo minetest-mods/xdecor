@@ -51,6 +51,12 @@ worktable.defs = {
 			    { 0, 8,  0, 8,  8, 8  }}
 }
 
+-- Tools allowed to be repaired.
+worktable.repairable_tools = [[
+	pick, axe, shovel, sword, hoe
+	armor, shield
+]]
+
 function worktable.get_recipe(item)
 	if item:find("^group:") then
 		if item:find("wool$") or item:find("dye$") then
@@ -298,10 +304,9 @@ end
 function worktable.put(pos, listname, _, stack)
 	local stackname = stack:get_name()
 	local mod, node = stackname:match("(.*):(.*)")
-	local allowed_tools = "pick, axe, shovel, sword, hoe, armor"
 
 	if listname == "tool" and stack:get_wear() > 0 and
-			allowed_tools:find(stackname:match(":(%w+)")) then
+			worktable.repairable_tools:find(stackname:match(":(%w+)")) then
 		return stack:get_count()
 	end
 	if (listname == "input" and worktable.allowed(worktable.nodes[mod], node)) or
