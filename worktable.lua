@@ -4,11 +4,12 @@ screwdriver = screwdriver or {}
 -- Nodes allowed to be cut.
 -- Only the regular, solid blocks without formspec or explosivity can be cut.
 function worktable.nodes(def)
-	return (def.drawtype == "normal" or def.drawtype:find("glass")) and not
+	return (def.drawtype == "normal" or def.drawtype:find("glass")) and
+		(def.groups.cracky or def.groups.choppy) and not
 		def.on_construct and not def.after_place_node and not
 		def.after_place_node and not def.on_rightclick and not
 		def.on_blast and not def.allow_metadata_inventory_take and not
-		def.groups.crumbly and not (def.groups.not_in_creative_inventory == 1) and not
+		(def.groups.not_in_creative_inventory == 1) and not
 		def.description:find("Ore") and not def.name:find("wool") and
 		def.description and def.description ~= "" and def.light_source == 0
 end
