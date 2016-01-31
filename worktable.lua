@@ -8,9 +8,9 @@ function worktable.nodes(def)
 		def.on_construct and not def.after_place_node and not
 		def.after_place_node and not def.on_rightclick and not
 		def.on_blast and not def.allow_metadata_inventory_take and not
-		def.groups["crumbly"] and not def.groups["not_in_creative_inventory"] and not
-		def.description:find("Ore") and def.light_source == 0 and
-		def.description
+		def.groups.crumbly and not (def.groups.not_in_creative_inventory == 1) and not
+		def.description:find("Ore") and not def.name:find("wool") and
+		def.description and def.description ~= "" and def.light_source == 0
 end
 
 -- Nodeboxes definitions.
@@ -381,11 +381,11 @@ xdecor.register("worktable", {
 	allow_metadata_inventory_move = worktable.move
 })
 
-for _, d in pairs(worktable.defs) do
 for node in pairs(minetest.registered_nodes) do
+for _, d in pairs(worktable.defs) do
 	local def = minetest.registered_nodes[node]
 	if worktable.nodes(def) and d[3] then
-		local groups, tiles = {}, {}
+		local groups, tiles = {}, {def.tiles[1]}
 		groups.not_in_creative_inventory = 1
 
 		for k, v in pairs(def.groups) do
@@ -396,8 +396,6 @@ for node in pairs(minetest.registered_nodes) do
 
 		if #def.tiles > 1 and not def.drawtype:find("glass") then
 			tiles = def.tiles
-		else
-			tiles = {def.tiles[1]}
 		end
 
 		stairs.register_stair_and_slab(node:match(":(.*)"), node, groups, tiles,
@@ -418,7 +416,7 @@ for node in pairs(minetest.registered_nodes) do
 				local pointed_nodebox = minetest.get_node(pos).name:match("(%w+)$")
 				local wield_item = clicker:get_wielded_item():get_name()
 				local player_name = clicker:get_player_name()
-				local newnode = ""
+				local newnode = def.name
 
 				if minetest.is_protected(pos, player_name) then
 					minetest.record_protection_violation(pos, player_name)
@@ -443,11 +441,7 @@ for node in pairs(minetest.registered_nodes) do
 					if wield_item == def.name.."_"..x[1] then
 						if not x[2] then x[2] = x[1] end
 						if x[2] == pointed_nodebox then
-							if not x[3] then
-								newnode = def.name
-							else
-								newnode = def.name.."_"..worktable.defs[x[3]][1]
-							end
+							if x[3] then newnode = def.name.."_"..worktable.defs[x[3]][1] end
 						end
 					end
 				end
