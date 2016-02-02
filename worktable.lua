@@ -39,8 +39,7 @@ worktable.defs = {
 
 -- Tools allowed to be repaired.
 worktable.repairable_tools = [[
-	pick, axe, shovel, sword, hoe
-	armor, shield
+	pick, axe, shovel, sword, hoe, armor, shield
 ]]
 
 function worktable.get_recipe(item)
@@ -49,12 +48,9 @@ function worktable.get_recipe(item)
 			item = item:sub(7)..":white"
 		elseif minetest.registered_items["default:"..item:sub(7)] then
 			item = item:gsub("group:", "default:")
-		else
-			for node, def in pairs(minetest.registered_items) do
-				if def.groups[item:match("[^,:]+$")] then
-					item = node
-				end
-			end
+		else for node, def in pairs(minetest.registered_items) do
+			 if def.groups[item:match("[^,:]+$")] then item = node end
+		     end
 		end
 	end
 	return item
@@ -65,11 +61,8 @@ function worktable.craftguide_formspec(meta, pagenum, item, recipe_num, filter, 
 	local npp, i, s = 8*3, 0, 0
 	local pagemax = math.floor((inv_size - 1) / npp + 1)
 
-	if pagenum > pagemax then
-		pagenum = 1
-	elseif pagenum == 0 then
-		pagenum = pagemax
-	end
+	if     pagenum > pagemax then pagenum = 1
+	elseif pagenum == 0      then pagenum = pagemax end
 
 	local formspec = [[ size[8,6.6;]
 			tablecolumns[color;text;color;text]
@@ -89,10 +82,9 @@ function worktable.craftguide_formspec(meta, pagenum, item, recipe_num, filter, 
 	for _, name in pairs(worktable.craftguide_main_list(meta, filter, tab_id)) do
 		if s < (pagenum - 1) * npp then
 			s = s + 1
-		else
-			if i >= npp then break end
+		else if i >= npp then break end
 			formspec = formspec.."item_image_button["..(i%8)..","..
-					(math.floor(i/8)+1)..";1,1;"..name..";"..name..";]"
+					     (math.floor(i/8)+1)..";1,1;"..name..";"..name..";]"
 			i = i + 1
 		end
 	end
@@ -102,14 +94,14 @@ function worktable.craftguide_formspec(meta, pagenum, item, recipe_num, filter, 
 		local items_num = #minetest.get_all_craft_recipes(item)
 		if recipe_num > items_num then recipe_num = 1 end
 
-		if items_num > 1 then
-			formspec = formspec.."button[0,6;1.6,1;alternate;Alternate]"..
-					"label[0,5.5;Recipe "..recipe_num.." of "..items_num.."]"
+		if items_num > 1 then formspec = formspec..
+			"button[0,6;1.6,1;alternate;Alternate]"..
+			"label[0,5.5;Recipe "..recipe_num.." of "..items_num.."]"
 		end
 		
 		local type = minetest.get_all_craft_recipes(item)[recipe_num].type
-		if type == "cooking" then
-			formspec = formspec.."image[3.75,4.6;0.5,0.5;default_furnace_fire_fg.png]"
+		if type == "cooking" then formspec = formspec..
+			"image[3.75,4.6;0.5,0.5;default_furnace_fire_fg.png]"
 		end
 
 		local items = minetest.get_all_craft_recipes(item)[recipe_num].items
@@ -123,14 +115,14 @@ function worktable.craftguide_formspec(meta, pagenum, item, recipe_num, filter, 
 			return ""
 		end
 
-		for i, v in pairs(items) do
-			formspec = formspec.."item_image_button["..((i-1) % width + 4.5)..","..
-				(math.floor((i-1) / width + (6 - math.min(2, rows))))..";1,1;"..
-				worktable.get_recipe(v)..";"..worktable.get_recipe(v)..";"..is_group(v).."]"
+		for i, v in pairs(items) do formspec = formspec..
+			"item_image_button["..((i-1) % width + 4.5)..","..
+			(math.floor((i-1) / width + (6 - math.min(2, rows))))..";1,1;"..
+			worktable.get_recipe(v)..";"..worktable.get_recipe(v)..";"..is_group(v).."]"
 		end
 
 		formspec = formspec.."item_image_button[2.5,5;1,1;"..item..";"..item..";"..yield.."]"..
-				"image[3.5,5;1,1;gui_furnace_arrow_bg.png^[transformR90]"
+				     "image[3.5,5;1,1;gui_furnace_arrow_bg.png^[transformR90]"
 	end
 
 	meta:set_string("formspec", formspec)
@@ -143,7 +135,6 @@ local function tab_category(tab_id)
 		minetest.registered_tools,
 		minetest.registered_craftitems
 	}
-
 	return id_category[tab_id] or id_category[1]
 end
 
@@ -254,18 +245,14 @@ function worktable.fields(pos, _, fields)
 		worktable.craftguide_main_list(meta, filter, tonumber(fields.tabs))
 		worktable.craftguide_formspec(meta, 1, nil, 1, filter, tonumber(fields.tabs))
 	elseif fields.prev or fields.next then
-		if fields.prev then
-			pagenum = pagenum - 1
-		else
-			pagenum = pagenum + 1
-		end
+		if fields.prev then pagenum = pagenum - 1
+		else		    pagenum = pagenum + 1 end
 		worktable.craftguide_formspec(meta, pagenum, nil, 1, filter, tab_id)
-	else
-		for item in pairs(fields) do
-			if item:find(":") and minetest.get_craft_recipe(item).items then
-				worktable.craftguide_formspec(meta, pagenum, item, 1, filter, tab_id)
-			end
-		end
+	else for item in pairs(fields) do
+		 if minetest.get_craft_recipe(item).items then
+			worktable.craftguide_formspec(meta, pagenum, item, 1, filter, tab_id)
+		 end
+	     end
 	end
 end
 
@@ -277,9 +264,7 @@ end
 
 local function trash_delete(pos)
 	local inv = minetest.get_meta(pos):get_inventory()
-	minetest.after(0, function()
-		inv:set_stack("trash", 1, "")
-	end)
+	minetest.after(0, function() inv:set_stack("trash", 1, "") end)
 end
 
 function worktable.put(pos, listname, _, stack)
@@ -294,26 +279,21 @@ function worktable.put(pos, listname, _, stack)
 		if listname == "trash" then trash_delete(pos) end
 		return stack:get_count()
 	end
-
 	return 0
 end
 
 function worktable.take(_, listname, _, stack, player)
 	if listname == "forms" then
-		local inv = player:get_inventory()
-		if inv:room_for_item("main", stack:get_name()) then
-			return -1
-		end
+		local free_space = player:get_inventory():room_for_item("main", stack:get_name())
+		if free_space then return -1 end
 		return 0
 	end
 	return stack:get_count()
 end
 
 function worktable.move(pos, _, _, to_list, _, count)
-	if to_list == "storage" then
-		return count
-	elseif to_list == "trash" then
-		trash_delete(pos)
+	if to_list == "storage" or to_list == "trash" then
+		if to_list == "trash" then trash_delete(pos) end
 		return count
 	end
 	return 0
@@ -321,19 +301,15 @@ end
 
 function worktable.get_output(inv, input, name)
 	if inv:is_empty("input") then
-		inv:set_list("forms", {})
-		return
-	end
+		inv:set_list("forms", {}) return end
 
 	local output = {}
 	for _, n in pairs(worktable.defs) do
 		local count = math.min(n[2] * input:get_count(), input:get_stack_max())
 		local item = name.."_"..n[1]
 		if not n[3] then item = "stairs:"..n[1].."_"..name:match(":(.*)") end
-
 		output[#output+1] = item.." "..count
 	end
-
 	inv:set_list("forms", output)
 end
 
@@ -352,9 +328,7 @@ function worktable.on_take(pos, listname, index, stack)
 	if listname == "input" then
 		if stack:get_name() == input:get_name() then
 			worktable.get_output(inv, input, stack:get_name())
-		else
-			inv:set_list("forms", {})
-		end
+		else inv:set_list("forms", {}) end
 	elseif listname == "forms" then
 		input:take_item(math.ceil(stack:get_count() / worktable.defs[index][2]))
 		inv:set_stack("input", 1, input)
@@ -417,8 +391,7 @@ for _, d in pairs(worktable.defs) do
 				local player_name = clicker:get_player_name()
 				if minetest.is_protected(pos, player_name) then
 					minetest.record_protection_violation(pos, player_name)
-					return
-				end
+				return end
 
 				local T = {
 					{"nanoslab",   nil,	     2},
@@ -441,6 +414,7 @@ for _, d in pairs(worktable.defs) do
 						if wield_item == newnode.."_"..x[1] then
 							if not x[2] then x[2] = x[1] end
 							local pointed_nodebox = minetest.get_node(pos).name:match("(%w+)$")
+
 							if x[2] == pointed_nodebox then
 								if x[3] then newnode = newnode.."_"..worktable.defs[x[3]][1] end
 								combined = true
@@ -448,9 +422,7 @@ for _, d in pairs(worktable.defs) do
 							end
 						end
 					end
-				else
-					minetest.item_place_node(itemstack, clicker, pointed_thing)
-				end
+				else minetest.item_place_node(itemstack, clicker, pointed_thing) end
 
 				if combined and not minetest.setting_getbool("creative_mode") then
 					itemstack:take_item()
@@ -462,9 +434,7 @@ for _, d in pairs(worktable.defs) do
 	if node:find("meselamp") then
 		if d[3] then
 			minetest.register_alias("default:meselamp_"..d[1], "default:glass_"..d[1])
-		else
-			minetest.register_alias("stairs:"..d[1].."_meselamp", "stairs:"..d[1].."_glass")
-		end
+		else minetest.register_alias("stairs:"..d[1].."_meselamp", "stairs:"..d[1].."_glass") end
 	elseif worktable.nodes(def) and not d[3] then
 		minetest.register_alias(node.."_"..d[1], "stairs:"..d[1].."_"..node:match(":(.*)"))
 	end
@@ -476,8 +446,7 @@ minetest.register_abm({
 	interval = 3, chance = 1,
 	action = function(pos)
 		local inv = minetest.get_meta(pos):get_inventory()
-		local tool = inv:get_stack("tool", 1)
-		local hammer = inv:get_stack("hammer", 1)
+		local tool, hammer = inv:get_stack("tool", 1), inv:get_stack("hammer", 1)
 
 		if tool:is_empty() or hammer:is_empty() or tool:get_wear() == 0 then
 			return

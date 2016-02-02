@@ -117,9 +117,7 @@ function enchanting.put(_, listname, _, stack)
 end
 
 function enchanting.on_take(pos, listname)
-	if listname == "tool" then
-		enchanting.formspec(pos, nil)
-	end
+	if listname == "tool" then enchanting.formspec(pos, nil) end
 end
 
 function enchanting.construct(pos)
