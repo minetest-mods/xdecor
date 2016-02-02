@@ -414,11 +414,7 @@ for _, d in pairs(worktable.defs) do
 			sunlight_propagates = true,
 			on_place = minetest.rotate_node,
 			on_rightclick = function(pos, node, clicker, itemstack, pointed_thing)
-				local pointed_nodebox = minetest.get_node(pos).name:match("(%w+)$")
-				local wield_item = clicker:get_wielded_item():get_name()
 				local player_name = clicker:get_player_name()
-				local newnode = def.name
-
 				if minetest.is_protected(pos, player_name) then
 					minetest.record_protection_violation(pos, player_name)
 					return
@@ -438,26 +434,27 @@ for _, d in pairs(worktable.defs) do
 					{"halfstair",  "outerstair", nil}
 				}
 
-				for _, x in pairs(T) do
-					if wield_item == def.name.."_"..x[1] then
-						if not x[2] then x[2] = x[1] end
-						if x[2] == pointed_nodebox then
-							if x[3] then newnode = def.name.."_"..worktable.defs[x[3]][1] end
+				local newnode, combined = def.name, false
+				if clicker:get_player_control().sneak then
+					local wield_item = clicker:get_wielded_item():get_name()
+					for _, x in pairs(T) do
+						if wield_item == newnode.."_"..x[1] then
+							if not x[2] then x[2] = x[1] end
+							local pointed_nodebox = minetest.get_node(pos).name:match("(%w+)$")
+							if x[2] == pointed_nodebox then
+								if x[3] then newnode = newnode.."_"..worktable.defs[x[3]][1] end
+								combined = true
+								minetest.set_node(pos, {name=newnode, param2=node.param2})
+							end
 						end
 					end
-				end
-
-				if clicker:get_player_control().sneak then
-					if not minetest.registered_nodes[newnode] then return end
-					minetest.set_node(pos, {name=newnode, param2=node.param2})
 				else
-					minetest.item_place_node(ItemStack(wield_item), clicker, pointed_thing)
+					minetest.item_place_node(itemstack, clicker, pointed_thing)
 				end
 
-				if not minetest.setting_getbool("creative_mode") then
+				if combined and not minetest.setting_getbool("creative_mode") then
 					itemstack:take_item()
 				end
-
 				return itemstack
 			end
 		})
