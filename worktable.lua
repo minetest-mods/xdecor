@@ -56,7 +56,7 @@ function worktable.get_recipe(item)
 	return item
 end
 
-function worktable.craftguide_formspec(meta, pagenum, item, recipe_num, filter, tab_id)
+function worktable.craftguide_formspec(meta, pagenum, item, recipe_num, filter)
 	local inv_size = meta:get_int("inv_size")
 	local npp, i, s = 8*3, 0, 0
 	local pagemax = math.floor((inv_size - 1) / npp + 1)
@@ -73,13 +73,12 @@ function worktable.craftguide_formspec(meta, pagenum, item, recipe_num, filter, 
 			button[4.6,0.2;0.7,0.5;clearfilter;X]
 			button[0,0;1.5,1;backcraft;< Back]
 			tooltip[search;Search]
-			tooltip[clearfilter;Reset] ]]
-			.."tabheader[0,0;tabs;All,Nodes,Tools,Items;"..tostring(tab_id)..";true;false]"..
+			tooltip[clearfilter;Reset] ]] ..
 			"table[6.1,0.2;1.1,0.5;pagenum;#FFFF00,"..tostring(pagenum)..
 			",#FFFFFF,/ "..tostring(pagemax).."]"..
 			"field[1.8,0.32;2.6,1;filter;;"..filter.."]"..xbg
 
-	for _, name in pairs(worktable.craftguide_main_list(meta, filter, tab_id)) do
+	for _, name in pairs(worktable.craftguide_items(meta, filter)) do
 		if s < (pagenum - 1) * npp then
 			s = s + 1
 		else if i >= npp then break end
@@ -106,7 +105,6 @@ function worktable.craftguide_formspec(meta, pagenum, item, recipe_num, filter, 
 
 		local items = minetest.get_all_craft_recipes(item)[recipe_num].items
 		local width = minetest.get_all_craft_recipes(item)[recipe_num].width
-		local yield = minetest.get_all_craft_recipes(item)[recipe_num].output:match("%s(%d+)") or ""
 		if width == 0 then width = math.min(3, #items) end
 		local rows = math.ceil(table.maxn(items) / width)
 
@@ -120,7 +118,8 @@ function worktable.craftguide_formspec(meta, pagenum, item, recipe_num, filter, 
 			(math.floor((i-1) / width + (6 - math.min(2, rows))))..";1,1;"..
 			worktable.get_recipe(v)..";"..worktable.get_recipe(v)..";"..is_group(v).."]"
 		end
-
+		
+		local yield = minetest.get_all_craft_recipes(item)[recipe_num].output:match("%s(%d+)") or ""
 		formspec = formspec.."item_image_button[2.5,5;1,1;"..item..";"..item..";"..yield.."]"..
 				     "image[3.5,5;1,1;gui_furnace_arrow_bg.png^[transformR90]"
 	end
@@ -128,19 +127,9 @@ function worktable.craftguide_formspec(meta, pagenum, item, recipe_num, filter, 
 	meta:set_string("formspec", formspec)
 end
 
-local function tab_category(tab_id)
-	local id_category = {
-		minetest.registered_items,
-		minetest.registered_nodes,
-		minetest.registered_tools,
-		minetest.registered_craftitems
-	}
-	return id_category[tab_id] or id_category[1]
-end
-
-function worktable.craftguide_main_list(meta, filter, tab_id)
+function worktable.craftguide_items(meta, filter)
 	local items_list = {}
-	for name, def in pairs(tab_category(tab_id)) do
+	for name, def in pairs(minetest.registered_items) do
 		if not (def.groups.not_in_creative_inventory == 1) and
 				minetest.get_craft_recipe(name).items and
 				def.description and def.description ~= "" and
@@ -222,7 +211,6 @@ function worktable.fields(pos, _, fields)
 	local formspec = meta:to_table().fields.formspec
 	local filter = formspec:match("filter;;([%w_:]+)") or ""
 	local pagenum = tonumber(formspec:match("#FFFF00,(%d+)")) or 1
-	local tab_id = tonumber(formspec:match("tabheader%[.*;(%d+)%;.*%]")) or 1
 
 	if fields.back then
 		worktable.formspecs.main(meta)
@@ -231,26 +219,23 @@ function worktable.fields(pos, _, fields)
 	elseif fields.storage then
 		worktable.formspecs.storage(meta)
 	elseif fields.craftguide or fields.clearfilter then
-		worktable.craftguide_main_list(meta, nil, tab_id)
-		worktable.craftguide_formspec(meta, 1, nil, 1, "", tab_id)
+		worktable.craftguide_items(meta, nil)
+		worktable.craftguide_formspec(meta, 1, nil, 1, "")
 	elseif fields.alternate then
 		local item = formspec:match("item_image_button%[.*;([%w_:]+);.*%]") or ""
 		local recipe_num = tonumber(formspec:match("Recipe%s(%d+)")) or 1
 		recipe_num = recipe_num + 1
-		worktable.craftguide_formspec(meta, pagenum, item, recipe_num, filter, tab_id)
+		worktable.craftguide_formspec(meta, pagenum, item, recipe_num, filter)
 	elseif fields.search then
-		worktable.craftguide_main_list(meta, fields.filter:lower(), tab_id)
-		worktable.craftguide_formspec(meta, 1, nil, 1, fields.filter:lower(), tab_id)
-	elseif fields.tabs then
-		worktable.craftguide_main_list(meta, filter, tonumber(fields.tabs))
-		worktable.craftguide_formspec(meta, 1, nil, 1, filter, tonumber(fields.tabs))
+		worktable.craftguide_items(meta, fields.filter:lower())
+		worktable.craftguide_formspec(meta, 1, nil, 1, fields.filter:lower())
 	elseif fields.prev or fields.next then
 		if fields.prev then pagenum = pagenum - 1
-		else		    pagenum = pagenum + 1 end
-		worktable.craftguide_formspec(meta, pagenum, nil, 1, filter, tab_id)
+		else pagenum = pagenum + 1 end
+		worktable.craftguide_formspec(meta, pagenum, nil, 1, filter)
 	else for item in pairs(fields) do
 		 if minetest.get_craft_recipe(item).items then
-			worktable.craftguide_formspec(meta, pagenum, item, 1, filter, tab_id)
+			worktable.craftguide_formspec(meta, pagenum, item, 1, filter)
 		 end
 	     end
 	end
@@ -301,7 +286,8 @@ end
 
 function worktable.get_output(inv, input, name)
 	if inv:is_empty("input") then
-		inv:set_list("forms", {}) return end
+		inv:set_list("forms", {}) return
+	end
 
 	local output = {}
 	for _, n in pairs(worktable.defs) do
@@ -390,8 +376,8 @@ for _, d in pairs(worktable.defs) do
 			on_rightclick = function(pos, node, clicker, itemstack, pointed_thing)
 				local player_name = clicker:get_player_name()
 				if minetest.is_protected(pos, player_name) then
-					minetest.record_protection_violation(pos, player_name)
-				return end
+					minetest.record_protection_violation(pos, player_name) return
+				end
 
 				local T = {
 					{"nanoslab",   nil,	     2},
@@ -447,10 +433,7 @@ minetest.register_abm({
 	action = function(pos)
 		local inv = minetest.get_meta(pos):get_inventory()
 		local tool, hammer = inv:get_stack("tool", 1), inv:get_stack("hammer", 1)
-
-		if tool:is_empty() or hammer:is_empty() or tool:get_wear() == 0 then
-			return
-		end
+		if tool:is_empty() or hammer:is_empty() or tool:get_wear() == 0 then return end
 
 		-- Wear : 0-65535 | 0 = new condition.
 		tool:add_wear(-500)
