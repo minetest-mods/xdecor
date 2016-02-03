@@ -143,6 +143,21 @@ function worktable.craftguide_items(meta, filter)
 	return items_list
 end
 
+function worktable.get_output(inv, input, name)
+	if inv:is_empty("input") then
+		inv:set_list("forms", {}) return
+	end
+
+	local output = {}
+	for _, n in pairs(worktable.defs) do
+		local count = math.min(n[2] * input:get_count(), input:get_stack_max())
+		local item = name.."_"..n[1]
+		if not n[3] then item = "stairs:"..n[1].."_"..name:match(":(.*)") end
+		output[#output+1] = item.." "..count
+	end
+	inv:set_list("forms", output)
+end
+
 worktable.formspecs = {
 	crafting = function(meta)
 		meta:set_string("formspec", [[ size[8,7;]
@@ -268,29 +283,10 @@ function worktable.take(_, listname, _, stack, player)
 	return stack:get_count()
 end
 
-function worktable.on_move(pos, _, _, to_list, _, count)
-	local inv = minetest.get_meta(pos):get_inventory()
-	if to_list == "trash" then inv:set_list("trash", {}) end
-end
 
 function worktable.move(pos, _, _, to_list, _, count)
 	if to_list == "storage" or to_list == "trash" then return count end
 	return 0
-end
-
-function worktable.get_output(inv, input, name)
-	if inv:is_empty("input") then
-		inv:set_list("forms", {}) return
-	end
-
-	local output = {}
-	for _, n in pairs(worktable.defs) do
-		local count = math.min(n[2] * input:get_count(), input:get_stack_max())
-		local item = name.."_"..n[1]
-		if not n[3] then item = "stairs:"..n[1].."_"..name:match(":(.*)") end
-		output[#output+1] = item.." "..count
-	end
-	inv:set_list("forms", output)
 end
 
 function worktable.on_put(pos, listname, _, stack)
@@ -316,6 +312,11 @@ function worktable.on_take(pos, listname, index, stack)
 		inv:set_stack("input", 1, input)
 		worktable.get_output(inv, input, input:get_name())
 	end
+end
+
+function worktable.on_move(pos, _, _, to_list, _, count)
+	local inv = minetest.get_meta(pos):get_inventory()
+	if to_list == "trash" then inv:set_list("trash", {}) end
 end
 
 xdecor.register("worktable", {
