@@ -254,11 +254,9 @@ end
 
 function worktable.put(pos, listname, _, stack)
 	local stackname = stack:get_name()
-	if listname == "tool" and stack:get_wear() > 0 and
-			worktable.repairable_tools:find(stackname:match(":(%w+)")) then
-		return stack:get_count()
-	end
-	if (listname == "input" and worktable.nodes(minetest.registered_nodes[stackname])) or
+	if (listname == "tool" and stack:get_wear() > 0 and
+			worktable.repairable_tools:find(stackname:match(":(%w+)"))) or
+			(listname == "input" and worktable.nodes(minetest.registered_nodes[stackname])) or
 			(listname == "hammer" and stackname == "xdecor:hammer") or
 			listname == "storage" or listname == "trash" then
 		if listname == "trash" then trash_delete(pos) end
@@ -269,8 +267,8 @@ end
 
 function worktable.take(_, listname, _, stack, player)
 	if listname == "forms" then
-		local free_space = player:get_inventory():room_for_item("main", stack:get_name())
-		if free_space then return -1 end
+		local inv = player:get_inventory()
+		if inv:room_for_item("main", stack:get_name()) then return -1 end
 		return 0
 	end
 	return stack:get_count()
@@ -408,7 +406,9 @@ for _, d in pairs(worktable.defs) do
 							end
 						end
 					end
-				else minetest.item_place_node(itemstack, clicker, pointed_thing) end
+				else
+					minetest.item_place_node(itemstack, clicker, pointed_thing)
+				end
 
 				if combined and not minetest.setting_getbool("creative_mode") then
 					itemstack:take_item()
