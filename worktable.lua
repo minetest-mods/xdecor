@@ -247,11 +247,6 @@ function worktable.dig(pos)
 		inv:is_empty("tool") and inv:is_empty("storage")
 end
 
-local function trash_delete(pos)
-	local inv = minetest.get_meta(pos):get_inventory()
-	minetest.after(0, function() inv:set_stack("trash", 1, "") end)
-end
-
 function worktable.put(pos, listname, _, stack)
 	local stackname = stack:get_name()
 	if (listname == "tool" and stack:get_wear() > 0 and
@@ -259,7 +254,6 @@ function worktable.put(pos, listname, _, stack)
 			(listname == "input" and worktable.nodes(minetest.registered_nodes[stackname])) or
 			(listname == "hammer" and stackname == "xdecor:hammer") or
 			listname == "storage" or listname == "trash" then
-		if listname == "trash" then trash_delete(pos) end
 		return stack:get_count()
 	end
 	return 0
@@ -274,11 +268,13 @@ function worktable.take(_, listname, _, stack, player)
 	return stack:get_count()
 end
 
+function worktable.on_move(pos, _, _, to_list, _, count)
+	local inv = minetest.get_meta(pos):get_inventory()
+	if to_list == "trash" then inv:set_list("trash", {}) end
+end
+
 function worktable.move(pos, _, _, to_list, _, count)
-	if to_list == "storage" or to_list == "trash" then
-		if to_list == "trash" then trash_delete(pos) end
-		return count
-	end
+	if to_list == "storage" or to_list == "trash" then return count end
 	return 0
 end
 
@@ -298,10 +294,12 @@ function worktable.get_output(inv, input, name)
 end
 
 function worktable.on_put(pos, listname, _, stack)
+	local inv = minetest.get_meta(pos):get_inventory()
 	if listname == "input" then
-		local inv = minetest.get_meta(pos):get_inventory()
 		local input = inv:get_stack("input", 1)
 		worktable.get_output(inv, input, stack:get_name())
+	elseif listname == "trash" then
+		inv:set_list("trash", {})
 	end
 end
 
@@ -335,6 +333,7 @@ xdecor.register("worktable", {
 	on_receive_fields = worktable.fields,
 	on_metadata_inventory_put = worktable.on_put,
 	on_metadata_inventory_take = worktable.on_take,
+	on_metadata_inventory_move = worktable.on_move,
 	allow_metadata_inventory_put = worktable.put,
 	allow_metadata_inventory_take = worktable.take,
 	allow_metadata_inventory_move = worktable.move
