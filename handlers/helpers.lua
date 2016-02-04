@@ -23,7 +23,7 @@ function xdecor.tablecopy(T)
 		if type(v) == "table" then
 			new[k] = xdecor.tablecopy(v)
 		else
-			new[k] = item
+			new[k] = v
 		end
 	end
 	return new
