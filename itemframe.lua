@@ -85,10 +85,7 @@ xdecor.register("frame", {
 	on_rotate = screwdriver.disallow,
 	sunlight_propagates = true,
 	inventory_image = "xdecor_frame.png",
-	node_box = {
-		type = "fixed",
-		fixed = {-0.5, -0.5, 0.4375, 0.5, 0.5, 0.5}
-	},
+	node_box = xdecor.nodebox.slab_z(0.9375),
 	tiles = {
 		"xdecor_wood.png", "xdecor_wood.png", "xdecor_wood.png",
 		"xdecor_wood.png", "xdecor_wood.png", "xdecor_frame.png"

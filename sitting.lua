@@ -64,7 +64,7 @@ xdecor.register("chair", {
 	sounds = default.node_sound_wood_defaults(),
 	groups = {choppy=3, oddly_breakable_by_hand=2, flammable=3},
 	on_rotate = screwdriver.rotate_simple,
-	node_box = xdecor.pixelnodebox(16, {
+	node_box = xdecor.pixelbox(16, {
 		{3,  0, 11,   2, 16, 2},
 		{11, 0, 11,   2, 16, 2},
 		{5,  9, 11.5, 6,  6, 1},

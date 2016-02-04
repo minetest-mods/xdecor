@@ -426,7 +426,7 @@ xdecor.register("stonepath", {
 	on_rotate = screwdriver.rotate_simple,
 	sounds = default.node_sound_stone_defaults(),
 	sunlight_propagates = true,
-	node_box = xdecor.pixelnodebox(16, {
+	node_box = xdecor.pixelbox(16, {
 		{8,  0,  8, 6, .5, 6},
 		{1,  0,  1, 6, .5, 6},
 		{1,  0, 10, 5, .5, 5},
@@ -453,7 +453,7 @@ xdecor.register("table", {
 	tiles = {"xdecor_wood.png"},
 	groups = {choppy=3, oddly_breakable_by_hand=2, flammable=3},
 	sounds = default.node_sound_wood_defaults(),
-	node_box = xdecor.pixelnodebox(16, {
+	node_box = xdecor.pixelbox(16, {
 		{0, 14, 0, 16, 2, 16}, {5.5, 0, 5.5, 5, 14, 6}
 	})
 })
