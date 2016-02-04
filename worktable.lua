@@ -3,15 +3,15 @@ screwdriver = screwdriver or {}
 
 -- Nodes allowed to be cut.
 -- Only the regular, solid blocks without formspec or explosivity can be cut.
-function worktable.nodes(def)
+function worktable:nodes(def)
 	return (def.drawtype == "normal" or def.drawtype:find("glass")) and
 		(def.groups.cracky or def.groups.choppy) and not
 		def.on_construct and not def.after_place_node and not
 		def.after_place_node and not def.on_rightclick and not
 		def.on_blast and not def.allow_metadata_inventory_take and not
 		(def.groups.not_in_creative_inventory == 1) and not
-		def.description:find("Ore") and not def.name:find("wool") and
-		def.description and def.description ~= "" and def.light_source == 0
+		def.groups.wool and def.light_source == 0 and
+		def.description and def.description ~= ""
 end
 
 -- Nodeboxes definitions.
@@ -42,7 +42,7 @@ worktable.repairable_tools = [[
 	pick, axe, shovel, sword, hoe, armor, shield
 ]]
 
-function worktable.get_recipe(item)
+function worktable:get_recipe(item)
 	if item:find("^group:") then
 		if item:find("wool$") or item:find("dye$") then
 			item = item:sub(7)..":white"
@@ -56,7 +56,7 @@ function worktable.get_recipe(item)
 	return item
 end
 
-function worktable.craftguide_formspec(meta, pagenum, item, recipe_num, filter)
+function worktable:craftguide_formspec(meta, pagenum, item, recipe_num, filter)
 	local inv_size = meta:get_int("inv_size")
 	local npp, i, s = 8*3, 0, 0
 	local pagemax = math.floor((inv_size - 1) / npp + 1)
@@ -78,7 +78,7 @@ function worktable.craftguide_formspec(meta, pagenum, item, recipe_num, filter)
 			",#FFFFFF,/ "..tostring(pagemax).."]"..
 			"field[1.8,0.32;2.6,1;filter;;"..filter.."]"..xbg
 
-	for _, name in pairs(worktable.craftguide_items(meta, filter)) do
+	for _, name in pairs(self:craftguide_items(meta, filter)) do
 		if s < (pagenum - 1) * npp then
 			s = s + 1
 		else if i >= npp then break end
@@ -116,7 +116,7 @@ function worktable.craftguide_formspec(meta, pagenum, item, recipe_num, filter)
 		for i, v in pairs(items) do formspec = formspec..
 			"item_image_button["..((i-1) % width + 4.5)..","..
 			(math.floor((i-1) / width + (6 - math.min(2, rows))))..";1,1;"..
-			worktable.get_recipe(v)..";"..worktable.get_recipe(v)..";"..is_group(v).."]"
+			self:get_recipe(v)..";"..self:get_recipe(v)..";"..is_group(v).."]"
 		end
 		
 		local yield = minetest.get_all_craft_recipes(item)[recipe_num].output:match("%s(%d+)") or ""
@@ -127,7 +127,7 @@ function worktable.craftguide_formspec(meta, pagenum, item, recipe_num, filter)
 	meta:set_string("formspec", formspec)
 end
 
-function worktable.craftguide_items(meta, filter)
+function worktable:craftguide_items(meta, filter)
 	local items_list = {}
 	for name, def in pairs(minetest.registered_items) do
 		if not (def.groups.not_in_creative_inventory == 1) and
@@ -143,13 +143,13 @@ function worktable.craftguide_items(meta, filter)
 	return items_list
 end
 
-function worktable.get_output(inv, input, name)
+function worktable:get_output(inv, input, name)
 	if inv:is_empty("input") then
 		inv:set_list("forms", {}) return
 	end
 
 	local output = {}
-	for _, n in pairs(worktable.defs) do
+	for _, n in pairs(self.defs) do
 		local count = math.min(n[2] * input:get_count(), input:get_stack_max())
 		local item = name.."_"..n[1]
 		if not n[3] then item = "stairs:"..n[1].."_"..name:match(":(.*)") end
@@ -234,23 +234,23 @@ function worktable.fields(pos, _, fields)
 	elseif fields.storage then
 		worktable.formspecs.storage(meta)
 	elseif fields.craftguide or fields.clearfilter then
-		worktable.craftguide_items(meta, nil)
-		worktable.craftguide_formspec(meta, 1, nil, 1, "")
+		worktable:craftguide_items(meta, nil)
+		worktable:craftguide_formspec(meta, 1, nil, 1, "")
 	elseif fields.alternate then
 		local item = formspec:match("item_image_button%[.*;([%w_:]+);.*%]") or ""
 		local recipe_num = tonumber(formspec:match("Recipe%s(%d+)")) or 1
 		recipe_num = recipe_num + 1
-		worktable.craftguide_formspec(meta, pagenum, item, recipe_num, filter)
+		worktable:craftguide_formspec(meta, pagenum, item, recipe_num, filter)
 	elseif fields.search then
-		worktable.craftguide_items(meta, fields.filter:lower())
-		worktable.craftguide_formspec(meta, 1, nil, 1, fields.filter:lower())
+		worktable:craftguide_items(meta, fields.filter:lower())
+		worktable:craftguide_formspec(meta, 1, nil, 1, fields.filter:lower())
 	elseif fields.prev or fields.next then
 		if fields.prev then pagenum = pagenum - 1
 		else pagenum = pagenum + 1 end
-		worktable.craftguide_formspec(meta, pagenum, nil, 1, filter)
+		worktable:craftguide_formspec(meta, pagenum, nil, 1, filter)
 	else for item in pairs(fields) do
 		 if minetest.get_craft_recipe(item).items then
-			worktable.craftguide_formspec(meta, pagenum, item, 1, filter)
+			worktable:craftguide_formspec(meta, pagenum, item, 1, filter)
 		 end
 	     end
 	end
@@ -266,7 +266,7 @@ function worktable.put(pos, listname, _, stack)
 	local stackname = stack:get_name()
 	if (listname == "tool" and stack:get_wear() > 0 and
 			worktable.repairable_tools:find(stackname:match(":(%w+)"))) or
-			(listname == "input" and worktable.nodes(minetest.registered_nodes[stackname])) or
+			(listname == "input" and worktable:nodes(minetest.registered_nodes[stackname])) or
 			(listname == "hammer" and stackname == "xdecor:hammer") or
 			listname == "storage" or listname == "trash" then
 		return stack:get_count()
@@ -293,7 +293,7 @@ function worktable.on_put(pos, listname, _, stack)
 	local inv = minetest.get_meta(pos):get_inventory()
 	if listname == "input" then
 		local input = inv:get_stack("input", 1)
-		worktable.get_output(inv, input, stack:get_name())
+		worktable:get_output(inv, input, stack:get_name())
 	elseif listname == "trash" then
 		inv:set_list("trash", {})
 	end
@@ -305,12 +305,12 @@ function worktable.on_take(pos, listname, index, stack)
 
 	if listname == "input" then
 		if stack:get_name() == input:get_name() then
-			worktable.get_output(inv, input, stack:get_name())
+			worktable:get_output(inv, input, stack:get_name())
 		else inv:set_list("forms", {}) end
 	elseif listname == "forms" then
 		input:take_item(math.ceil(stack:get_count() / worktable.defs[index][2]))
 		inv:set_stack("input", 1, input)
-		worktable.get_output(inv, input, input:get_name())
+		worktable:get_output(inv, input, input:get_name())
 	end
 end
 
@@ -343,7 +343,7 @@ xdecor.register("worktable", {
 for node in pairs(minetest.registered_nodes) do
 for _, d in pairs(worktable.defs) do
 	local def = minetest.registered_nodes[node]
-	if worktable.nodes(def) and d[3] then
+	if worktable:nodes(def) and d[3] then
 		local groups, tiles = {}, {def.tiles[1]}
 		groups.not_in_creative_inventory = 1
 
@@ -421,7 +421,7 @@ for _, d in pairs(worktable.defs) do
 		if d[3] then
 			minetest.register_alias("default:meselamp_"..d[1], "default:glass_"..d[1])
 		else minetest.register_alias("stairs:"..d[1].."_meselamp", "stairs:"..d[1].."_glass") end
-	elseif worktable.nodes(def) and not d[3] then
+	elseif worktable:nodes(def) and not d[3] then
 		minetest.register_alias(node.."_"..d[1], "stairs:"..d[1].."_"..node:match(":(.*)"))
 	end
 end
