@@ -10,7 +10,7 @@ function worktable:nodes(def)
 		def.after_place_node and not def.on_rightclick and not
 		def.on_blast and not def.allow_metadata_inventory_take and not
 		(def.groups.not_in_creative_inventory == 1) and not
-		def.groups.wool and def.light_source == 0 and
+		def.groups.wool and not def.drop and def.light_source == 0 and
 		def.description and def.description ~= ""
 end
 
@@ -133,7 +133,8 @@ function worktable:craftguide_items(meta, filter)
 		if not (def.groups.not_in_creative_inventory == 1) and
 				minetest.get_craft_recipe(name).items and
 				def.description and def.description ~= "" and
-				(not filter or def.name:find(filter, 1, true)) then
+				(not filter or def.name:find(filter, 1, true) or
+					def.description:lower():find(filter, 1, true)) then
 			items_list[#items_list+1] = name
 		end
 	end
@@ -284,7 +285,7 @@ function worktable.take(_, listname, _, stack, player)
 end
 
 
-function worktable.move(pos, _, _, to_list, _, count)
+function worktable.move(_, _, _, to_list, _, count)
 	if to_list == "storage" or to_list == "trash" then return count end
 	return 0
 end
@@ -340,8 +341,8 @@ xdecor.register("worktable", {
 	allow_metadata_inventory_move = worktable.move
 })
 
-for node in pairs(minetest.registered_nodes) do
 for _, d in pairs(worktable.defs) do
+for node in pairs(minetest.registered_nodes) do
 	local def = minetest.registered_nodes[node]
 	if worktable:nodes(def) and d[3] then
 		local groups, tiles = {}, {def.tiles[1]}
@@ -418,8 +419,7 @@ for _, d in pairs(worktable.defs) do
 		})
 	end
 	if node:find("meselamp") then
-		if d[3] then
-			minetest.register_alias("default:meselamp_"..d[1], "default:glass_"..d[1])
+		if d[3] then minetest.register_alias("default:meselamp_"..d[1], "default:glass_"..d[1])
 		else minetest.register_alias("stairs:"..d[1].."_meselamp", "stairs:"..d[1].."_glass") end
 	elseif worktable:nodes(def) and not d[3] then
 		minetest.register_alias(node.."_"..d[1], "stairs:"..d[1].."_"..node:match(":(.*)"))
