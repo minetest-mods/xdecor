@@ -354,16 +354,18 @@ for node in pairs(minetest.registered_nodes) do
 			end
 		end
 
-		if def.tiles then		
+		if def.tiles then
 			if #def.tiles > 1 and not def.drawtype:find("glass") then
 				tiles = def.tiles
-			else tiles = def.tiles[1] end
+			else tiles = {def.tiles[1]} end
 		else
-			tiles = def.tile_images[1]
+			tiles = {def.tile_images[1]}
 		end
 
-		stairs.register_stair_and_slab(node:match(":(.*)"), node, groups, tiles,
-			def.description.." Stair", def.description.." Slab", def.sounds)
+		if not minetest.registered_nodes["stairs:slab_"..node:match(":(.*)")] then
+			stairs.register_stair_and_slab(node:match(":(.*)"), node, groups, tiles,
+				def.description.." Stair", def.description.." Slab", def.sounds)
+		end
 
 		minetest.register_node(":"..node.."_"..d[1], {
 			description = def.description.." "..d[1]:gsub("^%l", string.upper),
