@@ -345,7 +345,7 @@ for _, d in pairs(worktable.defs) do
 for node in pairs(minetest.registered_nodes) do
 	local def = minetest.registered_nodes[node]
 	if worktable:nodes(def) and d[3] then
-		local groups, tiles = {}, {def.tiles[1]}
+		local groups, tiles = {}, {}
 		groups.not_in_creative_inventory = 1
 
 		for k, v in pairs(def.groups) do
@@ -354,8 +354,12 @@ for node in pairs(minetest.registered_nodes) do
 			end
 		end
 
-		if #def.tiles > 1 and not def.drawtype:find("glass") then
-			tiles = def.tiles
+		if def.tiles then		
+			if #def.tiles > 1 and not def.drawtype:find("glass") then
+				tiles = def.tiles
+			else tiles = def.tiles[1] end
+		else
+			tiles = def.tile_images[1]
 		end
 
 		stairs.register_stair_and_slab(node:match(":(.*)"), node, groups, tiles,
