@@ -263,11 +263,11 @@ function worktable.dig(pos)
 		inv:is_empty("tool") and inv:is_empty("storage")
 end
 
-function worktable.put(pos, listname, _, stack)
+function worktable.put(_, listname, _, stack)
 	local stackname = stack:get_name()
 	if (listname == "tool" and stack:get_wear() > 0 and
 			worktable.repairable_tools:find(stackname:match(":(%w+)"))) or
-			(listname == "input" and worktable:nodes(minetest.registered_nodes[stackname])) or
+			(listname == "input" and minetest.registered_nodes[stackname.."_cube"]) or
 			(listname == "hammer" and stackname == "xdecor:hammer") or
 			listname == "storage" or listname == "trash" then
 		return stack:get_count()
