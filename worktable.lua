@@ -109,7 +109,7 @@ function worktable:craftguide_formspec(meta, pagenum, item, recipe_num, filter)
 		local rows = math.ceil(table.maxn(items) / width) -- Lua 5.3 removed `table.maxn`, use `xdecor.maxn` in case of failure.
 
 		local function is_group(item)
-			if item:find("^group:") then return "G" end
+			if item:find("^group:") then return "\nG" end
 			return ""
 		end
 
@@ -120,7 +120,7 @@ function worktable:craftguide_formspec(meta, pagenum, item, recipe_num, filter)
 		end
 		
 		local yield = minetest.get_all_craft_recipes(item)[recipe_num].output:match("%s(%d+)") or ""
-		formspec = formspec.."item_image_button[2.5,5;1,1;"..item..";"..item..";"..yield.."]"..
+		formspec = formspec.."item_image_button[2.5,5;1,1;"..item..";"..item..";\n\n\t\t\t\t"..yield.."]"..
 				     "image[3.5,5;1,1;gui_furnace_arrow_bg.png^[transformR90]"
 	end
 
@@ -238,7 +238,7 @@ function worktable.fields(pos, _, fields)
 		worktable:craftguide_items(meta, nil)
 		worktable:craftguide_formspec(meta, 1, nil, 1, "")
 	elseif fields.alternate then
-		local item = formspec:match("item_image_button%[.*;([%w_:]+);.*%]") or ""
+		local item = formspec:match("image_button%[.*;([%w_:]+);.*%]") or ""
 		local recipe_num = tonumber(formspec:match("Recipe%s(%d+)")) or 1
 		recipe_num = recipe_num + 1
 		worktable:craftguide_formspec(meta, pagenum, item, recipe_num, filter)
