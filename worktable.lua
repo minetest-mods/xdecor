@@ -67,14 +67,14 @@ function worktable:craftguide_formspec(meta, pagenum, item, recipe_num, filter)
 	local formspec = [[ size[8,6.6;]
 			tablecolumns[color;text;color;text]
 			tableoptions[background=#00000000;highlight=#00000000;border=false]
-			button[5.5,0;0.7,1;prev;<]
-			button[7.3,0;0.7,1;next;>]
+			button[5.5,0;0.7,0.95;prev;<]
+			button[7.3,0;0.7,0.95;next;>]
 			button[4,0.2;0.7,0.5;search;?]
 			button[4.6,0.2;0.7,0.5;clearfilter;X]
 			button[0,0;1.5,1;backcraft;< Back]
 			tooltip[search;Search]
 			tooltip[clearfilter;Reset] ]] ..
-			"table[6.1,0.2;1.1,0.5;pagenum;#FFFF00,"..tostring(pagenum)..
+			"table[6.1,0.18;1.1,0.5;pagenum;#FFFF00,"..tostring(pagenum)..
 			",#FFFFFF,/ "..tostring(pagemax).."]"..
 			"field[1.8,0.32;2.6,1;filter;;"..filter.."]"..xbg
 
