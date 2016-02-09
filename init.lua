@@ -18,5 +18,5 @@ dofile(modpath.."/rope.lua")
 dofile(modpath.."/sitting.lua")
 dofile(modpath.."/worktable.lua")
 dofile(modpath.."/xwall.lua")
---print(string.format("xdecor loaded in %.2f ms", (os.clock()-t)*1000))
+--print(string.format("[xdecor] loaded in %.2f ms", (os.clock()-t)*1000))
 

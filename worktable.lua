@@ -118,9 +118,9 @@ function worktable:craftguide_formspec(meta, pagenum, item, recipe_num, filter)
 			(math.floor((i-1) / width + (6 - math.min(2, rows))))..";1,1;"..
 			self:get_recipe(v)..";"..self:get_recipe(v)..";"..is_group(v).."]"
 		end
-		
-		local yield = minetest.get_all_craft_recipes(item)[recipe_num].output:match("%s(%d+)") or ""
-		formspec = formspec.."item_image_button[2.5,5;1,1;"..item..";"..item..";\n\n\t\t\t\t"..yield.."]"..
+
+		local output = minetest.get_all_craft_recipes(item)[recipe_num].output
+		formspec = formspec.."item_image_button[2.5,5;1,1;"..output..";"..item..";]"..
 				     "image[3.5,5;1,1;gui_furnace_arrow_bg.png^[transformR90]"
 	end
 
@@ -283,7 +283,6 @@ function worktable.take(_, listname, _, stack, player)
 	end
 	return stack:get_count()
 end
-
 
 function worktable.move(_, _, _, to_list, _, count)
 	if to_list == "storage" or to_list == "trash" then return count end
