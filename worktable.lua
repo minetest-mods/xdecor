@@ -42,6 +42,22 @@ worktable.repairable_tools = [[
 	pick, axe, shovel, sword, hoe, armor, shield
 ]]
 
+-- Nodeboxes's combination table.
+worktable.nodebox_blender = {
+	{"nanoslab",   nil,	     2  },
+	{"micropanel", nil,	     3  },
+	{"cube",       nil,	     6  },
+	{"cube",       "panel",      9  },
+	{"cube",       "outerstair", 11 },
+	{"cube",       "halfstair",  7  },
+	{"cube",       "innerstair", nil},
+	{"panel",      nil,          7  },
+	{"panel",      "cube",	     9  },
+	{"panel",      "outerstair", 12 },
+	{"halfstair",  nil,	     11 },
+	{"halfstair",  "outerstair", nil}
+}
+
 function worktable:get_recipe(item)
 	if item:find("^group:") then
 		if item:find("wool$") or item:find("dye$") then
@@ -407,25 +423,10 @@ for node in pairs(minetest.registered_nodes) do
 					minetest.record_protection_violation(pos, player_name) return
 				end
 
-				local T = {
-					{"nanoslab",   nil,	     2  },
-					{"micropanel", nil,	     3  },
-					{"cube",       nil,	     6  },
-					{"cube",       "panel",      9  },
-					{"cube",       "outerstair", 11 },
-					{"cube",       "halfstair",  7  },
-					{"cube",       "innerstair", nil},
-					{"panel",      nil,          7  },
-					{"panel",      "cube",	     9  },
-					{"panel",      "outerstair", 12 },
-					{"halfstair",  nil,	     11 },
-					{"halfstair",  "outerstair", nil}
-				}
-
 				local newnode, combined = def.name, false
 				if clicker:get_player_control().sneak then
 					local wield_item = clicker:get_wielded_item():get_name()
-					for _, x in pairs(T) do
+					for _, x in pairs(worktable.nodebox_blender) do
 						if wield_item == newnode.."_"..x[1] then
 							if not x[2] then x[2] = x[1] end
 							local pointed_nodebox = minetest.get_node(pos).name:match("(%w+)$")
