@@ -263,6 +263,26 @@ function worktable.dig(pos)
 		inv:is_empty("tool") and inv:is_empty("storage")
 end
 
+function worktable.timer(pos)
+	local timer = minetest.get_node_timer(pos)
+	local inv = minetest.get_meta(pos):get_inventory()
+	local tool = inv:get_stack("tool", 1)
+	local hammer = inv:get_stack("hammer", 1)
+
+	if tool:is_empty() or hammer:is_empty() or tool:get_wear() == 0 then
+		timer:stop() return
+	end
+
+	-- Tool's wearing range: 0-65535 | 0 = new condition.
+	tool:add_wear(-500)
+	hammer:add_wear(700)
+
+	inv:set_stack("tool", 1, tool)
+	inv:set_stack("hammer", 1, hammer)
+
+	return true
+end
+
 function worktable.put(_, listname, _, stack)
 	local stackname = stack:get_name()
 	if (listname == "tool" and stack:get_wear() > 0 and
@@ -296,6 +316,9 @@ function worktable.on_put(pos, listname, _, stack)
 		worktable:get_output(inv, input, stack:get_name())
 	elseif listname == "trash" then
 		inv:set_list("trash", {})
+	elseif listname == "tool" or listname == "hammer" then
+		local timer = minetest.get_node_timer(pos)
+		timer:start(1.0)
 	end
 end
 
@@ -330,6 +353,7 @@ xdecor.register("worktable", {
 	},
 	on_rotate = screwdriver.rotate_simple,
 	can_dig = worktable.dig,
+	on_timer = worktable.timer,
 	on_construct = worktable.construct,
 	on_receive_fields = worktable.fields,
 	on_metadata_inventory_put = worktable.on_put,
@@ -384,16 +408,17 @@ for node in pairs(minetest.registered_nodes) do
 				end
 
 				local T = {
-					{"nanoslab",   nil,	     2},
-					{"micropanel", nil,	     3},
-					{"cube",       nil,	     6},
-					{"cube",       "panel",      9},
-					{"cube",       "outerstair", 11},
-					{"cube",       "halfstair",  7},
+					{"nanoslab",   nil,	     2  },
+					{"micropanel", nil,	     3  },
+					{"cube",       nil,	     6  },
+					{"cube",       "panel",      9  },
+					{"cube",       "outerstair", 11 },
+					{"cube",       "halfstair",  7  },
 					{"cube",       "innerstair", nil},
-					{"panel",      nil,          7},
-					{"panel",      "outerstair", 12},
-					{"halfstair",  nil,	     11},
+					{"panel",      nil,          7  },
+					{"panel",      "cube",	     9  },
+					{"panel",      "outerstair", 12 },
+					{"halfstair",  nil,	     11 },
 					{"halfstair",  "outerstair", nil}
 				}
 
@@ -431,21 +456,4 @@ for node in pairs(minetest.registered_nodes) do
 	end
 end
 end
-
-minetest.register_abm({
-	nodenames = {"xdecor:worktable"},
-	interval = 3, chance = 1,
-	action = function(pos)
-		local inv = minetest.get_meta(pos):get_inventory()
-		local tool, hammer = inv:get_stack("tool", 1), inv:get_stack("hammer", 1)
-		if tool:is_empty() or hammer:is_empty() or tool:get_wear() == 0 then return end
-
-		-- Wear : 0-65535 | 0 = new condition.
-		tool:add_wear(-500)
-		hammer:add_wear(700)
-
-		inv:set_stack("tool", 1, tool)
-		inv:set_stack("hammer", 1, hammer)
-	end
-})
 
