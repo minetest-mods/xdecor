@@ -318,7 +318,7 @@ function worktable.on_put(pos, listname, _, stack)
 		inv:set_list("trash", {})
 	elseif listname == "tool" or listname == "hammer" then
 		local timer = minetest.get_node_timer(pos)
-		timer:start(1.0)
+		timer:start(3.0)
 	end
 end
 
