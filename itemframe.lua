@@ -90,19 +90,9 @@ xdecor.register("frame", {
 		"xdecor_wood.png", "xdecor_wood.png", "xdecor_wood.png",
 		"xdecor_wood.png", "xdecor_wood.png", "xdecor_frame.png"
 	},
-	on_timer = function(pos)
-		local timer = minetest.get_node_timer(pos)
-		local num = #minetest.get_objects_inside_radius(pos, 0.5)
-		if num > 0 then timer:stop() return end
-
-		update_item(pos, node)
-		return true
-	end,
 	after_place_node = function(pos, placer, itemstack)
 		local meta = minetest.get_meta(pos)
 		local name = placer:get_player_name()
-		local timer = minetest.get_node_timer(pos)
-		timer:start(15.0)
 
 		meta:set_string("owner", name)
 		meta:set_string("infotext", "Item Frame (owned by "..name..")")
@@ -142,3 +132,12 @@ xdecor.register("frame", {
 	after_destruct = remove_item
 })
 
+minetest.register_abm({
+	nodenames = {"xdecor:frame"},
+	interval = 15, chance = 1,
+	action = function(pos, node)
+		local num = #minetest.get_objects_inside_radius(pos, 0.5)
+		if num > 0 then return end
+		update_item(pos, node)
+	end
+})
