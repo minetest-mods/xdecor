@@ -59,8 +59,8 @@ worktable.nodebox_blender = {
 }
 
 function worktable:get_recipe(item)
-	if item:find("^group:") then
-		if item:find("wool$") or item:find("dye$") then
+	if item:sub(1,6) == "group:" then
+		if item:sub(-4) == "wool" or item:sub(-3) == "dye" then
 			item = item:sub(7)..":white"
 		elseif minetest.registered_items["default:"..item:sub(7)] then
 			item = item:gsub("group:", "default:")
@@ -125,7 +125,7 @@ function worktable:craftguide_formspec(meta, pagenum, item, recipe_num, filter)
 		local rows = math.ceil(table.maxn(items) / width) -- Lua 5.3 removed `table.maxn`, use `xdecor.maxn` in case of failure.
 
 		local function is_group(item)
-			if item:find("^group:") then return "\nG" end
+			if item:sub(1,6) == "group:" then return "\nG" end
 			return ""
 		end
 

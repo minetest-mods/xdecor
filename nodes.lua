@@ -179,7 +179,7 @@ xdecor.register("cushion_block", {
 })
 
 local function door_access(door)
-	return door:find("prison")
+	return door:sub(1,6) == "prison"
 end
 
 local door_types = {
