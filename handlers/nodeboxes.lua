@@ -21,7 +21,8 @@ xdecor.nodebox = {
 xdecor.pixelbox = function(size, boxes)
 	local fixed = {}
 	for _, box in pairs(boxes) do
-		local x, y, z, w, h, l = unpack(box) -- `unpack` has been changed to `table.unpack` in newest Lua versions.
+		-- `unpack` has been changed to `table.unpack` in newest Lua versions.
+		local x, y, z, w, h, l = unpack(box)
 		fixed[#fixed+1] = {
 			(x / size) - 0.5,
 			(y / size) - 0.5,

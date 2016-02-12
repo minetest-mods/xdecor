@@ -2,9 +2,13 @@
 xdecor = {}
 local modpath = minetest.get_modpath("xdecor")
 
+-- Handlers.
+dofile(modpath.."/handlers/animations.lua")
 dofile(modpath.."/handlers/helpers.lua")
 dofile(modpath.."/handlers/nodeboxes.lua")
 dofile(modpath.."/handlers/registration.lua")
+
+-- Item files.
 dofile(modpath.."/chess.lua")
 dofile(modpath.."/cooking.lua")
 dofile(modpath.."/craftitems.lua")
@@ -15,7 +19,6 @@ dofile(modpath.."/mailbox.lua")
 dofile(modpath.."/nodes.lua")
 dofile(modpath.."/recipes.lua")
 dofile(modpath.."/rope.lua")
-dofile(modpath.."/sitting.lua")
 dofile(modpath.."/worktable.lua")
 dofile(modpath.."/xwall.lua")
 --print(string.format("[xdecor] loaded in %.2f ms", (os.clock()-t)*1000))

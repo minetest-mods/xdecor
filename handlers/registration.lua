@@ -87,9 +87,7 @@ function xdecor.register(name, def)
 	if inventory then
 		def.on_construct = def.on_construct or function(pos)
 			local meta = minetest.get_meta(pos)
-			if infotext then
-				meta:set_string("infotext", infotext)
-			end
+			if infotext then meta:set_string("infotext", infotext) end
 
 			local size = inventory.size or default_inventory_size
 			local inv = meta:get_inventory()

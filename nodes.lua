@@ -90,6 +90,27 @@ xdecor.register("candle", {
 	}
 })
 
+xdecor.register("chair", {
+	description = "Chair",
+	tiles = {"xdecor_wood.png"},
+	sounds = default.node_sound_wood_defaults(),
+	groups = {choppy=3, oddly_breakable_by_hand=2, flammable=3},
+	on_rotate = screwdriver.rotate_simple,
+	node_box = xdecor.pixelbox(16, {
+		{3,  0, 11,   2, 16, 2},
+		{11, 0, 11,   2, 16, 2},
+		{5,  9, 11.5, 6,  6, 1},
+		{3,  0,  3,   2,  6, 2},
+		{11, 0,  3,   2,  6, 2},
+		{3,  6,  3,   10, 2, 8}
+	}),
+	can_dig = xdecor.sit_dig,
+	on_rightclick = function(pos, node, clicker, itemstack, pointed_thing)
+		pos.y = pos.y + 0  -- Sitting position.
+		xdecor.sit(pos, node, clicker, pointed_thing)
+	end
+})
+
 xpanes.register_pane("chainlink", {
 	description = "Chain Link",
 	tiles = {"xdecor_chainlink.png"},
@@ -170,6 +191,34 @@ xdecor.register("crate", {
 	tiles = {"xdecor_crate.png"},
 	groups = {choppy=2, oddly_breakable_by_hand=1, flammable=3},
 	sounds = default.node_sound_wood_defaults()
+})
+
+xdecor.register("cushion", {
+	description = "Cushion",
+	tiles = {"xdecor_cushion.png"},
+	groups = {snappy=3, flammable=3, fall_damage_add_percent=-50},
+	on_place = minetest.rotate_node,
+	node_box = xdecor.nodebox.slab_y(0.5),
+	can_dig = xdecor.sit_dig,
+	on_rightclick = function(pos, node, clicker, itemstack, pointed_thing)
+		pos.y = pos.y + 0
+		xdecor.sit(pos, node, clicker, pointed_thing)
+
+		local wield_item = clicker:get_wielded_item():get_name()
+		if wield_item == "xdecor:cushion" and clicker:get_player_control().sneak then
+			local player_name = clicker:get_player_name()
+			if minetest.is_protected(pos, player_name) then
+				minetest.record_protection_violation(pos, player_name) return
+			end
+
+			minetest.set_node(pos, {name="xdecor:cushion_block", param2=node.param2})
+
+			if not minetest.setting_getbool("creative_mode") then
+				itemstack:take_item()
+			end
+			return itemstack
+		end
+	end
 })
 
 xdecor.register("cushion_block", {

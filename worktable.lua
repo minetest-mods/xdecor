@@ -122,7 +122,8 @@ function worktable:craftguide_formspec(meta, pagenum, item, recipe_num, filter)
 		local items = minetest.get_all_craft_recipes(item)[recipe_num].items
 		local width = minetest.get_all_craft_recipes(item)[recipe_num].width
 		if width == 0 then width = math.min(3, #items) end
-		local rows = math.ceil(table.maxn(items) / width) -- Lua 5.3 removed `table.maxn`, use `xdecor.maxn` in case of failure.
+		-- Lua 5.3 removed `table.maxn`, use `xdecor.maxn` in case of breakage.
+		local rows = math.ceil(table.maxn(items) / width)
 
 		local function is_group(item)
 			if item:sub(1,6) == "group:" then return "\nG" end
@@ -414,7 +415,8 @@ for node in pairs(minetest.registered_nodes) do
 			sounds = def.sounds,
 			tiles = tiles,
 			groups = groups,
-			node_box = xdecor.pixelbox(16, {unpack(d, 3)}), -- `unpack` has been changed to `table.unpack` in newest Lua versions.
+			-- `unpack` has been changed to `table.unpack` in newest Lua versions.
+			node_box = xdecor.pixelbox(16, {unpack(d, 3)}),
 			sunlight_propagates = true,
 			on_place = minetest.rotate_node,
 			on_rightclick = function(pos, node, clicker, itemstack, pointed_thing)
