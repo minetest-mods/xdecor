@@ -227,27 +227,22 @@ xdecor.register("cushion_block", {
 	drop = "xdecor:cushion 2"
 })
 
-local function door_access(door)
-	return door:sub(1,6) == "prison"
-end
+local function door_access(door) return door:find("prison") end
 
-local door_types = {
-	{"japanese", "brown"}, {"prison", "grey"}, {"prison_rust", "rust"},
-	{"screen", "brownb"}, {"slide", "brownc"}, {"woodglass", "brown"}
-}
-
-for _, d in pairs(door_types) do
-	doors.register_door("xdecor:"..d[1].."_door", {
-		description = string.gsub(" "..d[1], "%W%l", string.upper):sub(2):gsub("_", " ").." Door",
-		inventory_image = "xdecor_"..d[1].."_door_inv.png",
+for _, d in pairs({"japanese", "prison", "rusty_prison",
+		"screen", "slide", "woodglass"}) do
+	doors.register(d.."_door", {
+		tiles = {{name = "xdecor_"..d.."_door.png", backface_culling=true}},
+		description = string.gsub(" "..d, "%W%l", string.upper):sub(2):gsub("_", " ").." Door",
+		inventory_image = "xdecor_"..d.."_door_inv.png",
+		protected = door_access(d),
 		groups = {choppy=3, cracky=3, oddly_breakable_by_hand=1, flammable=2, door=1},
-		tiles_bottom = {"xdecor_"..d[1].."_door_b.png", "xdecor_"..d[2]..".png"},
-		tiles_top = {"xdecor_"..d[1].."_door_a.png", "xdecor_"..d[2]..".png"},
-		only_placer_can_open = door_access(d[1]),
-		sounds = default.node_sound_wood_defaults(),
-		sunlight = false
+		material = ""
 	})
+	minetest.register_alias("xdecor:"..d.."_door", "doors:"..d.."_door")
 end
+
+minetest.register_alias("xdecor:prison_rust_door", "doors:rusty_prison_door")
 
 xdecor.register("empty_shelf", {
 	description = "Empty Shelf",
@@ -452,14 +447,14 @@ xdecor.register("multishelf", {
 	sounds = default.node_sound_wood_defaults()
 })
 
-xpanes.register_pane("rust_bar", {
-	description = "Rust Bars",
-	tiles = {"xdecor_rust_bars.png"},
+xpanes.register_pane("rusty_bar", {
+	description = "Rusty Iron Bars",
+	tiles = {"xdecor_rusty_bars.png"},
 	drawtype = "airlike",
 	paramtype = "light",
-	textures = {"xdecor_rust_bars.png", "xdecor_rust_bars.png", "xpanes_space.png"},
-	inventory_image = "xdecor_rust_bars.png",
-	wield_image = "xdecor_rust_bars.png",
+	textures = {"xdecor_rusty_bars.png", "xdecor_rusty_bars.png", "xpanes_space.png"},
+	inventory_image = "xdecor_rusty_bars.png",
+	wield_image = "xdecor_rusty_bars.png",
 	groups = {cracky=3, oddly_breakable_by_hand=2, pane=1},
 	recipe = {
 		{"", "default:dirt", ""},
@@ -467,6 +462,10 @@ xpanes.register_pane("rust_bar", {
 		{"default:steel_ingot", "default:steel_ingot", "default:steel_ingot"}
 	}
 })
+minetest.register_alias("xpanes:rust_bar", "xpanes:rusty_bar")
+for i = 1, 15 do
+	minetest.register_alias("xpanes:rust_bar_"..i, "xpanes:rusty_bar_"..i)
+end
 
 xdecor.register("stonepath", {
 	description = "Garden Stone Path",

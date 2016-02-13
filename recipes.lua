@@ -216,7 +216,7 @@ minetest.register_craft({
 })
 
 minetest.register_craft({
-	output = "xdecor:japanese_door",
+	output = "doors:japanese_door",
 	recipe = {
 		{"group:wood", "default:paper"},
 		{"default:paper", "group:wood"},
@@ -267,7 +267,7 @@ minetest.register_craft({
 })
 
 minetest.register_craft({
-	output = "xdecor:prison_door",
+	output = "doors:prison_door",
 	recipe = {
 		{"xpanes:bar", "xpanes:bar"},
 		{"xpanes:bar", "xpanes:bar"},
@@ -276,11 +276,11 @@ minetest.register_craft({
 })
 
 minetest.register_craft({
-	output = "xdecor:prison_rust_door",
+	output = "doors:rusty_prison_door",
 	recipe = {
-		{"xpanes:rust_bar", "xpanes:rust_bar"},
-		{"xpanes:rust_bar", "xpanes:rust_bar"},
-		{"xpanes:rust_bar", "xpanes:rust_bar"}
+		{"xpanes:rusty_bar", "xpanes:rusty_bar"},
+		{"xpanes:rusty_bar", "xpanes:rusty_bar"},
+		{"xpanes:rusty_bar", "xpanes:rusty_bar"}
 	}
 })
 
@@ -294,7 +294,7 @@ minetest.register_craft({
 })
 
 minetest.register_craft({
-	output = "xdecor:screen_door",
+	output = "doors:screen_door",
 	recipe = {
 		{"group:wood", "group:wood"},
 		{"xpanes:chainlink", "xpanes:chainlink"},
@@ -303,7 +303,7 @@ minetest.register_craft({
 })
 
 minetest.register_craft({
-	output = "xdecor:slide_door",
+	output = "doors:slide_door",
 	recipe = {
 		{"default:paper", "default:paper"},
 		{"default:paper", "default:paper"},
@@ -398,7 +398,7 @@ minetest.register_craft({
 })
 
 minetest.register_craft({
-	output = "xdecor:woodglass_door",
+	output = "doors:woodglass_door",
 	recipe = {
 		{"default:glass", "default:glass"},
 		{"group:wood", "group:wood"},
