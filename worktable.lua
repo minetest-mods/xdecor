@@ -451,9 +451,9 @@ for node in pairs(minetest.registered_nodes) do
 			end
 		})
 	end
-	if node:find("meselamp") then
-		if d[3] then minetest.register_alias("default:meselamp_"..d[1], "default:glass_"..d[1])
-		else minetest.register_alias("stairs:"..d[1].."_meselamp", "stairs:"..d[1].."_glass") end
+	if node:match(":mese") then
+		if d[3] then minetest.register_alias(node.."_"..d[1], "default:glass_"..d[1])
+		else minetest.register_alias("stairs:"..d[1].."_"..node:match(":(.*)"), "stairs:"..d[1].."_glass") end
 	elseif worktable:nodes(def) and not d[3] then
 		minetest.register_alias(node.."_"..d[1], "stairs:"..d[1].."_"..node:match(":(.*)"))
 	end
