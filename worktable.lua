@@ -339,7 +339,6 @@ xdecor.register("worktable", {
 	on_receive_fields = worktable.fields,
 	on_metadata_inventory_put = worktable.on_put,
 	on_metadata_inventory_take = worktable.on_take,
-	on_metadata_inventory_move = worktable.on_move,
 	allow_metadata_inventory_put = worktable.put,
 	allow_metadata_inventory_take = worktable.take,
 	allow_metadata_inventory_move = worktable.move
