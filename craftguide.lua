@@ -25,16 +25,15 @@ function craftguide:get_formspec(stack, pagenum, item, recipe_num, filter, playe
 	local formspec = [[ size[8,6.6;]
 			tablecolumns[color;text;color;text]
 			tableoptions[background=#00000000;highlight=#00000000;border=false]
-			button[5.5,0;0.7,0.95;prev;<]
-			button[7.3,0;0.7,0.95;next;>]
-			button[4,0.2;0.7,0.5;search;?]
-			button[4.6,0.2;0.7,0.5;clearfilter;X]
-			button[0,0;1.5,1;backcraft;< Back]
+			button[5.4,0;0.8,0.95;prev;<]
+			button[7.2,0;0.8,0.95;next;>]
+			button[2.5,0.2;0.8,0.5;search;?]
+			button[3.2,0.2;0.8,0.5;clear;X]
 			tooltip[search;Search]
-			tooltip[clearfilter;Reset] ]]
-			.."table[6.1,0.18;1.1,0.5;pagenum;#FFFF00,"..tostring(pagenum)..
+			tooltip[clear;Reset] ]]
+			.."table[6,0.18;1.1,0.5;pagenum;#FFFF00,"..tostring(pagenum)..
 			",#FFFFFF,/ "..tostring(pagemax).."]"..
-			"field[1.8,0.32;2.6,1;filter;;"..filter.."]"..
+			"field[0.3,0.32;2.6,1;filter;;"..filter.."]"..
 			default.gui_bg..default.gui_bg_img
 
 	for _, name in pairs(self:get_items(filter, player_name)) do
@@ -114,7 +113,7 @@ minetest.register_on_player_receive_fields(function(player, listname, fields)
 	local filter = formspec:match("filter;;([%w_:]+)") or ""
 	local pagenum = tonumber(formspec:match("#FFFF00,(%d+)")) or 1
 
-	if fields.clearfilter then
+	if fields.clear then
 		craftguide:get_items(nil, player_name)
 		craftguide:get_formspec(stack, 1, nil, 1, "", player_name)
 	elseif fields.alternate then
