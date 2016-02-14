@@ -176,66 +176,53 @@ function worktable:get_output(inv, input, name)
 	inv:set_list("forms", output)
 end
 
-worktable.formspecs = {
-	crafting = function(meta)
-		meta:set_string("formspec", [[ size[8,7;]
-			image[5,1;1,1;gui_furnace_arrow_bg.png^[transformR270]
-			image[0.06,2.12;0.8,0.8;trash_icon.png]
-			button[0,0;1.5,1;back;< Back]
-			button[0,0.85;1.5,1;craftguide;Guide]
-			list[context;trash;0,2;1,1;]
-			list[current_player;main;0,3.3;8,4;]
-			list[current_player;craft;2,0;3,3;]
-			list[current_player;craftpreview;6,1;1,1;]
-			listring[current_player;main]
-			listring[current_player;craft] ]]
-			..xbg..default.get_hotbar_bg(0,3.3))
-	end,
-	storage = function(meta)
-		meta:set_string("formspec", [[ size[8,7]
-			image[7.06,0.12;0.8,0.8;trash_icon.png]
-			list[context;trash;7,0;1,1;]
-			list[context;storage;0,1;8,2;]
-			list[current_player;main;0,3.25;8,4;]
-			listring[context;storage]
-			listring[current_player;main]
-			button[0,0;1.5,1;back;< Back] ]]
-			..xbg..default.get_hotbar_bg(0,3.25))
-	end,
-	main = function(meta)
-		meta:set_string("formspec", [[ size[8,7;]
-			label[0.9,1.23;Cut]
-			label[0.9,2.23;Repair]
-			box[-0.05,1;2.05,0.9;#555555]
-			box[-0.05,2;2.05,0.9;#555555]
-			image[3,1;1,1;gui_furnace_arrow_bg.png^[transformR270]
-			image[0,1;1,1;worktable_saw.png]
-			image[0,2;1,1;worktable_anvil.png]
-			image[3,2;1,1;hammer_layout.png]
-			list[context;input;2,1;1,1;]
-			list[context;tool;2,2;1,1;]
-			list[context;hammer;3,2;1,1;]
-			list[context;forms;4,0;4,3;]
-			list[current_player;main;0,3.25;8,4;]
-			button[0,0;2,1;craft;Crafting]
-			button[2,0;2,1;storage;Storage] ]]
-			..xbg..default.get_hotbar_bg(0,3.25))
-	end
-}
+function worktable.formspecs(meta, id)
+	local formspecs = {
+		-- Main formspec.
+		[[ label[0.9,1.23;Cut]
+		   label[0.9,2.23;Repair]
+		   box[-0.05,1;2.05,0.9;#555555]
+		   box[-0.05,2;2.05,0.9;#555555]
+		   button[0,0;2,1;craft;Crafting]
+		   button[2,0;2,1;storage;Storage]
+		   image[3,1;1,1;gui_furnace_arrow_bg.png^[transformR270]
+		   image[0,1;1,1;worktable_saw.png]
+		   image[0,2;1,1;worktable_anvil.png]
+		   image[3,2;1,1;hammer_layout.png]
+		   list[context;input;2,1;1,1;]
+		   list[context;tool;2,2;1,1;]
+		   list[context;hammer;3,2;1,1;]
+		   list[context;forms;4,0;4,3;] ]],
+		-- Crafting formspec.
+		[[ image[5,1;1,1;gui_furnace_arrow_bg.png^[transformR270]
+		   button[0,0;1.5,1;back;< Back]
+		   list[current_player;craft;2,0;3,3;]
+		   list[current_player;craftpreview;6,1;1,1;]
+		   listring[current_player;main]
+		   listring[current_player;craft] ]],
+		-- Storage formspec.
+		[[ list[context;storage;0,1;8,2;]
+		   button[0,0;1.5,1;back;< Back]
+		   listring[context;storage]
+		   listring[current_player;main] ]]
+	}
+
+	meta:set_string("formspec", "size[8,7;]list[current_player;main;0,3.25;8,4;]"..
+			formspecs[id]..xbg..default.get_hotbar_bg(0,3.25))
+end
 
 function worktable.construct(pos)
 	local meta = minetest.get_meta(pos)
 	local inv = meta:get_inventory()
 
 	inv:set_size("tool", 1)
-	inv:set_size("trash", 1)
 	inv:set_size("input", 1)
 	inv:set_size("hammer", 1)
 	inv:set_size("forms", 4*3)
 	inv:set_size("storage", 8*2)
-	meta:set_string("infotext", "Work Table")
 
-	worktable.formspecs.main(meta)
+	meta:set_string("infotext", "Work Table")
+	worktable.formspecs(meta, 1)
 end
 
 function worktable.fields(pos, _, fields)
@@ -246,11 +233,11 @@ function worktable.fields(pos, _, fields)
 	local pagenum = tonumber(formspec:match("#FFFF00,(%d+)")) or 1
 
 	if fields.back then
-		worktable.formspecs.main(meta)
-	elseif fields.craft or fields.backcraft then
-		worktable.formspecs.crafting(meta)
+		worktable.formspecs(meta, 1)
+	elseif fields.craft then
+		worktable.formspecs(meta, 2)
 	elseif fields.storage then
-		worktable.formspecs.storage(meta)
+		worktable.formspecs(meta, 3)
 	elseif fields.craftguide or fields.clearfilter then
 		worktable:craftguide_items(meta, nil)
 		worktable:craftguide_formspec(meta, 1, nil, 1, "")
@@ -306,7 +293,7 @@ function worktable.put(_, listname, _, stack)
 			worktable.repairable_tools:find(stackname:match(":(%w+)"))) or
 			(listname == "input" and minetest.registered_nodes[stackname.."_cube"]) or
 			(listname == "hammer" and stackname == "xdecor:hammer") or
-			listname == "storage" or listname == "trash" then
+			listname == "storage" then
 		return stack:get_count()
 	end
 	return 0
@@ -322,7 +309,7 @@ function worktable.take(_, listname, _, stack, player)
 end
 
 function worktable.move(_, _, _, to_list, _, count)
-	if to_list == "storage" or to_list == "trash" then return count end
+	if to_list == "storage" then return count end
 	return 0
 end
 
@@ -331,8 +318,6 @@ function worktable.on_put(pos, listname, _, stack)
 	if listname == "input" then
 		local input = inv:get_stack("input", 1)
 		worktable:get_output(inv, input, stack:get_name())
-	elseif listname == "trash" then
-		inv:set_list("trash", {})
 	elseif listname == "tool" or listname == "hammer" then
 		local timer = minetest.get_node_timer(pos)
 		timer:start(3.0)
@@ -352,11 +337,6 @@ function worktable.on_take(pos, listname, index, stack)
 		inv:set_stack("input", 1, input)
 		worktable:get_output(inv, input, input:get_name())
 	end
-end
-
-function worktable.on_move(pos, _, _, to_list, _, count)
-	local inv = minetest.get_meta(pos):get_inventory()
-	if to_list == "trash" then inv:set_list("trash", {}) end
 end
 
 xdecor.register("worktable", {
