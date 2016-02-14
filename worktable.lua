@@ -42,22 +42,6 @@ worktable.repairable_tools = [[
 	pick, axe, shovel, sword, hoe, armor, shield
 ]]
 
--- Nodeboxes's combination table.
-worktable.nodebox_blender = {
-	{"nanoslab",   nil,	     2  },
-	{"micropanel", nil,	     3  },
-	{"cube",       nil,	     6  },
-	{"cube",       "panel",      9  },
-	{"cube",       "outerstair", 11 },
-	{"cube",       "halfstair",  7  },
-	{"cube",       "innerstair", nil},
-	{"panel",      nil,          7  },
-	{"panel",      "cube",	     9  },
-	{"panel",      "outerstair", 12 },
-	{"halfstair",  nil,	     11 },
-	{"halfstair",  "outerstair", nil}
-}
-
 function worktable:get_recipe(item)
 	if item:sub(1,6) == "group:" then
 		if item:sub(-4) == "wool" or item:sub(-3) == "dye" then
@@ -398,37 +382,7 @@ for node in pairs(minetest.registered_nodes) do
 			-- `unpack` has been changed to `table.unpack` in newest Lua versions.
 			node_box = xdecor.pixelbox(16, {unpack(d, 3)}),
 			sunlight_propagates = true,
-			on_place = minetest.rotate_node,
-			on_rightclick = function(pos, node, clicker, itemstack, pointed_thing)
-				local player_name = clicker:get_player_name()
-				if minetest.is_protected(pos, player_name) then
-					minetest.record_protection_violation(pos, player_name) return
-				end
-
-				local newnode, combined = def.name, false
-				if clicker:get_player_control().sneak then
-					local wield_item = clicker:get_wielded_item():get_name()
-					for _, x in pairs(worktable.nodebox_blender) do
-						if wield_item == newnode.."_"..x[1] then
-							if not x[2] then x[2] = x[1] end
-							local pointed_nodebox = minetest.get_node(pos).name:match("(%w+)$")
-
-							if x[2] == pointed_nodebox then
-								if x[3] then newnode = newnode.."_"..worktable.defs[x[3]][1] end
-								combined = true
-								minetest.set_node(pos, {name=newnode, param2=node.param2})
-							end
-						end
-					end
-				else
-					minetest.item_place_node(itemstack, clicker, pointed_thing)
-				end
-
-				if combined and not minetest.setting_getbool("creative_mode") then
-					itemstack:take_item()
-				end
-				return itemstack
-			end
+			on_place = minetest.rotate_node
 		})
 	end
 	if node:match(":mese") then
