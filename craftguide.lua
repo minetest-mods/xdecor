@@ -1,4 +1,4 @@
-local craftguide = {}
+local craftguide, datas = {}, {}
 
 function craftguide:get_recipe(item)
 	if item:sub(1,6) == "group:" then
@@ -15,7 +15,7 @@ function craftguide:get_recipe(item)
 end
 
 function craftguide:get_formspec(stack, pagenum, item, recipe_num, filter, player_name)
-	local inv_size = self[player_name].size
+	local inv_size = datas[player_name].size
 	local npp, i, s = 8*3, 0, 0
 	local pagemax = math.floor((inv_size - 1) / npp + 1)
 
@@ -34,7 +34,8 @@ function craftguide:get_formspec(stack, pagenum, item, recipe_num, filter, playe
 			tooltip[clearfilter;Reset] ]]
 			.."table[6.1,0.18;1.1,0.5;pagenum;#FFFF00,"..tostring(pagenum)..
 			",#FFFFFF,/ "..tostring(pagemax).."]"..
-			"field[1.8,0.32;2.6,1;filter;;"..filter.."]"..xbg
+			"field[1.8,0.32;2.6,1;filter;;"..filter.."]"..
+			default.gui_bg..default.gui_bg_img
 
 	for _, name in pairs(self:get_items(filter, player_name)) do
 		if s < (pagenum - 1) * npp then
@@ -84,8 +85,8 @@ function craftguide:get_formspec(stack, pagenum, item, recipe_num, filter, playe
 	end
 	
 	stack:set_metadata(formspec)
-	self[player_name].formspec = stack:get_metadata()
-	minetest.show_formspec(player_name, "", formspec)
+	datas[player_name].formspec = stack:get_metadata()
+	minetest.show_formspec(player_name, "xdecor:crafting_guide", formspec)
 end
 
 function craftguide:get_items(filter, player_name)
@@ -100,15 +101,16 @@ function craftguide:get_items(filter, player_name)
 		end
 	end
 
-	self[player_name].size = #items_list
+	datas[player_name].size = #items_list
 	table.sort(items_list)
 	return items_list
 end
 
-minetest.register_on_player_receive_fields(function(player, _, fields)
+minetest.register_on_player_receive_fields(function(player, listname, fields)
+	if listname ~= "xdecor:crafting_guide" then return end
 	local player_name = player:get_player_name()
 	local stack = player:get_wielded_item()
-	local formspec = craftguide[player_name].formspec
+	local formspec = datas[player_name].formspec
 	local filter = formspec:match("filter;;([%w_:]+)") or ""
 	local pagenum = tonumber(formspec:match("#FFFF00,(%d+)")) or 1
 
@@ -142,7 +144,7 @@ minetest.register_craftitem("xdecor:crafting_guide", {
 	stack_max = 1,
 	on_use = function(itemstack, user)
 		local player_name = user:get_player_name()
-		craftguide[player_name] = {}
+		datas[player_name] = {}
 
 		craftguide:get_items(nil, player_name)
 		craftguide:get_formspec(itemstack, 1, nil, 1, "", player_name)
