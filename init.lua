@@ -11,6 +11,7 @@ dofile(modpath.."/handlers/registration.lua")
 -- Item files.
 dofile(modpath.."/chess.lua")
 dofile(modpath.."/cooking.lua")
+dofile(modpath.."/craftguide.lua")
 dofile(modpath.."/craftitems.lua")
 dofile(modpath.."/enchanting.lua")
 dofile(modpath.."/hive.lua")
