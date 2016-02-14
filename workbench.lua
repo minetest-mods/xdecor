@@ -1,9 +1,9 @@
-local worktable = {}
+local workbench = {}
 screwdriver = screwdriver or {}
 
 -- Nodes allowed to be cut.
 -- Only the regular, solid blocks without formspec or explosivity can be cut.
-function worktable:nodes(def)
+function workbench:nodes(def)
 	return (def.drawtype == "normal" or def.drawtype:find("glass")) and
 		(def.groups.cracky or def.groups.choppy) and not
 		def.on_construct and not def.after_place_node and not
@@ -15,7 +15,7 @@ function worktable:nodes(def)
 end
 
 -- Nodeboxes definitions.
-worktable.defs = {
+workbench.defs = {
 	-- Name       Yield   X  Y   Z  W   H  L
 	{"nanoslab",	16, { 0, 0,  0, 8,  1, 8  }},
 	{"micropanel",	16, { 0, 0,  0, 16, 1, 8  }},
@@ -38,11 +38,11 @@ worktable.defs = {
 }
 
 -- Tools allowed to be repaired.
-worktable.repairable_tools = [[
+workbench.repairable_tools = [[
 	pick, axe, shovel, sword, hoe, armor, shield
 ]]
 
-function worktable:get_output(inv, input, name)
+function workbench:get_output(inv, input, name)
 	if inv:is_empty("input") then
 		inv:set_list("forms", {}) return
 	end
@@ -57,7 +57,7 @@ function worktable:get_output(inv, input, name)
 	inv:set_list("forms", output)
 end
 
-function worktable.formspecs(meta, id)
+function workbench:formspecs(meta, id)
 	local formspecs = {
 		-- Main formspec.
 		[[ label[0.9,1.23;Cut]
@@ -92,7 +92,7 @@ function worktable.formspecs(meta, id)
 			formspecs[id]..xbg..default.get_hotbar_bg(0,3.25))
 end
 
-function worktable.construct(pos)
+function workbench.construct(pos)
 	local meta = minetest.get_meta(pos)
 	local inv = meta:get_inventory()
 
@@ -102,24 +102,24 @@ function worktable.construct(pos)
 	inv:set_size("forms", 4*3)
 	inv:set_size("storage", 8*2)
 
-	meta:set_string("infotext", "Work Table")
-	worktable.formspecs(meta, 1)
+	meta:set_string("infotext", "Work Bench")
+	workbench:formspecs(meta, 1)
 end
 
-function worktable.fields(pos, _, fields)
+function workbench.fields(pos, _, fields)
 	local meta = minetest.get_meta(pos)
-	if     fields.back    then worktable.formspecs(meta, 1)
-	elseif fields.craft   then worktable.formspecs(meta, 2)
-	elseif fields.storage then worktable.formspecs(meta, 3) end
+	if     fields.back    then workbench:formspecs(meta, 1)
+	elseif fields.craft   then workbench:formspecs(meta, 2)
+	elseif fields.storage then workbench:formspecs(meta, 3) end
 end
 
-function worktable.dig(pos)
+function workbench.dig(pos)
 	local inv = minetest.get_meta(pos):get_inventory()
 	return inv:is_empty("input") and inv:is_empty("hammer") and
 		inv:is_empty("tool") and inv:is_empty("storage")
 end
 
-function worktable.timer(pos)
+function workbench.timer(pos)
 	local timer = minetest.get_node_timer(pos)
 	local inv = minetest.get_meta(pos):get_inventory()
 	local tool = inv:get_stack("tool", 1)
@@ -139,10 +139,10 @@ function worktable.timer(pos)
 	return true
 end
 
-function worktable.put(_, listname, _, stack)
+function workbench.put(_, listname, _, stack)
 	local stackname = stack:get_name()
 	if (listname == "tool" and stack:get_wear() > 0 and
-			worktable.repairable_tools:find(stackname:match(":(%w+)"))) or
+			workbench.repairable_tools:find(stackname:match(":(%w+)"))) or
 			(listname == "input" and minetest.registered_nodes[stackname.."_cube"]) or
 			(listname == "hammer" and stackname == "xdecor:hammer") or
 			listname == "storage" then
@@ -151,7 +151,7 @@ function worktable.put(_, listname, _, stack)
 	return 0
 end
 
-function worktable.take(_, listname, _, stack, player)
+function workbench.take(_, listname, _, stack, player)
 	if listname == "forms" then
 		local inv = player:get_inventory()
 		if inv:room_for_item("main", stack:get_name()) then return -1 end
@@ -160,62 +160,62 @@ function worktable.take(_, listname, _, stack, player)
 	return stack:get_count()
 end
 
-function worktable.move(_, _, _, to_list, _, count)
+function workbench.move(_, _, _, to_list, _, count)
 	if to_list == "storage" then return count end
 	return 0
 end
 
-function worktable.on_put(pos, listname, _, stack)
+function workbench.on_put(pos, listname, _, stack)
 	local inv = minetest.get_meta(pos):get_inventory()
 	if listname == "input" then
 		local input = inv:get_stack("input", 1)
-		worktable:get_output(inv, input, stack:get_name())
+		workbench:get_output(inv, input, stack:get_name())
 	elseif listname == "tool" or listname == "hammer" then
 		local timer = minetest.get_node_timer(pos)
 		timer:start(3.0)
 	end
 end
 
-function worktable.on_take(pos, listname, index, stack)
+function workbench.on_take(pos, listname, index, stack)
 	local inv = minetest.get_meta(pos):get_inventory()
 	local input = inv:get_stack("input", 1)
 
 	if listname == "input" then
 		if stack:get_name() == input:get_name() then
-			worktable:get_output(inv, input, stack:get_name())
+			workbench:get_output(inv, input, stack:get_name())
 		else inv:set_list("forms", {}) end
 	elseif listname == "forms" then
-		input:take_item(math.ceil(stack:get_count() / worktable.defs[index][2]))
+		input:take_item(math.ceil(stack:get_count() / workbench.defs[index][2]))
 		inv:set_stack("input", 1, input)
-		worktable:get_output(inv, input, input:get_name())
+		workbench:get_output(inv, input, input:get_name())
 	end
 end
 
-xdecor.register("worktable", {
-	description = "Work Table",
+xdecor.register("workbench", {
+	description = "Work Bench",
 	groups = {cracky=2, choppy=2, oddly_breakable_by_hand=1},
 	sounds = default.node_sound_wood_defaults(),
 	tiles = {
-		"xdecor_worktable_top.png", "xdecor_worktable_top.png",
-		"xdecor_worktable_sides.png", "xdecor_worktable_sides.png",
-		"xdecor_worktable_front.png", "xdecor_worktable_front.png"
+		"xdecor_workbench_top.png", "xdecor_workbench_top.png",
+		"xdecor_workbench_sides.png", "xdecor_workbench_sides.png",
+		"xdecor_workbench_front.png", "xdecor_workbench_front.png"
 	},
 	on_rotate = screwdriver.rotate_simple,
-	can_dig = worktable.dig,
-	on_timer = worktable.timer,
-	on_construct = worktable.construct,
-	on_receive_fields = worktable.fields,
-	on_metadata_inventory_put = worktable.on_put,
-	on_metadata_inventory_take = worktable.on_take,
-	allow_metadata_inventory_put = worktable.put,
-	allow_metadata_inventory_take = worktable.take,
-	allow_metadata_inventory_move = worktable.move
+	can_dig = workbench.dig,
+	on_timer = workbench.timer,
+	on_construct = workbench.construct,
+	on_receive_fields = workbench.fields,
+	on_metadata_inventory_put = workbench.on_put,
+	on_metadata_inventory_take = workbench.on_take,
+	allow_metadata_inventory_put = workbench.put,
+	allow_metadata_inventory_take = workbench.take,
+	allow_metadata_inventory_move = workbench.move
 })
 
-for _, d in pairs(worktable.defs) do
+for _, d in pairs(workbench.defs) do
 for node in pairs(minetest.registered_nodes) do
 	local def = minetest.registered_nodes[node]
-	if worktable:nodes(def) and d[3] then
+	if workbench:nodes(def) and d[3] then
 		local groups, tiles = {}, {}
 		groups.not_in_creative_inventory = 1
 
@@ -255,9 +255,11 @@ for node in pairs(minetest.registered_nodes) do
 	if node:match(":mese") then
 		if d[3] then minetest.register_alias(node.."_"..d[1], "default:glass_"..d[1])
 		else minetest.register_alias("stairs:"..d[1].."_"..node:match(":(.*)"), "stairs:"..d[1].."_glass") end
-	elseif worktable:nodes(def) and not d[3] then
+	elseif workbench:nodes(def) and not d[3] then
 		minetest.register_alias(node.."_"..d[1], "stairs:"..d[1].."_"..node:match(":(.*)"))
 	end
 end
 end
+
+minetest.register_alias("xdecor:worktable", "xdecor:workbench")
 

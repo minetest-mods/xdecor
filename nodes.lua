@@ -224,6 +224,7 @@ local function door_access(door) return door:find("prison") end
 
 for _, d in pairs({"japanese", "prison", "rusty_prison",
 		"screen", "slide", "woodglass"}) do
+	if not doors.register then return end
 	doors.register(d.."_door", {
 		tiles = {{name = "xdecor_"..d.."_door.png", backface_culling=true}},
 		description = string.gsub(" "..d, "%W%l", string.upper):sub(2):gsub("_", " ").." Door",

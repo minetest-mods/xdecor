@@ -360,7 +360,7 @@ minetest.register_craft({
 })
 
 minetest.register_craft({
-	output = "xdecor:worktable",
+	output = "xdecor:workbench",
 	recipe = {
 		{"group:wood", "group:wood"},
 		{"group:wood", "group:wood"}
