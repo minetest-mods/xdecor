@@ -38,9 +38,10 @@ workbench.defs = {
 }
 
 -- Tools allowed to be repaired.
-workbench.repairable_tools = [[
-	pick, axe, shovel, sword, hoe, armor, shield
-]]
+function workbench:repairable_tools(stack)
+	local tools = [[ pick, axe, shovel, sword, hoe, armor, shield ]]
+	return tools:find(stack:match(":(%w+)"))
+end
 
 function workbench:get_output(inv, input, name)
 	if inv:is_empty("input") then
@@ -141,8 +142,7 @@ end
 
 function workbench.put(_, listname, _, stack)
 	local stackname = stack:get_name()
-	if (listname == "tool" and stack:get_wear() > 0 and
-			workbench.repairable_tools:find(stackname:match(":(%w+)"))) or
+	if (listname == "tool" and stack:get_wear() > 0 and workbench:repairable_tools(stackname)) or
 			(listname == "input" and minetest.registered_nodes[stackname.."_cube"]) or
 			(listname == "hammer" and stackname == "xdecor:hammer") or
 			listname == "storage" then
