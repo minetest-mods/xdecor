@@ -114,11 +114,9 @@ end
 
 xdecor.register("mailbox", {
 	description = "Mailbox",
-	tiles = {
-		"xdecor_mailbox_top.png", "xdecor_mailbox_bottom.png",
-		"xdecor_mailbox_side.png", "xdecor_mailbox_side.png",
-		"xdecor_mailbox.png", "xdecor_mailbox.png",
-	},
+	tiles = {"xdecor_mailbox_top.png", "xdecor_mailbox_bottom.png",
+		 "xdecor_mailbox_side.png", "xdecor_mailbox_side.png",
+		 "xdecor_mailbox.png", "xdecor_mailbox.png"},
 	groups = {cracky=3, oddly_breakable_by_hand=1},
 	on_rotate = screwdriver.rotate_simple,
 	can_dig = mailbox.dig,

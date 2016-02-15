@@ -24,17 +24,15 @@ minetest.register_craftitem("xdecor:bowl_soup", {
 minetest.register_tool("xdecor:flint_steel", {
 	description = "Flint & Steel",
 	inventory_image = "xdecor_flint_steel.png",
-	tool_capabilities = {
-		groupcaps = { igniter = {uses=10, maxlevel=1} }
-	},
 	on_use = function(itemstack, user, pointed_thing)
 		local player = user:get_player_name()
-		if pointed_thing.type == "node" and
-				minetest.get_node(pointed_thing.above).name == "air" then
-			if not minetest.is_protected(pointed_thing.above, player) then
-				minetest.set_node(pointed_thing.above, {name="xdecor:fire"})
+		local pt = pointed_thing
+
+		if pt.type == "node" and minetest.get_node(pt.above).name == "air" then
+			if not minetest.is_protected(pt.above, player) then
+				minetest.set_node(pt.above, {name="xdecor:fire"})
 			else
-				minetest.chat_send_player(player, "This area is protected.")
+				minetest.chat_send_player(player, "[!] This area is protected")
 			end
 		end
 

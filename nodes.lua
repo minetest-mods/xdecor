@@ -9,11 +9,9 @@ xpanes.register_pane("bamboo_frame", {
 	inventory_image = "xdecor_bamboo_frame.png",
 	wield_image = "xdecor_bamboo_frame.png",
 	groups = {choppy=3, oddly_breakable_by_hand=2, pane=1, flammable=2},
-	recipe = {
-		{"default:papyrus", "default:papyrus", "default:papyrus"},
-		{"default:papyrus", "farming:cotton", "default:papyrus"},
-		{"default:papyrus", "default:papyrus", "default:papyrus"}
-	}
+	recipe = { {"default:papyrus", "default:papyrus", "default:papyrus"},
+		   {"default:papyrus", "farming:cotton",  "default:papyrus"},
+		   {"default:papyrus", "default:papyrus", "default:papyrus"} }
 })
 
 xdecor.register("baricade", {
@@ -43,11 +41,9 @@ xdecor.register("cabinet", {
 	groups = {choppy=2, oddly_breakable_by_hand=1, flammable=3},
 	sounds = default.node_sound_wood_defaults(),
 	on_rotate = screwdriver.rotate_simple,
-	tiles = {
-		"xdecor_cabinet_sides.png", "xdecor_cabinet_sides.png",
-		"xdecor_cabinet_sides.png", "xdecor_cabinet_sides.png",
-		"xdecor_cabinet_sides.png", "xdecor_cabinet_front.png"
-	}
+	tiles = {"xdecor_cabinet_sides.png", "xdecor_cabinet_sides.png",
+		 "xdecor_cabinet_sides.png", "xdecor_cabinet_sides.png",
+		 "xdecor_cabinet_sides.png", "xdecor_cabinet_front.png"}
 })
 
 xdecor.register("cabinet_half", {
@@ -57,11 +53,9 @@ xdecor.register("cabinet_half", {
 	groups = {choppy=3, oddly_breakable_by_hand=2, flammable=3},
 	sounds = default.node_sound_wood_defaults(),
 	node_box = xdecor.nodebox.slab_y(0.5, 0.5),
-	tiles = {
-		"xdecor_cabinet_sides.png", "xdecor_cabinet_sides.png",
-		"xdecor_half_cabinet_sides.png", "xdecor_half_cabinet_sides.png",
-		"xdecor_half_cabinet_sides.png", "xdecor_half_cabinet_front.png"
-	}
+	tiles = {"xdecor_cabinet_sides.png", "xdecor_cabinet_sides.png",
+		 "xdecor_half_cabinet_sides.png", "xdecor_half_cabinet_sides.png",
+		 "xdecor_half_cabinet_sides.png", "xdecor_half_cabinet_front.png"}
 })
 
 xdecor.register("candle", {
@@ -74,13 +68,12 @@ xdecor.register("candle", {
 	legacy_wallmounted = true,
 	walkable = false,
 	groups = {dig_immediate=3, attached_node=1},
-	tiles = {
-		{ name = "xdecor_candle_floor.png",
-			animation = {type="vertical_frames", length=1.5} },
-		{ name = "xdecor_candle_ceiling.png",
-			animation = {type="vertical_frames", length=1.5} },
-		{ name = "xdecor_candle_wall.png",
-			animation = {type="vertical_frames", length=1.5} }
+	tiles = {{name = "xdecor_candle_floor.png",
+			animation = {type="vertical_frames", length=1.5}},
+		{name = "xdecor_candle_ceiling.png",
+			animation = {type="vertical_frames", length=1.5}},
+		{name = "xdecor_candle_wall.png",
+			animation = {type="vertical_frames", length=1.5}}
 	},
 	selection_box = {
 		type = "wallmounted",
@@ -120,11 +113,9 @@ xpanes.register_pane("chainlink", {
 	inventory_image = "xdecor_chainlink.png",
 	wield_image = "xdecor_chainlink.png",
 	groups = {cracky=3, oddly_breakable_by_hand=2, pane=1},
-	recipe = {
-		{"default:steel_ingot", "", "default:steel_ingot"},
-		{"", "default:steel_ingot", ""},
-		{"default:steel_ingot", "", "default:steel_ingot"}
-	}
+	recipe = { {"default:steel_ingot", "", "default:steel_ingot"},
+		   {"", "default:steel_ingot", ""},
+		   {"default:steel_ingot", "", "default:steel_ingot"} }
 })
 
 -- The following nodedef is licensed under WTFPL for granting a possible re-use
@@ -177,10 +168,8 @@ for _, c in pairs({"red"}) do  -- Add more curtains colors simply here.
 
 	minetest.register_craft({
 		output = "xdecor:curtain_"..c.." 4",
-		recipe = {
-			{"", "wool:"..c, ""},
-			{"", "wool:"..c, ""}
-		}
+		recipe = { {"", "wool:"..c, ""},
+			   {"", "wool:"..c, ""} }
 	})
 end
 
@@ -216,8 +205,7 @@ xdecor.register("cushion", {
 
 xdecor.register("cushion_block", {
 	tiles = {"xdecor_cushion.png"},
-	groups = {snappy=3, flammable=3, fall_damage_add_percent=-75, not_in_creative_inventory=1},
-	drop = "xdecor:cushion 2"
+	groups = {snappy=3, flammable=3, fall_damage_add_percent=-75, not_in_creative_inventory=1}
 })
 
 local function door_access(door) return door:find("prison") end
@@ -250,11 +238,9 @@ xdecor.register("empty_shelf", {
 
 xdecor.register("enderchest", {
 	description = "Ender Chest",
-	tiles = {
-		"xdecor_enderchest_top.png", "xdecor_enderchest_top.png",
-		"xdecor_enderchest_side.png", "xdecor_enderchest_side.png",
-		"xdecor_enderchest_side.png", "xdecor_enderchest_front.png"
-	},
+	tiles = {"xdecor_enderchest_top.png", "xdecor_enderchest_top.png",
+		 "xdecor_enderchest_side.png", "xdecor_enderchest_side.png",
+		 "xdecor_enderchest_side.png", "xdecor_enderchest_front.png"},
 	groups = {cracky=1, choppy=1, oddly_breakable_by_hand=1},
 	sounds = default.node_sound_stone_defaults(),
 	on_rotate = screwdriver.rotate_simple,
@@ -280,15 +266,11 @@ xdecor.register("fire", {
 	drawtype = "plantlike",
 	light_source = 14,
 	walkable = false,
-	tiles = {
-		{ name = "xdecor_fire_anim.png",
-		animation = {type="vertical_frames", length=1.5} }
-	},
+	tiles = {{ name = "xdecor_fire_anim.png",
+		   animation = {type="vertical_frames", length=1.5 }}},
 	damage_per_second = 4,
 	drop = "",
-	selection_box = {
-		type = "fixed", fixed = {-0.3, -0.5, -0.3, 0.3, -0.3, 0.3}
-	},
+	selection_box = xdecor.pixelbox(16, {{4, 0, 4, 8, 3, 8}}),
 	groups = {dig_immediate=3, hot=3, not_in_creative_inventory=1}
 })
 
@@ -317,8 +299,7 @@ xdecor.register("lantern", {
 	legacy_wallmounted = true,
 	walkable = false,
 	groups = {dig_immediate=3, attached_node=1},
-	tiles = {"xdecor_lantern_floor.png", "xdecor_lantern_ceiling.png",
-			"xdecor_lantern.png"},
+	tiles = {"xdecor_lantern_floor.png", "xdecor_lantern_ceiling.png", "xdecor_lantern.png"},
 	selection_box = {
 		type = "wallmounted",
 		wall_top = {-0.25, -0.4, -0.25, 0.25, 0.5, 0.25},
@@ -347,10 +328,8 @@ xdecor.register("packed_ice", {
 	sounds = default.node_sound_glass_defaults()
 })
 
-local flowers = {"dandelion_white", "dandelion_yellow", "geranium", "rose",
-		"tulip", "viola"}
-
-for _, f in pairs(flowers) do
+for _, f in pairs({"dandelion_white", "dandelion_yellow", "geranium",
+		"rose", "tulip", "viola"}) do
 	xdecor.register("potted_"..f, {
 		description = string.gsub("Potted Flowers ("..f..")", "_", " "),
 		walkable = false,
@@ -364,10 +343,8 @@ for _, f in pairs(flowers) do
 
 	minetest.register_craft({
 		output = "xdecor:potted_"..f,
-		recipe = {
-			{"default:clay_brick", "flowers:"..f, "default:clay_brick"},
-			{"", "default:clay_brick", ""}
-		}
+		recipe = { {"default:clay_brick", "flowers:"..f, "default:clay_brick"},
+			   {"", "default:clay_brick", ""} }
 	})
 end
 
@@ -450,12 +427,11 @@ xpanes.register_pane("rusty_bar", {
 	inventory_image = "xdecor_rusty_bars.png",
 	wield_image = "xdecor_rusty_bars.png",
 	groups = {cracky=3, oddly_breakable_by_hand=2, pane=1},
-	recipe = {
-		{"", "default:dirt", ""},
-		{"default:steel_ingot", "default:steel_ingot", "default:steel_ingot"},
-		{"default:steel_ingot", "default:steel_ingot", "default:steel_ingot"}
-	}
+	recipe = { {"", "default:dirt", ""},
+		   {"default:steel_ingot", "default:steel_ingot", "default:steel_ingot"},
+		   {"default:steel_ingot", "default:steel_ingot", "default:steel_ingot"} }
 })
+
 minetest.register_alias("xpanes:rust_bar", "xpanes:rusty_bar")
 for i = 1, 15 do
 	minetest.register_alias("xpanes:rust_bar_"..i, "xpanes:rusty_bar_"..i)
@@ -477,10 +453,8 @@ xdecor.register("stonepath", {
 	selection_box = xdecor.nodebox.slab_y(0.05)
 })
 
-local stonish = {"desertstone_tile", "stone_tile", "stone_rune",
-		"coalstone_tile", "hard_clay"}
-
-for _, t in pairs(stonish) do
+for _, t in pairs({"desertstone_tile", "stone_tile", "stone_rune",
+		"coalstone_tile", "hard_clay"}) do
 	xdecor.register(t, {
 		drawtype = "normal",
 		description = string.gsub(" "..t, "%W%l", string.upper):sub(2):gsub("_", " "),
@@ -513,14 +487,12 @@ xdecor.register("tv", {
 	light_source = 11,
 	groups = {snappy=3},
 	on_rotate = screwdriver.rotate_simple,
-	tiles = {
-		"xdecor_television_left.png^[transformR270",
-		"xdecor_television_left.png^[transformR90",
-		"xdecor_television_left.png^[transformFX",
-		"xdecor_television_left.png", "xdecor_television_back.png",
-		{ name = "xdecor_television_front_animated.png",
-			animation = {type="vertical_frames", length=80.0} }
-	}
+	tiles = { "xdecor_television_left.png^[transformR270",
+		  "xdecor_television_left.png^[transformR90",
+		  "xdecor_television_left.png^[transformFX",
+		  "xdecor_television_left.png", "xdecor_television_back.png",
+		{name = "xdecor_television_front_animated.png",
+		 animation = {type="vertical_frames", length=80.0}} }
 })
 
 xpanes.register_pane("wood_frame", {
@@ -533,11 +505,9 @@ xpanes.register_pane("wood_frame", {
 	wield_image = "xdecor_wood_frame.png",
 	groups = {choppy=3, oddly_breakable_by_hand=2, pane=1, flammable=3},
 	sounds = default.node_sound_wood_defaults(),
-	recipe = {
-		{"group:wood", "group:stick", "group:wood"},
-		{"group:stick", "group:stick", "group:stick"},
-		{"group:wood", "group:stick", "group:wood"}
-	}
+	recipe = { {"group:wood", "group:stick", "group:wood"},
+		   {"group:stick", "group:stick", "group:stick"},
+		   {"group:wood", "group:stick", "group:wood"} }
 })
 
 xdecor.register("woodframed_glass", {

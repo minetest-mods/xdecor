@@ -3,7 +3,7 @@ local rope = {}
 -- Code by Mirko K. (modified by Temperest, Wulfsdad and kilbith) (License: GPL).
 minetest.register_on_punchnode(function(pos, oldnode, digger)
 	if oldnode.name == "xdecor:rope" then
-		rope.remove(pos, oldnode, digger, "xdecor:rope")
+		rope:remove(pos, oldnode, digger, "xdecor:rope")
 	end
 end)
 
@@ -26,7 +26,7 @@ function rope.place(itemstack, _, pointed_thing)
 	return itemstack
 end
 
-function rope.remove(pos, oldnode, digger, rope_name)
+function rope:remove(pos, oldnode, digger, rope_name)
 	local num = 0
 	local below = {x=pos.x, y=pos.y, z=pos.z}
 	local digger_inv = digger:get_inventory()
@@ -50,9 +50,6 @@ xdecor.register("rope", {
 	tiles = {"xdecor_rope.png"},
 	inventory_image = "xdecor_rope_inv.png",
 	wield_image = "xdecor_rope_inv.png",
-	selection_box = {
-		type = "fixed",
-		fixed = {-0.15, -0.5, -0.15, 0.15, 0.5, 0.15}
-	},
+	selection_box = xdecor.pixelbox(8, {{3, 0, 3, 2, 8, 2}}),
 	on_place = rope.place
 })

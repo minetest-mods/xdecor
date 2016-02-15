@@ -38,9 +38,12 @@ workbench.defs = {
 }
 
 -- Tools allowed to be repaired.
-function workbench:repairable_tools(stack)
-	local tools = [[ pick, axe, shovel, sword, hoe, armor, shield ]]
-	return tools:find(stack:match(":(%w+)"))
+function workbench:repairable(stack)
+	local tools = {"pick", "axe", "shovel", "sword", "hoe", "armor", "shield"}
+	for _, t in pairs(tools) do
+		if stack:find(t) then return true end
+	end
+	return false
 end
 
 function workbench:get_output(inv, input, name)
@@ -136,16 +139,15 @@ function workbench.timer(pos)
 
 	inv:set_stack("tool", 1, tool)
 	inv:set_stack("hammer", 1, hammer)
-
 	return true
 end
 
 function workbench.put(_, listname, _, stack)
 	local stackname = stack:get_name()
-	if (listname == "tool" and stack:get_wear() > 0 and workbench:repairable_tools(stackname)) or
-			(listname == "input" and minetest.registered_nodes[stackname.."_cube"]) or
-			(listname == "hammer" and stackname == "xdecor:hammer") or
-			listname == "storage" then
+	if (listname == "tool" and stack:get_wear() > 0 and workbench:repairable(stackname)) or
+	   (listname == "input" and minetest.registered_nodes[stackname.."_cube"]) or
+	   (listname == "hammer" and stackname == "xdecor:hammer") or
+	    listname == "storage" then
 		return stack:get_count()
 	end
 	return 0
@@ -183,7 +185,9 @@ function workbench.on_take(pos, listname, index, stack)
 	if listname == "input" then
 		if stack:get_name() == input:get_name() then
 			workbench:get_output(inv, input, stack:get_name())
-		else inv:set_list("forms", {}) end
+		else
+			inv:set_list("forms", {})
+		end
 	elseif listname == "forms" then
 		input:take_item(math.ceil(stack:get_count() / workbench.defs[index][2]))
 		inv:set_stack("input", 1, input)
@@ -195,11 +199,9 @@ xdecor.register("workbench", {
 	description = "Work Bench",
 	groups = {cracky=2, choppy=2, oddly_breakable_by_hand=1},
 	sounds = default.node_sound_wood_defaults(),
-	tiles = {
-		"xdecor_workbench_top.png", "xdecor_workbench_top.png",
-		"xdecor_workbench_sides.png", "xdecor_workbench_sides.png",
-		"xdecor_workbench_front.png", "xdecor_workbench_front.png"
-	},
+	tiles = {"xdecor_workbench_top.png",   "xdecor_workbench_top.png",
+		 "xdecor_workbench_sides.png", "xdecor_workbench_sides.png",
+		 "xdecor_workbench_front.png", "xdecor_workbench_front.png"},
 	on_rotate = screwdriver.rotate_simple,
 	can_dig = workbench.dig,
 	on_timer = workbench.timer,
