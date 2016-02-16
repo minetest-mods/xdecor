@@ -1,7 +1,7 @@
-local tmp, itemframe = {}, {}
+local tmp = {}
 screwdriver = screwdriver or {}
 
-function itemframe:remove_item(pos, node)
+local function remove_item(pos, node)
 	local objs = minetest.get_objects_inside_radius(pos, 0.5)
 	if not objs then return end
 
@@ -18,8 +18,8 @@ local facedir = {
 	      {x=0, y=0, z=-1},{x=-1, y=0, z=0}
 }
 
-function itemframe:update_item(pos, node)
-	self:remove_item(pos, node)
+local function update_item(pos, node)
+	remove_item(pos, node)
 	local meta = minetest.get_meta(pos)
 	local itemstring = meta:get_string("item")
 	local posad = facedir[node.param2]
@@ -36,14 +36,14 @@ function itemframe:update_item(pos, node)
 	entity:setyaw(yaw)
 end
 
-function itemframe:drop_item(pos, node)
+local function drop_item(pos, node)
 	local meta = minetest.get_meta(pos)
 	local item = meta:get_string("item")
 	if item == "" then return end
 
 	minetest.add_item(pos, item)
 	meta:set_string("item", "")
-	self:remove_item(pos, node)
+	remove_item(pos, node)
 end
 
 minetest.register_entity("xdecor:f_item", {
@@ -100,10 +100,10 @@ xdecor.register("frame", {
 		local owner = meta:get_string("owner")
 		if player ~= owner or not itemstack then return end
 
-		itemframe:drop_item(pos, node)
+		drop_item(pos, node)
 		local itemstring = itemstack:take_item():to_string()
 		meta:set_string("item", itemstring)
-		itemframe:update_item(pos, node)
+		update_item(pos, node)
 
 		return itemstack
 	end,
@@ -113,7 +113,7 @@ xdecor.register("frame", {
 		local owner = meta:get_string("owner")
 
 		if player ~= owner then return end
-		itemframe:drop_item(pos, node)
+		drop_item(pos, node)
 	end,
 	can_dig = function(pos, player)
 		local meta = minetest.get_meta(pos)
@@ -122,7 +122,7 @@ xdecor.register("frame", {
 
 		return player and pname == owner
 	end,
-	after_destruct = itemframe:remove_item(pos, node)
+	after_destruct = remove_item
 })
 
 minetest.register_abm({
@@ -131,6 +131,6 @@ minetest.register_abm({
 	action = function(pos, node)
 		local num = #minetest.get_objects_inside_radius(pos, 0.5)
 		if num > 0 then return end
-		itemframe:update_item(pos, node)
+		update_item(pos, node)
 	end
 })
