@@ -208,24 +208,55 @@ xdecor.register("cushion_block", {
 	groups = {snappy=3, flammable=3, fall_damage_add_percent=-75, not_in_creative_inventory=1}
 })
 
-local function door_access(door) return door:find("prison") end
 
-for _, d in pairs({"japanese", "prison", "rusty_prison",
-		"screen", "slide", "woodglass"}) do
+local function door_access(name) return name:find("prison") end
+local xdecor_doors = {
+	japanese = {
+		{"group:wood", "default:paper"},
+		{"default:paper", "group:wood"},
+		{"group:wood", "default:paper"}
+	},
+	prison = {
+		{"xpanes:bar", "xpanes:bar"},
+		{"xpanes:bar", "xpanes:bar"},
+		{"xpanes:bar", "xpanes:bar"}
+	},
+	rusty_prison = {
+		{"xpanes:rusty_bar", "xpanes:rusty_bar"},
+		{"xpanes:rusty_bar", "xpanes:rusty_bar"},
+		{"xpanes:rusty_bar", "xpanes:rusty_bar"}
+	},
+	screen = {
+		{"group:wood", "group:wood"},
+		{"xpanes:chainlink", "xpanes:chainlink"},
+		{"group:wood", "group:wood"}
+	},
+	slide = {
+		{"default:paper", "default:paper"},
+		{"default:paper", "default:paper"},
+		{"group:wood", "group:wood"}
+	},
+	woodglass = {
+		{"default:glass", "default:glass"},
+		{"group:wood", "group:wood"},
+		{"group:wood", "group:wood"}
+	}
+}
+
+for name, recipe in pairs(xdecor_doors) do
 	if not doors.register then return end
-	doors.register(d.."_door", {
-		tiles = {{name = "xdecor_"..d.."_door.png", backface_culling=true}},
-		description = string.gsub(" "..d, "%W%l", string.upper):sub(2):gsub("_", " ").." Door",
-		inventory_image = "xdecor_"..d.."_door_inv.png",
-		protected = door_access(d),
+	doors.register(name.."_door", {
+		tiles = {{name = "xdecor_"..name.."_door.png", backface_culling=true}},
+		description = string.gsub(" "..name, "%W%l", string.upper):sub(2):gsub("_", " ").." Door",
+		inventory_image = "xdecor_"..name.."_door_inv.png",
+		protected = door_access(name),
 		groups = {choppy=3, cracky=3, oddly_breakable_by_hand=1, flammable=2, door=1},
-		material = ""
+		recipe = recipe
 	})
-	minetest.register_alias("xdecor:"..d.."_door", "doors:"..d.."_door")
-	minetest.register_alias("xdecor:"..d.."_door_a", "air")
-	minetest.register_alias("xdecor:"..d.."_door_b", "doors:"..d.."_door")
+	minetest.register_alias("xdecor:"..name.."_door", "doors:"..name.."_door")
+	minetest.register_alias("xdecor:"..name.."_door_a", "air")
+	minetest.register_alias("xdecor:"..name.."_door_b", "doors:"..name.."_door")
 end
-
 minetest.register_alias("xdecor:prison_rust_door", "doors:rusty_prison_door")
 
 xdecor.register("empty_shelf", {
