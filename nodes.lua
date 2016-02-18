@@ -222,6 +222,8 @@ for _, d in pairs({"japanese", "prison", "rusty_prison",
 		material = ""
 	})
 	minetest.register_alias("xdecor:"..d.."_door", "doors:"..d.."_door")
+	minetest.register_alias("xdecor:"..d.."_door_a", "air")
+	minetest.register_alias("xdecor:"..d.."_door_b", "doors:"..d.."_door")
 end
 
 minetest.register_alias("xdecor:prison_rust_door", "doors:rusty_prison_door")
