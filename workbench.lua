@@ -228,9 +228,11 @@ for node in pairs(minetest.registered_nodes) do
 		end
 
 		if def.tiles then
-			if #def.tiles > 1 and not def.drawtype:find("glass") then
+			if #def.tiles > 1 and not (def.drawtype:sub(1,5) == "glass") then
 				tiles = def.tiles
-			else tiles = {def.tiles[1]} end
+			else
+				tiles = {def.tiles[1]}
+			end
 		else
 			tiles = {def.tile_images[1]}
 		end
