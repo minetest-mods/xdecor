@@ -255,7 +255,7 @@ for name, recipe in pairs(xdecor_doors) do
 	})
 	minetest.register_alias("xdecor:"..name.."_door", "doors:"..name.."_door")
 	minetest.register_alias("xdecor:"..name.."_door_a", "air")
-	minetest.register_alias("xdecor:"..name.."_door_b", "doors:"..name.."_door")
+	minetest.register_alias("xdecor:"..name.."_door_b", "doors:"..name.."_door_a")
 end
 minetest.register_alias("xdecor:prison_rust_door", "doors:rusty_prison_door")
 
