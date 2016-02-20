@@ -20,11 +20,9 @@ end
 
 xdecor.register("hive", {
 	description = "Artificial Hive",
-	tiles = {
-		"xdecor_hive_top.png", "xdecor_hive_top.png",
-		"xdecor_hive_side.png", "xdecor_hive_side.png",
-		"xdecor_hive_side.png", "xdecor_hive_front.png"
-	},
+	tiles = {"xdecor_hive_top.png", "xdecor_hive_top.png",
+		 "xdecor_hive_side.png", "xdecor_hive_side.png",
+		 "xdecor_hive_side.png", "xdecor_hive_front.png"},
 	groups = {choppy=3, oddly_breakable_by_hand=2, flammable=1},
 	on_construct = hive.construct,
 	can_dig = function(pos)
@@ -40,6 +38,9 @@ minetest.register_abm({
 	nodenames = {"xdecor:hive"},
 	interval = 30, chance = 10,
 	action = function(pos)
+		local time = (minetest.get_timeofday() or 0) * 24000
+		if time < 5500 or time > 18500 then return end
+
 		local inv = minetest.get_meta(pos):get_inventory()
 		local honeystack = inv:get_stack("honey", 1)
 		local honey = honeystack:get_count()
@@ -47,9 +48,9 @@ minetest.register_abm({
 		local radius = 4
 		local minp = vector.add(pos, -radius)
 		local maxp = vector.add(pos, radius)
-		local flowers = minetest.find_nodes_in_area(minp, maxp, "group:flower")
+		local flowers = minetest.find_nodes_in_area_under_air(minp, maxp, "group:flower")
 
-		if #flowers >= 2 and honey < 16 then
+		if #flowers > 2 and honey < 16 then
 			inv:add_item("honey", "xdecor:honey")
 		end
 	end
