@@ -208,7 +208,6 @@ xdecor.register("cushion_block", {
 	groups = {snappy=3, flammable=3, fall_damage_add_percent=-75, not_in_creative_inventory=1}
 })
 
-
 local function door_access(name) return name:find("prison") end
 local xdecor_doors = {
 	japanese = {
@@ -254,10 +253,16 @@ for name, recipe in pairs(xdecor_doors) do
 		recipe = recipe
 	})
 	minetest.register_alias("xdecor:"..name.."_door", "doors:"..name.."_door")
-	minetest.register_alias("xdecor:"..name.."_door_a", "air")
-	minetest.register_alias("xdecor:"..name.."_door_b", "doors:"..name.."_door_a")
+	minetest.register_alias("xdecor:"..name.."_door_t_1", "air")
+	minetest.register_alias("xdecor:"..name.."_door_t_2", "air")
+	minetest.register_alias("xdecor:"..name.."_door_b_1", "doors:"..name.."_door_a")
+	minetest.register_alias("xdecor:"..name.."_door_b_2", "doors:"..name.."_door_b")
 end
 minetest.register_alias("xdecor:prison_rust_door", "doors:rusty_prison_door")
+minetest.register_alias("xdecor:prison_rust_door_t_1", "air")
+minetest.register_alias("xdecor:prison_rust_door_t_2", "air")
+minetest.register_alias("xdecor:prison_rust_door_b_1", "doors:rusty_prison_door_a")
+minetest.register_alias("xdecor:prison_rust_door_b_2", "doors:rusty_prison_door_b")
 
 xdecor.register("empty_shelf", {
 	description = "Empty Shelf",
@@ -435,7 +440,8 @@ for _, b in pairs({{"cactus", "cactus"}, {"moon", "stone"}}) do
 	
 	minetest.register_craft({
 		output = "xdecor:"..b[1].."brick",
-		recipe = {{"default:brick", "default:"..b[2]}}
+		type = "shapeless",
+		recipe = {"default:brick", "default:"..b[2]}
 	})
 end
 
