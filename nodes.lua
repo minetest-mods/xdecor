@@ -244,7 +244,7 @@ local xdecor_doors = {
 }
 
 for name, recipe in pairs(xdecor_doors) do
-	if not doors.register then return end
+	if not doors.register then break end
 	doors.register(name.."_door", {
 		tiles = {{name = "xdecor_"..name.."_door.png", backface_culling=true}},
 		description = string.gsub(" "..name, "%W%l", string.upper):sub(2):gsub("_", " ").." Door",
@@ -434,11 +434,9 @@ for _, b in pairs({{"cactus", "cactus"}, {"moon", "stone"}}) do
 	})
 	
 	minetest.register_craft({
-	output = "xdecor:"..b[1].."brick",
-	recipe = {
-		{"default:brick", "default:"..b[2]}
-	}
-})
+		output = "xdecor:"..b[1].."brick",
+		recipe = {{"default:brick", "default:"..b[2]}}
+	})
 end
 
 xdecor.register("multishelf", {
