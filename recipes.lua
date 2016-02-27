@@ -255,6 +255,18 @@ minetest.register_craft({
 })
 
 minetest.register_craft({
+	output = "xdecor:pressure_stone_off",
+	type = "shapeless",
+	recipe = {"default:stone", "default:stone"}
+})
+
+minetest.register_craft({
+	output = "xdecor:pressure_wooden_off",
+	type = "shapeless",
+	recipe = {"group:wood", "group:wood"}
+})
+
+minetest.register_craft({
 	output = "xdecor:rope",
 	recipe = {
 		{"farming:string"},
