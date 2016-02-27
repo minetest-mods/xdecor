@@ -121,7 +121,7 @@ minetest.register_abm({
 		for _, obj in pairs(objs) do
 			if obj and obj:get_luaentity() then
 				local itemstring = obj:get_luaentity().itemstring:match(":([%w_]+)")
-				if not next(ingredients) then
+				if ingredients == {} then
 					for _, rep in pairs(ingredients) do
 						if itemstring == rep then return end
 					end
@@ -137,7 +137,9 @@ minetest.register_abm({
 
 		if #ingredients >= 2 then
 			for _, obj in pairs(objs) do
-				if obj and obj:get_luaentity() then obj:remove() end
+				if obj and obj:get_luaentity() then
+					obj:remove()
+				end
 			end
 			minetest.set_node(pos, {name="xdecor:cauldron_soup", param2=node.param2})
 		end

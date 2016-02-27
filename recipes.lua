@@ -257,7 +257,7 @@ minetest.register_craft({
 minetest.register_craft({
 	output = "xdecor:pressure_stone_off",
 	type = "shapeless",
-	recipe = {"default:stone", "default:stone"}
+	recipe = {"group:stone", "group:stone"}
 })
 
 minetest.register_craft({

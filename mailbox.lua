@@ -76,9 +76,9 @@ function mailbox.rightclick(pos, _, clicker)
 	local owner = meta:get_string("owner")
 
 	if player == owner then
-		minetest.show_formspec(player, "", mailbox:formspec(pos, owner, 1))
+		minetest.show_formspec(player, "xdecor:mailbox", mailbox:formspec(pos, owner, 1))
 	else
-		minetest.show_formspec(player, "", mailbox:formspec(pos, owner, 0))
+		minetest.show_formspec(player, "xdecor:mailbox", mailbox:formspec(pos, owner, 0))
 	end
 end
 
