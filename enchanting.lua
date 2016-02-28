@@ -164,7 +164,7 @@ for enchant in tooldef[2]:gmatch("[%w_]+") do
 			local fleshy = original_damage_groups.fleshy
 			local full_punch_interval = original_tool.tool_capabilities.full_punch_interval
 			local max_drop_level = original_tool.tool_capabilities.max_drop_level
-			group = tostring(next(original_groupcaps))
+			group = next(original_groupcaps)
 
 			if enchant == "durable" then
 				groupcaps[group].uses = math.ceil(original_groupcaps[group].uses * enchanting.uses)
