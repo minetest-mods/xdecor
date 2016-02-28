@@ -119,7 +119,7 @@ minetest.register_abm({
 
 		local ingredients = {}
 		for _, obj in pairs(objs) do
-			if obj and obj:get_luaentity() then
+			if obj and obj:get_luaentity().itemstring then
 				local itemstring = obj:get_luaentity().itemstring:match(":([%w_]+)")
 				if ingredients == {} then
 					for _, rep in pairs(ingredients) do
