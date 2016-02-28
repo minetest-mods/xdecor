@@ -63,9 +63,9 @@ for _, m in pairs({"wooden", "stone"}) do
 	})
 end
 
-xdecor.register("leaver_off", {
-	description = "Leaver",
-	tiles = {"xdecor_leaver_off.png"},
+xdecor.register("lever_off", {
+	description = "Lever",
+	tiles = {"xdecor_lever_off.png"},
 	drawtype = "nodebox",
 	node_box = xdecor.pixelbox(16, {{2, 1, 15, 12, 14, 1}}),
 	groups = {cracky=3, oddly_breakable_by_hand=2},
@@ -84,14 +84,14 @@ xdecor.register("leaver_off", {
 	end
 })
 
-xdecor.register("leaver_on", {
-	tiles = {"xdecor_leaver_on.png"},
+xdecor.register("lever_on", {
+	tiles = {"xdecor_lever_on.png"},
 	drawtype = "nodebox",
 	node_box = xdecor.pixelbox(16, {{2, 1, 15, 12, 14, 1}}),
 	groups = {cracky=3, oddly_breakable_by_hand=2, not_in_creative_inventory=1},
 	sounds = default.node_sound_stone_defaults(),
 	sunlight_propagates = true,
 	on_rotate = screwdriver.rotate_simple,
-	drop = "xdecor:leaver_off"
+	drop = "xdecor:lever_off"
 })
 

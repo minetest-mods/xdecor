@@ -222,7 +222,7 @@ minetest.register_craft({
 })
 
 minetest.register_craft({
-	output = "xdecor:leaver_off",
+	output = "xdecor:lever_off",
 	recipe = {
 		{"group:stick"},
 		{"group:stone"}
