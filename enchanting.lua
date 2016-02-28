@@ -169,8 +169,8 @@ for enchant in tooldef[2]:gmatch("[%w_]+") do
 			if enchant == "durable" then
 				groupcaps[group].uses = math.ceil(original_groupcaps[group].uses * enchanting.uses)
 			elseif enchant == "fast" then
-				for i = 1, 3 do
-					groupcaps[group].times[i] = original_groupcaps[group].times[i] - enchanting.times
+				for i, time in pairs(original_groupcaps[group].times) do
+					groupcaps[group].times[i] = time - enchanting.times
 				end
 			elseif enchant == "sharp" then
 				fleshy = fleshy + enchanting.damages
