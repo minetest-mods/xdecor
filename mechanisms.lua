@@ -2,22 +2,22 @@
 local plate = {}
 screwdriver = screwdriver or {}
 
-function plate.construct(pos)
-	local timer = minetest.get_node_timer(pos)
-	timer:start(0.5)
-end
-
-function plate.door_toggle(pos_plate, pos_door, player)
-	local plate = minetest.get_node(pos_plate)
+local function door_toggle(pos_actuator, pos_door, player)
+	local actuator = minetest.get_node(pos_actuator)
 	local door = doors.get(pos_door)
 
-	minetest.set_node(pos_plate, {name=plate.name:gsub("_off", "_on"), param2=plate.param2})
+	minetest.set_node(pos_actuator, {name=actuator.name:gsub("_off", "_on"), param2=actuator.param2})
 	door:open(player)
 
 	minetest.after(2, function()
-		minetest.set_node(pos_plate, {name=plate.name, param2=plate.param2})
+		minetest.set_node(pos_actuator, {name=actuator.name, param2=actuator.param2})
 		door:close(player)
 	end)
+end
+
+function plate.construct(pos)
+	local timer = minetest.get_node_timer(pos)
+	timer:start(0.5)
 end
 
 function plate.timer(pos)
@@ -30,7 +30,7 @@ function plate.timer(pos)
 	for _, player in pairs(objs) do
 		if player:is_player() then
 			for i = 1, #doors do
-				plate.door_toggle(pos, doors[i], player)
+				door_toggle(pos, doors[i], player)
 			end
 		end
 	end
@@ -62,3 +62,36 @@ for _, m in pairs({"wooden", "stone"}) do
 		on_rotate = screwdriver.rotate_simple
 	})
 end
+
+xdecor.register("leaver_off", {
+	description = "Leaver",
+	tiles = {"xdecor_leaver_off.png"},
+	drawtype = "nodebox",
+	node_box = xdecor.pixelbox(16, {{2, 1, 15, 12, 14, 1}}),
+	groups = {cracky=3, oddly_breakable_by_hand=2},
+	sounds = default.node_sound_stone_defaults(),
+	sunlight_propagates = true,
+	on_rotate = screwdriver.rotate_simple,
+	on_rightclick = function(pos, node, clicker)
+		if not doors.get then return end
+		local minp = {x=pos.x-2, y=pos.y-1, z=pos.z-2}
+		local maxp = {x=pos.x+2, y=pos.y+1, z=pos.z+2}
+		local doors = minetest.find_nodes_in_area(minp, maxp, "group:door")
+
+		for i = 1, #doors do
+			door_toggle(pos, doors[i], clicker)
+		end
+	end
+})
+
+xdecor.register("leaver_on", {
+	tiles = {"xdecor_leaver_on.png"},
+	drawtype = "nodebox",
+	node_box = xdecor.pixelbox(16, {{2, 1, 15, 12, 14, 1}}),
+	groups = {cracky=3, oddly_breakable_by_hand=2, not_in_creative_inventory=1},
+	sounds = default.node_sound_stone_defaults(),
+	sunlight_propagates = true,
+	on_rotate = screwdriver.rotate_simple,
+	drop = "xdecor:leaver_off"
+})
+

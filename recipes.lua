@@ -222,6 +222,14 @@ minetest.register_craft({
 })
 
 minetest.register_craft({
+	output = "xdecor:leaver_off",
+	recipe = {
+		{"group:stick"},
+		{"group:stone"}
+	}
+})
+
+minetest.register_craft({
 	output = "xdecor:mailbox",
 	recipe = {
 		{"default:steel_ingot", "default:steel_ingot", "default:steel_ingot"},
