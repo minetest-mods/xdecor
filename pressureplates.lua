@@ -1,5 +1,6 @@
 -- Thanks to sofar for helping with that code.
 local plate = {}
+screwdriver = screwdriver or {}
 
 function plate.construct(pos)
 	local timer = minetest.get_node_timer(pos)
@@ -45,6 +46,7 @@ for _, m in pairs({"wooden", "stone"}) do
 		groups = {snappy=3},
 		sounds = default.node_sound_wood_defaults(),
 		sunlight_propagates = true,
+		on_rotate = screwdriver.rotate_simple,
 		on_construct = plate.construct,
 		on_timer = plate.timer
 	})
@@ -56,6 +58,7 @@ for _, m in pairs({"wooden", "stone"}) do
 		groups = {snappy=3, not_in_creative_inventory=1},
 		sounds = default.node_sound_wood_defaults(),
 		drop = "xdecor:pressure_"..m.."_off",
-		sunlight_propagates = true
+		sunlight_propagates = true,
+		on_rotate = screwdriver.rotate_simple
 	})
 end
