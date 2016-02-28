@@ -45,7 +45,21 @@ xdecor.register("cauldron_idle", {
 	drop = "xdecor:cauldron_empty",
 	infotext = "Cauldron (idle)",
 	collision_box = xdecor.pixelbox(16, cauldron_cbox),
-	on_rightclick = fill_water_bucket
+	on_rightclick = fill_water_bucket,
+	on_construct = function(pos)
+		local timer = minetest.get_node_timer(pos)
+		timer:start(10.0)
+	end,
+	on_timer = function(pos)
+		local below_node = {x=pos.x, y=pos.y-1, z=pos.z}
+		if not minetest.get_node(below_node).name:find("fire") then
+			return true
+		end
+
+		local node = minetest.get_node(pos)
+		minetest.set_node(pos, {name="xdecor:cauldron_boiling_water", param2=node.param2})
+		return true
+	end
 })
 
 xdecor.register("cauldron_boiling_water", {
@@ -60,7 +74,49 @@ xdecor.register("cauldron_boiling_water", {
 		"xdecor_cauldron_sides.png"
 	},
 	collision_box = xdecor.pixelbox(16, cauldron_cbox),
-	on_rightclick = fill_water_bucket
+	on_rightclick = fill_water_bucket,
+	on_construct = function(pos)
+		local meta = minetest.get_meta(pos)
+		local timer = minetest.get_node_timer(pos)
+		meta:set_string("infotext", "Cauldron (active) - Drop some foods inside to make a soup")
+		timer:start(5.0)
+	end,
+	on_timer = function(pos)
+		local objs = minetest.get_objects_inside_radius(pos, 0.5)
+		if objs == {} then return true end
+
+		local ingredients = {}
+		for _, obj in pairs(objs) do
+			if obj and not obj:is_player() and obj:get_luaentity().itemstring then
+				local itemstring = obj:get_luaentity().itemstring:match(":([%w_]+)")
+				if ingredients == {} then
+					for _, rep in pairs(ingredients) do
+						if itemstring == rep then return end
+					end
+				end
+
+				for _, ing in pairs(ingredients_list) do
+					if itemstring and itemstring:find(ing) then
+						ingredients[#ingredients+1] = itemstring
+					end
+				end
+			end
+		end
+
+		local node = minetest.get_node(pos)
+		if #ingredients >= 2 then
+			for _, obj in pairs(objs) do
+				obj:remove()
+			end
+			minetest.set_node(pos, {name="xdecor:cauldron_soup", param2=node.param2})
+		end
+
+		local node_under = {x=pos.x, y=pos.y-1, z=pos.z}
+		if not minetest.get_node(node_under).name:find("fire") then
+			minetest.set_node(pos, {name="xdecor:cauldron_idle", param2=node.param2})
+		end
+		return true
+	end	
 })
 
 xdecor.register("cauldron_soup", {
@@ -95,58 +151,6 @@ xdecor.register("cauldron_soup", {
 
 			minetest.set_node(pos, {name="xdecor:cauldron_empty", param2=node.param2})
 			return itemstack
-		end
-	end
-})
-
-minetest.register_abm({
-	nodenames = {"xdecor:cauldron_idle"},
-	interval = 15, chance = 1,
-	action = function(pos, node)
-		local below_node = {x=pos.x, y=pos.y-1, z=pos.z}
-		if minetest.get_node(below_node).name:find("fire") then
-			minetest.set_node(pos, {name="xdecor:cauldron_boiling_water", param2=node.param2})
-		end
-	end
-})
-
-minetest.register_abm({
-	nodenames = {"xdecor:cauldron_boiling_water"},
-	interval = 5, chance = 1,
-	action = function(pos, node)
-		local objs = minetest.get_objects_inside_radius(pos, 0.5)
-		if not objs then return end
-
-		local ingredients = {}
-		for _, obj in pairs(objs) do
-			if obj and obj:get_luaentity().itemstring then
-				local itemstring = obj:get_luaentity().itemstring:match(":([%w_]+)")
-				if ingredients == {} then
-					for _, rep in pairs(ingredients) do
-						if itemstring == rep then return end
-					end
-				end
-
-				for _, ing in pairs(ingredients_list) do
-					if itemstring and itemstring:find(ing) then
-						ingredients[#ingredients+1] = itemstring
-					end
-				end
-			end
-		end
-
-		if #ingredients >= 2 then
-			for _, obj in pairs(objs) do
-				if obj and obj:get_luaentity() then
-					obj:remove()
-				end
-			end
-			minetest.set_node(pos, {name="xdecor:cauldron_soup", param2=node.param2})
-		end
-
-		local node_under = {x=pos.x, y=pos.y-1, z=pos.z}
-		if not minetest.get_node(node_under).name:find("fire") then
-			minetest.set_node(pos, {name="xdecor:cauldron_idle", param2=node.param2})
 		end
 	end
 })
