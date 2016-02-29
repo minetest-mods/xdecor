@@ -58,7 +58,7 @@ minetest.register_craft({
 minetest.register_craft({ 
 	output = "xdecor:crafting_guide",
 	type = "shapeless",
-	recipe = {"default:book", "dye:blue"}
+	recipe = {"default:book"}
 })
 
 minetest.register_craft({

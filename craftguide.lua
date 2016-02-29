@@ -143,6 +143,7 @@ minetest.register_craftitem("xdecor:crafting_guide", {
 	inventory_image = "xdecor_crafting_guide.png",
 	wield_image = "xdecor_crafting_guide.png",
 	stack_max = 1,
+	groups = {book=1},
 	on_use = function(itemstack, user)
 		local player_name = user:get_player_name()
 		datas[player_name] = {}
