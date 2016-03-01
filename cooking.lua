@@ -62,6 +62,14 @@ xdecor.register("cauldron_idle", {
 	end
 })
 
+-- Ugly hack to determine if an item has `minetest.item_eat` in its definition.
+local function eatable(itemstring)
+	local item = itemstring:match("[%w_:]+")
+	local on_use_def = minetest.registered_items[item].on_use
+	if not on_use_def then return end
+	return string.format("%q", string.dump(on_use_def)):find("item_eat")
+end
+
 xdecor.register("cauldron_boiling_water", {
 	groups = {cracky=2, oddly_breakable_by_hand=1, not_in_creative_inventory=1},
 	on_rotate = screwdriver.rotate_simple,
@@ -88,16 +96,19 @@ xdecor.register("cauldron_boiling_water", {
 		local ingredients = {}
 		for _, obj in pairs(objs) do
 			if obj and not obj:is_player() and obj:get_luaentity().itemstring then
-				local itemstring = obj:get_luaentity().itemstring:match(":([%w_]+)")
+				local itemstring = obj:get_luaentity().itemstring
+				local name = itemstring:match(":([%w_]+)")
+
 				if ingredients == {} then
 					for _, rep in pairs(ingredients) do
-						if itemstring == rep then return end
+						if name == rep then return end
 					end
 				end
 
 				for _, ing in pairs(ingredients_list) do
-					if itemstring and itemstring:find(ing) then
-						ingredients[#ingredients+1] = itemstring
+					if name and (eatable(itemstring) or name:find(ing)) then
+						ingredients[#ingredients+1] = name
+						break
 					end
 				end
 			end
