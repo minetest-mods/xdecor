@@ -38,13 +38,17 @@ function plate.timer(pos)
 end
 
 for _, m in pairs({"wooden", "stone"}) do
+	local sound = default.node_sound_wood_defaults()
+	if m == "stone" then
+		sound = default.node_sound_stone_defaults()
+	end
 	xdecor.register("pressure_"..m.."_off", {
 		description = m:gsub("^%l", string.upper).." Pressure Plate",
 		tiles = {"xdecor_pressure_"..m..".png"},
 		drawtype = "nodebox",
 		node_box = xdecor.pixelbox(16, {{1, 0, 1, 14, 1, 14}}),
 		groups = {snappy=3},
-		sounds = default.node_sound_wood_defaults(),
+		sounds = sound,
 		sunlight_propagates = true,
 		on_rotate = screwdriver.rotate_simple,
 		on_construct = plate.construct,
@@ -56,7 +60,7 @@ for _, m in pairs({"wooden", "stone"}) do
 		drawtype = "nodebox",
 		node_box = xdecor.pixelbox(16, {{1, 0, 1, 14, 0.4, 14}}),
 		groups = {snappy=3, not_in_creative_inventory=1},
-		sounds = default.node_sound_wood_defaults(),
+		sounds = sound,
 		drop = "xdecor:pressure_"..m.."_off",
 		sunlight_propagates = true,
 		on_rotate = screwdriver.rotate_simple
