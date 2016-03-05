@@ -23,7 +23,7 @@ end
 
 function plate.construct(pos)
 	local timer = minetest.get_node_timer(pos)
-	timer:start(0.5)
+	timer:start(0.1)
 end
 
 function plate.timer(pos)

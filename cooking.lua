@@ -28,16 +28,30 @@ function cauldron.boiling_construct(pos)
 end
 
 function cauldron.filling(pos, node, clicker, itemstack)
+	local inv = clicker:get_inventory()
 	local wield_item = clicker:get_wielded_item():get_name()
+
 	if wield_item:sub(1,7) == "bucket:" then
-		if wield_item:sub(-6) == "_empty" then
+		if wield_item:sub(-6) == "_empty" and not (node.name:sub(-6) == "_empty") then
+			if itemstack:get_count() > 1 then
+				if inv:room_for_item("main", "bucket:bucket_water 1") then
+					itemstack:take_item()
+					inv:add_item("main", "bucket:bucket_water 1")
+				else
+					minetest.chat_send_player(clicker:get_player_name(),
+						"No room in your inventory to add a bucket of water.")
+					return
+				end
+			else
+				itemstack:replace("bucket:bucket_water")
+			end
 			minetest.set_node(pos, {name="xdecor:cauldron_empty", param2=node.param2})
-			itemstack:replace("bucket:bucket_water")
-		elseif wield_item:sub(-6) == "_water" then
+		elseif wield_item:sub(-6) == "_water" and node.name:sub(-6) == "_empty" then
 			minetest.set_node(pos, {name="xdecor:cauldron_idle", param2=node.param2})
 			itemstack:replace("bucket:bucket_empty")
 		end
-	end	
+		return itemstack
+	end
 end
 
 function cauldron.idle_timer(pos)
@@ -47,7 +61,7 @@ function cauldron.idle_timer(pos)
 	end
 
 	local node = minetest.get_node(pos)
-	minetest.set_node(pos, {name="xdecor:cauldron_boiling_water", param2=node.param2})
+	minetest.set_node(pos, {name="xdecor:cauldron_boiling", param2=node.param2})
 	return true
 end
 
@@ -101,7 +115,7 @@ function cauldron.take_soup(pos, node, clicker, itemstack)
 				inv:add_item("main", "xdecor:bowl_soup 1")
 			else
 				minetest.chat_send_player(clicker:get_player_name(),
-					"No room in your inventory to add a bowl of soup!")
+					"No room in your inventory to add a bowl of soup.")
 				return
 			end
 		else
@@ -135,7 +149,7 @@ xdecor.register("cauldron_idle", {
 	on_timer = cauldron.idle_timer
 })
 
-xdecor.register("cauldron_boiling_water", {
+xdecor.register("cauldron_boiling", {
 	groups = {cracky=2, oddly_breakable_by_hand=1, not_in_creative_inventory=1},
 	on_rotate = screwdriver.rotate_simple,
 	drop = "xdecor:cauldron_empty",
@@ -149,6 +163,7 @@ xdecor.register("cauldron_boiling_water", {
 	on_construct = cauldron.boiling_construct,
 	on_timer = cauldron.boiling_timer
 })
+minetest.register_alias("xdecor:cauldron_boiling_water", "xdecor:cauldron_boiling")
 
 xdecor.register("cauldron_soup", {
 	groups = {cracky=2, oddly_breakable_by_hand=1, not_in_creative_inventory=1},
