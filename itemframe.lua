@@ -7,15 +7,14 @@ local function remove_item(pos, node)
 
 	for _, obj in pairs(objs) do
 		if obj and obj:get_luaentity() and
-			obj:get_luaentity().name == "xdecor:f_item" then
-			obj:remove()
+				obj:get_luaentity().name == "xdecor:f_item" then
+			obj:remove() break
 		end
 	end
 end
 
 local facedir = {
-	[0] = {x=0, y=0, z=1}, {x=1, y=0, z=0},
-	      {x=0, y=0, z=-1},{x=-1, y=0, z=0}
+	[0] = {x=0, y=0, z=1}, {x=1, y=0, z=0}, {x=0, y=0, z=-1}, {x=-1, y=0, z=0}
 }
 
 local function update_item(pos, node)
@@ -25,9 +24,7 @@ local function update_item(pos, node)
 	local posad = facedir[node.param2]
 	if not posad or itemstring == "" then return end
 
-	pos.x = pos.x + posad.x * 6.5/16
-	pos.y = pos.y + posad.y * 6.5/16
-	pos.z = pos.z + posad.z * 6.5/16
+	pos = vector.add(pos, vector.multiply(posad, 6.5/16))
 	tmp.nodename = node.name
 	tmp.texture = ItemStack(itemstring):get_name()
 
@@ -53,9 +50,8 @@ local function drop_item(pos, node)
 end
 
 minetest.register_entity("xdecor:f_item", {
-	hp_max = 1,
 	visual = "wielditem",
-	visual_size = {x=.33, y=.33},
+	visual_size = {x=0.33, y=0.33},
 	collisionbox = {0},
 	physical = false,
 	textures = {"air"},
