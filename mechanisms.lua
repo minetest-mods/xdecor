@@ -44,35 +44,41 @@ function plate.timer(pos)
 	return true
 end
 
-for _, m in pairs({"wooden", "stone"}) do
-	local sound = default.node_sound_wood_defaults()
-	if m == "stone" then
-		sound = default.node_sound_stone_defaults()
-	end
-	xdecor.register("pressure_"..m.."_off", {
-		description = m:gsub("^%l", string.upper).." Pressure Plate",
-		tiles = {"xdecor_pressure_"..m..".png"},
+function plate.register(material, desc, def)
+	local sound, groups = def.sounds, def.groups
+	xdecor.register("pressure_"..material.."_off", {
+		description = desc.." Pressure Plate",
+		tiles = {"xdecor_pressure_"..material..".png"},
 		drawtype = "nodebox",
 		node_box = xdecor.pixelbox(16, {{1, 0, 1, 14, 1, 14}}),
-		groups = {snappy=3},
+		groups = groups,
 		sounds = sound,
 		sunlight_propagates = true,
 		on_rotate = screwdriver.rotate_simple,
 		on_construct = plate.construct,
 		on_timer = plate.timer
 	})
-
-	xdecor.register("pressure_"..m.."_on", {
-		tiles = {"xdecor_pressure_"..m..".png"},
+	xdecor.register("pressure_"..material.."_on", {
+		tiles = {"xdecor_pressure_"..material..".png"},
 		drawtype = "nodebox",
 		node_box = xdecor.pixelbox(16, {{1, 0, 1, 14, 0.4, 14}}),
-		groups = {snappy=3, not_in_creative_inventory=1},
+		groups = groups,
 		sounds = sound,
-		drop = "xdecor:pressure_"..m.."_off",
+		drop = "xdecor:pressure_"..material.."_off",
 		sunlight_propagates = true,
 		on_rotate = screwdriver.rotate_simple
 	})
 end
+
+plate.register("wood", "Wooden", {
+	sounds = default.node_sound_wood_defaults(),
+	groups = {choppy=3, flammable=2}
+})
+
+plate.register("stone", "Stone", {
+	sounds = default.node_sound_stone_defaults(),
+	groups = {cracky=3}
+})
 
 xdecor.register("lever_off", {
 	description = "Lever",
