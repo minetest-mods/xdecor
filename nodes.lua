@@ -297,18 +297,11 @@ minetest.register_on_joinplayer(function(player)
 	inv:set_size("enderchest", 8*4)
 end)
 
-xdecor.register("fire", {
-	description = "Fancy Fire",
-	drawtype = "plantlike",
-	light_source = 14,
-	walkable = false,
-	tiles = {{ name = "xdecor_fire_anim.png",
-		   animation = {type="vertical_frames", length=1.5 }}},
-	damage_per_second = 4,
-	drop = "",
-	selection_box = xdecor.pixelbox(16, {{4, 0, 4, 8, 3, 8}}),
-	groups = {dig_immediate=3, hot=3, not_in_creative_inventory=1}
-})
+if rawget(_G, "fire") then
+	minetest.register_alias("xdecor:fire", "fire:basic_flame")
+else
+	minetest.register_alias("xdecor:fire", "air")
+end
 
 xdecor.register("ivy", {
 	description = "Ivy",

@@ -12,7 +12,7 @@ minetest.register_craftitem("xdecor:bowl_soup", {
 	stack_max = 1,
 	on_use = function(itemstack, user)
 		itemstack:replace("xdecor:bowl 1")
-		if minetest.get_modpath("hunger") then
+		if rawget(_G, "hunger") then
 			minetest.item_eat(20)
 		else
 			user:set_hp(20)
@@ -21,25 +21,27 @@ minetest.register_craftitem("xdecor:bowl_soup", {
 	end
 })
 
-minetest.register_tool("xdecor:flint_steel", {
-	description = "Flint & Steel",
-	inventory_image = "xdecor_flint_steel.png",
-	on_use = function(itemstack, user, pointed_thing)
-		local player = user:get_player_name()
-		local pt = pointed_thing
+if rawget(_G, "fire") then
+	minetest.register_tool("xdecor:flint_steel", {
+		description = "Flint & Steel",
+		inventory_image = "xdecor_flint_steel.png",
+		on_use = function(itemstack, user, pointed_thing)
+			local player = user:get_player_name()
+			local pt = pointed_thing
 
-		if pt.type == "node" and minetest.get_node(pt.above).name == "air" then
-			if not minetest.is_protected(pt.above, player) then
-				minetest.set_node(pt.above, {name="xdecor:fire"})
-			else
-				minetest.chat_send_player(player, "[!] This area is protected")
+			if pt.type == "node" and minetest.get_node(pt.above).name == "air" then
+				if not minetest.is_protected(pt.above, player) then
+					minetest.set_node(pt.above, {name="fire:basic_flame"})
+				else
+					minetest.chat_send_player(player, "[!] This area is protected")
+				end
 			end
-		end
 
-		itemstack:add_wear(1000)
-		return itemstack
-	end
-})
+			itemstack:add_wear(2000)
+			return itemstack
+		end
+	})
+end
 
 minetest.register_tool("xdecor:hammer", {
 	description = "Hammer",
