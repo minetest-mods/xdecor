@@ -45,14 +45,13 @@ function plate.timer(pos)
 end
 
 function plate.register(material, desc, def)
-	local sound, groups = def.sounds, def.groups
 	xdecor.register("pressure_"..material.."_off", {
 		description = desc.." Pressure Plate",
 		tiles = {"xdecor_pressure_"..material..".png"},
 		drawtype = "nodebox",
 		node_box = xdecor.pixelbox(16, {{1, 0, 1, 14, 1, 14}}),
-		groups = groups,
-		sounds = sound,
+		groups = def.groups,
+		sounds = def.sounds,
 		sunlight_propagates = true,
 		on_rotate = screwdriver.rotate_simple,
 		on_construct = plate.construct,
@@ -62,8 +61,8 @@ function plate.register(material, desc, def)
 		tiles = {"xdecor_pressure_"..material..".png"},
 		drawtype = "nodebox",
 		node_box = xdecor.pixelbox(16, {{1, 0, 1, 14, 0.4, 14}}),
-		groups = groups,
-		sounds = sound,
+		groups = def.groups,
+		sounds = def.sounds,
 		drop = "xdecor:pressure_"..material.."_off",
 		sunlight_propagates = true,
 		on_rotate = screwdriver.rotate_simple

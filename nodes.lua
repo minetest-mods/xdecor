@@ -20,7 +20,7 @@ xdecor.register("baricade", {
 	walkable = false,
 	inventory_image = "xdecor_baricade.png",
 	tiles = {"xdecor_baricade.png"},
-	groups = {choppy=2, oddly_breakable_by_hand=1, flammable=3},
+	groups = {choppy=2, oddly_breakable_by_hand=1, flammable=2},
 	damage_per_second = 4,
 	selection_box = xdecor.nodebox.slab_y(0.3)
 })
@@ -30,7 +30,7 @@ xdecor.register("barrel", {
 	inventory = {size=24},
 	infotext = "Barrel",
 	tiles = {"xdecor_barrel_top.png", "xdecor_barrel_sides.png"},
-	groups = {choppy=2, oddly_breakable_by_hand=1, flammable=3},
+	groups = {choppy=2, oddly_breakable_by_hand=1, flammable=2},
 	sounds = default.node_sound_wood_defaults()
 })
 
@@ -38,7 +38,7 @@ xdecor.register("cabinet", {
 	description = "Wood Cabinet",
 	inventory = {size=24},
 	infotext = "Wood Cabinet",
-	groups = {choppy=2, oddly_breakable_by_hand=1, flammable=3},
+	groups = {choppy=2, oddly_breakable_by_hand=1, flammable=2},
 	sounds = default.node_sound_wood_defaults(),
 	on_rotate = screwdriver.rotate_simple,
 	tiles = {"xdecor_cabinet_sides.png", "xdecor_cabinet_sides.png",
@@ -50,7 +50,7 @@ xdecor.register("cabinet_half", {
 	description = "Half Wood Cabinet",
 	inventory = {size=8},
 	infotext = "Half Wood Cabinet",
-	groups = {choppy=3, oddly_breakable_by_hand=2, flammable=3},
+	groups = {choppy=3, oddly_breakable_by_hand=2, flammable=2},
 	sounds = default.node_sound_wood_defaults(),
 	node_box = xdecor.nodebox.slab_y(0.5, 0.5),
 	tiles = {"xdecor_cabinet_sides.png", "xdecor_cabinet_sides.png",
@@ -87,7 +87,7 @@ xdecor.register("chair", {
 	description = "Chair",
 	tiles = {"xdecor_wood.png"},
 	sounds = default.node_sound_wood_defaults(),
-	groups = {choppy=3, oddly_breakable_by_hand=2, flammable=3},
+	groups = {choppy=3, oddly_breakable_by_hand=2, flammable=2},
 	on_rotate = screwdriver.rotate_simple,
 	node_box = xdecor.pixelbox(16, {
 		{3,  0, 11,   2, 16, 2},
@@ -118,8 +118,6 @@ xpanes.register_pane("chainlink", {
 		   {"default:steel_ingot", "", "default:steel_ingot"} }
 })
 
--- The following nodedef is licensed under WTFPL for granting a possible re-use
--- in Minetest Game (https://github.com/minetest/minetest_game). 
 xdecor.register("cobweb", {
 	description = "Cobweb",
 	drawtype = "plantlike",
@@ -249,7 +247,7 @@ for name, recipe in pairs(xdecor_doors) do
 		description = string.gsub(" "..name, "%W%l", string.upper):sub(2):gsub("_", " ").." Door",
 		inventory_image = "xdecor_"..name.."_door_inv.png",
 		protected = door_access(name),
-		groups = {choppy=3, cracky=3, oddly_breakable_by_hand=1, flammable=2, door=1},
+		groups = {choppy=2, cracky=2, oddly_breakable_by_hand=1, door=1},
 		recipe = recipe
 	})
 	minetest.register_alias("xdecor:"..name.."_door", "doors:"..name.."_door")
@@ -269,7 +267,7 @@ xdecor.register("empty_shelf", {
 	inventory = {size=24},
 	infotext = "Empty Shelf",
 	tiles = {"default_wood.png", "default_wood.png^xdecor_empty_shelf.png"},
-	groups = {choppy=2, oddly_breakable_by_hand=1, flammable=3},
+	groups = {choppy=2, oddly_breakable_by_hand=1, flammable=2},
 	sounds = default.node_sound_wood_defaults(),
 	on_rotate = screwdriver.rotate_simple
 })
@@ -395,7 +393,7 @@ xdecor.register("painting_1", {
 	legacy_wallmounted = true,
 	wield_image = "xdecor_painting_empty.png",
 	sunlight_propagates = true,
-	groups = {choppy=3, oddly_breakable_by_hand=2, flammable=3, attached_node=1},
+	groups = {choppy=3, oddly_breakable_by_hand=2, flammable=2, attached_node=1},
 	sounds = default.node_sound_wood_defaults(),
 	node_box = {
 		type = "wallmounted",
@@ -418,7 +416,7 @@ for i = 2, 4 do
 		legacy_wallmounted = true,
 		drop = "xdecor:painting_1",
 		sunlight_propagates = true,
-		groups = {choppy=3, oddly_breakable_by_hand=2, flammable=3, attached_node=1, not_in_creative_inventory=1},
+		groups = {choppy=3, oddly_breakable_by_hand=2, flammable=2, attached_node=1, not_in_creative_inventory=1},
 		sounds = default.node_sound_wood_defaults(),
 		node_box = {
 			type = "wallmounted",
@@ -451,7 +449,7 @@ xdecor.register("multishelf", {
 	infotext = "Multi Shelf",
 	on_rotate = screwdriver.rotate_simple,
 	tiles = {"default_wood.png", "default_wood.png^xdecor_multishelf.png"},
-	groups = {choppy=2, oddly_breakable_by_hand=1, flammable=3},
+	groups = {choppy=2, oddly_breakable_by_hand=1, flammable=2},
 	sounds = default.node_sound_wood_defaults()
 })
 
@@ -463,7 +461,7 @@ xpanes.register_pane("rusty_bar", {
 	textures = {"xdecor_rusty_bars.png", "xdecor_rusty_bars.png", "xpanes_space.png"},
 	inventory_image = "xdecor_rusty_bars.png",
 	wield_image = "xdecor_rusty_bars.png",
-	groups = {cracky=3, oddly_breakable_by_hand=2, pane=1},
+	groups = {cracky=2, pane=1},
 	recipe = { {"", "default:dirt", ""},
 		   {"default:steel_ingot", "default:steel_ingot", "default:steel_ingot"},
 		   {"default:steel_ingot", "default:steel_ingot", "default:steel_ingot"} }
@@ -504,7 +502,7 @@ end
 xdecor.register("table", {
 	description = "Table",
 	tiles = {"xdecor_wood.png"},
-	groups = {choppy=3, oddly_breakable_by_hand=2, flammable=3},
+	groups = {choppy=2, oddly_breakable_by_hand=1, flammable=2},
 	sounds = default.node_sound_wood_defaults(),
 	node_box = xdecor.pixelbox(16, {
 		{0, 14, 0, 16, 2, 16}, {5.5, 0, 5.5, 5, 14, 6}
@@ -540,7 +538,7 @@ xpanes.register_pane("wood_frame", {
 	textures = {"xdecor_wood_frame.png", "xdecor_wood_frame.png", "xpanes_space.png"},
 	inventory_image = "xdecor_wood_frame.png",
 	wield_image = "xdecor_wood_frame.png",
-	groups = {choppy=3, oddly_breakable_by_hand=2, pane=1, flammable=3},
+	groups = {choppy=2, pane=1, flammable=2},
 	sounds = default.node_sound_wood_defaults(),
 	recipe = { {"group:wood", "group:stick", "group:wood"},
 		   {"group:stick", "group:stick", "group:stick"},
@@ -551,7 +549,7 @@ xdecor.register("woodframed_glass", {
 	description = "Wood Framed Glass",
 	drawtype = "glasslike_framed",
 	tiles = {"xdecor_woodframed_glass.png", "xdecor_woodframed_glass_detail.png"},
-	groups = {cracky=3, oddly_breakable_by_hand=2},
+	groups = {cracky=2, oddly_breakable_by_hand=1},
 	sounds = default.node_sound_glass_defaults()
 })
 
@@ -559,7 +557,7 @@ xdecor.register("wood_tile", {
 	description = "Wood Tile",
 	tiles = {"xdecor_wood_tile.png"},
 	drawtype = "normal",
-	groups = {choppy=1, oddly_breakable_by_hand=1, wood=1, flammable=2},
+	groups = {choppy=1, wood=1, flammable=2},
 	sounds = default.node_sound_wood_defaults()
 })
 
