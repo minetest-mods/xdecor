@@ -18,11 +18,12 @@ function mailbox:formspec(pos, owner, num)
 	if num == 1 then
 		for i = 1, 7 do
 			if meta:get_string("giver"..i) ~= "" then
-				giver = giver.."#FFFF00,"..meta:get_string("giver"..i):sub(1, 12)..
-					","..i..",#FFFFFF,x "..meta:get_string("stack"..i):match("%s(%d+)")..","
+				local giver_name = meta:get_string("giver"..i):sub(1,12)
+				local stack_name = meta:get_string("stack"..i):match("[%w_:]+")
+				local stack_count = meta:get_string("stack"..i):match("%s(%d+)") or 1
 
-				img = img..i.."="..img_col(minetest.registered_items[
-					meta:get_string("stack"..i):match("(.*)%s")])..","
+				giver = giver.."#FFFF00,"..giver_name..","..i..",#FFFFFF,x "..stack_count..","
+				img = img..i.."="..img_col(minetest.registered_items[stack_name])..","
 			end
 		end
 
