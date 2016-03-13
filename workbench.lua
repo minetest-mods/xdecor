@@ -114,7 +114,8 @@ function workbench.fields(pos, _, fields)
 	local meta = minetest.get_meta(pos)
 	if     fields.back    then workbench:formspecs(meta, 1)
 	elseif fields.craft   then workbench:formspecs(meta, 2)
-	elseif fields.storage then workbench:formspecs(meta, 3) end
+	elseif fields.storage then workbench:formspecs(meta, 3)
+	elseif fields.backcraft then workbench:formspecs(meta, 1) end -- Legacy code for older formspecs.
 end
 
 function workbench.dig(pos)
