@@ -523,6 +523,11 @@ xdecor.register("tv", {
 		 animation = {type="vertical_frames", length=80.0}} }
 })
 
+for _, n in pairs({"c0", "c1", "c2", "c3", "c4", "ln"}) do
+	minetest.register_alias("xdecor:cobble_wall_"..n, "walls:cobble")
+	minetest.register_alias("xdecor:mossycobble_wall_"..n, "walls:cobble")
+end
+
 xpanes.register_pane("wood_frame", {
 	description = "Wood Frame",
 	tiles = {"xdecor_wood_frame.png"},

@@ -95,22 +95,6 @@ minetest.register_craft({
 })
 
 minetest.register_craft({
-	output = "xdecor:cobble_wall_ln 6",
-	recipe = {
-		{"default:cobble", "default:cobble", "default:cobble"},
-		{"default:cobble", "default:cobble", "default:cobble"}
-	}
-})
-
-minetest.register_craft({
-	output = "xdecor:mossycobble_wall_ln 6",
-	recipe = {
-		{"default:mossycobble", "default:mossycobble", "default:mossycobble"},
-		{"default:mossycobble", "default:mossycobble", "default:mossycobble"}
-	}
-})
-
-minetest.register_craft({
 	output = "xdecor:cobweb",
 	recipe = {
 		{"farming:cotton", "", "farming:cotton"},
@@ -258,7 +242,7 @@ minetest.register_craft({
 minetest.register_craft({
 	output = "xdecor:painting_1",
 	recipe = {
-		{"default:sign_wall", "dye:blue"}
+		{"default:sign_wall_wood", "dye:blue"}
 	}
 })
 
