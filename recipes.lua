@@ -253,7 +253,7 @@ minetest.register_craft({
 })
 
 minetest.register_craft({
-	output = "xdecor:pressure_wooden_off",
+	output = "xdecor:pressure_wood_off",
 	type = "shapeless",
 	recipe = {"group:wood", "group:wood"}
 })
