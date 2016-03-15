@@ -146,13 +146,6 @@ minetest.register_craft({
 })
 
 minetest.register_craft({
-	output = "xdecor:flint_steel",
-	recipe = {
-		{"default:obsidian_shard", "default:steel_ingot"}
-	}
-})
-
-minetest.register_craft({
 	output = "xdecor:frame",
 	recipe = {
 		{"group:stick", "group:stick", "group:stick"},
