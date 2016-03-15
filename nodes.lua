@@ -106,19 +106,18 @@ xdecor.register("candle", {
 	inventory_image = "xdecor_candle_inv.png",
 	wield_image = "xdecor_candle_wield.png",
 	paramtype2 = "wallmounted",
-	legacy_wallmounted = true,
 	walkable = false,
 	groups = {dig_immediate=3, attached_node=1},
 	tiles = {{name = "xdecor_candle_floor.png",
 			animation = {type="vertical_frames", length=1.5}},
-		{name = "xdecor_candle_ceiling.png",
+		{name = "xdecor_candle_floor.png",
 			animation = {type="vertical_frames", length=1.5}},
 		{name = "xdecor_candle_wall.png",
 			animation = {type="vertical_frames", length=1.5}}
 	},
 	selection_box = {
 		type = "wallmounted",
-		wall_top = {-0.3, -0.4, -0.3, 0.3, 0.5, 0.3},
+		wall_top = {-0.25, -0.5, -0.25, 0.25, 0.1, 0.25},
 		wall_bottom = {-0.25, -0.5, -0.25, 0.25, 0.1, 0.25},
 		wall_side = {-0.5, -0.35, -0.15, -0.15, 0.4, 0.15}
 	}
@@ -319,7 +318,6 @@ xdecor.register("ivy", {
 	groups = {dig_immediate=3, flammable=3, plant=1},
 	paramtype2 = "wallmounted",
 	selection_box = {type="wallmounted"},
-	legacy_wallmounted = true,
 	tiles = {"xdecor_ivy.png"},
 	inventory_image = "xdecor_ivy.png",
 	wield_image = "xdecor_ivy.png",
@@ -328,20 +326,15 @@ xdecor.register("ivy", {
 
 xdecor.register("lantern", {
 	description = "Lantern",
-	light_source = 12,
-	drawtype = "torchlike",
-	inventory_image = "xdecor_lantern_floor.png",
-	wield_image = "xdecor_lantern_floor.png", 
+	light_source = 13,
+	drawtype = "plantlike",
+	inventory_image = "xdecor_lantern_inv.png",
+	wield_image = "xdecor_lantern_inv.png",
 	paramtype2 = "wallmounted",
-	legacy_wallmounted = true,
 	walkable = false,
 	groups = {dig_immediate=3, attached_node=1},
-	tiles = {"xdecor_lantern_floor.png", "xdecor_lantern_ceiling.png", "xdecor_lantern.png"},
-	selection_box = {
-		type = "wallmounted",
-		wall_top = {-0.25, -0.4, -0.25, 0.25, 0.5, 0.25},
-		wall_bottom = {-0.25, -0.5, -0.25, 0.25, 0.4, 0.25},
-		wall_side = {-0.5, -0.5, -0.15, 0.5, 0.5, 0.15} }
+	tiles = {{name = "xdecor_lantern.png", animation = {type="vertical_frames", length=1.5}}},
+	selection_box = xdecor.pixelbox(16, {{4, 0, 4, 8, 16, 8}})
 })
 
 for _, l in pairs({"iron", "wooden"}) do
@@ -388,7 +381,6 @@ xdecor.register("painting_1", {
 	inventory_image = "xdecor_painting_empty.png",
 	wield_image = "xdecor_painting_empty.png",
 	paramtype2 = "wallmounted",
-	legacy_wallmounted = true,
 	wield_image = "xdecor_painting_empty.png",
 	sunlight_propagates = true,
 	groups = {choppy=3, oddly_breakable_by_hand=2, flammable=2, attached_node=1},
@@ -406,7 +398,6 @@ for i = 2, 4 do
 	xdecor.register("painting_"..i, {
 		tiles = {"xdecor_painting_"..i..".png"},
 		paramtype2 = "wallmounted",
-		legacy_wallmounted = true,
 		drop = "xdecor:painting_1",
 		sunlight_propagates = true,
 		groups = {choppy=3, oddly_breakable_by_hand=2, flammable=2, attached_node=1, not_in_creative_inventory=1},
