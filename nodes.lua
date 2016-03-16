@@ -194,7 +194,7 @@ for _, c in pairs({"red"}) do  -- Add more curtains colors simply here.
 	})
 end
 
-minetest.register_alias("xdecor:crate", "default:chess")
+minetest.register_alias("xdecor:crate", "default:chest")
 
 xdecor.register("cushion", {
 	description = "Cushion",
