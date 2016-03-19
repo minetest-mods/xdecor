@@ -60,17 +60,19 @@ function xdecor.register_storage(name, desc, def)
 	xdecor.register(name, {
 		description = desc,
 		inventory = {size=def.inv_size or 24},
-		node_box = def.node_box or {},
 		infotext = desc,
 		tiles = def.tiles,
-		on_rotate = def.on_rotate or {},
+		node_box = def.node_box,
+		on_rotate = def.on_rotate,
+		on_place = def.on_place,
 		groups = def.groups or {choppy=2, oddly_breakable_by_hand=1, flammable=2},
 		sounds = default.node_sound_wood_defaults()
 	})
 end
 
 xdecor.register_storage("barrel", "Barrel", {
-	tiles = {"xdecor_barrel_top.png", "xdecor_barrel_sides.png"}
+	tiles = {"xdecor_barrel_top.png", "xdecor_barrel_sides.png"},
+	on_place = minetest.rotate_node
 })
 
 xdecor.register_storage("cabinet", "Wooden Cabinet", {
