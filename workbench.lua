@@ -257,14 +257,6 @@ for node in pairs(minetest.registered_nodes) do
 			on_place = minetest.rotate_node
 		})
 	end
-	if node:match(":mese") then
-		if d[3] then minetest.register_alias(node.."_"..d[1], "default:glass_"..d[1])
-		else minetest.register_alias("stairs:"..d[1].."_"..node:match(":(.*)"), "stairs:"..d[1].."_glass") end
-	elseif workbench:nodes(def) and not d[3] then
-		minetest.register_alias(node.."_"..d[1], "stairs:"..d[1].."_"..node:match(":(.*)"))
-	end
 end
 end
-
-minetest.register_alias("xdecor:worktable", "xdecor:workbench")
 

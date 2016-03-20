@@ -163,7 +163,6 @@ xdecor.register("cauldron_boiling", {
 	on_construct = cauldron.boiling_construct,
 	on_timer = cauldron.boiling_timer
 })
-minetest.register_alias("xdecor:cauldron_boiling_water", "xdecor:cauldron_boiling")
 
 xdecor.register("cauldron_soup", {
 	groups = {cracky=2, oddly_breakable_by_hand=1, not_in_creative_inventory=1},

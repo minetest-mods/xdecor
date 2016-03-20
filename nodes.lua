@@ -196,8 +196,6 @@ for _, c in pairs({"red"}) do  -- Add more curtains colors simply here.
 	})
 end
 
-minetest.register_alias("xdecor:crate", "default:chest")
-
 xdecor.register("cushion", {
 	description = "Cushion",
 	tiles = {"xdecor_cushion.png"},
@@ -286,7 +284,7 @@ xdecor.register("enderchest", {
 	tiles = {"xdecor_enderchest_top.png", "xdecor_enderchest_top.png",
 		 "xdecor_enderchest_side.png", "xdecor_enderchest_side.png",
 		 "xdecor_enderchest_side.png", "xdecor_enderchest_front.png"},
-	groups = {cracky=1, choppy=1, oddly_breakable_by_hand=1},
+	groups = {cracky=1, choppy=1},
 	sounds = default.node_sound_stone_defaults(),
 	on_rotate = screwdriver.rotate_simple,
 	on_construct = function(pos)
@@ -348,7 +346,6 @@ for _, l in pairs({"iron", "wooden"}) do
 		sounds = default.node_sound_glass_defaults()
 	})
 end
-minetest.register_alias("xdecor:lightbox", "xdecor:wooden_lightbox")
 
 for _, f in pairs({"dandelion_white", "dandelion_yellow", "geranium",
 		"rose", "tulip", "viola"}) do
@@ -406,11 +403,6 @@ for i = 2, 4 do
 		sounds = default.node_sound_wood_defaults(),
 		node_box = painting_box
 	})
-end
-
-minetest.register_alias("xpanes:rust_bar", "xpanes:rusty_bar")
-for i = 1, 15 do
-	minetest.register_alias("xpanes:rust_bar_"..i, "xpanes:rusty_bar_"..i)
 end
 
 xdecor.register("stonepath", {

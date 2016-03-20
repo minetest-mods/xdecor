@@ -75,12 +75,12 @@ end
 
 plate.register("wood", "Wooden", {
 	sounds = default.node_sound_wood_defaults(),
-	groups = {choppy=3, flammable=2}
+	groups = {choppy=3, oddly_breakable_by_hand=2, flammable=2}
 })
 
 plate.register("stone", "Stone", {
 	sounds = default.node_sound_stone_defaults(),
-	groups = {cracky=3}
+	groups = {cracky=3, oddly_breakable_by_hand=2}
 })
 
 xdecor.register("lever_off", {
