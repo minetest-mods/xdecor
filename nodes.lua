@@ -436,6 +436,7 @@ xdecor.register_hard_node("moonbrick", "Moon Brick", {})
 xdecor.register_hard_node("stone_tile", "Stone Tile", {})
 xdecor.register_hard_node("stone_rune", "Runestone", {})
 xdecor.register_hard_node("packed_ice", "Packed Ice", {
+	groups = {cracky=1, puts_out_fire=1},
 	sounds = default.node_sound_glass_defaults()
 })
 xdecor.register_hard_node("wood_tile", "Wooden Tile", {

@@ -146,7 +146,7 @@ minetest.register_craft({
 })
 
 minetest.register_craft({
-	output = "xdecor:frame",
+	output = "xdecor:itemframe",
 	recipe = {
 		{"group:stick", "group:stick", "group:stick"},
 		{"group:stick", "default:paper", "group:stick"},
