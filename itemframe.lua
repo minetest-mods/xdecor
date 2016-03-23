@@ -74,7 +74,7 @@ function itemframe.rightclick(pos, node, clicker, itemstack)
 	if player ~= owner or not itemstack then return end
 
 	drop_item(pos, node)
-	local itemstring = itemstack:take_item():get_name()
+	local itemstring = itemstack:take_item():to_string()
 	meta:set_string("item", itemstring)
 	update_item(pos, node)
 
