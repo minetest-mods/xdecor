@@ -3,15 +3,18 @@ screwdriver = screwdriver or {}
 
 -- Nodes allowed to be cut.
 -- Only the regular, solid blocks without formspec or explosivity can be cut.
-function workbench:nodes(def)
-	return (def.drawtype == "normal" or def.drawtype:find("glass")) and
-		(def.groups.cracky or def.groups.choppy) and not
-		def.on_construct and not def.after_place_node and not
-		def.after_place_node and not def.on_rightclick and not
-		def.on_blast and not def.allow_metadata_inventory_take and not
-		(def.groups.not_in_creative_inventory == 1) and not
-		def.groups.wool and not def.description:find("Ore") and
-		def.description and def.description ~= "" and def.light_source == 0
+local nodes = {}
+for node, def in pairs(minetest.registered_nodes) do
+	if (def.drawtype == "normal" or def.drawtype:find("glass")) and
+			(def.groups.cracky or def.groups.choppy) and not
+			def.on_construct and not def.after_place_node and not
+			def.after_place_node and not def.on_rightclick and not
+			def.on_blast and not def.allow_metadata_inventory_take and not
+			(def.groups.not_in_creative_inventory == 1) and not
+			def.groups.wool and not def.description:find("Ore") and
+			def.description and def.description ~= "" and def.light_source == 0 then
+		nodes[#nodes+1] = node
+	end
 end
 
 -- Nodeboxes definitions.
@@ -216,9 +219,11 @@ xdecor.register("workbench", {
 })
 
 for _, d in pairs(workbench.defs) do
-for node in pairs(minetest.registered_nodes) do
+for i=1, #nodes do
+	local node = nodes[i]
 	local def = minetest.registered_nodes[node]
-	if workbench:nodes(def) and d[3] then
+
+	if d[3] then
 		local groups, tiles = {}, {}
 		groups.not_in_creative_inventory = 1
 
