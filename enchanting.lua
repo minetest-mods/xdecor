@@ -110,6 +110,29 @@ function enchanting.construct(pos)
 	local inv = meta:get_inventory()
 	inv:set_size("tool", 1)
 	inv:set_size("mese", 1)
+
+	minetest.add_entity({x=pos.x, y=pos.y+0.85, z=pos.z}, "xdecor:book_open")
+	local timer = minetest.get_node_timer(pos)
+	timer:start(15.0)
+end
+
+function enchanting.destruct(pos)
+	for _, obj in pairs(minetest.get_objects_inside_radius(pos, 0.9)) do
+		if obj and obj:get_luaentity() and
+				obj:get_luaentity().name == "xdecor:book_open" then
+			obj:remove() break
+		end
+	end
+end
+
+function enchanting.timer(pos)
+	local node = minetest.get_node(pos)
+	local num = #minetest.get_objects_inside_radius(pos, 0.9)
+
+	if num == 0 then
+		minetest.add_entity({x=pos.x, y=pos.y+0.85, z=pos.z}, "xdecor:book_open")
+	end
+	return true
 end
 
 xdecor.register("enchantment_table", {
@@ -121,12 +144,22 @@ xdecor.register("enchantment_table", {
 	sounds = default.node_sound_stone_defaults(),
 	on_rotate = screwdriver.rotate_simple,
 	can_dig = enchanting.dig,
+	on_timer = enchanting.timer,
 	on_construct = enchanting.construct,
+	on_destruct = enchanting.destruct,
 	on_receive_fields = enchanting.fields,
 	on_metadata_inventory_put = enchanting.on_put,
 	on_metadata_inventory_take = enchanting.on_take,
 	allow_metadata_inventory_put = enchanting.put,
 	allow_metadata_inventory_move = function() return 0 end
+})
+
+minetest.register_entity("xdecor:book_open", {
+	visual = "sprite",
+	visual_size = {x=0.75, y=0.75},
+	collisionbox = {0},
+	physical = false,
+	textures = {"xdecor_book_open.png"}
 })
 
 local function cap(S) return S:gsub("^%l", string.upper) end
