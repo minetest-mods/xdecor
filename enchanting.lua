@@ -180,7 +180,15 @@ minetest.register_entity("xdecor:book_open", {
 	visual_size = {x=0.75, y=0.75},
 	collisionbox = {0},
 	physical = false,
-	textures = {"xdecor_book_open.png"}
+	textures = {"xdecor_book_open.png"},
+	on_activate = function(self)
+		local pos = self.object:getpos()
+		local pos_under = {x=pos.x, y=pos.y-1, z=pos.z}
+
+		if minetest.get_node(pos_under).name ~= "xdecor:enchantment_table" then
+			self.object:remove()
+		end
+	end
 })
 
 local function cap(S) return S:gsub("^%l", string.upper) end
