@@ -146,8 +146,8 @@ function enchanting.timer(pos)
 	if tostring(x..z):find(2) then
 		minetest.add_particle({
 			pos = bookshelf_pos,
-			velocity = {x=x, y=1.7-y, z=z},
-			acceleration = {x=-0.6, y=-1.5, z=0},
+			velocity = {x=x, y=2-y, z=z},
+			acceleration = {x=0, y=-2.2, z=0},
 			expirationtime = 1,
 			size = 2,
 			texture = "xdecor_glyph"..math.random(1,14)..".png"
