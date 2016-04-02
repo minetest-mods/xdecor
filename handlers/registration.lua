@@ -1,10 +1,3 @@
---[[ local default_can_dig = function(pos, _)
-	local meta = minetest.get_meta(pos)
-	local inv = meta:get_inventory()
-
-	return inv:is_empty("main")
-end --]]
-
 xbg = default.gui_bg..default.gui_bg_img..default.gui_slots
 local default_inventory_size = 32
 
@@ -44,24 +37,9 @@ local function get_formspec_by_size(size)
 	return formspec or default_inventory_formspecs
 end
 
-local function drop_stuff()
-	return function(pos, oldnode, oldmetadata, digger)
-		local meta = minetest.get_meta(pos)
-		meta:from_table(oldmetadata)
-		local inv = meta:get_inventory()
-
-		for i=1, inv:get_size("main") do
-			local stack = inv:get_stack("main", i)
-			if not stack:is_empty() then
-				local p = {
-					x = pos.x + math.random(0,5) / 5 - 0.5,
-					y = pos.y,
-					z = pos.z + math.random(0,5) / 5 - 0.5
-				}
-				minetest.add_item(p, stack)
-			end
-		end
-	end
+local default_can_dig = function(pos)
+	local inv = minetest.get_meta(pos):get_inventory()
+	return inv:is_empty("main")
 end
 
 function xdecor.register(name, def)
@@ -94,8 +72,7 @@ function xdecor.register(name, def)
 			inv:set_size("main", size)
 			meta:set_string("formspec", (inventory.formspec or get_formspec_by_size(size))..xbg)
 		end
-		def.after_dig_node = def.after_dig_node or drop_stuff()
-		--def.can_dig = def.can_dig or default_can_dig
+		def.can_dig = def.can_dig or default_can_dig
 	elseif infotext and not def.on_construct then
 		def.on_construct = function(pos)
 			local meta = minetest.get_meta(pos)

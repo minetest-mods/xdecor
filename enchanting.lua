@@ -150,7 +150,7 @@ function enchanting.timer(pos)
 			acceleration = {x=0, y=-2.2, z=0},
 			expirationtime = 1,
 			size = 2,
-			texture = "xdecor_glyph"..math.random(1,14)..".png"
+			texture = "xdecor_glyph"..math.random(1,18)..".png"
 		})
 	end
 	return true
