@@ -249,7 +249,7 @@ minetest.register_craft({
 minetest.register_craft({
 	output = "xdecor:painting_1",
 	recipe = {
-		{"default:sign_wall_wood", "dye:blue"}
+		{"default:sign_wall", "dye:blue"}
 	}
 })
 
