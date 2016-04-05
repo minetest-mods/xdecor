@@ -7,9 +7,8 @@ local function img_col(stack)
 
 	if def.inventory_image ~= "" then
 		return def.inventory_image:match("(.*)%.png")..".png"
-	else
-		return def.tiles[1]:match("(.*)%.png")..".png"
 	end
+	return def.tiles[1]:match("(.*)%.png")..".png"
 end
 
 function mailbox:formspec(pos, owner, num)
@@ -19,10 +18,12 @@ function mailbox:formspec(pos, owner, num)
 
 	if num == 1 then
 		for i = 1, 7 do
-			if meta:get_string("giver"..i) ~= "" then
-				local giver_name = meta:get_string("giver"..i):sub(1,12)
-				local stack_name = meta:get_string("stack"..i):match("[%w_:]+")
-				local stack_count = meta:get_string("stack"..i):match("%s(%d+)") or 1
+			local giving = meta:get_string("giver"..i)
+			if giving ~= "" then
+				local stack = meta:get_string("stack"..i)
+				local giver_name = giving:sub(1,12)
+				local stack_name = stack:match("[%w_:]+")
+				local stack_count = stack:match("%s(%d+)") or 1
 
 				giver = giver.."#FFFF00,"..giver_name..","..i..",#FFFFFF,x "..stack_count..","
 				-- Hack to force using a 16px resolution for images in formspec's tablecolumn.
