@@ -14,7 +14,7 @@ function craftguide:get_recipe(item)
 	return item
 end
 
-function craftguide:get_formspec(player_name, pagenum, recipe_num)
+function craftguide:set_formspec(player_name, pagenum, recipe_num)
 	local data = datas[player_name]
 	local formspec = [[ size[8,6.6;]
 			tablecolumns[color;text;color;text]
@@ -111,25 +111,25 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 	if fields.clear then
 		data.filter, data.item = "", nil
 		craftguide:get_items(player_name)
-		craftguide:get_formspec(player_name, 1, 1)
+		craftguide:set_formspec(player_name, 1, 1)
 	elseif fields.alternate then
 		local recipe_num = tonumber(formspec:match("Recipe%s(%d+)")) or 1
 		recipe_num = recipe_num + 1
-		craftguide:get_formspec(player_name, pagenum, recipe_num)
+		craftguide:set_formspec(player_name, pagenum, recipe_num)
 	elseif fields.search then
 		data.filter = fields.filter:lower()
 		craftguide:get_items(player_name)
-		craftguide:get_formspec(player_name, 1, 1)
+		craftguide:set_formspec(player_name, 1, 1)
 	elseif fields.prev or fields.next then
 		if fields.prev then pagenum = pagenum - 1
 		else pagenum = pagenum + 1 end
 		if     pagenum > data.pagemax then pagenum = 1
 		elseif pagenum == 0	      then pagenum = data.pagemax end
-		craftguide:get_formspec(player_name, pagenum, 1)
+		craftguide:set_formspec(player_name, pagenum, 1)
 	else for item in pairs(fields) do
 		 if minetest.get_craft_recipe(item).items then
 			data.item = item
-			craftguide:get_formspec(player_name, pagenum, 1)
+			craftguide:set_formspec(player_name, pagenum, 1)
 		 end
 	     end
 	end
@@ -147,7 +147,7 @@ minetest.register_craftitem("xdecor:crafting_guide", {
 			datas[player_name] = {}
 			datas[player_name].filter = ""
 			craftguide:get_items(player_name)
-			craftguide:get_formspec(player_name, 1, 1)
+			craftguide:set_formspec(player_name, 1, 1)
 		else
 			minetest.show_formspec(player_name, "xdecor:craftguide", datas[player_name].formspec)
 		end

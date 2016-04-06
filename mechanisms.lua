@@ -1,5 +1,5 @@
 --[[ Thanks to sofar for helping with that code.
-Pressure plates work better with this setting in minetest.conf (requires 0.4.14):
+Recommended setting in minetest.conf (requires 0.4.14 or newer) :
 	nodetimer_interval = 0.1
 ]]
 
