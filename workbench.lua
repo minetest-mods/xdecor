@@ -2,17 +2,18 @@ local workbench = {}
 screwdriver = screwdriver or {}
 
 -- Nodes allowed to be cut.
--- Only the regular, solid blocks without formspec or explosivity can be cut.
+-- Only the regular, solid blocks without metas or explosivity can be cut.
 local nodes = {}
 for node, def in pairs(minetest.registered_nodes) do
 	if (def.drawtype == "normal" or def.drawtype:find("glass")) and
-			(def.groups.cracky or def.groups.choppy) and not
-			def.on_construct and not def.after_place_node and not
-			def.after_place_node and not def.on_rightclick and not
-			def.on_blast and not def.allow_metadata_inventory_take and not
-			(def.groups.not_in_creative_inventory == 1) and not
-			def.groups.wool and not def.description:find("Ore") and
-			def.description and def.description ~= "" and def.light_source == 0 then
+	   (def.groups.cracky or def.groups.choppy) and not
+	   def.on_construct and not def.after_place_node and not
+	   def.after_place_node and not def.on_rightclick and not
+	   def.on_blast and not def.allow_metadata_inventory_take and not
+	   (def.groups.not_in_creative_inventory == 1) and not
+	   def.groups.wool and not def.description:find("Ore") and
+	   def.description and def.description ~= "" and def.light_source == 0
+	then
 		nodes[#nodes+1] = node
 	end
 end
@@ -64,37 +65,37 @@ function workbench:get_output(inv, input, name)
 	inv:set_list("forms", output)
 end
 
-function workbench:formspecs(meta, id)
-	local formspecs = {
-		-- Main formspec.
-		[[ label[0.9,1.23;Cut]
-		   label[0.9,2.23;Repair]
-		   box[-0.05,1;2.05,0.9;#555555]
-		   box[-0.05,2;2.05,0.9;#555555]
-		   button[0,0;2,1;craft;Crafting]
-		   button[2,0;2,1;storage;Storage]
-		   image[3,1;1,1;gui_furnace_arrow_bg.png^[transformR270]
-		   image[0,1;1,1;worktable_saw.png]
-		   image[0,2;1,1;worktable_anvil.png]
-		   image[3,2;1,1;hammer_layout.png]
-		   list[context;input;2,1;1,1;]
-		   list[context;tool;2,2;1,1;]
-		   list[context;hammer;3,2;1,1;]
-		   list[context;forms;4,0;4,3;] ]],
-		-- Crafting formspec.
-		[[ image[5,1;1,1;gui_furnace_arrow_bg.png^[transformR270]
-		   button[0,0;1.5,1;back;< Back]
-		   list[current_player;craft;2,0;3,3;]
-		   list[current_player;craftpreview;6,1;1,1;]
-		   listring[current_player;main]
-		   listring[current_player;craft] ]],
-		-- Storage formspec.
-		[[ list[context;storage;0,1;8,2;]
-		   button[0,0;1.5,1;back;< Back]
-		   listring[context;storage]
-		   listring[current_player;main] ]]
-	}
+local formspecs = {
+	-- Main formspec.
+	[[ label[0.9,1.23;Cut]
+	   label[0.9,2.23;Repair]
+	   box[-0.05,1;2.05,0.9;#555555]
+	   box[-0.05,2;2.05,0.9;#555555]
+	   button[0,0;2,1;craft;Crafting]
+	   button[2,0;2,1;storage;Storage]
+	   image[3,1;1,1;gui_furnace_arrow_bg.png^[transformR270]
+	   image[0,1;1,1;worktable_saw.png]
+	   image[0,2;1,1;worktable_anvil.png]
+	   image[3,2;1,1;hammer_layout.png]
+	   list[context;input;2,1;1,1;]
+	   list[context;tool;2,2;1,1;]
+	   list[context;hammer;3,2;1,1;]
+	   list[context;forms;4,0;4,3;] ]],
+	-- Crafting formspec.
+	[[ image[5,1;1,1;gui_furnace_arrow_bg.png^[transformR270]
+	   button[0,0;1.5,1;back;< Back]
+	   list[current_player;craft;2,0;3,3;]
+	   list[current_player;craftpreview;6,1;1,1;]
+	   listring[current_player;main]
+	   listring[current_player;craft] ]],
+	-- Storage formspec.
+	[[ list[context;storage;0,1;8,2;]
+	   button[0,0;1.5,1;back;< Back]
+	   listring[context;storage]
+	   listring[current_player;main] ]]
+}
 
+function workbench:set_formspec(meta, id)
 	meta:set_string("formspec", "size[8,7;]list[current_player;main;0,3.25;8,4;]"..
 			formspecs[id]..xbg..default.get_hotbar_bg(0,3.25))
 end
@@ -110,15 +111,14 @@ function workbench.construct(pos)
 	inv:set_size("storage", 8*2)
 
 	meta:set_string("infotext", "Work Bench")
-	workbench:formspecs(meta, 1)
+	workbench:set_formspec(meta, 1)
 end
 
 function workbench.fields(pos, _, fields)
 	local meta = minetest.get_meta(pos)
-	if     fields.back    then workbench:formspecs(meta, 1)
-	elseif fields.craft   then workbench:formspecs(meta, 2)
-	elseif fields.storage then workbench:formspecs(meta, 3)
-	elseif fields.backcraft then workbench:formspecs(meta, 1) end -- Legacy code for older formspecs.
+	if     fields.back    then workbench:set_formspec(meta, 1)
+	elseif fields.craft   then workbench:set_formspec(meta, 2)
+	elseif fields.storage then workbench:set_formspec(meta, 3) end
 end
 
 function workbench.dig(pos)
@@ -219,7 +219,7 @@ xdecor.register("workbench", {
 })
 
 for _, d in pairs(workbench.defs) do
-for i=1, #nodes do
+for i = 1, #nodes do
 	local node = nodes[i]
 	local def = minetest.registered_nodes[node]
 
