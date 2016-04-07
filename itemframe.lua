@@ -98,8 +98,6 @@ function itemframe.dig(pos, player)
 	return player and pname == owner
 end
 
-minetest.register_alias("xdecor:frame", "xdecor:itemframe")
-
 xdecor.register("itemframe", {
 	description = "Item Frame",
 	groups = {choppy=3, oddly_breakable_by_hand=2, flammable=3},

@@ -21,8 +21,6 @@ minetest.register_craftitem("xdecor:bowl_soup", {
 	end
 })
 
-minetest.register_alias("xdecor:flint_steel", "fire:flint_and_steel")
-
 minetest.register_tool("xdecor:hammer", {
 	description = "Hammer",
 	inventory_image = "xdecor_hammer.png",

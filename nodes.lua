@@ -267,17 +267,7 @@ for name, recipe in pairs(xdecor_doors) do
 		groups = {choppy=2, cracky=2, oddly_breakable_by_hand=1, door=1},
 		recipe = recipe
 	})
-	minetest.register_alias("xdecor:"..name.."_door", "doors:"..name.."_door")
-	minetest.register_alias("xdecor:"..name.."_door_t_1", "air")
-	minetest.register_alias("xdecor:"..name.."_door_t_2", "air")
-	minetest.register_alias("xdecor:"..name.."_door_b_1", "doors:"..name.."_door_a")
-	minetest.register_alias("xdecor:"..name.."_door_b_2", "doors:"..name.."_door_b")
 end
-minetest.register_alias("xdecor:prison_rust_door", "doors:rusty_prison_door")
-minetest.register_alias("xdecor:prison_rust_door_t_1", "air")
-minetest.register_alias("xdecor:prison_rust_door_t_2", "air")
-minetest.register_alias("xdecor:prison_rust_door_b_1", "doors:rusty_prison_door_a")
-minetest.register_alias("xdecor:prison_rust_door_b_2", "doors:rusty_prison_door_b")
 
 xdecor.register("enderchest", {
 	description = "Ender Chest",
@@ -303,12 +293,6 @@ minetest.register_on_joinplayer(function(player)
 	local inv = player:get_inventory()
 	inv:set_size("enderchest", 8*4)
 end)
-
-if rawget(_G, "fire") then
-	minetest.register_alias("xdecor:fire", "fire:basic_flame")
-else
-	minetest.register_alias("xdecor:fire", "air")
-end
 
 xdecor.register("ivy", {
 	description = "Ivy",
@@ -474,11 +458,6 @@ xdecor.register("tv", {
 		{name="xdecor_television_front_animated.png",
 		 animation = {type="vertical_frames", length=80.0}} }
 })
-
-for _, n in pairs({"c0", "c1", "c2", "c3", "c4", "ln"}) do
-	minetest.register_alias("xdecor:cobble_wall_"..n, "walls:cobble")
-	minetest.register_alias("xdecor:mossycobble_wall_"..n, "walls:cobble")
-end
 
 xdecor.register("woodframed_glass", {
 	description = "Wood Framed Glass",
