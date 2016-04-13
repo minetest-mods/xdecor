@@ -1,4 +1,4 @@
-local cauldron = {}
+local cauldron, sounds = {}, {}
 
 -- Add more ingredients here that make a soup.
 local ingredients_list = {
@@ -15,15 +15,27 @@ cauldron.cbox = {
 	{0,  0, 0,  16, 8,  16}
 }
 
+function cauldron.stop_sound(pos)
+	local spos = minetest.hash_node_position(pos)
+	if sounds[spos] then minetest.sound_stop(sounds[spos]) end
+end
+
 function cauldron.idle_construct(pos)
 	local timer = minetest.get_node_timer(pos)
 	timer:start(10.0)
+	cauldron.stop_sound(pos)
 end
 
 function cauldron.boiling_construct(pos)
+	local spos = minetest.hash_node_position(pos)
+	sounds[spos] = minetest.sound_play("xdecor_boiling_water", {
+		pos=pos, max_hear_distance=5, gain=0.8, loop=true
+	})
+
 	local meta = minetest.get_meta(pos)
-	local timer = minetest.get_node_timer(pos)
 	meta:set_string("infotext", "Cauldron (active) - Drop some foods inside to make a soup")
+
+	local timer = minetest.get_node_timer(pos)
 	timer:start(5.0)
 end
 
@@ -133,6 +145,9 @@ xdecor.register("cauldron_empty", {
 	on_rotate = screwdriver.rotate_simple,
 	tiles = {"xdecor_cauldron_top_empty.png", "xdecor_cauldron_sides.png"},
 	infotext = "Cauldron (empty)",
+	on_construct = function(pos)
+		cauldron.stop_sound(pos)
+	end,
 	on_rightclick = cauldron.filling,
 	collision_box = xdecor.pixelbox(16, cauldron.cbox)
 })

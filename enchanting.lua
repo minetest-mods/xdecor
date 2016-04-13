@@ -58,7 +58,7 @@ function enchanting.on_put(pos, listname, _, stack)
 	end
 end
 
-function enchanting.fields(pos, _, fields)
+function enchanting.fields(pos, _, fields, sender)
 	if fields.quit then return end
 	local inv = minetest.get_meta(pos):get_inventory()
 	local tool = inv:get_stack("tool", 1)
@@ -68,6 +68,7 @@ function enchanting.fields(pos, _, fields)
 	local enchanted_tool = (mod or "")..":enchanted_"..(name or "").."_"..next(fields)
 
 	if mese:get_count() >= mese_cost and minetest.registered_tools[enchanted_tool] then
+		minetest.sound_play("xdecor_enchanting", {to_player=sender:get_player_name(), gain=0.8})
 		tool:replace(enchanted_tool)
 		tool:add_wear(orig_wear)
 		mese:take_item(mese_cost)
