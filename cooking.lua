@@ -176,6 +176,9 @@ xdecor.register("cauldron_boiling", {
 	collision_box = xdecor.pixelbox(16, cauldron.cbox),
 	on_rightclick = cauldron.filling,
 	on_construct = cauldron.boiling_construct,
+	on_destruct = function(pos)
+		cauldron.stop_sound(pos)
+	end,
 	on_timer = cauldron.boiling_timer
 })
 
@@ -189,6 +192,9 @@ xdecor.register("cauldron_soup", {
 			animation={type="vertical_frames", length=3.0}},
 		"xdecor_cauldron_sides.png"},
 	collision_box = xdecor.pixelbox(16, cauldron.cbox),
-	on_rightclick = cauldron.take_soup
+	on_rightclick = cauldron.take_soup,
+	on_destruct = function(pos)
+		cauldron.stop_sound(pos)
+	end
 })
 
