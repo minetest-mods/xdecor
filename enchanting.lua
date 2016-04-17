@@ -199,7 +199,7 @@ function enchanting:register_tools(mod, def)
 	for material in def.materials:gmatch("[%w_]+") do
 	for enchant in def.tools[tool].enchants:gmatch("[%w_]+") do
 		local original_tool = minetest.registered_tools[mod..":"..tool.."_"..material]
-		if not original_tool then return end
+		if not original_tool then break end
 
 		if original_tool.tool_capabilities then
 			local original_damage_groups = original_tool.tool_capabilities.damage_groups
