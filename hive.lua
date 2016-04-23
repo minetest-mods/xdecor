@@ -6,8 +6,7 @@ function hive.construct(pos)
 	local inv = meta:get_inventory()
 
 	local formspec = [[ size[8,5;]
-			label[1.35,0;Bees are making honey]
-			label[1.35,0.5;with pollen around...]
+			label[0.5,0;Bees are busy making honey...]
 			image[6,0;1,1;hive_bee.png]
 			image[5,0;1,1;hive_layout.png]
 			list[context;honey;5,0;1,1;]
@@ -26,7 +25,7 @@ function hive.timer(pos)
 	local time = (minetest.get_timeofday() or 0) * 24000
 	if time < 5500 or time > 18500 then return true end
 
-	local inv = minetest.get_meta(pos):get_inventory()	
+	local inv = minetest.get_meta(pos):get_inventory()
 	local honeystack = inv:get_stack("honey", 1)
 	local honey = honeystack:get_count()
 

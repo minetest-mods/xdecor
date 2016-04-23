@@ -202,29 +202,11 @@ xdecor.register("cushion", {
 	groups = {snappy=3, flammable=3, fall_damage_add_percent=-50},
 	on_place = minetest.rotate_node,
 	node_box = xdecor.nodebox.slab_y(0.5),
-	can_dig = xdecor.sit_dig,
-	on_rightclick = function(pos, node, clicker, itemstack, pointed_thing)
-		pos.y = pos.y + 0
-		xdecor.sit(pos, node, clicker, pointed_thing)
-
-		local wield_item = clicker:get_wielded_item():get_name()
-		if wield_item == "xdecor:cushion" and clicker:get_player_control().sneak then
-			local player_name = clicker:get_player_name()
-			if minetest.is_protected(pos, player_name) then
-				minetest.record_protection_violation(pos, player_name) return
-			end
-
-			minetest.set_node(pos, {name="xdecor:cushion_block", param2=node.param2})
-
-			if not minetest.setting_getbool("creative_mode") then
-				itemstack:take_item()
-			end
-			return itemstack
-		end
-	end
+	can_dig = xdecor.sit_dig
 })
 
 xdecor.register("cushion_block", {
+	description = "Cushion Block",
 	tiles = {"xdecor_cushion.png"},
 	groups = {snappy=3, flammable=3, fall_damage_add_percent=-75, not_in_creative_inventory=1}
 })
