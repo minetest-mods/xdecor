@@ -325,6 +325,15 @@ minetest.register_craft({
 })
 
 minetest.register_craft({
+	output = "xdecor:trampoline",
+	recipe = {
+		{"farming:string", "farming:string", "farming:string"},
+		{"default:steel_ingot", "default:steel_ingot", "default:steel_ingot"},
+		{"default:steel_ingot", "", "default:steel_ingot"}
+	}
+})
+
+minetest.register_craft({
 	output = "xdecor:tv",
 	recipe = {
 		{"default:steel_ingot", "default:copper_ingot", "default:steel_ingot"},

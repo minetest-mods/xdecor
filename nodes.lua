@@ -428,6 +428,13 @@ xdecor.register("tatami", {
 	node_box = xdecor.nodebox.slab_y(0.0625)
 })
 
+xdecor.register("trampoline", {
+	description = "Trampoline",
+	tiles = {"xdecor_trampoline.png", "xdecor_trampoline_sides.png"},
+	groups = {snappy=3, flammable=3, fall_damage_add_percent=-80, bouncy=90},
+	node_box = xdecor.nodebox.slab_y(0.5)
+})
+
 xdecor.register("tv", {
 	description = "Television",
 	light_source = 11,
