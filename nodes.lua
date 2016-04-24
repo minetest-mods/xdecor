@@ -137,7 +137,7 @@ xdecor.register("chair", {
 		{11, 0,  3,   2,  6, 2}, {3,  6,  3, 10, 2, 8}
 	}),
 	can_dig = xdecor.sit_dig,
-	on_rightclick = function(pos, node, clicker, itemstack, pointed_thing)
+	on_rightclick = function(pos, node, clicker, _, pointed_thing)
 		pos.y = pos.y + 0  -- Sitting position.
 		xdecor.sit(pos, node, clicker, pointed_thing)
 	end
@@ -202,7 +202,11 @@ xdecor.register("cushion", {
 	groups = {snappy=3, flammable=3, fall_damage_add_percent=-50},
 	on_place = minetest.rotate_node,
 	node_box = xdecor.nodebox.slab_y(0.5),
-	can_dig = xdecor.sit_dig
+	can_dig = xdecor.sit_dig,
+	on_rightclick = function(pos, node, clicker, _, pointed_thing)
+		pos.y = pos.y + 0  -- Sitting position.
+		xdecor.sit(pos, node, clicker, pointed_thing)
+	end
 })
 
 xdecor.register("cushion_block", {
@@ -430,7 +434,7 @@ xdecor.register("tatami", {
 
 xdecor.register("trampoline", {
 	description = "Trampoline",
-	tiles = {"xdecor_trampoline.png", "xdecor_trampoline_sides.png"},
+	tiles = {"xdecor_trampoline.png", "mailbox_blank16.png", "xdecor_trampoline_sides.png"},
 	groups = {snappy=3, flammable=3, fall_damage_add_percent=-80, bouncy=90},
 	node_box = xdecor.nodebox.slab_y(0.5)
 })
