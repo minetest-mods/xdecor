@@ -48,12 +48,21 @@ xdecor.register_pane("wood_frame", "Wood Frame", {
 xdecor.register("baricade", {
 	description = "Baricade",
 	drawtype = "plantlike",
-	walkable = false,
+	paramtype2 = "facedir",
 	inventory_image = "xdecor_baricade.png",
 	tiles = {"xdecor_baricade.png"},
 	groups = {choppy=2, oddly_breakable_by_hand=1, flammable=2},
 	damage_per_second = 4,
-	selection_box = xdecor.nodebox.slab_y(0.3)
+	selection_box = xdecor.nodebox.slab_y(0.3),
+	collision_box = xdecor.pixelbox(2, {{0,0,1,2,2,0}})
+})
+
+xdecor.register("barrel", {
+	description = "Barrel",
+	tiles = {"xdecor_barrel_top.png", "xdecor_barrel_top.png", "xdecor_barrel_sides.png"},
+	on_place = minetest.rotate_node,
+	groups = {choppy=2, oddly_breakable_by_hand=1, flammable=2},
+	sounds = default.node_sound_wood_defaults()
 })
 
 function xdecor.register_storage(name, desc, def)
@@ -69,11 +78,6 @@ function xdecor.register_storage(name, desc, def)
 		sounds = default.node_sound_wood_defaults()
 	})
 end
-
-xdecor.register_storage("barrel", "Barrel", {
-	tiles = {"xdecor_barrel_top.png", "xdecor_barrel_sides.png"},
-	on_place = minetest.rotate_node
-})
 
 xdecor.register_storage("cabinet", "Wooden Cabinet", {
 	on_rotate = screwdriver.rotate_simple,
@@ -156,7 +160,7 @@ xdecor.register("cobweb", {
 	liquid_range = 0,
 	walkable = false,
 	selection_box = {type = "regular"},
-	groups = {dig_immediate=3, liquid=3, flammable=3},
+	groups = {snappy=3, liquid=3, flammable=3},
 	sounds = default.node_sound_leaves_defaults()
 })
 
@@ -285,7 +289,7 @@ xdecor.register("ivy", {
 	drawtype = "signlike",
 	walkable = false,
 	climbable = true,
-	groups = {dig_immediate=3, flammable=3, plant=1},
+	groups = {snappy=3, flora=1, attached_node=1, plant=1, flammable=3},
 	paramtype2 = "wallmounted",
 	selection_box = {type="wallmounted"},
 	tiles = {"xdecor_ivy.png"},
@@ -302,7 +306,7 @@ xdecor.register("lantern", {
 	wield_image = "xdecor_lantern_inv.png",
 	paramtype2 = "wallmounted",
 	walkable = false,
-	groups = {dig_immediate=3, attached_node=1},
+	groups = {snappy=3, attached_node=1},
 	tiles = {{name = "xdecor_lantern.png", animation = {type="vertical_frames", length=1.5}}},
 	selection_box = xdecor.pixelbox(16, {{4, 0, 4, 8, 16, 8}})
 })
@@ -322,7 +326,7 @@ for _, f in pairs({"dandelion_white", "dandelion_yellow", "geranium",
 	xdecor.register("potted_"..f, {
 		description = "Potted "..f:gsub("%f[%w]%l", string.upper):gsub("_", " "),
 		walkable = false,
-		groups = {dig_immediate=3, flammable=3, plant=1, flower=1},
+		groups = {snappy=3, flammable=3, plant=1, flower=1},
 		tiles = {"xdecor_"..f.."_pot.png"},
 		inventory_image = "xdecor_"..f.."_pot.png",
 		drawtype = "plantlike",
@@ -429,20 +433,21 @@ xdecor.register("tatami", {
 	tiles = {"xdecor_tatami.png"},
 	wield_image = "xdecor_tatami.png",
 	groups = {snappy=3, flammable=3},
+	sunlight_propagates = true,
 	node_box = xdecor.nodebox.slab_y(0.0625)
 })
 
 xdecor.register("trampoline", {
 	description = "Trampoline",
 	tiles = {"xdecor_trampoline.png", "mailbox_blank16.png", "xdecor_trampoline_sides.png"},
-	groups = {snappy=3, flammable=3, fall_damage_add_percent=-80, bouncy=90},
+	groups = {cracky=3, oddly_breakable_by_hand=1, fall_damage_add_percent=-80, bouncy=90},
 	node_box = xdecor.nodebox.slab_y(0.5)
 })
 
 xdecor.register("tv", {
 	description = "Television",
 	light_source = 11,
-	groups = {snappy=3},
+	groups = {cracky=3, oddly_breakable_by_hand=2},
 	on_rotate = screwdriver.rotate_simple,
 	tiles = {"xdecor_television_left.png^[transformR270",
 		 "xdecor_television_left.png^[transformR90",
@@ -455,6 +460,7 @@ xdecor.register("tv", {
 xdecor.register("woodframed_glass", {
 	description = "Wood Framed Glass",
 	drawtype = "glasslike_framed",
+	sunlight_propagates = true,
 	tiles = {"xdecor_woodframed_glass.png", "xdecor_woodframed_glass_detail.png"},
 	groups = {cracky=2, oddly_breakable_by_hand=1},
 	sounds = default.node_sound_glass_defaults()

@@ -47,7 +47,7 @@ xdecor.register("rope", {
 	drawtype = "plantlike",
 	walkable = false,
 	climbable = true,
-	groups = {dig_immediate=3, flammable=3},
+	groups = {snappy=3, flammable=3},
 	tiles = {"xdecor_rope.png"},
 	inventory_image = "xdecor_rope_inv.png",
 	wield_image = "xdecor_rope_inv.png",
