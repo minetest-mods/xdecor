@@ -443,9 +443,9 @@ xdecor.register("trampoline", {
 	groups = {cracky=3, oddly_breakable_by_hand=1, fall_damage_add_percent=-80, bouncy=90},
 	node_box = xdecor.nodebox.slab_y(0.5),
 	sounds = {
-  place = {name = "xdecor_boink", gain = 0.01},
+  place = {name = "xdecor_boink", gain = 0.1},
   footstep = {name = "xdecor_bouncy", gain = 0.01},
-  dig = {name = "xdecor_boink", gain = 0.009}},
+  dig = {name = "xdecor_boink", gain = 0.1}},
 })
 
 xdecor.register("tv", {
