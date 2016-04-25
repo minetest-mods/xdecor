@@ -441,7 +441,8 @@ xdecor.register("trampoline", {
 	description = "Trampoline",
 	tiles = {"xdecor_trampoline.png", "mailbox_blank16.png", "xdecor_trampoline_sides.png"},
 	groups = {cracky=3, oddly_breakable_by_hand=1, fall_damage_add_percent=-80, bouncy=90},
-	node_box = xdecor.nodebox.slab_y(0.5)
+	node_box = xdecor.nodebox.slab_y(0.5),
+	sounds = {footstep = {name="xdecor_bouncy", gain=0.8}}
 })
 
 xdecor.register("tv", {
