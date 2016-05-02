@@ -94,7 +94,7 @@ function mailbox.put(pos, listname, _, stack, player)
 		if inv:room_for_item("mailbox", stack) then
 			return -1
 		else
-			minetest.chat_send_player(player:get_player_name(), "[!] The mailbox is full")
+			minetest.chat_send_player(player:get_player_name(), "The mailbox is full")
 		end
 	end
 	return 0

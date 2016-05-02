@@ -54,7 +54,7 @@ xdecor.register("baricade", {
 	groups = {choppy=2, oddly_breakable_by_hand=1, flammable=2},
 	damage_per_second = 4,
 	selection_box = xdecor.nodebox.slab_y(0.3),
-	collision_box = xdecor.pixelbox(2, {{0,0,1,2,2,0}})
+	collision_box = xdecor.pixelbox(2, {{0, 0, 1, 2, 2, 0}})
 })
 
 xdecor.register("barrel", {
@@ -359,11 +359,22 @@ xdecor.register("painting_1", {
 	groups = {choppy=3, oddly_breakable_by_hand=2, flammable=2, attached_node=1},
 	sounds = default.node_sound_wood_defaults(),
 	node_box = painting_box,
-	on_construct = function(pos)
-		local node = minetest.get_node(pos)
-		local random = math.random(4)
-		if random == 1 then return end
-		minetest.set_node(pos, {name="xdecor:painting_"..random, param2=node.param2})
+	node_placement_prediction = "",
+	on_place = function(itemstack, placer, pointed_thing)
+		local player_name = placer:get_player_name()
+		local pos = pointed_thing.above
+
+		if not minetest.is_protected(pos, player_name) then
+			local num = math.random(4)
+			local dir = minetest.dir_to_wallmounted(placer:get_look_dir())
+			minetest.set_node(pos, {name="xdecor:painting_"..num, param2=dir})
+		else
+			minetest.chat_send_player(player_name, "This area is protected")
+		end
+		if not minetest.setting_getbool("creative_mode") then
+			itemstack:take_item()
+			return itemstack
+		end
 	end
 })
 
