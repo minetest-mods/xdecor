@@ -171,8 +171,8 @@ function workbench.take(_, listname, _, stack, player)
 	return stack:get_count()
 end
 
-function workbench.move(_, _, _, to_list, _, count)
-	if to_list == "storage" then return count end
+function workbench.move(_, from_list, _, to_list, _, count)
+	if to_list == "storage" and from_list ~= "forms" then return count end
 	return 0
 end
 
