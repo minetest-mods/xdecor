@@ -28,7 +28,7 @@ function mailbox:formspec(pos, owner, num)
 				giver = giver.."#FFFF00,"..giver_name..","..i..",#FFFFFF,x "..stack_count..","
 				-- Hack to force using a 16px resolution for images in formspec's tablecolumn.
 				-- The engine doesn't scale them automatically yet.
-				img = img..i.."=mailbox_blank16.png^"..img_col(stack_name)..","
+				img = img..i.."="..img_col(stack_name).."^\\[resize:16x16,"
 			end
 		end
 
