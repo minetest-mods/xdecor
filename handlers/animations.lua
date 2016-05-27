@@ -53,3 +53,27 @@ function xdecor.sit_dig(pos, player)
 	return true
 end
 
+local time = 0
+minetest.register_globalstep(function(dtime)
+	time = time + dtime
+	if time > 1 then
+		local players = minetest.get_connected_players()
+		for i=1, #players do
+			local name = players[i]:get_player_name()
+			local controls = players[i]:get_player_control()
+			if default.player_attached[name] and not players[i]:get_attach() and
+					(controls.up == true or
+					controls.down == true or
+					controls.left == true or
+					controls.right == true or
+					controls.jump == true) then
+				players[i]:set_eye_offset({x=0, y=0, z=0}, {x=0, y=0, z=0})
+				players[i]:set_physics_override(1, 1, 1)
+				default.player_attached[name] = false
+				default.player_set_animation(players[i], "stand", 30)
+			end
+		end
+		time = 0
+	end
+end)
+
