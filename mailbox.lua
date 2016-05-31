@@ -8,7 +8,12 @@ local function img_col(stack)
 	if def.inventory_image ~= "" then
 		return def.inventory_image:match("(.*)%.png")..".png"
 	end
-	return def.tiles[1]:match("(.*)%.png")..".png"
+
+	if def.tiles and def.tiles[1] then
+		return def.tiles[1]:match("(.*)%.png")..".png"
+	end
+
+	return ""
 end
 
 function mailbox:formspec(pos, owner, num)
