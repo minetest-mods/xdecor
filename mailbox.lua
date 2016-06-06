@@ -1,16 +1,31 @@
 local mailbox = {}
 screwdriver = screwdriver or {}
 
+local function get_img(img)
+	local img_name = img:match("(.*)%.png")
+	if img_name then return img_name..".png" end
+end
+
 local function img_col(stack)
 	local def = minetest.registered_items[stack]
 	if not def then return "" end
 
 	if def.inventory_image ~= "" then
-		return def.inventory_image:match("(.*)%.png")..".png"
+		local img = get_img(def.inventory_image)
+		if img then return img end
 	end
 
-	if def.tiles and def.tiles[1] then
-		return def.tiles[1]:match("(.*)%.png")..".png"
+	if def.tiles then
+		local img
+		local tile = def.tiles[1]
+
+		if type(tile) == "table" then
+			img = get_img(tile.name)
+		elseif type(tile) == "string" then
+			img = get_img(tile)
+		end
+
+		if img then return img end
 	end
 
 	return ""
@@ -136,4 +151,3 @@ xdecor.register("mailbox", {
 	allow_metadata_inventory_put = mailbox.put,
 	after_place_node = mailbox.after_place_node
 })
-
