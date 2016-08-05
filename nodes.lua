@@ -354,7 +354,6 @@ xdecor.register("painting_1", {
 	inventory_image = "xdecor_painting_empty.png",
 	wield_image = "xdecor_painting_empty.png",
 	paramtype2 = "wallmounted",
-	wield_image = "xdecor_painting_empty.png",
 	sunlight_propagates = true,
 	groups = {choppy=3, oddly_breakable_by_hand=2, flammable=2, attached_node=1},
 	sounds = default.node_sound_wood_defaults(),

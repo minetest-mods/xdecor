@@ -127,7 +127,6 @@ function enchanting.destruct(pos)
 end
 
 function enchanting.timer(pos)
-	local node = minetest.get_node(pos)
 	local num = #minetest.get_objects_inside_radius(pos, 0.9)
 
 	if num == 0 then

@@ -229,7 +229,8 @@ for i = 1, #nodes do
 	local def = minetest.registered_nodes[node]
 
 	if d[3] then
-		local groups, tiles = {}, {}
+		local groups = {}
+		local tiles
 		groups.not_in_creative_inventory = 1
 
 		for k, v in pairs(def.groups) do

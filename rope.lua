@@ -9,9 +9,7 @@ end)
 
 function rope.place(itemstack, placer, pointed_thing)
 	if pointed_thing.type == "node" then
-		local under = pointed_thing.under
-		local above = pointed_thing.above
-		local pos = above
+		local pos = pointed_thing.above
 		local oldnode = minetest.get_node(pos)
 		local stackname = itemstack:get_name()
 		if minetest.is_protected(pos, placer:get_player_name()) then return end
