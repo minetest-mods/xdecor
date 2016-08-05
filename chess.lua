@@ -556,6 +556,9 @@ function realchess.fields(pos, _, fields, sender)
 end
 
 function realchess.dig(pos, player)
+	if not player then
+		return false
+	end
 	local meta = minetest.get_meta(pos)
 	local playerName = player:get_player_name()
 	local timeout_limit = meta:get_int("lastMoveTime") + 300
