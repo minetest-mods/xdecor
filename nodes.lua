@@ -364,17 +364,9 @@ xdecor.register("painting_1", {
 	node_box = painting_box,
 	node_placement_prediction = "",
 	on_place = function(itemstack, placer, pointed_thing)
-		local player_name = placer:get_player_name()
-		local pos = pointed_thing.above
-
-		if not minetest.is_protected(pos, player_name) then
-			local num = math.random(4)
-			local dir = minetest.dir_to_wallmounted(placer:get_look_dir())
-			minetest.set_node(pos, {name="xdecor:painting_"..num, param2=dir})
-		else
-			minetest.chat_send_player(player_name, "This area is protected")
-		end
-		if not minetest.setting_getbool("creative_mode") then
+		local num = math.random(4)
+		local leftover = minetest.item_place_node(ItemStack("xdecor:painting_"..num), placer, pointed_thing)
+		if leftover:get_count() == 0 and not minetest.setting_getbool("creative_mode") then
 			itemstack:take_item()
 		end
 		return itemstack
