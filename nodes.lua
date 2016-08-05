@@ -141,9 +141,10 @@ xdecor.register("chair", {
 		{11, 0,  3,   2,  6, 2}, {3,  6,  3, 10, 2, 8}
 	}),
 	can_dig = xdecor.sit_dig,
-	on_rightclick = function(pos, node, clicker, _, pointed_thing)
+	on_rightclick = function(pos, node, clicker, itemstack, pointed_thing)
 		pos.y = pos.y + 0  -- Sitting position.
 		xdecor.sit(pos, node, clicker, pointed_thing)
+		return itemstack
 	end
 })
 
@@ -175,8 +176,9 @@ for _, c in pairs({"red"}) do  -- Add more curtains colors simply here.
 		paramtype2 = "wallmounted",
 		groups = {dig_immediate=3, flammable=3},
 		selection_box = {type="wallmounted"},
-		on_rightclick = function(pos, node)
+		on_rightclick = function(pos, node, clicker, itemstack, pointed_thing)
 			minetest.set_node(pos, {name="xdecor:curtain_open_"..c, param2=node.param2})
+			return itemstack
 		end
 	})
 
@@ -188,8 +190,9 @@ for _, c in pairs({"red"}) do  -- Add more curtains colors simply here.
 		groups = {dig_immediate=3, flammable=3, not_in_creative_inventory=1},
 		selection_box = {type="wallmounted"},
 		drop = "xdecor:curtain_"..c,
-		on_rightclick = function(pos, node)
+		on_rightclick = function(pos, node, clicker, itemstack, pointed_thing)
 			minetest.set_node(pos, {name="xdecor:curtain_"..c, param2=node.param2})
+			return itemstack
 		end
 	})
 
@@ -207,9 +210,10 @@ xdecor.register("cushion", {
 	on_place = minetest.rotate_node,
 	node_box = xdecor.nodebox.slab_y(0.5),
 	can_dig = xdecor.sit_dig,
-	on_rightclick = function(pos, node, clicker, _, pointed_thing)
+	on_rightclick = function(pos, node, clicker, itemstack, pointed_thing)
 		pos.y = pos.y + 0  -- Sitting position.
 		xdecor.sit(pos, node, clicker, pointed_thing)
+		return itemstack
 	end
 })
 
@@ -372,8 +376,8 @@ xdecor.register("painting_1", {
 		end
 		if not minetest.setting_getbool("creative_mode") then
 			itemstack:take_item()
-			return itemstack
 		end
+		return itemstack
 	end
 })
 

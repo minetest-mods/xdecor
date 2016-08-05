@@ -71,7 +71,9 @@ function itemframe.rightclick(pos, node, clicker, itemstack)
 	local meta = minetest.get_meta(pos)
 	local player = clicker:get_player_name()
 	local owner = meta:get_string("owner")
-	if player ~= owner or not itemstack then return end
+	if player ~= owner or not itemstack then
+		return itemstack
+	end
 
 	drop_item(pos, node)
 	local itemstring = itemstack:take_item():to_string()

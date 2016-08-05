@@ -12,7 +12,9 @@ function rope.place(itemstack, placer, pointed_thing)
 		local pos = pointed_thing.above
 		local oldnode = minetest.get_node(pos)
 		local stackname = itemstack:get_name()
-		if minetest.is_protected(pos, placer:get_player_name()) then return end
+		if minetest.is_protected(pos, placer:get_player_name()) then
+			return itemstack
+		end
 
 		while oldnode.name == "air" and not itemstack:is_empty() do
 			local newnode = {name = stackname, param1 = 0}

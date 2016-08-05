@@ -92,8 +92,10 @@ xdecor.register("lever_off", {
 	sounds = default.node_sound_stone_defaults(),
 	sunlight_propagates = true,
 	on_rotate = screwdriver.rotate_simple,
-	on_rightclick = function(pos, node, clicker)
-		if not doors.get then return end
+	on_rightclick = function(pos, node, clicker, itemstack, pointed_thing)
+		if not doors.get then
+			return itemstack
+		end
 		local minp = {x=pos.x-2, y=pos.y-1, z=pos.z-2}
 		local maxp = {x=pos.x+2, y=pos.y+1, z=pos.z+2}
 		local doors = minetest.find_nodes_in_area(minp, maxp, "group:door")
@@ -101,6 +103,7 @@ xdecor.register("lever_off", {
 		for i = 1, #doors do
 			door_toggle(pos, doors[i], clicker)
 		end
+		return itemstack
 	end
 })
 

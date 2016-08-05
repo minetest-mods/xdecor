@@ -52,7 +52,7 @@ function cauldron.filling(pos, node, clicker, itemstack)
 				else
 					minetest.chat_send_player(clicker:get_player_name(),
 						"No room in your inventory to add a bucket of water.")
-					return
+					return itemstack
 				end
 			else
 				itemstack:replace("bucket:bucket_water")
@@ -128,15 +128,15 @@ function cauldron.take_soup(pos, node, clicker, itemstack)
 			else
 				minetest.chat_send_player(clicker:get_player_name(),
 					"No room in your inventory to add a bowl of soup.")
-				return
+				return itemstack
 			end
 		else
 			itemstack:replace("xdecor:bowl_soup 1")
 		end
 
 		minetest.set_node(pos, {name="xdecor:cauldron_empty", param2=node.param2})
-		return itemstack
 	end
+	return itemstack
 end
 
 xdecor.register("cauldron_empty", {

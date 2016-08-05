@@ -96,7 +96,7 @@ function mailbox.after_place_node(pos, placer)
 	inv:set_size("drop", 1)
 end
 
-function mailbox.rightclick(pos, _, clicker)
+function mailbox.rightclick(pos, node, clicker, itemstack, pointed_thing)
 	local meta = minetest.get_meta(pos)
 	local player = clicker:get_player_name()
 	local owner = meta:get_string("owner")
@@ -106,6 +106,7 @@ function mailbox.rightclick(pos, _, clicker)
 	else
 		minetest.show_formspec(player, "xdecor:mailbox", mailbox:formspec(pos, owner, 0))
 	end
+	return itemstack
 end
 
 function mailbox.put(pos, listname, _, stack, player)
