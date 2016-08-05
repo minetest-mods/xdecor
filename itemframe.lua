@@ -94,10 +94,10 @@ end
 
 function itemframe.dig(pos, player)
 	local meta = minetest.get_meta(pos)
-	local pname = player:get_player_name()
+	local pname = player and player:get_player_name()
 	local owner = meta:get_string("owner")
 
-	return player and pname == owner
+	return pname == owner
 end
 
 xdecor.register("itemframe", {

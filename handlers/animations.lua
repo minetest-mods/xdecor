@@ -40,13 +40,9 @@ function xdecor.sit(pos, node, clicker, pointed_thing)
 	end
 end
 
-function xdecor.sit_dig(pos, player)
-	local pname = player:get_player_name()
-	local objs = minetest.get_objects_inside_radius(pos, 0.1)
-
-	for _, p in pairs(objs) do
-		if not player or not player:is_player() or p:get_player_name() or
-				default.player_attached[pname] then
+function xdecor.sit_dig(pos, digger)
+	for _, player in pairs(minetest.get_objects_inside_radius(pos, 0.1)) do
+		if player:is_player() and default.player_attached[player:get_player_name()] then
 			return false
 		end
 	end

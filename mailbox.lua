@@ -78,10 +78,10 @@ end
 function mailbox.dig(pos, player)
 	local meta = minetest.get_meta(pos)
 	local owner = meta:get_string("owner")
-	local player_name = player:get_player_name()
+	local player_name = player and player:get_player_name()
 	local inv = meta:get_inventory()
 
-	return inv:is_empty("mailbox") and player and player_name == owner
+	return inv:is_empty("mailbox") and player_name == owner
 end
 
 function mailbox.after_place_node(pos, placer)
