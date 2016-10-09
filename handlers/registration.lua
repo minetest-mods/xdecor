@@ -43,8 +43,10 @@ local default_can_dig = function(pos)
 end
 
 function xdecor.register(name, def)
-	def.drawtype = def.drawtype or (def.node_box and "nodebox")
-	def.paramtype = def.paramtype or "light"
+	def.drawtype = def.drawtype
+		or (def.mesh and "mesh")
+		or (def.node_box and "nodebox")
+
 	def.sounds = def.sounds or default.node_sound_defaults()
 
 	if not (def.drawtype == "normal" or def.drawtype == "signlike" or
@@ -53,9 +55,16 @@ function xdecor.register(name, def)
 		def.paramtype2 = def.paramtype2 or "facedir"
 	end
 
-	if def.drawtype == "plantlike" or def.drawtype == "torchlike" or
-			def.drawtype == "signlike" or def.drawtype == "fencelike" then
+	if def.sunlight_propagates ~= false and
+			(def.drawtype == "plantlike" or def.drawtype == "torchlike" or
+			def.drawtype == "signlike" or def.drawtype == "fencelike") then
 		def.sunlight_propagates = true
+	end
+
+	if not def.paramtype and
+		(def.light_source or def.sunlight_propagates or
+		def.drawtype == "nodebox" or def.drawtype == "mesh") then
+		def.paramtype = "light"
 	end
 
 	local infotext = def.infotext
