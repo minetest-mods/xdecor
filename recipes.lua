@@ -171,14 +171,6 @@ minetest.register_craft({
 })
 
 minetest.register_craft({
-	output = "xdecor:hard_clay",
-	recipe = {
-		{"default:clay", "default:clay"},
-		{"default:clay", "default:clay"}
-	}
-})
-
-minetest.register_craft({
 	output = "xdecor:hive",
 	recipe = {
 		{"group:stick", "group:stick", "group:stick"},
