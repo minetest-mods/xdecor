@@ -46,8 +46,6 @@ function mailbox:formspec(pos, owner, num)
 				local stack_count = stack:match("%s(%d+)") or 1
 
 				giver = giver.."#FFFF00,"..giver_name..","..i..",#FFFFFF,x "..stack_count..","
-				-- Hack to force using a 16px resolution for images in formspec's tablecolumn.
-				-- The engine doesn't scale them automatically yet.
 				img = img..i.."="..img_col(stack_name).."^\\[resize:16x16,"
 			end
 		end

@@ -23,6 +23,22 @@ for node, def in pairs(minetest.registered_nodes) do
 	end
 end
 
+-- Optionally, you can register custom cuttable nodes in the workbench
+workbench.custom_nodes_register = {
+	-- "default:leaves",
+}
+
+setmetatable(nodes, {
+	__concat = function(t1, t2)
+		for k in pairs(t2) do
+			t1[#t1+1] = t2[k]
+		end
+		return t1
+	end
+})
+
+nodes = nodes..workbench.custom_nodes_register
+
 -- Nodeboxes definitions.
 workbench.defs = {
 	-- Name       Yield   X  Y   Z  W   H  L
