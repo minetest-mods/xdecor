@@ -230,16 +230,16 @@ local xdecor_doors = {
 		{"default:paper", "group:wood"},
 		{"group:wood", "default:paper"} },
 	prison = {
-		{"xpanes:bar", "xpanes:bar"},
-		{"xpanes:bar", "xpanes:bar"},
-		{"xpanes:bar", "xpanes:bar"} },
+		{"xpanes:bar_flat", "xpanes:bar_flat",},
+		{"xpanes:bar_flat", "xpanes:bar_flat",},
+		{"xpanes:bar_flat", "xpanes:bar_flat"} },
 	rusty_prison = {
-		{"xpanes:rusty_bar", "xpanes:rusty_bar"},
-		{"xpanes:rusty_bar", "xpanes:rusty_bar"},
-		{"xpanes:rusty_bar", "xpanes:rusty_bar"} },
+		{"xpanes:rusty_bar_flat", "xpanes:rusty_bar_flat",},
+		{"xpanes:rusty_bar_flat", "xpanes:rusty_bar_flat",},
+		{"xpanes:rusty_bar_flat", "xpanes:rusty_bar_flat"} },
 	screen = {
 		{"group:wood", "group:wood"},
-		{"xpanes:chainlink", "xpanes:chainlink"},
+		{"xpanes:chainlink_flat", "xpanes:chainlink_flat"},
 		{"group:wood", "group:wood"} },
 	slide = {
 		{"default:paper", "default:paper"},
