@@ -8,4 +8,6 @@
 
 ##### Special thanks to Gambit for the textures from the PixelBOX pack for Minetest. #####
 
+##### Thanks to all contributors that keep this mod alive. #####
+
 ![Preview](http://i.imgur.com/AVoyCQy.png)
