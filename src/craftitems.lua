@@ -36,3 +36,4 @@ minetest.register_craftitem("xdecor:honey", {
 	on_use = minetest.item_eat(2)
 })
 
+minetest.register_alias("xdecor:crafting_guide", "craftguide:book")
