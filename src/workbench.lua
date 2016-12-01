@@ -15,7 +15,7 @@ for node, def in pairs(minetest.registered_nodes) do
 	   not def.allow_metadata_inventory_take and
 	   not (def.groups.not_in_creative_inventory == 1) and
 	   not def.groups.wool and
-	   not def.tiles[1]:find("default_mineral") and
+	   (def.tiles and not def.tiles[1]:find("default_mineral")) and
 	   not def.mesecons and
 	   def.description and
 	   def.description ~= "" and
