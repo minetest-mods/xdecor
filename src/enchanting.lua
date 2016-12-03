@@ -1,16 +1,49 @@
-local enchanting = {}
 screwdriver = screwdriver or {}
+local ceil, abs, random = math.ceil, math.abs, math.random
 
 -- Cost in Mese crystal(s) for enchanting.
 local mese_cost = 1
 
 -- Force of the enchantments.
-enchanting.uses     = 1.2  -- Durability
-enchanting.times    = 0.1  -- Efficiency
-enchanting.damages  = 1    -- Sharpness
-enchanting.strength = 1.2  -- Armor strength (3d_armor only)
-enchanting.speed    = 0.2  -- Player speed (3d_armor only)
-enchanting.jump     = 0.2  -- Player jumping (3d_armor only)
+local enchanting = {
+	uses     = 1.2,  -- Durability
+	times    = 0.1,  -- Efficiency
+	damages  = 1,    -- Sharpness
+	strength = 1.2,  -- Armor strength (3d_armor only)
+	speed    = 0.2,  -- Player speed (3d_armor only)
+	jump     = 0.2   -- Player jumping (3d_armor only)
+}
+
+local function cap(S) return S:gsub("^%l", string.upper) end
+local function to_percent(orig_value, final_value)
+	return abs(ceil(((final_value - orig_value) / orig_value) * 100))
+end
+
+function enchanting:get_tooltip(enchant, orig_caps, fleshy)
+	local bonus = {durable=0, efficiency=0, damages=0}
+	if orig_caps then
+		bonus.durable = to_percent(orig_caps.uses, orig_caps.uses * enchanting.uses)
+		local sum_caps_times = 0
+		for i=1, #orig_caps.times do
+			sum_caps_times = sum_caps_times + orig_caps.times[i]
+		end
+		local average_caps_time = sum_caps_times / #orig_caps.times
+		bonus.efficiency = to_percent(average_caps_time, average_caps_time - enchanting.times)
+	end
+	if fleshy then
+		bonus.damages = to_percent(fleshy, fleshy + enchanting.damages)
+	end
+
+	local specs = { -- not finished, to complete
+		durable = {"#00baff", " (+"..bonus.durable.."%)"},
+		fast    = {"#74ff49", " (+"..bonus.efficiency.."%)"},
+		sharp   = {"#ffff00", " (+"..bonus.damages.."%)"},
+		strong  = {"#ff3d3d", ""},
+		speed   = {"#fd5eff", ""}
+	}
+	return minetest.colorize(specs[enchant][1], "\n"..cap(enchant)..specs[enchant][2])
+end
+
 
 function enchanting.formspec(pos, num)
 	local meta = minetest.get_meta(pos)
@@ -85,9 +118,7 @@ function enchanting.dig(pos)
 end
 
 local function allowed(tool)
-	if not tool then
-		return false
-	end
+	if not tool then return false end
 	for item in pairs(minetest.registered_tools) do
 		if item:find("enchanted_"..tool) then return true end
 	end
@@ -99,7 +130,7 @@ function enchanting.put(_, listname, _, stack)
 	if listname == "mese" and item == "mese_crystal" then
 		return stack:get_count()
 	elseif listname == "tool" and allowed(item) then
-		return 1 
+		return 1
 	end
 	return 0
 end
@@ -133,7 +164,6 @@ end
 
 function enchanting.timer(pos)
 	local num = #minetest.get_objects_inside_radius(pos, 0.9)
-
 	if num == 0 then
 		minetest.add_entity({x=pos.x, y=pos.y+0.85, z=pos.z}, "xdecor:book_open")
 	end
@@ -143,7 +173,7 @@ function enchanting.timer(pos)
 	local bookshelves = minetest.find_nodes_in_area(minp, maxp, "default:bookshelf")
 	if #bookshelves == 0 then return true end
 
-	local bookshelf_pos = bookshelves[math.random(1, #bookshelves)]
+	local bookshelf_pos = bookshelves[random(1, #bookshelves)]
 	local x = pos.x - bookshelf_pos.x
 	local y = bookshelf_pos.y - pos.y
 	local z = pos.z - bookshelf_pos.z
@@ -155,7 +185,7 @@ function enchanting.timer(pos)
 			acceleration = {x=0, y=-2.2, z=0},
 			expirationtime = 1,
 			size = 2,
-			texture = "xdecor_glyph"..math.random(1,18)..".png"
+			texture = "xdecor_glyph"..random(1,18)..".png"
 		})
 	end
 	return true
@@ -196,8 +226,6 @@ minetest.register_entity("xdecor:book_open", {
 	end
 })
 
-local function cap(S) return S:gsub("^%l", string.upper) end
-
 function enchanting:register_tools(mod, def)
 	for tool in pairs(def.tools) do
 	for material in def.materials:gmatch("[%w_]+") do
@@ -215,7 +243,7 @@ function enchanting:register_tools(mod, def)
 			local group = next(original_groupcaps)
 
 			if enchant == "durable" then
-				groupcaps[group].uses = math.ceil(original_groupcaps[group].uses * enchanting.uses)
+				groupcaps[group].uses = ceil(original_groupcaps[group].uses * enchanting.uses)
 			elseif enchant == "fast" then
 				for i, time in pairs(original_groupcaps[group].times) do
 					groupcaps[group].times[i] = time - enchanting.times
@@ -225,7 +253,8 @@ function enchanting:register_tools(mod, def)
 			end
 
 			minetest.register_tool(":"..mod..":enchanted_"..tool.."_"..material.."_"..enchant, {
-				description = "Enchanted "..cap(material).." "..cap(tool).." ("..cap(enchant)..")",
+				description = "Enchanted "..cap(material).." "..cap(tool)..
+					self:get_tooltip(enchant, original_groupcaps[group], fleshy),
 				inventory_image = original_tool.inventory_image.."^[colorize:violet:50",
 				wield_image = original_tool.wield_image,
 				groups = {not_in_creative_inventory=1},
@@ -243,7 +272,7 @@ function enchanting:register_tools(mod, def)
 
 			for armor_group, value in pairs(original_armor_groups) do
 				if enchant == "strong" then
-					armorcaps[armor_group] = math.ceil(value * enchanting.strength)
+					armorcaps[armor_group] = ceil(value * enchanting.strength)
 				elseif enchant == "speed" then
 					armorcaps[armor_group] = value
 					armorcaps.physics_speed = enchanting.speed
@@ -252,7 +281,8 @@ function enchanting:register_tools(mod, def)
 			end
 
 			minetest.register_tool(":"..mod..":enchanted_"..tool.."_"..material.."_"..enchant, {
-				description = "Enchanted "..cap(material).." "..cap(tool).." ("..cap(enchant)..")",
+				description = "Enchanted "..cap(material).." "..cap(tool)..
+					self:get_tooltip(enchant),
 				inventory_image = original_tool.inventory_image,
 				texture = "3d_armor_"..tool.."_"..material,
 				wield_image = original_tool.wield_image,
@@ -269,7 +299,7 @@ enchanting:register_tools("default", {
 	materials = "steel, bronze, mese, diamond",
 	tools = {
 		axe    = {enchants = "durable, fast"},
-		pick   = {enchants = "durable, fast"}, 
+		pick   = {enchants = "durable, fast"},
 		shovel = {enchants = "durable, fast"},
 		sword  = {enchants = "sharp"}
 	}
