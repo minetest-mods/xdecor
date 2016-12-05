@@ -28,7 +28,8 @@ function enchanting:get_tooltip(enchant, orig_caps, fleshy)
 			sum_caps_times = sum_caps_times + orig_caps.times[i]
 		end
 		local average_caps_time = sum_caps_times / #orig_caps.times
-		bonus.efficiency = to_percent(average_caps_time, average_caps_time - enchanting.times)
+		bonus.efficiency = to_percent(average_caps_time, average_caps_time -
+					      enchanting.times)
 	end
 	if fleshy then
 		bonus.damages = to_percent(fleshy, fleshy + enchanting.damages)
@@ -44,6 +45,14 @@ function enchanting:get_tooltip(enchant, orig_caps, fleshy)
 	return minetest.colorize(specs[enchant][1], "\n"..cap(enchant)..specs[enchant][2])
 end
 
+local enchant_buttons = {
+    	[[ image_button[3.9,0.85;4,0.92;bg_btn.png;fast;Efficiency]
+    	image_button[3.9,1.77;4,1.12;bg_btn.png;durable;Durability] ]],
+    	"image_button[3.9,0.85;4,0.92;bg_btn.png;strong;Strength]",
+    	"image_button[3.9,2.9;4,0.92;bg_btn.png;sharp;Sharpness]",
+    	[[ image_button[3.9,0.85;4,0.92;bg_btn.png;strong;Strength]
+    	image_button[3.9,1.77;4,1.12;bg_btn.png;speed;Speed] ]]
+}
 
 function enchanting.formspec(pos, num)
 	local meta = minetest.get_meta(pos)
@@ -60,15 +69,6 @@ function enchanting.formspec(pos, num)
 			tooltip[strong;Your armor is more resistant]
 			tooltip[speed;Your speed is increased] ]]
 			..default.gui_slots..default.get_hotbar_bg(0.5,4.5)
-
-	local enchant_buttons = {
-		[[ image_button[3.9,0.85;4,0.92;bg_btn.png;fast;Efficiency]
-		image_button[3.9,1.77;4,1.12;bg_btn.png;durable;Durability] ]],
-		"image_button[3.9,0.85;4,0.92;bg_btn.png;strong;Strength]",
-		"image_button[3.9,2.9;4,0.92;bg_btn.png;sharp;Sharpness]",
-		[[ image_button[3.9,0.85;4,0.92;bg_btn.png;strong;Strength]
-		image_button[3.9,1.77;4,1.12;bg_btn.png;speed;Speed] ]]
-	}
 
 	formspec = formspec..(enchant_buttons[num] or "")
 	meta:set_string("formspec", formspec)
@@ -92,9 +92,7 @@ function enchanting.on_put(pos, listname, _, stack)
 end
 
 function enchanting.fields(pos, _, fields, sender)
-	if not next(fields) or fields.quit then
-		return
-	end
+	if not next(fields) or fields.quit then return end
 	local inv = minetest.get_meta(pos):get_inventory()
 	local tool = inv:get_stack("tool", 1)
 	local mese = inv:get_stack("mese", 1)
@@ -103,7 +101,8 @@ function enchanting.fields(pos, _, fields, sender)
 	local enchanted_tool = (mod or "")..":enchanted_"..(name or "").."_"..next(fields)
 
 	if mese:get_count() >= mese_cost and minetest.registered_tools[enchanted_tool] then
-		minetest.sound_play("xdecor_enchanting", {to_player=sender:get_player_name(), gain=0.8})
+		minetest.sound_play("xdecor_enchanting", {
+			to_player=sender:get_player_name(), gain=0.8})
 		tool:replace(enchanted_tool)
 		tool:add_wear(orig_wear)
 		mese:take_item(mese_cost)
@@ -126,10 +125,10 @@ local function allowed(tool)
 end
 
 function enchanting.put(_, listname, _, stack)
-	local item = stack:get_name():match("[^:]+$")
-	if listname == "mese" and item == "mese_crystal" then
+	local stackname = stack:get_name()
+	if listname == "mese" and stackname == "default:mese_crystal" then
 		return stack:get_count()
-	elseif listname == "tool" and allowed(item) then
+	elseif listname == "tool" and allowed(stackname:match("[^:]+$")) then
 		return 1
 	end
 	return 0
@@ -232,18 +231,20 @@ function enchanting:register_tools(mod, def)
 	for enchant in def.tools[tool].enchants:gmatch("[%w_]+") do
 		local original_tool = minetest.registered_tools[mod..":"..tool.."_"..material]
 		if not original_tool then break end
+		local original_toolcaps = original_tool.tool_capabilities
 
-		if original_tool.tool_capabilities then
-			local original_damage_groups = original_tool.tool_capabilities.damage_groups
-			local original_groupcaps = original_tool.tool_capabilities.groupcaps
+		if original_toolcaps then
+			local original_damage_groups = original_toolcaps.damage_groups
+			local original_groupcaps = original_toolcaps.groupcaps
 			local groupcaps = table.copy(original_groupcaps)
 			local fleshy = original_damage_groups.fleshy
-			local full_punch_interval = original_tool.tool_capabilities.full_punch_interval
-			local max_drop_level = original_tool.tool_capabilities.max_drop_level
+			local full_punch_interval = original_toolcaps.full_punch_interval
+			local max_drop_level = original_toolcaps.max_drop_level
 			local group = next(original_groupcaps)
 
 			if enchant == "durable" then
-				groupcaps[group].uses = ceil(original_groupcaps[group].uses * enchanting.uses)
+				groupcaps[group].uses = ceil(original_groupcaps[group].uses *
+							     enchanting.uses)
 			elseif enchant == "fast" then
 				for i, time in pairs(original_groupcaps[group].times) do
 					groupcaps[group].times[i] = time - enchanting.times
@@ -260,7 +261,8 @@ function enchanting:register_tools(mod, def)
 				groups = {not_in_creative_inventory=1},
 				tool_capabilities = {
 					groupcaps = groupcaps, damage_groups = {fleshy = fleshy},
-					full_punch_interval = full_punch_interval, max_drop_level = max_drop_level
+					full_punch_interval = full_punch_interval,
+					max_drop_level = max_drop_level
 				}
 			})
 		end

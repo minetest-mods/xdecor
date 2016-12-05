@@ -42,7 +42,8 @@ end
 
 function xdecor.sit_dig(pos, digger)
 	for _, player in pairs(minetest.get_objects_inside_radius(pos, 0.1)) do
-		if player:is_player() and default.player_attached[player:get_player_name()] then
+		if player:is_player() and
+			    default.player_attached[player:get_player_name()] then
 			return false
 		end
 	end

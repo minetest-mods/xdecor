@@ -43,10 +43,7 @@ local default_can_dig = function(pos)
 end
 
 function xdecor.register(name, def)
-	def.drawtype = def.drawtype
-		or (def.mesh and "mesh")
-		or (def.node_box and "nodebox")
-
+	def.drawtype = def.drawtype or (def.mesh and "mesh") or (def.node_box and "nodebox")
 	def.sounds = def.sounds or default.node_sound_defaults()
 
 	if not (def.drawtype == "normal" or def.drawtype == "signlike" or
@@ -79,7 +76,8 @@ function xdecor.register(name, def)
 			local size = inventory.size or default_inventory_size
 			local inv = meta:get_inventory()
 			inv:set_size("main", size)
-			meta:set_string("formspec", (inventory.formspec or get_formspec_by_size(size))..xbg)
+			meta:set_string("formspec", (inventory.formspec or
+					get_formspec_by_size(size))..xbg)
 		end
 		def.can_dig = def.can_dig or default_can_dig
 	elseif infotext and not def.on_construct then

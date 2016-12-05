@@ -26,7 +26,7 @@ for node, def in pairs(minetest.registered_nodes) do
 	end
 end
 
--- Optionally, you can register custom cuttable nodes in the workbench
+-- Optionally, you can register custom cuttable nodes in the workbench.
 workbench.custom_nodes_register = {
 	-- "default:leaves",
 }
@@ -172,7 +172,8 @@ end
 
 function workbench.put(_, listname, _, stack)
 	local stackname = stack:get_name()
-	if (listname == "tool" and stack:get_wear() > 0 and workbench:repairable(stackname)) or
+	if (listname == "tool" and stack:get_wear() > 0 and
+	    workbench:repairable(stackname)) or
 	   (listname == "input" and minetest.registered_nodes[stackname.."_cube"]) or
 	   (listname == "hammer" and stackname == "xdecor:hammer") or
 	    listname == "storage" then
@@ -243,7 +244,7 @@ xdecor.register("workbench", {
 })
 
 for _, d in pairs(workbench.defs) do
-for i = 1, #nodes do
+for i=1, #nodes do
 	local node = nodes[i]
 	local def = minetest.registered_nodes[node]
 
@@ -269,8 +270,9 @@ for i = 1, #nodes do
 		end
 
 		if not minetest.registered_nodes["stairs:slab_"..node:match(":(.*)")] then
-			stairs.register_stair_and_slab(node:match(":(.*)"), node, groups, tiles,
-				def.description.." Stair", def.description.." Slab", def.sounds)
+			stairs.register_stair_and_slab(node:match(":(.*)"), node,
+				groups, tiles, def.description.." Stair",
+				def.description.." Slab", def.sounds)
 		end
 
 		minetest.register_node(":"..node.."_"..d[1], {
