@@ -44,7 +44,8 @@ function mailbox:formspec(pos, owner, is_owner)
 
 				giver = giver.."#FFFF00,"..giver_name..","..i..
 					",#FFFFFF,x "..stack_count..","
-				img = img..i.."="..img_col(stack_name).."^\\[resize:16x16,"
+				img = img..i.."="..
+					img_col(stack_name).."^\\[resize:16x16,"
 			end
 		end
 
@@ -63,7 +64,9 @@ function mailbox:formspec(pos, owner, is_owner)
 	end
     	return [[ size[8,5]
     		list[current_player;main;0,1.25;8,4;] ]]..
-    		"label[0,0;Send your goods to\n"..minetest.colorize("#FFFF00", owner).."]"..
+    		"label[0,0;Send your goods to\n"..
+			(minetest.colorize and
+			 minetest.colorize("#FFFF00", owner) or owner).."]"..
     		"list[nodemeta:"..spos..";drop;3.5,0;1,1;]"..
     		xbg..default.get_hotbar_bg(0,1.25)
 end

@@ -42,7 +42,10 @@ function enchanting:get_tooltip(enchant, orig_caps, fleshy)
 		strong  = {"#ff3d3d", ""},
 		speed   = {"#fd5eff", ""}
 	}
-	return minetest.colorize(specs[enchant][1], "\n"..cap(enchant)..specs[enchant][2])
+	return minetest.colorize and
+		minetest.colorize(specs[enchant][1],
+				  "\n"..cap(enchant)..specs[enchant][2]) or
+		"\n"..cap(enchant)..specs[enchant][2]
 end
 
 local enchant_buttons = {
