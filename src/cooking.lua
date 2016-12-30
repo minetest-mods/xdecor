@@ -88,7 +88,7 @@ end
 function cauldron.boiling_timer(pos)
 	local node = minetest.get_node(pos)
 	local objs = minetest.get_objects_inside_radius(pos, 0.5)
-	if objs == {} then return true end
+	if not next(objs) then return true end
 
 	local ingredients = {}
 	for _, obj in pairs(objs) do
