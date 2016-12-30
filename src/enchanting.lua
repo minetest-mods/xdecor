@@ -49,12 +49,12 @@ function enchanting:get_tooltip(enchant, orig_caps, fleshy)
 end
 
 local enchant_buttons = {
-    	[[ image_button[3.9,0.85;4,0.92;bg_btn.png;fast;Efficiency]
-    	image_button[3.9,1.77;4,1.12;bg_btn.png;durable;Durability] ]],
-    	"image_button[3.9,0.85;4,0.92;bg_btn.png;strong;Strength]",
-    	"image_button[3.9,2.9;4,0.92;bg_btn.png;sharp;Sharpness]",
-    	[[ image_button[3.9,0.85;4,0.92;bg_btn.png;strong;Strength]
-    	image_button[3.9,1.77;4,1.12;bg_btn.png;speed;Speed] ]]
+	[[ image_button[3.9,0.85;4,0.92;bg_btn.png;fast;Efficiency]
+	image_button[3.9,1.77;4,1.12;bg_btn.png;durable;Durability] ]],
+	"image_button[3.9,0.85;4,0.92;bg_btn.png;strong;Strength]",
+	"image_button[3.9,2.9;4,0.92;bg_btn.png;sharp;Sharpness]",
+	[[ image_button[3.9,0.85;4,0.92;bg_btn.png;strong;Strength]
+	image_button[3.9,1.77;4,1.12;bg_btn.png;speed;Speed] ]]
 }
 
 function enchanting.formspec(pos, num)

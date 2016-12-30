@@ -1,6 +1,6 @@
 screwdriver = screwdriver or {}
 
-function xdecor.register_pane(name, desc, def)
+local function register_pane(name, desc, def)
 	xpanes.register_pane(name, {
 		description = desc,
 		tiles = {"xdecor_"..name..".png"},
@@ -15,21 +15,21 @@ function xdecor.register_pane(name, desc, def)
 	})
 end
 
-xdecor.register_pane("bamboo_frame", "Bamboo Frame", {
+register_pane("bamboo_frame", "Bamboo Frame", {
 	groups = {choppy=3, oddly_breakable_by_hand=2, pane=1, flammable=2},
 	recipe = {{"default:papyrus", "default:papyrus", "default:papyrus"},
 		  {"default:papyrus", "farming:cotton",  "default:papyrus"},
 		  {"default:papyrus", "default:papyrus", "default:papyrus"}}
 })
 
-xdecor.register_pane("chainlink", "Chainlink", {
+register_pane("chainlink", "Chainlink", {
 	groups = {cracky=3, oddly_breakable_by_hand=2, pane=1},
 	recipe = {{"default:steel_ingot", "", "default:steel_ingot"},
 		  {"", "default:steel_ingot", ""},
 		  {"default:steel_ingot", "", "default:steel_ingot"}}
 })
 
-xdecor.register_pane("rusty_bar", "Rusty Iron Bars", {
+register_pane("rusty_bar", "Rusty Iron Bars", {
 	sounds = default.node_sound_stone_defaults(),
 	groups = {cracky=2, pane=1},
 	recipe = {{"", "default:dirt", ""},
@@ -37,7 +37,7 @@ xdecor.register_pane("rusty_bar", "Rusty Iron Bars", {
 		  {"default:steel_ingot", "default:steel_ingot", "default:steel_ingot"}}
 })
 
-xdecor.register_pane("wood_frame", "Wood Frame", {
+register_pane("wood_frame", "Wood Frame", {
 	sounds = default.node_sound_wood_defaults(),
 	groups = {choppy=2, pane=1, flammable=2},
 	recipe = {{"group:wood", "group:stick", "group:wood"},
@@ -65,7 +65,7 @@ xdecor.register("barrel", {
 	sounds = default.node_sound_wood_defaults()
 })
 
-function xdecor.register_storage(name, desc, def)
+local function register_storage(name, desc, def)
 	xdecor.register(name, {
 		description = desc,
 		inventory = {size=def.inv_size or 24},
@@ -79,14 +79,14 @@ function xdecor.register_storage(name, desc, def)
 	})
 end
 
-xdecor.register_storage("cabinet", "Wooden Cabinet", {
+register_storage("cabinet", "Wooden Cabinet", {
 	on_rotate = screwdriver.rotate_simple,
 	tiles = {"xdecor_cabinet_sides.png", "xdecor_cabinet_sides.png",
 		 "xdecor_cabinet_sides.png", "xdecor_cabinet_sides.png",
 		 "xdecor_cabinet_sides.png", "xdecor_cabinet_front.png"}
 })
 
-xdecor.register_storage("cabinet_half", "Half Wooden Cabinet", {
+register_storage("cabinet_half", "Half Wooden Cabinet", {
 	inv_size = 8,
 	node_box = xdecor.nodebox.slab_y(0.5, 0.5),
 	on_rotate = screwdriver.rotate_simple,
@@ -95,12 +95,12 @@ xdecor.register_storage("cabinet_half", "Half Wooden Cabinet", {
 		 "xdecor_half_cabinet_sides.png", "xdecor_half_cabinet_front.png"}
 })
 
-xdecor.register_storage("empty_shelf", "Empty Shelf", {
+register_storage("empty_shelf", "Empty Shelf", {
 	on_rotate = screwdriver.rotate_simple,
 	tiles = {"default_wood.png", "default_wood.png^xdecor_empty_shelf.png"}
 })
 
-xdecor.register_storage("multishelf", "Multi Shelf", {
+register_storage("multishelf", "Multi Shelf", {
 	on_rotate = screwdriver.rotate_simple,
 	tiles = {"default_wood.png", "default_wood.png^xdecor_multishelf.png"},
 })
@@ -399,7 +399,7 @@ xdecor.register("stonepath", {
 	selection_box = xdecor.nodebox.slab_y(0.05)
 })
 
-function xdecor.register_hard_node(name, desc, def)
+local function register_hard_node(name, desc, def)
 	xdecor.register(name, {
 		description = desc,
 		tiles = {"xdecor_"..name..".png"},
@@ -408,18 +408,18 @@ function xdecor.register_hard_node(name, desc, def)
 	})
 end
 
-xdecor.register_hard_node("cactusbrick", "Cactus Brick", {})
-xdecor.register_hard_node("coalstone_tile", "Coal Stone Tile", {})
-xdecor.register_hard_node("desertstone_tile", "Desert Stone Tile", {})
-xdecor.register_hard_node("hard_clay", "Hardened Clay", {})
-xdecor.register_hard_node("moonbrick", "Moon Brick", {})
-xdecor.register_hard_node("stone_tile", "Stone Tile", {})
-xdecor.register_hard_node("stone_rune", "Runestone", {})
-xdecor.register_hard_node("packed_ice", "Packed Ice", {
+register_hard_node("cactusbrick", "Cactus Brick", {})
+register_hard_node("coalstone_tile", "Coal Stone Tile", {})
+register_hard_node("desertstone_tile", "Desert Stone Tile", {})
+register_hard_node("hard_clay", "Hardened Clay", {})
+register_hard_node("moonbrick", "Moon Brick", {})
+register_hard_node("stone_tile", "Stone Tile", {})
+register_hard_node("stone_rune", "Runestone", {})
+register_hard_node("packed_ice", "Packed Ice", {
 	groups = {cracky=1, puts_out_fire=1},
 	sounds = default.node_sound_glass_defaults()
 })
-xdecor.register_hard_node("wood_tile", "Wooden Tile", {
+register_hard_node("wood_tile", "Wooden Tile", {
 	groups = {choppy=1, wood=1, flammable=2},
 	sounds = default.node_sound_wood_defaults()
 })

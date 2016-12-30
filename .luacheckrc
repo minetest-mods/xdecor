@@ -6,4 +6,5 @@ read_globals = {
 	"vector", "ItemStack",
 	"default",
 	"stairs", "doors", "xpanes",
+	"xdecor", "xbg",
 }

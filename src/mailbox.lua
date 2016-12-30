@@ -62,13 +62,13 @@ function mailbox:formspec(pos, owner, is_owner)
 			"listring[nodemeta:"..spos..";mailbox]"..
 			xbg..default.get_hotbar_bg(0.75,5.25)
 	end
-    	return [[ size[8,5]
-    		list[current_player;main;0,1.25;8,4;] ]]..
-    		"label[0,0;Send your goods to\n"..
-			(minetest.colorize and
-			 minetest.colorize("#FFFF00", owner) or owner).."]"..
-    		"list[nodemeta:"..spos..";drop;3.5,0;1,1;]"..
-    		xbg..default.get_hotbar_bg(0,1.25)
+	return [[ size[8,5]
+		list[current_player;main;0,1.25;8,4;] ]]..
+		"label[0,0;Send your goods to\n"..
+		(minetest.colorize and
+			minetest.colorize("#FFFF00", owner) or owner).."]"..
+		"list[nodemeta:"..spos..";drop;3.5,0;1,1;]"..
+		xbg..default.get_hotbar_bg(0,1.25)
 end
 
 function mailbox.dig(pos, player)
