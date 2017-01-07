@@ -1,7 +1,6 @@
---[[ Thanks to sofar for helping with that code.
-Recommended setting in minetest.conf (requires 0.4.14 or newer) :
-	nodetimer_interval = 0.1
-]]
+-- Thanks to sofar for helping with that code.
+
+minetest.setting_set("nodetimer_interval", 0.1)
 
 local plate = {}
 screwdriver = screwdriver or {}
