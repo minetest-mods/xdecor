@@ -14,6 +14,9 @@ minetest.register_craftitem("xdecor:bowl_soup", {
 		itemstack:replace("xdecor:bowl 1")
 		if rawget(_G, "hunger") then
 			minetest.item_eat(20)
+		elseif rawget(_G, "hbhunger") then
+			hbhunger.hunger[user:get_player_name()] = 30
+			hbhunger.set_hunger_raw(user)
 		else
 			user:set_hp(20)
 		end
