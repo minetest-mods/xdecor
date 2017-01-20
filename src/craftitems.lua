@@ -10,18 +10,7 @@ minetest.register_craftitem("xdecor:bowl_soup", {
 	wield_image = "xdecor_bowl_soup.png",
 	groups = {not_in_creative_inventory=1},
 	stack_max = 1,
-	on_use = function(itemstack, user)
-		itemstack:replace("xdecor:bowl 1")
-		if rawget(_G, "hunger") then
-			minetest.item_eat(20)
-		elseif rawget(_G, "hbhunger") then
-			hbhunger.hunger[user:get_player_name()] = 30
-			hbhunger.set_hunger_raw(user)
-		else
-			user:set_hp(20)
-		end
-		return itemstack
-	end
+	on_use = minetest.item_eat(30, "xdecor:bowl")
 })
 
 minetest.register_tool("xdecor:hammer", {
