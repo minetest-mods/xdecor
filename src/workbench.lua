@@ -67,7 +67,7 @@ workbench.defs = {
 			    { 0, 8,  0, 8,  8, 8  }}
 }
 
--- Tools allowed to be repaired.
+-- Tools allowed to be repaired
 function workbench:repairable(stack)
 	local tools = {"pick", "axe", "shovel", "sword", "hoe", "armor", "shield"}
 	for i=1, #tools do
@@ -164,7 +164,7 @@ function workbench.timer(pos)
 		return
 	end
 
-	-- Tool's wearing range: 0-65535 | 0 = new condition.
+	-- Tool's wearing range: 0-65535 | 0 = new condition
 	tool:add_wear(-500)
 	hammer:add_wear(700)
 
@@ -185,14 +185,6 @@ function workbench.put(_, listname, _, stack)
 	return 0
 end
 
-function workbench.take(_, listname, _, stack, player)
-	if listname == "forms" then
-		local inv = player:get_inventory()
-		return inv:room_for_item("main", stack:get_name()) and -1 or 0
-	end
-	return stack:get_count()
-end
-
 function workbench.move(_, from_list, _, to_list, _, count)
 	return (to_list == "storage" and from_list ~= "forms") and count or 0
 end
@@ -208,20 +200,34 @@ function workbench.on_put(pos, listname, _, stack)
 	end
 end
 
-function workbench.on_take(pos, listname, index, stack)
+function workbench.on_take(pos, listname, index, stack, player)
 	local inv = minetest.get_meta(pos):get_inventory()
 	local input = inv:get_stack("input", 1)
+	local fromlist = inv:get_stack(listname, index)
+	local inputname = input:get_name()
+	local stackname = stack:get_name()
+
+	if not fromlist:is_empty() and fromlist:get_name() ~= stackname then
+		local player_inv = player:get_inventory()
+		if player_inv:room_for_item("main", fromlist) then
+			player_inv:add_item("main", fromlist)
+		end
+
+		inv:set_list("input", {})
+		inv:set_list("forms", {})
+		return
+	end
 
 	if listname == "input" then
-		if stack:get_name() == input:get_name() then
-			workbench:get_output(inv, input, stack:get_name())
+		if stackname == inputname then
+			workbench:get_output(inv, input, stackname)
 		else
 			inv:set_list("forms", {})
 		end
 	elseif listname == "forms" then
 		input:take_item(ceil(stack:get_count() / workbench.defs[index][2]))
 		inv:set_stack("input", 1, input)
-		workbench:get_output(inv, input, input:get_name())
+		workbench:get_output(inv, input, inputname)
 	end
 end
 
@@ -240,7 +246,6 @@ xdecor.register("workbench", {
 	on_metadata_inventory_put = workbench.on_put,
 	on_metadata_inventory_take = workbench.on_take,
 	allow_metadata_inventory_put = workbench.put,
-	allow_metadata_inventory_take = workbench.take,
 	allow_metadata_inventory_move = workbench.move
 })
 
