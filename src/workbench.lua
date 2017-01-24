@@ -76,11 +76,6 @@ function workbench:repairable(stack)
 end
 
 function workbench:get_output(inv, input, name)
-	if inv:is_empty("input") then
-		inv:set_list("forms", {})
-		return
-	end
-
 	local output = {}
 	for _, n in pairs(self.defs) do
 		local count = min(n[2] * input:get_count(), input:get_stack_max())
@@ -203,20 +198,8 @@ end
 function workbench.on_take(pos, listname, index, stack, player)
 	local inv = minetest.get_meta(pos):get_inventory()
 	local input = inv:get_stack("input", 1)
-	local fromlist = inv:get_stack(listname, index)
 	local inputname = input:get_name()
 	local stackname = stack:get_name()
-
-	if not fromlist:is_empty() and fromlist:get_name() ~= stackname then
-		local player_inv = player:get_inventory()
-		if player_inv:room_for_item("main", fromlist) then
-			player_inv:add_item("main", fromlist)
-		end
-
-		inv:set_list("input", {})
-		inv:set_list("forms", {})
-		return
-	end
 
 	if listname == "input" then
 		if stackname == inputname then
@@ -225,6 +208,14 @@ function workbench.on_take(pos, listname, index, stack, player)
 			inv:set_list("forms", {})
 		end
 	elseif listname == "forms" then
+		local fromstack = inv:get_stack(listname, index)
+		if not fromstack:is_empty() and fromstack:get_name() ~= stackname then
+			local player_inv = player:get_inventory()
+			if player_inv:room_for_item("main", fromstack) then
+				player_inv:add_item("main", fromstack)
+			end
+		end
+
 		input:take_item(ceil(stack:get_count() / workbench.defs[index][2]))
 		inv:set_stack("input", 1, input)
 		workbench:get_output(inv, input, inputname)
