@@ -3,8 +3,8 @@ WB = {}
 screwdriver = screwdriver or {}
 local min, ceil = math.min, math.ceil
 
--- Nodes allowed to be cut.
--- Only the regular, solid blocks without metas or explosivity can be cut.
+-- Nodes allowed to be cut
+-- Only the regular, solid blocks without metas or explosivity can be cut
 local nodes = {}
 for node, def in pairs(minetest.registered_nodes) do
 	if (def.drawtype == "normal" or def.drawtype:sub(1,5) == "glass") and
@@ -28,7 +28,7 @@ for node, def in pairs(minetest.registered_nodes) do
 	end
 end
 
--- Optionally, you can register custom cuttable nodes in the workbench.
+-- Optionally, you can register custom cuttable nodes in the workbench
 WB.custom_nodes_register = {
 	-- "default:leaves",
 }
@@ -44,7 +44,7 @@ setmetatable(nodes, {
 
 nodes = nodes..WB.custom_nodes_register
 
--- Nodeboxes definitions.
+-- Nodeboxes definitions
 workbench.defs = {
 	-- Name       Yield   X  Y   Z  W   H  L
 	{"nanoslab",	16, { 0, 0,  0, 8,  1, 8  }},
@@ -70,15 +70,15 @@ workbench.defs = {
 -- Tools allowed to be repaired.
 function workbench:repairable(stack)
 	local tools = {"pick", "axe", "shovel", "sword", "hoe", "armor", "shield"}
-	for _, t in pairs(tools) do
-		if stack:find(t) then return true end
+	for i=1, #tools do
+		return stack:find(tools[i])
 	end
-	return false
 end
 
 function workbench:get_output(inv, input, name)
 	if inv:is_empty("input") then
-		inv:set_list("forms", {}) return
+		inv:set_list("forms", {})
+		return
 	end
 
 	local output = {}
@@ -92,7 +92,7 @@ function workbench:get_output(inv, input, name)
 end
 
 local formspecs = {
-	-- Main formspec.
+	-- Main formspec
 	[[ label[0.9,1.23;Cut]
 	   label[0.9,2.23;Repair]
 	   box[-0.05,1;2.05,0.9;#555555]
@@ -107,14 +107,14 @@ local formspecs = {
 	   list[context;tool;2,2;1,1;]
 	   list[context;hammer;3,2;1,1;]
 	   list[context;forms;4,0;4,3;] ]],
-	-- Crafting formspec.
+	-- Crafting formspec
 	[[ image[5,1;1,1;gui_furnace_arrow_bg.png^[transformR270]
 	   button[0,0;1.5,1;back;< Back]
 	   list[current_player;craft;2,0;3,3;]
 	   list[current_player;craftpreview;6,1;1,1;]
 	   listring[current_player;main]
 	   listring[current_player;craft] ]],
-	-- Storage formspec.
+	-- Storage formspec
 	[[ list[context;storage;0,1;8,2;]
 	   button[0,0;1.5,1;back;< Back]
 	   listring[context;storage]
@@ -150,7 +150,7 @@ end
 function workbench.dig(pos)
 	local inv = minetest.get_meta(pos):get_inventory()
 	return inv:is_empty("input") and inv:is_empty("hammer") and
-		inv:is_empty("tool") and inv:is_empty("storage")
+	       inv:is_empty("tool") and inv:is_empty("storage")
 end
 
 function workbench.timer(pos)
@@ -160,7 +160,8 @@ function workbench.timer(pos)
 	local hammer = inv:get_stack("hammer", 1)
 
 	if tool:is_empty() or hammer:is_empty() or tool:get_wear() == 0 then
-		timer:stop() return
+		timer:stop()
+		return
 	end
 
 	-- Tool's wearing range: 0-65535 | 0 = new condition.
@@ -187,15 +188,13 @@ end
 function workbench.take(_, listname, _, stack, player)
 	if listname == "forms" then
 		local inv = player:get_inventory()
-		if inv:room_for_item("main", stack:get_name()) then return -1 end
-		return 0
+		return inv:room_for_item("main", stack:get_name()) and -1 or 0
 	end
 	return stack:get_count()
 end
 
 function workbench.move(_, from_list, _, to_list, _, count)
-	if to_list == "storage" and from_list ~= "forms" then return count end
-	return 0
+	return (to_list == "storage" and from_list ~= "forms") and count or 0
 end
 
 function workbench.on_put(pos, listname, _, stack)
@@ -285,7 +284,7 @@ for i=1, #nodes do
 			sounds = def.sounds,
 			tiles = tiles,
 			groups = groups,
-			-- `unpack` has been changed to `table.unpack` in newest Lua versions.
+			-- `unpack` has been changed to `table.unpack` in newest Lua versions
 			node_box = xdecor.pixelbox(16, {unpack(d, 3)}),
 			sunlight_propagates = true,
 			on_place = minetest.rotate_node
