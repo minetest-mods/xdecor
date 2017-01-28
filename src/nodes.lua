@@ -97,12 +97,14 @@ register_storage("cabinet_half", "Half Wooden Cabinet", {
 
 register_storage("empty_shelf", "Empty Shelf", {
 	on_rotate = screwdriver.rotate_simple,
-	tiles = {"default_wood.png", "default_wood.png^xdecor_empty_shelf.png"}
+	tiles = {"default_wood.png", "default_wood.png", "default_wood.png",
+		 "default_wood.png", "default_wood.png^xdecor_empty_shelf.png"}
 })
 
 register_storage("multishelf", "Multi Shelf", {
 	on_rotate = screwdriver.rotate_simple,
-	tiles = {"default_wood.png", "default_wood.png^xdecor_multishelf.png"},
+	tiles = {"default_wood.png", "default_wood.png", "default_wood.png",
+		 "default_wood.png", "default_wood.png^xdecor_multishelf.png"},
 })
 
 xdecor.register("candle", {
@@ -142,7 +144,7 @@ xdecor.register("chair", {
 	}),
 	can_dig = xdecor.sit_dig,
 	on_rightclick = function(pos, node, clicker, itemstack, pointed_thing)
-		pos.y = pos.y + 0  -- Sitting position.
+		pos.y = pos.y + 0  -- Sitting position
 		xdecor.sit(pos, node, clicker, pointed_thing)
 		return itemstack
 	end
@@ -165,7 +167,7 @@ xdecor.register("cobweb", {
 	sounds = default.node_sound_leaves_defaults()
 })
 
-for _, c in pairs({"red"}) do  -- Add more curtains colors simply here.
+for _, c in pairs({"red"}) do  -- Add more curtains colors simply here
 	xdecor.register("curtain_"..c, {
 		description = c:gsub("^%l", string.upper).." Curtain",
 		walkable = false,
@@ -211,7 +213,7 @@ xdecor.register("cushion", {
 	node_box = xdecor.nodebox.slab_y(0.5),
 	can_dig = xdecor.sit_dig,
 	on_rightclick = function(pos, node, clicker, itemstack, pointed_thing)
-		pos.y = pos.y + 0  -- Sitting position.
+		pos.y = pos.y + 0  -- Sitting position
 		xdecor.sit(pos, node, clicker, pointed_thing)
 		return itemstack
 	end
