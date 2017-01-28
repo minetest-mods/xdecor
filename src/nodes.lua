@@ -172,27 +172,29 @@ for _, c in pairs({"red"}) do  -- Add more curtains colors simply here
 		description = c:gsub("^%l", string.upper).." Curtain",
 		walkable = false,
 		tiles = {"wool_white.png^[colorize:"..c..":170"},
-		inventory_image = "wool_white.png^[colorize:"..c..":170^xdecor_curtain_open_overlay.png^[makealpha:255,126,126",
+		inventory_image = "wool_white.png^[colorize:"..c..
+			":170^xdecor_curtain_open_overlay.png^[makealpha:255,126,126",
 		wield_image = "wool_white.png^[colorize:"..c..":170",
 		drawtype = "signlike",
 		paramtype2 = "wallmounted",
 		groups = {dig_immediate=3, flammable=3},
 		selection_box = {type="wallmounted"},
-		on_rightclick = function(pos, node, clicker, itemstack, pointed_thing)
+		on_rightclick = function(pos, node, _, itemstack)
 			minetest.set_node(pos, {name="xdecor:curtain_open_"..c, param2=node.param2})
 			return itemstack
 		end
 	})
 
 	xdecor.register("curtain_open_"..c, {
-		tiles = {"wool_white.png^[colorize:"..c..":170^xdecor_curtain_open_overlay.png^[makealpha:255,126,126"},
+		tiles = {"wool_white.png^[colorize:"..c..
+			 ":170^xdecor_curtain_open_overlay.png^[makealpha:255,126,126"},
 		drawtype = "signlike",
 		paramtype2 = "wallmounted",
 		walkable = false,
 		groups = {dig_immediate=3, flammable=3, not_in_creative_inventory=1},
 		selection_box = {type="wallmounted"},
 		drop = "xdecor:curtain_"..c,
-		on_rightclick = function(pos, node, clicker, itemstack, pointed_thing)
+		on_rightclick = function(pos, node, _, itemstack)
 			minetest.set_node(pos, {name="xdecor:curtain_"..c, param2=node.param2})
 			return itemstack
 		end
@@ -200,8 +202,8 @@ for _, c in pairs({"red"}) do  -- Add more curtains colors simply here
 
 	minetest.register_craft({
 		output = "xdecor:curtain_"..c.." 4",
-		recipe = { {"", "wool:"..c, ""},
-			   {"", "wool:"..c, ""} }
+		recipe = {{"", "wool:"..c, ""},
+			  {"", "wool:"..c, ""}}
 	})
 end
 
@@ -225,7 +227,10 @@ xdecor.register("cushion_block", {
 	groups = {snappy=3, flammable=3, fall_damage_add_percent=-75, not_in_creative_inventory=1}
 })
 
-local function door_access(name) return name:find("prison") end
+local function door_access(name)
+	return name:find("prison")
+end
+
 local xdecor_doors = {
 	japanese = {
 		{"group:wood", "default:paper"},
@@ -313,7 +318,7 @@ xdecor.register("lantern", {
 	paramtype2 = "wallmounted",
 	walkable = false,
 	groups = {snappy=3, attached_node=1},
-	tiles = {{name = "xdecor_lantern.png", animation = {type="vertical_frames", length=1.5}}},
+	tiles = {{name="xdecor_lantern.png", animation={type="vertical_frames", length=1.5}}},
 	selection_box = xdecor.pixelbox(16, {{4, 0, 4, 8, 16, 8}})
 })
 
@@ -342,8 +347,8 @@ for _, f in pairs({"dandelion_white", "dandelion_yellow", "geranium",
 
 	minetest.register_craft({
 		output = "xdecor:potted_"..f,
-		recipe = { {"default:clay_brick", "flowers:"..f, "default:clay_brick"},
-			   {"", "default:clay_brick", ""} }
+		recipe = {{"default:clay_brick", "flowers:"..f,
+			   "default:clay_brick"}, {"", "default:clay_brick", ""}}
 	})
 end
 
@@ -367,8 +372,10 @@ xdecor.register("painting_1", {
 	node_placement_prediction = "",
 	on_place = function(itemstack, placer, pointed_thing)
 		local num = math.random(4)
-		local leftover = minetest.item_place_node(ItemStack("xdecor:painting_"..num), placer, pointed_thing)
-		if leftover:get_count() == 0 and not minetest.setting_getbool("creative_mode") then
+		local leftover = minetest.item_place_node(
+			ItemStack("xdecor:painting_"..num), placer, pointed_thing)
+		if leftover:get_count() == 0 and
+				not minetest.setting_getbool("creative_mode") then
 			itemstack:take_item()
 		end
 		return itemstack
@@ -381,7 +388,8 @@ for i = 2, 4 do
 		paramtype2 = "wallmounted",
 		drop = "xdecor:painting_1",
 		sunlight_propagates = true,
-		groups = {choppy=3, oddly_breakable_by_hand=2, flammable=2, attached_node=1, not_in_creative_inventory=1},
+		groups = {choppy=3, oddly_breakable_by_hand=2, flammable=2,
+			  attached_node=1, not_in_creative_inventory=1},
 		sounds = default.node_sound_wood_defaults(),
 		node_box = painting_box
 	})
@@ -402,6 +410,7 @@ xdecor.register("stonepath", {
 })
 
 local function register_hard_node(name, desc, def)
+	def = def or {}
 	xdecor.register(name, {
 		description = desc,
 		tiles = {"xdecor_"..name..".png"},
@@ -410,13 +419,13 @@ local function register_hard_node(name, desc, def)
 	})
 end
 
-register_hard_node("cactusbrick", "Cactus Brick", {})
-register_hard_node("coalstone_tile", "Coal Stone Tile", {})
-register_hard_node("desertstone_tile", "Desert Stone Tile", {})
-register_hard_node("hard_clay", "Hardened Clay", {})
-register_hard_node("moonbrick", "Moon Brick", {})
-register_hard_node("stone_tile", "Stone Tile", {})
-register_hard_node("stone_rune", "Runestone", {})
+register_hard_node("cactusbrick", "Cactus Brick")
+register_hard_node("coalstone_tile", "Coal Stone Tile")
+register_hard_node("desertstone_tile", "Desert Stone Tile")
+register_hard_node("hard_clay", "Hardened Clay")
+register_hard_node("moonbrick", "Moon Brick")
+register_hard_node("stone_tile", "Stone Tile")
+register_hard_node("stone_rune", "Runestone")
 register_hard_node("packed_ice", "Packed Ice", {
 	groups = {cracky=1, puts_out_fire=1},
 	sounds = default.node_sound_glass_defaults()
@@ -474,4 +483,3 @@ xdecor.register("woodframed_glass", {
 	groups = {cracky=2, oddly_breakable_by_hand=1},
 	sounds = default.node_sound_glass_defaults()
 })
-
