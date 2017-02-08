@@ -71,9 +71,10 @@ workbench.defs = {
 -- Tools allowed to be repaired
 function workbench:repairable(stack)
 	local tools = {"pick", "axe", "shovel", "sword", "hoe", "armor", "shield"}
-	for i=1, #tools do
-		return stack:find(tools[i])
+	for _, t in pairs(tools) do
+		if stack:find(t) then return true end
 	end
+	return false
 end
 
 function workbench:get_output(inv, input, name)
