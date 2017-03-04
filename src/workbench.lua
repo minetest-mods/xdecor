@@ -104,7 +104,15 @@ local formspecs = {
 	   list[context;input;2,1;1,1;]
 	   list[context;tool;2,2;1,1;]
 	   list[context;hammer;3,2;1,1;]
-	   list[context;forms;4,0;4,3;] ]],
+	   list[context;forms;4,0;4,3;]
+	   listring[current_player;main]
+	   listring[context;tool]
+	   listring[current_player;main]
+	   listring[context;hammer]
+	   listring[current_player;main]
+	   listring[context;forms]
+	   listring[current_player;main]
+	   listring[context;input] ]],
 	-- Crafting formspec
 	[[ image[5,1;1,1;gui_furnace_arrow_bg.png^[transformR270]
 	   button[0,0;1.5,1;back;< Back]
