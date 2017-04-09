@@ -133,6 +133,19 @@ function mailbox.on_put(pos, listname, _, stack, player)
 	end
 end
 
+function mailbox.allow_take(pos, listname, index, stack, player)
+	local meta = minetest.get_meta(pos)
+
+	if player:get_player_name() ~= meta:get_string("owner") then
+		return 0
+	end
+	return stack:get_count()
+end
+
+function mailbox.allow_move(pos)
+	return 0
+end
+
 xdecor.register("mailbox", {
 	description = "Mailbox",
 	tiles = {"xdecor_mailbox_top.png", "xdecor_mailbox_bottom.png",
@@ -142,6 +155,8 @@ xdecor.register("mailbox", {
 	on_rotate = screwdriver.rotate_simple,
 	can_dig = mailbox.dig,
 	on_rightclick = mailbox.rightclick,
+	allow_metadata_inventory_take = mailbox.allow_take,
+	allow_metadata_inventory_move = mailbox.allow_move,
 	on_metadata_inventory_put = mailbox.on_put,
 	allow_metadata_inventory_put = mailbox.put,
 	after_place_node = mailbox.after_place_node
