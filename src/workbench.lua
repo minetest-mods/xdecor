@@ -1,3 +1,5 @@
+local S, NS = dofile(minetest.get_modpath(minetest.get_current_modname()).."/intllib.lua")
+
 local workbench = {}
 WB = {}
 screwdriver = screwdriver or {}
@@ -236,7 +238,7 @@ function workbench.on_take(pos, listname, index, stack, player)
 end
 
 xdecor.register("workbench", {
-	description = "Work Bench",
+	description = S("Work Bench"),
 	groups = {cracky=2, choppy=2, oddly_breakable_by_hand=1},
 	sounds = default.node_sound_wood_defaults(),
 	tiles = {"xdecor_workbench_top.png",   "xdecor_workbench_top.png",

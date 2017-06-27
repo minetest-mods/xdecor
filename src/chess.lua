@@ -1,3 +1,5 @@
+local S, NS = dofile(minetest.get_modpath(minetest.get_current_modname()).."/intllib.lua")
+
 local realchess = {}
 screwdriver = screwdriver or {}
 
@@ -85,7 +87,7 @@ function realchess.move(pos, from_list, from_index, to_list, to_index, _, player
 	local meta = minetest.get_meta(pos)
 
 	if meta:get_string("winner") ~= "" then
-		minetest.chat_send_player(playerName, "This game is over.")
+		minetest.chat_send_player(playerName, S("This game is over."))
 		return 0
 	end
 
@@ -99,11 +101,11 @@ function realchess.move(pos, from_list, from_index, to_list, to_index, _, player
 
 	if pieceFrom:find("white") then
 		if playerWhite ~= "" and playerWhite ~= playerName then
-			minetest.chat_send_player(playerName, "Someone else plays white pieces!")
+			minetest.chat_send_player(playerName, S("Someone else plays white pieces!"))
 			return 0
 		end
 		if lastMove ~= "" and lastMove ~= "black" then
-			minetest.chat_send_player(playerName, "It's not your turn, wait for your opponent to play.")
+			minetest.chat_send_player(playerName, S("It's not your turn, wait for your opponent to play."))
 			return 0
 		end
 		if pieceTo:find("white") then
@@ -114,11 +116,11 @@ function realchess.move(pos, from_list, from_index, to_list, to_index, _, player
 		thisMove = "white"
 	elseif pieceFrom:find("black") then
 		if playerBlack ~= "" and playerBlack ~= playerName then
-			minetest.chat_send_player(playerName, "Someone else plays black pieces!")
+			minetest.chat_send_player(playerName, S("Someone else plays black pieces!"))
 			return 0
 		end
 		if lastMove ~= "" and lastMove ~= "white" then
-			minetest.chat_send_player(playerName, "It's not your turn, wait for your opponent to play.")
+			minetest.chat_send_player(playerName, S("It's not your turn, wait for your opponent to play."))
 			return 0
 		end
 		if pieceTo:find("black") then
@@ -510,15 +512,15 @@ function realchess.move(pos, from_list, from_index, to_list, to_index, _, player
 
 	if lastMove == "black" then
 		minetest.chat_send_player(playerWhite, "["..os.date("%H:%M:%S").."] "..
-				playerName.." moved a "..pieceFrom:match(":(%a+)")..", it's now your turn.")
+				playerName..S(" moved a ")..pieceFrom:match(":(%a+)")..S(", it's now your turn."))
 	elseif lastMove == "white" then
 		minetest.chat_send_player(playerBlack, "["..os.date("%H:%M:%S").."] "..
-				playerName.." moved a "..pieceFrom:match(":(%a+)")..", it's now your turn.")
+				playerName..S(" moved a ")..pieceFrom:match(":(%a+)")..S(", it's now your turn."))
 	end
 
 	if pieceTo:sub(11,14) == "king" then
-		minetest.chat_send_player(playerBlack, playerName.." won the game.")
-		minetest.chat_send_player(playerWhite, playerName.." won the game.")
+		minetest.chat_send_player(playerBlack, playerName..S(" won the game."))
+		minetest.chat_send_player(playerWhite, playerName..S(" won the game."))
 		meta:set_string("winner", thisMove)
 	end
 
@@ -550,8 +552,8 @@ function realchess.fields(pos, _, fields, sender)
 			(playerWhite ~= playerName or playerBlack ~= playerName) then
 		realchess.init(pos)
 	else
-		minetest.chat_send_player(playerName, "[!] You can't reset the chessboard, a game has been started.\n"..
-				"If you are not a current player, try again in "..timeout_format(timeout_limit))
+		minetest.chat_send_player(playerName, S("[!] You can't reset the chessboard, a game has been started.").."\n"..
+				S("If you are not a current player, try again in ")..timeout_format(timeout_limit))
 	end
 end
 
@@ -566,8 +568,8 @@ function realchess.dig(pos, player)
 
 	-- timeout is 5 min. by default for digging the chessboard (non-players only)
 	return (lastMoveTime == 0 and minetest.get_gametime() > timeout_limit) or
-		minetest.chat_send_player(playerName, "[!] You can't dig the chessboard, a game has been started.\n"..
-				"Reset it first if you're a current player, or dig again in "..timeout_format(timeout_limit))
+		minetest.chat_send_player(playerName, S("[!] You can't dig the chessboard, a game has been started.").."\n"..
+				S("Reset it first if you're a current player, or dig again in ")..timeout_format(timeout_limit))
 end
 
 function realchess.on_move(pos, from_list, from_index)
@@ -577,7 +579,7 @@ function realchess.on_move(pos, from_list, from_index)
 end
 
 minetest.register_node(":realchess:chessboard", {
-	description = "Chess Board",
+	description = S("Chess Board"),
 	drawtype = "nodebox",
 	paramtype = "light",
 	paramtype2 = "facedir",

@@ -1,3 +1,5 @@
+local S, NS = dofile(minetest.get_modpath(minetest.get_current_modname()).."/intllib.lua")
+
 local hive = {}
 local honey_max = 16
 
@@ -14,7 +16,7 @@ function hive.construct(pos)
 			..xbg..default.get_hotbar_bg(0,1.35)
 
 	meta:set_string("formspec", formspec)
-	meta:set_string("infotext", "Artificial Hive")
+	meta:set_string("infotext", S("Artificial Hive"))
 	inv:set_size("honey", 1)
 
 	local timer = minetest.get_node_timer(pos)
@@ -44,7 +46,7 @@ function hive.timer(pos)
 end
 
 xdecor.register("hive", {
-	description = "Artificial Hive",
+	description = S("Artificial Hive"),
 	tiles = {"xdecor_hive_top.png", "xdecor_hive_top.png",
 		 "xdecor_hive_side.png", "xdecor_hive_side.png",
 		 "xdecor_hive_side.png", "xdecor_hive_front.png"},

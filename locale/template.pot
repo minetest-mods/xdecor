@@ -1,0 +1,314 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2017-06-27 21:10+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: src/chess.lua
+msgid "This game is over."
+msgstr ""
+
+#: src/chess.lua
+msgid "Someone else plays white pieces!"
+msgstr ""
+
+#: src/chess.lua
+msgid "It's not your turn, wait for your opponent to play."
+msgstr ""
+
+#: src/chess.lua
+msgid "Someone else plays black pieces!"
+msgstr ""
+
+#: src/chess.lua
+msgid " moved a "
+msgstr ""
+
+#: src/chess.lua
+msgid ", it's now your turn."
+msgstr ""
+
+#: src/chess.lua
+msgid " won the game."
+msgstr ""
+
+#: src/chess.lua
+msgid "[!] You can't reset the chessboard, a game has been started."
+msgstr ""
+
+#: src/chess.lua
+msgid "If you are not a current player, try again in "
+msgstr ""
+
+#: src/chess.lua
+msgid "[!] You can't dig the chessboard, a game has been started."
+msgstr ""
+
+#: src/chess.lua
+msgid "Reset it first if you're a current player, or dig again in "
+msgstr ""
+
+#: src/chess.lua
+msgid "Chess Board"
+msgstr ""
+
+#: src/cooking.lua
+msgid "Cauldron (active) - Drop some foods inside to make a soup"
+msgstr ""
+
+#: src/cooking.lua
+msgid "No room in your inventory to add a bucket of water."
+msgstr ""
+
+#: src/cooking.lua
+msgid "No room in your inventory to add a bowl of soup."
+msgstr ""
+
+#: src/cooking.lua
+msgid "Cauldron"
+msgstr ""
+
+#: src/cooking.lua
+msgid "Cauldron (empty)"
+msgstr ""
+
+#: src/cooking.lua
+msgid "Cauldron (idle)"
+msgstr ""
+
+#: src/cooking.lua
+msgid "Cauldron (active) - Drop foods inside to make a soup"
+msgstr ""
+
+#: src/cooking.lua
+msgid "Cauldron (active) - Use a bowl to eat the soup"
+msgstr ""
+
+#: src/craftitems.lua
+msgid "Bowl"
+msgstr ""
+
+#: src/craftitems.lua
+msgid "Bowl of soup"
+msgstr ""
+
+#: src/craftitems.lua
+msgid "Hammer"
+msgstr ""
+
+#: src/craftitems.lua
+msgid "Honey"
+msgstr ""
+
+#: src/enchanting.lua
+msgid "Enchantment Table"
+msgstr ""
+
+#: src/enchanting.lua
+msgid "Enchanted @1"
+msgstr ""
+
+#: src/hive.lua
+msgid "Artificial Hive"
+msgstr ""
+
+#: src/itemframe.lua
+msgid "Item Frame (owned by "
+msgstr ""
+
+#: src/itemframe.lua
+msgid "Item Frame"
+msgstr ""
+
+#: src/mailbox.lua
+msgid "@1's Mailbox"
+msgstr ""
+
+#: src/mailbox.lua
+msgid "The mailbox is full"
+msgstr ""
+
+#: src/mailbox.lua
+msgid "Mailbox"
+msgstr ""
+
+#: src/mechanisms.lua
+msgid "@1 Pressure Plate"
+msgstr ""
+
+#: src/mechanisms.lua
+msgid "Lever"
+msgstr ""
+
+#: src/nodes.lua
+msgid "Bamboo Frame"
+msgstr ""
+
+#: src/nodes.lua
+msgid "Chainlink"
+msgstr ""
+
+#: src/nodes.lua
+msgid "Rusty Iron Bars"
+msgstr ""
+
+#: src/nodes.lua
+msgid "Wood Frame"
+msgstr ""
+
+#: src/nodes.lua
+msgid "Baricade"
+msgstr ""
+
+#: src/nodes.lua
+msgid "Barrel"
+msgstr ""
+
+#: src/nodes.lua
+msgid "Wooden Cabinet"
+msgstr ""
+
+#: src/nodes.lua
+msgid "Half Wooden Cabinet"
+msgstr ""
+
+#: src/nodes.lua
+msgid "Empty Shelf"
+msgstr ""
+
+#: src/nodes.lua
+msgid "Multi Shelf"
+msgstr ""
+
+#: src/nodes.lua
+msgid "Candle"
+msgstr ""
+
+#: src/nodes.lua
+msgid "Chair"
+msgstr ""
+
+#: src/nodes.lua
+msgid "Cobweb"
+msgstr ""
+
+#: src/nodes.lua
+msgid "@1 Curtain"
+msgstr ""
+
+#: src/nodes.lua
+msgid "Cushion"
+msgstr ""
+
+#: src/nodes.lua
+msgid "Cushion Block"
+msgstr ""
+
+#: src/nodes.lua
+msgid "@1 Door"
+msgstr ""
+
+#: src/nodes.lua
+msgid "Ender Chest"
+msgstr ""
+
+#: src/nodes.lua
+msgid "Ivy"
+msgstr ""
+
+#: src/nodes.lua
+msgid "Lantern"
+msgstr ""
+
+#: src/nodes.lua
+msgid "@1 Light Box"
+msgstr ""
+
+#: src/nodes.lua
+msgid "Potted @1"
+msgstr ""
+
+#: src/nodes.lua
+msgid "Painting"
+msgstr ""
+
+#: src/nodes.lua
+msgid "Garden Stone Path"
+msgstr ""
+
+#: src/nodes.lua
+msgid "Cactus Brick"
+msgstr ""
+
+#: src/nodes.lua
+msgid "Coal Stone Tile"
+msgstr ""
+
+#: src/nodes.lua
+msgid "Desert Stone Tile"
+msgstr ""
+
+#: src/nodes.lua
+msgid "Hardened Clay"
+msgstr ""
+
+#: src/nodes.lua
+msgid "Moon Brick"
+msgstr ""
+
+#: src/nodes.lua
+msgid "Stone Tile"
+msgstr ""
+
+#: src/nodes.lua
+msgid "Runestone"
+msgstr ""
+
+#: src/nodes.lua
+msgid "Packed Ice"
+msgstr ""
+
+#: src/nodes.lua
+msgid "Wooden Tile"
+msgstr ""
+
+#: src/nodes.lua
+msgid "Table"
+msgstr ""
+
+#: src/nodes.lua
+msgid "Tatami"
+msgstr ""
+
+#: src/nodes.lua
+msgid "Trampoline"
+msgstr ""
+
+#: src/nodes.lua
+msgid "Television"
+msgstr ""
+
+#: src/nodes.lua
+msgid "Wood Framed Glass"
+msgstr ""
+
+#: src/rope.lua
+msgid "Rope"
+msgstr ""
+
+#: src/workbench.lua
+msgid "Work Bench"
+msgstr ""

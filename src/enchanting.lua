@@ -1,3 +1,5 @@
+local S, NS = dofile(minetest.get_modpath(minetest.get_current_modname()).."/intllib.lua")
+
 screwdriver = screwdriver or {}
 local ceil, abs, random = math.ceil, math.abs, math.random
 
@@ -146,7 +148,7 @@ end
 
 function enchanting.construct(pos)
 	local meta = minetest.get_meta(pos)
-	meta:set_string("infotext", "Enchantment Table")
+	meta:set_string("infotext", S("Enchantment Table"))
 	enchanting.formspec(pos, nil)
 
 	local inv = meta:get_inventory()
@@ -198,7 +200,7 @@ function enchanting.timer(pos)
 end
 
 xdecor.register("enchantment_table", {
-	description = "Enchantment Table",
+	description = S("Enchantment Table"),
 	tiles = {"xdecor_enchantment_top.png",  "xdecor_enchantment_bottom.png",
 		 "xdecor_enchantment_side.png", "xdecor_enchantment_side.png",
 		 "xdecor_enchantment_side.png", "xdecor_enchantment_side.png"},
@@ -261,8 +263,8 @@ function enchanting:register_tools(mod, def)
 			end
 
 			minetest.register_tool(":"..mod..":enchanted_"..tool.."_"..material.."_"..enchant, {
-				description = "Enchanted "..cap(material).." "..cap(tool)..
-					self:get_tooltip(enchant, original_groupcaps[group], fleshy),
+				description = S("Enchanted @1", cap(material).." "..cap(tool)..
+					self:get_tooltip(enchant, original_groupcaps[group], fleshy)),
 				inventory_image = original_tool.inventory_image.."^[colorize:violet:50",
 				wield_image = original_tool.wield_image,
 				groups = {not_in_creative_inventory=1},
@@ -290,8 +292,8 @@ function enchanting:register_tools(mod, def)
 			end
 
 			minetest.register_tool(":"..mod..":enchanted_"..tool.."_"..material.."_"..enchant, {
-				description = "Enchanted "..cap(material).." "..cap(tool)..
-					self:get_tooltip(enchant),
+				description = S("Enchanted @1", cap(material).." "..cap(tool)..
+					self:get_tooltip(enchant)),
 				inventory_image = original_tool.inventory_image,
 				texture = "3d_armor_"..tool.."_"..material,
 				wield_image = original_tool.wield_image,
