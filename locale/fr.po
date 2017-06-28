@@ -23,7 +23,7 @@ msgstr "Cette partie est terminée."
 
 #: src/chess.lua
 msgid "Someone else plays white pieces!"
-msgstr "Quelqu'un d'autre joue avec les pièces blanches!"
+msgstr "Quelqu'un d'autre joue avec les pièces blanches !"
 
 #: src/chess.lua
 msgid "It's not your turn, wait for your opponent to play."
@@ -31,7 +31,7 @@ msgstr "Ce n'est pas votre tour, attendez que votre adversaire ait joué."
 
 #: src/chess.lua
 msgid "Someone else plays black pieces!"
-msgstr "Quelqu'un d'autre joue avec les pièces noires!"
+msgstr "Quelqu'un d'autre joue avec les pièces noires !"
 
 #: src/chess.lua
 msgid " moved a "
@@ -39,35 +39,35 @@ msgstr " a déplacé un(e)"
 
 #: src/chess.lua
 msgid ", it's now your turn."
-msgstr ", c'est votre tour maintenant"
+msgstr ", c'est maintenantvotre tour."
 
 #: src/chess.lua
 msgid " won the game."
-msgstr " a gagné la partie"
+msgstr " a gagné la partie."
 
 #: src/chess.lua
 msgid "[!] You can't reset the chessboard, a game has been started."
 msgstr ""
-"[!] Vous ne pouvez pas reinitialiser le jeu d'échec, une partie est en cour."
+"[!] Vous ne pouvez pas reinitialiser le jeu d'échecs, une partie est en cours."
 
 #: src/chess.lua
 msgid "If you are not a current player, try again in "
-msgstr "Si vous n'ètes pas le joueur en cours, essayez a nouveau dans "
+msgstr "Si vous n'ètes pas le joueur en cours, essayez à nouveau dans "
 
 #: src/chess.lua
 msgid "[!] You can't dig the chessboard, a game has been started."
 msgstr ""
-"[i] Vous ne pouvez pas détruire le jeu d'échec, une partie est en cour."
+"[i] Vous ne pouvez pas détruire le jeu d'échecs, une partie est en cours."
 
 #: src/chess.lua
 msgid "Reset it first if you're a current player, or dig again in "
 msgstr ""
-"Réinitialisez le d'abord si vous etes un joueur en cour, ou bien détruisez "
+"Réinitialisez le d'abord si vous êtes un joueur en cours, ou bien détruisez "
 "le encore dans "
 
 #: src/chess.lua
 msgid "Chess Board"
-msgstr "Jeu d'échec"
+msgstr "Jeu d'échecs"
 
 #: src/cooking.lua
 msgid "Cauldron (active) - Drop some foods inside to make a soup"
