@@ -39,7 +39,7 @@ msgstr " a déplacé un(e)"
 
 #: src/chess.lua
 msgid ", it's now your turn."
-msgstr ", c'est maintenantvotre tour."
+msgstr ", c'est maintenant votre tour."
 
 #: src/chess.lua
 msgid " won the game."
@@ -52,7 +52,7 @@ msgstr ""
 
 #: src/chess.lua
 msgid "If you are not a current player, try again in "
-msgstr "Si vous n'ètes pas le joueur en cours, essayez à nouveau dans "
+msgstr "Si vous n'êtes pas le joueur en cours, essayez à nouveau dans "
 
 #: src/chess.lua
 msgid "[!] You can't dig the chessboard, a game has been started."
@@ -72,16 +72,16 @@ msgstr "Jeu d'échecs"
 #: src/cooking.lua
 msgid "Cauldron (active) - Drop some foods inside to make a soup"
 msgstr ""
-"Chaudron (actif) - lachez de la nourriture à l'intérieur pour faire de la "
+"Chaudron (actif) - Jetez de la nourriture à l'intérieur pour faire de la "
 "soupe"
 
 #: src/cooking.lua
 msgid "No room in your inventory to add a bucket of water."
-msgstr "Pas assez d'espace dans votre inventaire pour ajouter un saut d'eau."
+msgstr "Pas assez d'espace libre dans votre inventaire pour ajouter un saut d'eau."
 
 #: src/cooking.lua
 msgid "No room in your inventory to add a bowl of soup."
-msgstr "Pas assez d'espace dans votre inventaire pour ajouter un bol de soupe."
+msgstr "Pas assez d'espace libre dans votre inventaire pour ajouter un bol de soupe."
 
 #: src/cooking.lua
 msgid "Cauldron"
@@ -98,7 +98,7 @@ msgstr "Chaudron (inactif)"
 #: src/cooking.lua
 msgid "Cauldron (active) - Drop foods inside to make a soup"
 msgstr ""
-"Chaudron (actif) - lachez de la nourriture à l'intérieur pour faire de la "
+"Chaudron (actif) - Jetez de la nourriture à l'intérieur pour faire de la "
 "soupe"
 
 #: src/cooking.lua
@@ -187,11 +187,11 @@ msgstr "Baril"
 
 #: src/nodes.lua
 msgid "Wooden Cabinet"
-msgstr "Rangement en bois"
+msgstr "Meuble en bois"
 
 #: src/nodes.lua
 msgid "Half Wooden Cabinet"
-msgstr "Demi rangement en bois"
+msgstr "Demi-meuble en bois"
 
 #: src/nodes.lua
 msgid "Empty Shelf"
@@ -223,7 +223,7 @@ msgstr "Coussin"
 
 #: src/nodes.lua
 msgid "Cushion Block"
-msgstr "Bloc de coussin"
+msgstr "Gros coussin"
 
 #: src/nodes.lua
 msgid "@1 Door"
@@ -271,27 +271,27 @@ msgstr "Bloc de pierre du désert"
 
 #: src/nodes.lua
 msgid "Hardened Clay"
-msgstr "Argile durci"
+msgstr "Argile durcie"
 
 #: src/nodes.lua
 msgid "Moon Brick"
-msgstr "Pierre de lune"
+msgstr "Briques lunaires"
 
 #: src/nodes.lua
 msgid "Stone Tile"
-msgstr "Bloc de pierre"
+msgstr "Pierre carrelée"
 
 #: src/nodes.lua
 msgid "Runestone"
-msgstr "Runetone"
+msgstr "Runestone"
 
 #: src/nodes.lua
 msgid "Packed Ice"
-msgstr "Pack de glace"
+msgstr "Glace compactée"
 
 #: src/nodes.lua
 msgid "Wooden Tile"
-msgstr "Bloc de bois"
+msgstr "Bois carrelé"
 
 #: src/nodes.lua
 msgid "Table"
@@ -307,11 +307,11 @@ msgstr "Trampoline"
 
 #: src/nodes.lua
 msgid "Television"
-msgstr "Television"
+msgstr "Télévision"
 
 #: src/nodes.lua
 msgid "Wood Framed Glass"
-msgstr "Vitre encadrée en bois"
+msgstr "Verra avec cadre en bois"
 
 #: src/rope.lua
 msgid "Rope"
