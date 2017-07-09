@@ -151,7 +151,7 @@ msgstr "La boite aux lettres est pleine"
 
 #: src/mailbox.lua
 msgid "Mailbox"
-msgstr "Boite aux lettre"
+msgstr "Boite aux lettres"
 
 #: src/mechanisms.lua
 msgid "@1 Pressure Plate"
