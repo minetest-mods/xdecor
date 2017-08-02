@@ -44,12 +44,9 @@ workbench.defs = {
 			    { 0, 8,  8, 16, 8, 8  }},
 	{"halfstair",	2,  { 0, 0,  0, 8,  8, 16 },
 			    { 0, 8,  8, 8,  8, 8  }},
-	{"outerstair",	1,  { 0, 0,  0, 16, 8, 16 },
-			    { 0, 8,  8, 8,  8, 8  }},
+	{"stair_outer",	1,  nil			  },
 	{"stair",	1,  nil			  },
-	{"innerstair",	1,  { 0, 0,  0, 16, 8, 16 },
-			    { 0, 8,  8, 16, 8, 8  },
-			    { 0, 8,  0, 8,  8, 8  }}
+	{"stair_inner",	1,  nil			  }
 }
 
 -- Tools allowed to be repaired
