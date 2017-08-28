@@ -626,3 +626,12 @@ register_piece("bishop", 2)
 register_piece("queen")
 register_piece("king")
 
+-- Recipes
+
+minetest.register_craft({
+	output = "realchess:chessboard",
+	recipe = {
+		{"dye:black", "dye:white", "dye:black"},
+		{"stairs:slab_wood", "stairs:slab_wood", "stairs:slab_wood"}
+	}
+})

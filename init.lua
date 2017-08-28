@@ -8,17 +8,30 @@ dofile(modpath.."/handlers/helpers.lua")
 dofile(modpath.."/handlers/nodeboxes.lua")
 dofile(modpath.."/handlers/registration.lua")
 
--- Item files.
-dofile(modpath.."/src/chess.lua")
-dofile(modpath.."/src/cooking.lua")
-dofile(modpath.."/src/craftitems.lua")
-dofile(modpath.."/src/enchanting.lua")
-dofile(modpath.."/src/hive.lua")
-dofile(modpath.."/src/itemframe.lua")
-dofile(modpath.."/src/mailbox.lua")
-dofile(modpath.."/src/mechanisms.lua")
+-- Node and others
+dofile(modpath.."/src/alias.lua")
 dofile(modpath.."/src/nodes.lua")
 dofile(modpath.."/src/recipes.lua")
-dofile(modpath.."/src/rope.lua")
-dofile(modpath.."/src/workbench.lua")
+
+-- Elements
+local submod = {
+	"chess",
+	"cooking",
+	"enchanting",
+	"hive",
+	"itemframe",
+	"mailbox",
+	"mechanisms",
+	"rope",
+	"workbench"
+}
+
+for _, name in ipairs(submod) do
+	local enable = not(minetest.settings:get_bool("disable_xdecor_"..name))
+	if enable then
+		dofile(modpath.."/src/"..name..".lua")
+	end
+end
+
+
 --print(string.format("[xdecor] loaded in %.2f ms", (os.clock()-t)*1000))

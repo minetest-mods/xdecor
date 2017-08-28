@@ -17,14 +17,6 @@ minetest.register_craft({
 })
 
 minetest.register_craft({
-	output = "xdecor:bowl 3",
-	recipe = {
-		{"group:wood", "", "group:wood"},
-		{"", "group:wood", ""}
-	}
-})
-
-minetest.register_craft({
 	output = "xdecor:candle",
 	recipe = {
 		{"default:torch"}
@@ -51,23 +43,6 @@ minetest.register_craft({
 	output = "xdecor:cactusbrick",
 	recipe = {
 		{"default:brick", "default:cactus"}
-	}
-})
-
-minetest.register_craft({
-	output = "xdecor:cauldron_empty",
-	recipe = {
-		{"default:iron_lump", "", "default:iron_lump"},
-		{"default:iron_lump", "", "default:iron_lump"},
-		{"default:iron_lump", "default:iron_lump", "default:iron_lump"}
-	}
-})
-
-minetest.register_craft({
-	output = "realchess:chessboard",
-	recipe = {
-		{"dye:black", "dye:white", "dye:black"},
-		{"stairs:slab_wood", "stairs:slab_wood", "stairs:slab_wood"}
 	}
 })
 
@@ -139,45 +114,10 @@ minetest.register_craft({
 })
 
 minetest.register_craft({
-	output = "xdecor:enchantment_table",
-	recipe = {
-		{"", "default:book", ""},
-		{"default:diamond", "default:obsidian", "default:diamond"},
-		{"default:obsidian", "default:obsidian", "default:obsidian"}
-	}
-})
-
-minetest.register_craft({
-	output = "xdecor:itemframe",
-	recipe = {
-		{"group:stick", "group:stick", "group:stick"},
-		{"group:stick", "default:paper", "group:stick"},
-		{"group:stick", "group:stick", "group:stick"}
-	}
-})
-
-minetest.register_craft({
-	output = "xdecor:hammer",
-	recipe = {
-		{"default:steel_ingot", "group:stick", "default:steel_ingot"},
-		{"", "group:stick", ""}
-	}
-})
-
-minetest.register_craft({
 	output = "xdecor:hard_clay",
 	recipe = {
 		{"default:clay", "default:clay"},
 		{"default:clay", "default:clay"}
-	}
-})
-
-minetest.register_craft({
-	output = "xdecor:hive",
-	recipe = {
-		{"group:stick", "group:stick", "group:stick"},
-		{"default:paper", "default:paper", "default:paper"},
-		{"group:stick", "group:stick", "group:stick"}
 	}
 })
 
@@ -204,23 +144,6 @@ minetest.register_craft({
 		{"default:iron_lump"},
 		{"default:torch"},
 		{"default:iron_lump"}
-	}
-})
-
-minetest.register_craft({
-	output = "xdecor:lever_off",
-	recipe = {
-		{"group:stick"},
-		{"group:stone"}
-	}
-})
-
-minetest.register_craft({
-	output = "xdecor:mailbox",
-	recipe = {
-		{"default:steel_ingot", "default:steel_ingot", "default:steel_ingot"},
-		{"dye:red", "default:paper", "dye:red"},
-		{"default:steel_ingot", "default:steel_ingot", "default:steel_ingot"}
 	}
 })
 
@@ -252,27 +175,6 @@ minetest.register_craft({
 	output = "xdecor:painting_1",
 	recipe = {
 		{"default:sign_wall_wood", "dye:blue"}
-	}
-})
-
-minetest.register_craft({
-	output = "xdecor:pressure_stone_off",
-	type = "shapeless",
-	recipe = {"group:stone", "group:stone"}
-})
-
-minetest.register_craft({
-	output = "xdecor:pressure_wood_off",
-	type = "shapeless",
-	recipe = {"group:wood", "group:wood"}
-})
-
-minetest.register_craft({
-	output = "xdecor:rope",
-	recipe = {
-		{"farming:string"},
-		{"farming:string"},
-		{"farming:string"}
 	}
 })
 
@@ -333,14 +235,6 @@ minetest.register_craft({
 		{"default:steel_ingot", "default:copper_ingot", "default:steel_ingot"},
 		{"default:steel_ingot", "default:glass", "default:steel_ingot"},
 		{"default:steel_ingot", "default:copper_ingot", "default:steel_ingot"}
-	}
-})
-
-minetest.register_craft({
-	output = "xdecor:workbench",
-	recipe = {
-		{"group:wood", "group:wood"},
-		{"group:wood", "group:wood"}
 	}
 })
 

@@ -43,6 +43,40 @@ local default_can_dig = function(pos)
 end
 
 function xdecor.register(name, def)
+	local function xdecor_stairs_alternative(nodename, def)
+		local mod, name = nodename:match("(.*):(.*)")
+		for groupname, value in pairs(def.groups) do
+			if	groupname ~= "cracky" and
+				groupname ~= "choppy" and
+				groupname ~= "flammable" and
+				groupname ~= "crumbly" and
+				groupname ~= "snappy" 
+			then
+				def.groups.groupname = nil
+			end
+		end	
+		if minetest.get_modpath("moreblocks") then
+			stairsplus:register_all(
+				mod,
+				name,
+				nodename,
+				{
+					description = def.description,
+					tiles = def.tiles,
+					groups = def.groups,
+					sounds = def.sounds,
+				}
+			)
+		elseif minetest.get_modpath("stairs") then	
+			stairs.register_stair_and_slab(name,nodename,
+				def.groups,
+				def.tiles,
+				("%s Stair"):format(def.description),
+				("%s Slab"):format(def.description),
+				def.sounds
+			)	
+		end	
+	end
 	def.drawtype = def.drawtype or (def.mesh and "mesh") or (def.node_box and "nodebox")
 	def.sounds = def.sounds or default.node_sound_defaults()
 
@@ -88,4 +122,11 @@ function xdecor.register(name, def)
 	end
 
 	minetest.register_node("xdecor:"..name, def)
+	
+	if minetest.settings:get_bool("disable_xdecor_workbench") and 
+	(minetest.get_modpath("moreblocks") or minetest.get_modpath("stairs")) then
+		if xdecor.stairs_valid_def(def) then
+			xdecor_stairs_alternative("xdecor:"..name, def)
+		end
+	end
 end

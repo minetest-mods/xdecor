@@ -8,23 +8,7 @@ local registered_nodes = minetest.registered_nodes
 -- Only the regular, solid blocks without metas or explosivity can be cut
 local nodes = {}
 for node, def in pairs(registered_nodes) do
-	if (def.drawtype == "normal" or def.drawtype:sub(1,5) == "glass") and
-	   (def.groups.cracky or def.groups.choppy) and
-	   not def.on_construct and
-	   not def.after_place_node and
-	   not def.on_rightclick and
-	   not def.on_blast and
-	   not def.allow_metadata_inventory_take and
-	   not (def.groups.not_in_creative_inventory == 1) and
-	   not (def.groups.not_cuttable == 1) and
-	   not def.groups.wool and
-	   (def.tiles and type(def.tiles[1]) == "string" and not
-		def.tiles[1]:find("default_mineral")) and
-	   not def.mesecons and
-	   def.description and
-	   def.description ~= "" and
-	   def.light_source == 0
-	then
+	if xdecor.stairs_valid_def(def) then
 		nodes[#nodes+1] = node
 	end
 end
@@ -303,3 +287,30 @@ for i=1, #nodes do
 	end
 end
 end
+
+-- Craft items
+
+minetest.register_tool("xdecor:hammer", {
+	description = "Hammer",
+	inventory_image = "xdecor_hammer.png",
+	wield_image = "xdecor_hammer.png",
+	on_use = function() do return end end
+})
+
+-- Recipes
+
+minetest.register_craft({
+	output = "xdecor:hammer",
+	recipe = {
+		{"default:steel_ingot", "group:stick", "default:steel_ingot"},
+		{"", "group:stick", ""}
+	}
+})
+
+minetest.register_craft({
+	output = "xdecor:workbench",
+	recipe = {
+		{"group:wood", "group:wood"},
+		{"group:wood", "group:wood"}
+	}
+})

@@ -281,3 +281,24 @@ enchanting:register_tools("default", {
 		sword  = {enchants = "sharp"}
 	}
 })
+
+enchanting:register_tools("3d_armor", {
+	materials = "steel, bronze, gold, diamond",
+	tools = {
+		boots      = {enchants = "strong, speed"},
+		chestplate = {enchants = "strong"},
+		helmet     = {enchants = "strong"},
+		leggings   = {enchants = "strong"}
+	}
+})
+
+-- Recipes
+
+minetest.register_craft({
+	output = "xdecor:enchantment_table",
+	recipe = {
+		{"", "default:book", ""},
+		{"default:diamond", "default:obsidian", "default:diamond"},
+		{"default:obsidian", "default:obsidian", "default:obsidian"}
+	}
+})

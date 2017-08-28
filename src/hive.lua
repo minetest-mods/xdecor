@@ -67,3 +67,23 @@ xdecor.register("hive", {
 	end
 })
 
+-- Craft items
+
+minetest.register_craftitem("xdecor:honey", {
+	description = "Honey",
+	inventory_image = "xdecor_honey.png",
+	wield_image = "xdecor_honey.png",
+	groups = {not_in_creative_inventory=1},
+	on_use = minetest.item_eat(2)
+})
+
+-- Recipes
+
+minetest.register_craft({
+	output = "xdecor:hive",
+	recipe = {
+		{"group:stick", "group:stick", "group:stick"},
+		{"default:paper", "default:paper", "default:paper"},
+		{"group:stick", "group:stick", "group:stick"}
+	}
+})

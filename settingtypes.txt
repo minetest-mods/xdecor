@@ -1,0 +1,11 @@
+#For disabling a element in xdecor.
+
+disable_xdecor_chess 		(Disable element Chess) 		bool false
+disable_xdecor_cooking  	(Disable element Cooking) 		bool false
+disable_xdecor_enchanting  	(Disable element Enchanting) 	bool false
+disable_xdecor_hive 		(Disable element Hive) 			bool false
+disable_xdecor_itemframe 	(Disable element Itemframe) 	bool false
+disable_xdecor_mailbox 		(Disable element Mailbox) 		bool false
+disable_xdecor_mechanisms 	(Disable element Mechanisms) 	bool false
+disable_xdecor_rope 		(Disable element Rope) 			bool false
+disable_xdecor_workbench 	(Disable element Workbench) 	bool false
