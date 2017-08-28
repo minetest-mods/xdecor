@@ -303,3 +303,30 @@ for i=1, #nodes do
 	end
 end
 end
+
+-- Craft items
+
+minetest.register_tool("xdecor:hammer", {
+	description = "Hammer",
+	inventory_image = "xdecor_hammer.png",
+	wield_image = "xdecor_hammer.png",
+	on_use = function() do return end end
+})
+
+-- Recipes
+
+minetest.register_craft({
+	output = "xdecor:hammer",
+	recipe = {
+		{"default:steel_ingot", "group:stick", "default:steel_ingot"},
+		{"", "group:stick", ""}
+	}
+})
+
+minetest.register_craft({
+	output = "xdecor:workbench",
+	recipe = {
+		{"group:wood", "group:wood"},
+		{"group:wood", "group:wood"}
+	}
+})

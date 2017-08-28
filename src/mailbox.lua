@@ -161,3 +161,14 @@ xdecor.register("mailbox", {
 	allow_metadata_inventory_put = mailbox.put,
 	after_place_node = mailbox.after_place_node
 })
+
+-- Recipes
+
+minetest.register_craft({
+	output = "xdecor:mailbox",
+	recipe = {
+		{"default:steel_ingot", "default:steel_ingot", "default:steel_ingot"},
+		{"dye:red", "default:paper", "dye:red"},
+		{"default:steel_ingot", "default:steel_ingot", "default:steel_ingot"}
+	}
+})

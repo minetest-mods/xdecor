@@ -55,3 +55,14 @@ xdecor.register("rope", {
 		end
 	end
 })
+
+-- Recipes
+
+minetest.register_craft({
+	output = "xdecor:rope",
+	recipe = {
+		{"farming:string"},
+		{"farming:string"},
+		{"farming:string"}
+	}
+})

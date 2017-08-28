@@ -115,3 +115,24 @@ xdecor.register("lever_on", {
 	drop = "xdecor:lever_off"
 })
 
+-- Recipes
+
+minetest.register_craft({
+	output = "xdecor:pressure_stone_off",
+	type = "shapeless",
+	recipe = {"group:stone", "group:stone"}
+})
+
+minetest.register_craft({
+	output = "xdecor:pressure_wood_off",
+	type = "shapeless",
+	recipe = {"group:wood", "group:wood"}
+})
+
+minetest.register_craft({
+	output = "xdecor:lever_off",
+	recipe = {
+		{"group:stick"},
+		{"group:stone"}
+	}
+})

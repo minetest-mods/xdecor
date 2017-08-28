@@ -43,6 +43,36 @@ local default_can_dig = function(pos)
 end
 
 function xdecor.register(name, def)
+	local function xdecor_stairs_alternatif(nodename, def)
+		local mod = string.match (nodename,"(.+):")
+		local name = string.match (nodename,":(.+)")
+		for i,groupname in ipairs(def.groups) do
+			if groupname == not("cracky") or not("choppy") or not("flammable") or not("crumbly") or not("snappy") then
+				table.remove(def[groups][groupname])
+			end
+		end	
+		if minetest.get_modpath("moreblocks") then
+			stairsplus:register_all(
+				mod,
+				name,
+				nodename,
+				{
+					description = def.description,
+					tiles = def.tiles,
+					groups = def.groups,
+					sounds = def.sounds,
+				}
+			)
+		elseif minetest.get_modpath("stairs") then	
+			stairs.register_stair_and_slab(name,nodename,
+				def.groups,
+				def.tiles,
+				("%s Stair"):format(def.description),
+				("%s Slab"):format(def.description),
+				def.sounds
+			)	
+		end	
+	end
 	def.drawtype = def.drawtype or (def.mesh and "mesh") or (def.node_box and "nodebox")
 	def.sounds = def.sounds or default.node_sound_defaults()
 
@@ -88,4 +118,26 @@ function xdecor.register(name, def)
 	end
 
 	minetest.register_node("xdecor:"..name, def)
+	
+	if minetest.settings:get_bool("disable_xdecor_workbench") and (minetest.get_modpath("moreblocks") or minetest.get_modpath("stairs")) then
+		if (def.drawtype == "normal" or def.drawtype:sub(1,5) == "glass") and
+		   (def.groups.cracky or def.groups.choppy) and
+		   not def.on_construct and
+		   not def.after_place_node and
+		   not def.on_rightclick and
+		   not def.on_blast and
+		   not def.allow_metadata_inventory_take and
+		   not (def.groups.not_in_creative_inventory == 1) and
+		   not (def.groups.not_cuttable == 1) and
+		   not def.groups.wool and
+		   (def.tiles and type(def.tiles[1]) == "string" and not
+			def.tiles[1]:find("default_mineral")) and
+		   not def.mesecons and
+		   def.description and
+		   def.description ~= "" and
+		   def.light_source == 0
+		then
+			xdecor_stairs_alternatif("xdecor:"..name, def)
+		end
+	end
 end

@@ -154,3 +154,13 @@ minetest.register_entity("xdecor:f_item", {
 	end
 })
 
+-- Recipes
+
+minetest.register_craft({
+	output = "xdecor:itemframe",
+	recipe = {
+		{"group:stick", "group:stick", "group:stick"},
+		{"group:stick", "default:paper", "group:stick"},
+		{"group:stick", "group:stick", "group:stick"}
+	}
+})
