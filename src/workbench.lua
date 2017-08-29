@@ -8,7 +8,7 @@ local registered_nodes = minetest.registered_nodes
 -- Only the regular, solid blocks without metas or explosivity can be cut
 local nodes = {}
 for node, def in pairs(registered_nodes) do
-	if xdecor.stairs_valid_def then
+	if xdecor.stairs_valid_def(def) then
 		nodes[#nodes+1] = node
 	end
 end

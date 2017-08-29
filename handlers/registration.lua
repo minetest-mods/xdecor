@@ -125,7 +125,7 @@ function xdecor.register(name, def)
 	
 	if minetest.settings:get_bool("disable_xdecor_workbench") and 
 	(minetest.get_modpath("moreblocks") or minetest.get_modpath("stairs")) then
-		if xdecor.stairs_valid_def then
+		if xdecor.stairs_valid_def(def) then
 			xdecor_stairs_alternative("xdecor:"..name, def)
 		end
 	end
