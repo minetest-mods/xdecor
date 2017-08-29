@@ -29,3 +29,27 @@ function xdecor.tablecopy(T)
 	return new
 end
 
+-- Return true if a def is accepting for stair
+function xdecor.stairs_valid_def(def)
+	if (def.drawtype == "normal" or def.drawtype:sub(1,5) == "glass") and
+		(def.groups.cracky or def.groups.choppy) and
+		not def.on_construct and
+		not def.after_place_node and
+		not def.on_rightclick and
+		not def.on_blast and
+		not def.allow_metadata_inventory_take and
+		not (def.groups.not_in_creative_inventory == 1) and
+		not (def.groups.not_cuttable == 1) and
+		not def.groups.wool and
+		(def.tiles and type(def.tiles[1]) == "string" and not
+		def.tiles[1]:find("default_mineral")) and
+		not def.mesecons and
+		def.description and
+		def.description ~= "" and
+		def.light_source == 0
+	then
+		return true
+	else
+		return false
+	end
+end
