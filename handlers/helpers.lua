@@ -49,7 +49,5 @@ function xdecor.stairs_valid_def(def)
 		def.light_source == 0
 	then
 		return true
-	else
-		return false
 	end
 end
