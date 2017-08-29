@@ -26,10 +26,10 @@ local submod = {
 	"workbench"
 }
 
-for _, i in ipairs(submod) do
-	local enable = not(minetest.settings:get_bool("disable_xdecor_"..i))
+for _, name in ipairs(submod) do
+	local enable = not(minetest.settings:get_bool("disable_xdecor_"..name))
 	if enable then
-		dofile(modpath.."/src/"..i..".lua")
+		dofile(modpath.."/src/"..name..".lua")
 	end
 end
 

@@ -45,12 +45,12 @@ end
 function xdecor.register(name, def)
 	local function xdecor_stairs_alternative(nodename, def)
 		local mod, name = nodename:match("(.*):(.*)")
-		for groupname,value in pairs(def.groups) do
+		for groupname, value in pairs(def.groups) do
 			if	groupname ~= "cracky" and
 				groupname ~= "choppy" and
-				groupname ~="flammable" and
-				groupname ~="crumbly" and
-				groupname ~="snappy" 
+				groupname ~= "flammable" and
+				groupname ~= "crumbly" and
+				groupname ~= "snappy" 
 			then
 				def.groups.groupname = nil
 			end
