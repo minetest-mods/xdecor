@@ -43,12 +43,16 @@ local default_can_dig = function(pos)
 end
 
 function xdecor.register(name, def)
-	local function xdecor_stairs_alternatif(nodename, def)
-		local mod = string.match (nodename,"(.+):")
-		local name = string.match (nodename,":(.+)")
-		for i,groupname in ipairs(def.groups) do
-			if groupname == not("cracky") or not("choppy") or not("flammable") or not("crumbly") or not("snappy") then
-				table.remove(def[groups][groupname])
+	local function xdecor_stairs_alternative(nodename, def)
+		local mod, name = nodename:match("(.*):(.*)")
+		for groupname,value in pairs(def.groups) do
+			if	groupname ~= "cracky" and
+				groupname ~= "choppy" and
+				groupname ~="flammable" and
+				groupname ~="crumbly" and
+				groupname ~="snappy" 
+			then
+				def.groups.groupname = nil
 			end
 		end	
 		if minetest.get_modpath("moreblocks") then
@@ -119,7 +123,8 @@ function xdecor.register(name, def)
 
 	minetest.register_node("xdecor:"..name, def)
 	
-	if minetest.settings:get_bool("disable_xdecor_workbench") and (minetest.get_modpath("moreblocks") or minetest.get_modpath("stairs")) then
+	if minetest.settings:get_bool("disable_xdecor_workbench") and 
+	(minetest.get_modpath("moreblocks") or minetest.get_modpath("stairs")) then
 		if (def.drawtype == "normal" or def.drawtype:sub(1,5) == "glass") and
 		   (def.groups.cracky or def.groups.choppy) and
 		   not def.on_construct and
@@ -137,7 +142,7 @@ function xdecor.register(name, def)
 		   def.description ~= "" and
 		   def.light_source == 0
 		then
-			xdecor_stairs_alternatif("xdecor:"..name, def)
+			xdecor_stairs_alternative("xdecor:"..name, def)
 		end
 	end
 end
