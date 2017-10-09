@@ -3,6 +3,5 @@ bucket
 doors
 stairs
 xpanes
-3d_armor?
 fire?
 oresplus?
