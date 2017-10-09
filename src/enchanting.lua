@@ -9,9 +9,6 @@ local enchanting = {
 	uses     = 1.2,  -- Durability
 	times    = 0.1,  -- Efficiency
 	damages  = 1,    -- Sharpness
-	strength = 1.2,  -- Armor strength (3d_armor only)
-	speed    = 0.2,  -- Player speed (3d_armor only)
-	jump     = 0.2   -- Player jumping (3d_armor only)
 }
 
 local function cap(S) return S:gsub("^%l", string.upper) end
@@ -71,9 +68,7 @@ function enchanting.formspec(pos, num)
 			image[2,2.9;1,1;mese_layout.png]
 			tooltip[sharp;Your weapon inflicts more damages]
 			tooltip[durable;Your tool last longer]
-			tooltip[fast;Your tool digs faster]
-			tooltip[strong;Your armor is more resistant]
-			tooltip[speed;Your speed is increased] ]]
+			tooltip[fast;Your tool digs faster] ]]
 			..default.gui_slots..default.get_hotbar_bg(0.5,4.5)
 
 	formspec = formspec..(enchant_buttons[num] or "")
@@ -85,8 +80,7 @@ function enchanting.on_put(pos, listname, _, stack)
 		local stackname = stack:get_name()
 		local tool_groups = {
 			"axe, pick, shovel",
-			"chestplate, leggings, helmet",
-			"sword", "boots"
+			"sword",
 		}
 
 		for idx, tools in pairs(tool_groups) do
