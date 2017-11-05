@@ -270,31 +270,6 @@ function enchanting:register_tools(mod, def)
 			})
 		end
 
-		if mod == "3d_armor" then
-			local original_armor_groups = original_tool.groups
-			local armorcaps = {}
-			armorcaps.not_in_creative_inventory = 1
-
-			for armor_group, value in pairs(original_armor_groups) do
-				if enchant == "strong" then
-					armorcaps[armor_group] = ceil(value * enchanting.strength)
-				elseif enchant == "speed" then
-					armorcaps[armor_group] = value
-					armorcaps.physics_speed = enchanting.speed
-					armorcaps.physics_jump = enchanting.jump
-				end
-			end
-
-			minetest.register_tool(":"..mod..":enchanted_"..tool.."_"..material.."_"..enchant, {
-				description = S("Enchanted @1", cap(material).." "..cap(tool)..
-					self:get_tooltip(enchant)),
-				inventory_image = original_tool.inventory_image,
-				texture = "3d_armor_"..tool.."_"..material,
-				wield_image = original_tool.wield_image,
-				groups = armorcaps,
-				wear = 0
-			})
-		end
 	end
 	end
 	end
