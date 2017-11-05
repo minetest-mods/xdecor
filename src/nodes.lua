@@ -429,7 +429,7 @@ register_hard_node("moonbrick", S("Moon Brick"))
 register_hard_node("stone_tile", S("Stone Tile"))
 register_hard_node("stone_rune", S("Runestone"))
 register_hard_node("packed_ice", S("Packed Ice"), {
-	groups = {cracky=1, puts_out_fire=1},
+	groups = {cracky=1, puts_out_fire=1, slippery=3},
 	sounds = default.node_sound_glass_defaults()
 })
 register_hard_node("wood_tile", S("Wooden Tile"), {
