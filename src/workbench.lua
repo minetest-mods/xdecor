@@ -150,9 +150,11 @@ end
 function workbench.fields(pos, _, fields)
 	if fields.quit then return end
 	local meta = minetest.get_meta(pos)
-	workbench:set_formspec(meta, fields.back    and 1 or
-				     fields.craft   and 2 or
-				     fields.storage and 3)
+	local id = fields.back and 1 or
+		   fields.craft and 2 or
+		   fields.storage and 3
+	if not id then return end
+	workbench:set_formspec(meta, id)
 end
 
 function workbench.dig(pos)
