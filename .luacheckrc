@@ -7,4 +7,6 @@ read_globals = {
 	"default",
 	"stairs", "doors", "xpanes",
 	"xdecor", "xbg",
+	table = { fields = { "copy" } },
+	"unpack",
 }
