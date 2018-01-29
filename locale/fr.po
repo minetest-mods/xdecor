@@ -1,0 +1,322 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2017-06-27 21:09+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: src/chess.lua
+msgid "This game is over."
+msgstr "Cette partie est terminée."
+
+#: src/chess.lua
+msgid "Someone else plays white pieces!"
+msgstr "Quelqu'un d'autre joue avec les pièces blanches !"
+
+#: src/chess.lua
+msgid "It's not your turn, wait for your opponent to play."
+msgstr "Ce n'est pas votre tour, attendez que votre adversaire ait joué."
+
+#: src/chess.lua
+msgid "Someone else plays black pieces!"
+msgstr "Quelqu'un d'autre joue avec les pièces noires !"
+
+#: src/chess.lua
+msgid " moved a "
+msgstr " a déplacé un(e)"
+
+#: src/chess.lua
+msgid ", it's now your turn."
+msgstr ", c'est maintenant votre tour."
+
+#: src/chess.lua
+msgid " won the game."
+msgstr " a gagné la partie."
+
+#: src/chess.lua
+msgid "[!] You can't reset the chessboard, a game has been started."
+msgstr ""
+"[!] Vous ne pouvez pas reinitialiser le jeu d'échecs, une partie est en cours."
+
+#: src/chess.lua
+msgid "If you are not a current player, try again in "
+msgstr "Si vous n'êtes pas le joueur en cours, essayez à nouveau dans "
+
+#: src/chess.lua
+msgid "[!] You can't dig the chessboard, a game has been started."
+msgstr ""
+"[i] Vous ne pouvez pas détruire le jeu d'échecs, une partie est en cours."
+
+#: src/chess.lua
+msgid "Reset it first if you're a current player, or dig again in "
+msgstr ""
+"Réinitialisez le d'abord si vous êtes un joueur en cours, ou bien détruisez "
+"le encore dans "
+
+#: src/chess.lua
+msgid "Chess Board"
+msgstr "Jeu d'échecs"
+
+#: src/cooking.lua
+msgid "Cauldron (active) - Drop some foods inside to make a soup"
+msgstr ""
+"Chaudron (actif) - Jetez de la nourriture à l'intérieur pour faire de la "
+"soupe"
+
+#: src/cooking.lua
+msgid "No room in your inventory to add a bucket of water."
+msgstr "Pas assez d'espace libre dans votre inventaire pour ajouter un saut d'eau."
+
+#: src/cooking.lua
+msgid "No room in your inventory to add a bowl of soup."
+msgstr "Pas assez d'espace libre dans votre inventaire pour ajouter un bol de soupe."
+
+#: src/cooking.lua
+msgid "Cauldron"
+msgstr "Chaudron"
+
+#: src/cooking.lua
+msgid "Cauldron (empty)"
+msgstr "Chaudron (vide)"
+
+#: src/cooking.lua
+msgid "Cauldron (idle)"
+msgstr "Chaudron (inactif)"
+
+#: src/cooking.lua
+msgid "Cauldron (active) - Drop foods inside to make a soup"
+msgstr ""
+"Chaudron (actif) - Jetez de la nourriture à l'intérieur pour faire de la "
+"soupe"
+
+#: src/cooking.lua
+msgid "Cauldron (active) - Use a bowl to eat the soup"
+msgstr "Chaudron (actif) - Utilisez un bol pour manger la soupe"
+
+#: src/craftitems.lua
+msgid "Bowl"
+msgstr "Bol"
+
+#: src/craftitems.lua
+msgid "Bowl of soup"
+msgstr "Bol de soupe"
+
+#: src/craftitems.lua
+msgid "Hammer"
+msgstr "Marteau"
+
+#: src/craftitems.lua
+msgid "Honey"
+msgstr "Miel"
+
+#: src/enchanting.lua
+msgid "Enchantment Table"
+msgstr "Table d'enchantement"
+
+#: src/enchanting.lua
+msgid "Enchanted @1"
+msgstr "@1 Enchanté"
+
+#: src/hive.lua
+msgid "Artificial Hive"
+msgstr "Ruche artificielle"
+
+#: src/itemframe.lua
+msgid "Item Frame (owned by "
+msgstr "Cadre (possédé par "
+
+#: src/itemframe.lua
+msgid "Item Frame"
+msgstr "Cadre"
+
+#: src/mailbox.lua
+msgid "@1's Mailbox"
+msgstr "Boite aux lettres de @1"
+
+#: src/mailbox.lua
+msgid "The mailbox is full"
+msgstr "La boite aux lettres est pleine"
+
+#: src/mailbox.lua
+msgid "Mailbox"
+msgstr "Boite aux lettres"
+
+#: src/mechanisms.lua
+msgid "@1 Pressure Plate"
+msgstr "Plaque de pression en @1"
+
+#: src/mechanisms.lua
+msgid "Lever"
+msgstr "Levier"
+
+#: src/nodes.lua
+msgid "Bamboo Frame"
+msgstr "Cadre en bambou"
+
+#: src/nodes.lua
+msgid "Chainlink"
+msgstr "Chaine"
+
+#: src/nodes.lua
+msgid "Rusty Iron Bars"
+msgstr "Barre de fer rouillée"
+
+#: src/nodes.lua
+msgid "Wood Frame"
+msgstr "Cadre en bois"
+
+#: src/nodes.lua
+msgid "Baricade"
+msgstr "Barricade"
+
+#: src/nodes.lua
+msgid "Barrel"
+msgstr "Baril"
+
+#: src/nodes.lua
+msgid "Wooden Cabinet"
+msgstr "Meuble en bois"
+
+#: src/nodes.lua
+msgid "Half Wooden Cabinet"
+msgstr "Demi-meuble en bois"
+
+#: src/nodes.lua
+msgid "Empty Shelf"
+msgstr "Etagère vide"
+
+#: src/nodes.lua
+msgid "Multi Shelf"
+msgstr "Etagère"
+
+#: src/nodes.lua
+msgid "Candle"
+msgstr "Bougie"
+
+#: src/nodes.lua
+msgid "Chair"
+msgstr "Chaise"
+
+#: src/nodes.lua
+msgid "Cobweb"
+msgstr "Toile d'araignée"
+
+#: src/nodes.lua
+msgid "@1 Curtain"
+msgstr "Rideau @1"
+
+#: src/nodes.lua
+msgid "Cushion"
+msgstr "Coussin"
+
+#: src/nodes.lua
+msgid "Cushion Block"
+msgstr "Gros coussin"
+
+#: src/nodes.lua
+msgid "@1 Door"
+msgstr "Porte en @1"
+
+#: src/nodes.lua
+msgid "Ender Chest"
+msgstr "Coffre Ender"
+
+#: src/nodes.lua
+msgid "Ivy"
+msgstr "Lierre"
+
+#: src/nodes.lua
+msgid "Lantern"
+msgstr "Lanterne"
+
+#: src/nodes.lua
+msgid "@1 Light Box"
+msgstr "Lumiere en @1"
+
+#: src/nodes.lua
+msgid "Potted @1"
+msgstr "@1 en pot"
+
+#: src/nodes.lua
+msgid "Painting"
+msgstr "Peinture"
+
+#: src/nodes.lua
+msgid "Garden Stone Path"
+msgstr "Dalle de jardin"
+
+#: src/nodes.lua
+msgid "Cactus Brick"
+msgstr "Brique de cactus"
+
+#: src/nodes.lua
+msgid "Coal Stone Tile"
+msgstr "Bloc de pierre de charbon"
+
+#: src/nodes.lua
+msgid "Desert Stone Tile"
+msgstr "Bloc de pierre du désert"
+
+#: src/nodes.lua
+msgid "Hardened Clay"
+msgstr "Argile durcie"
+
+#: src/nodes.lua
+msgid "Moon Brick"
+msgstr "Briques lunaires"
+
+#: src/nodes.lua
+msgid "Stone Tile"
+msgstr "Pierre carrelée"
+
+#: src/nodes.lua
+msgid "Runestone"
+msgstr "Runestone"
+
+#: src/nodes.lua
+msgid "Packed Ice"
+msgstr "Glace compactée"
+
+#: src/nodes.lua
+msgid "Wooden Tile"
+msgstr "Bois carrelé"
+
+#: src/nodes.lua
+msgid "Table"
+msgstr "Table"
+
+#: src/nodes.lua
+msgid "Tatami"
+msgstr "Tatami"
+
+#: src/nodes.lua
+msgid "Trampoline"
+msgstr "Trampoline"
+
+#: src/nodes.lua
+msgid "Television"
+msgstr "Télévision"
+
+#: src/nodes.lua
+msgid "Wood Framed Glass"
+msgstr "Verra avec cadre en bois"
+
+#: src/rope.lua
+msgid "Rope"
+msgstr "Corde"
+
+#: src/workbench.lua
+msgid "Work Bench"
+msgstr "Etabli"

@@ -1,4 +1,5 @@
 -- Thanks to sofar for helping with that code.
+local S, NS = dofile(minetest.get_modpath(minetest.get_current_modname()).."/intllib.lua")
 
 minetest.setting_set("nodetimer_interval", 0.1)
 
@@ -49,7 +50,7 @@ end
 
 function plate.register(material, desc, def)
 	xdecor.register("pressure_"..material.."_off", {
-		description = desc.." Pressure Plate",
+		description = S("@1 Pressure Plate", desc),
 		tiles = {"xdecor_pressure_"..material..".png"},
 		drawtype = "nodebox",
 		node_box = xdecor.pixelbox(16, {{1, 0, 1, 14, 1, 14}}),
@@ -83,7 +84,7 @@ plate.register("stone", "Stone", {
 })
 
 xdecor.register("lever_off", {
-	description = "Lever",
+	description = S("Lever"),
 	tiles = {"xdecor_lever_off.png"},
 	drawtype = "nodebox",
 	node_box = xdecor.pixelbox(16, {{2, 1, 15, 12, 14, 1}}),

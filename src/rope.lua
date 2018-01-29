@@ -1,3 +1,5 @@
+local S, NS = dofile(minetest.get_modpath(minetest.get_current_modname()).."/intllib.lua")
+
 local rope = {}
 
 -- Code by Mirko K. (modified by Temperest, Wulfsdad and kilbith) (License: GPL).
@@ -37,7 +39,7 @@ function rope.remove(pos, oldnode, digger, rope_name)
 end
 
 xdecor.register("rope", {
-	description = "Rope",
+	description = S("Rope"),
 	drawtype = "plantlike",
 	walkable = false,
 	climbable = true,

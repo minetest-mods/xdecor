@@ -1,3 +1,5 @@
+local S, NS = dofile(minetest.get_modpath(minetest.get_current_modname()).."/intllib.lua")
+
 local itemframe, tmp = {}, {}
 screwdriver = screwdriver or {}
 
@@ -53,7 +55,7 @@ function itemframe.after_place(pos, placer, itemstack)
 	local meta = minetest.get_meta(pos)
 	local name = placer:get_player_name()
 	meta:set_string("owner", name)
-	meta:set_string("infotext", "Item Frame (owned by "..name..")")
+	meta:set_string("infotext", S("Item Frame (owned by ")..name..")")
 end
 
 function itemframe.timer(pos)
@@ -101,7 +103,7 @@ function itemframe.dig(pos, player)
 end
 
 xdecor.register("itemframe", {
-	description = "Item Frame",
+	description = S("Item Frame"),
 	groups = {choppy=3, oddly_breakable_by_hand=2, flammable=3},
 	sounds = default.node_sound_wood_defaults(),
 	on_rotate = screwdriver.disallow,

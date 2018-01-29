@@ -1,3 +1,5 @@
+local S, NS = dofile(minetest.get_modpath(minetest.get_current_modname()).."/intllib.lua")
+
 local mailbox = {}
 screwdriver = screwdriver or {}
 
@@ -85,7 +87,7 @@ function mailbox.after_place_node(pos, placer)
 	local player_name = placer:get_player_name()
 
 	meta:set_string("owner", player_name)
-	meta:set_string("infotext", player_name.."'s Mailbox")
+	meta:set_string("infotext", S("@1's Mailbox", player_name))
 
 	local inv = meta:get_inventory()
 	inv:set_size("mailbox", 6*4)
@@ -109,7 +111,7 @@ function mailbox.put(pos, listname, _, stack, player)
 			return -1
 		else
 			minetest.chat_send_player(player:get_player_name(),
-						  "The mailbox is full")
+						  S("The mailbox is full"))
 		end
 	end
 	return 0
@@ -147,7 +149,7 @@ function mailbox.allow_move(pos)
 end
 
 xdecor.register("mailbox", {
-	description = "Mailbox",
+	description = S("Mailbox"),
 	tiles = {"xdecor_mailbox_top.png", "xdecor_mailbox_bottom.png",
 		 "xdecor_mailbox_side.png", "xdecor_mailbox_side.png",
 		 "xdecor_mailbox.png", "xdecor_mailbox.png"},
