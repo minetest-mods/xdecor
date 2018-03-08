@@ -149,7 +149,7 @@ function enchanting.construct(pos)
 
 	minetest.add_entity({x=pos.x, y=pos.y+0.85, z=pos.z}, "xdecor:book_open")
 	local timer = minetest.get_node_timer(pos)
-	timer:start(5.0)
+	timer:start(0.5)
 end
 
 function enchanting.destruct(pos)
@@ -184,7 +184,8 @@ function enchanting.timer(pos)
 			velocity = {x=x, y=2-y, z=z},
 			acceleration = {x=0, y=-2.2, z=0},
 			expirationtime = 1,
-			size = 2,
+			size = 1.5,
+			glow = 5,
 			texture = "xdecor_glyph"..random(1,18)..".png"
 		})
 	end
@@ -197,6 +198,7 @@ xdecor.register("enchantment_table", {
 		 "xdecor_enchantment_side.png", "xdecor_enchantment_side.png",
 		 "xdecor_enchantment_side.png", "xdecor_enchantment_side.png"},
 	groups = {cracky=1, level=1},
+	light_source = 6,
 	sounds = default.node_sound_stone_defaults(),
 	on_rotate = screwdriver.rotate_simple,
 	can_dig = enchanting.dig,
