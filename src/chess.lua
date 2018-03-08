@@ -161,6 +161,26 @@ function realchess.move(pos, from_list, from_index, to_list, to_index, _, player
 			else
 				return 0
 			end
+
+			-- if x not changed,
+			--   ensure that destination cell is empty
+			-- elseif x changed one unit left or right
+			--   ensure the pawn is killing opponent piece
+			-- else
+			--   move is not legal - abort
+
+			if from_x == to_x then
+				if pieceTo ~= "" then
+					return 0
+				end
+			elseif from_x - 1 == to_x or from_x + 1 == to_x then
+				if not pieceTo:find("black") then
+					return 0
+				end
+			else
+				return 0
+			end
+
 		elseif thisMove == "black" then
 			local pawnBlackMove = inv:get_stack(from_list, xy_to_index(from_x, from_y + 1)):get_name()
 			-- black pawns can go down only
