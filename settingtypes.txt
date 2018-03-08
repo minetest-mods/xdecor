@@ -1,11 +1,11 @@
-#For disabling a element in xdecor.
+#For enabling a subpart of X-Decor.
 
-disable_xdecor_chess 		(Disable element Chess) 		bool false
-disable_xdecor_cooking  	(Disable element Cooking) 		bool false
-disable_xdecor_enchanting  	(Disable element Enchanting) 	bool false
-disable_xdecor_hive 		(Disable element Hive) 			bool false
-disable_xdecor_itemframe 	(Disable element Itemframe) 	bool false
-disable_xdecor_mailbox 		(Disable element Mailbox) 		bool false
-disable_xdecor_mechanisms 	(Disable element Mechanisms) 	bool false
-disable_xdecor_rope 		(Disable element Rope) 			bool false
-disable_xdecor_workbench 	(Disable element Workbench) 	bool false
+enable_xdecor_chess 		(Enable Chess)		bool true
+enable_xdecor_cooking		(Enable Cooking) 	bool true
+enable_xdecor_enchanting  	(Enable Enchanting) 	bool true
+enable_xdecor_hive 		(Enable Hive) 		bool true
+enable_xdecor_itemframe 	(Enable Itemframe) 	bool true
+enable_xdecor_mailbox 		(Enable Mailbox) 	bool true
+enable_xdecor_mechanisms 	(Enable Mechanisms) 	bool true
+enable_xdecor_rope 		(Enable Rope) 		bool true
+enable_xdecor_workbench 	(Enable Workbench) 	bool true

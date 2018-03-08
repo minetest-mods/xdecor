@@ -29,10 +29,9 @@ function xdecor.tablecopy(T)
 	return new
 end
 
--- Return true if a def is accepting for stair
 function xdecor.stairs_valid_def(def)
 	return (def.drawtype == "normal" or def.drawtype:sub(1,5) == "glass") and
-		(def.groups.cracky or def.groups.choppy) and
+	       (def.groups.cracky or def.groups.choppy) and
 		not def.on_construct and
 		not def.after_place_node and
 		not def.on_rightclick and
@@ -46,5 +45,5 @@ function xdecor.stairs_valid_def(def)
 		not def.mesecons and
 		def.description and
 		def.description ~= "" and
-	def.light_source == 0
+		def.light_source == 0
 end

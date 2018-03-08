@@ -282,16 +282,6 @@ enchanting:register_tools("default", {
 	}
 })
 
-enchanting:register_tools("3d_armor", {
-	materials = "steel, bronze, gold, diamond",
-	tools = {
-		boots      = {enchants = "strong, speed"},
-		chestplate = {enchants = "strong"},
-		helmet     = {enchants = "strong"},
-		leggings   = {enchants = "strong"}
-	}
-})
-
 -- Recipes
 
 minetest.register_craft({
