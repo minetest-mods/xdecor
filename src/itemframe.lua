@@ -69,9 +69,11 @@ end
 
 function itemframe.rightclick(pos, node, clicker, itemstack)
 	local meta = minetest.get_meta(pos)
-	local player = clicker:get_player_name()
+	local player_name = clicker:get_player_name()
 	local owner = meta:get_string("owner")
-	if player ~= owner or not itemstack then
+	local admin = minetest.check_player_privs(player_name, "protection_bypass")
+
+	if not admin and (player_name ~= owner or not itemstack) then
 		return itemstack
 	end
 
@@ -85,19 +87,22 @@ end
 
 function itemframe.punch(pos, node, puncher)
 	local meta = minetest.get_meta(pos)
-	local player = puncher:get_player_name()
+	local player_name = puncher:get_player_name()
 	local owner = meta:get_string("owner")
+	local admin = minetest.check_player_privs(player_name, "protection_bypass")
 
-	if player ~= owner then return end
+	if not admin and player_name ~= owner then return end
 	drop_item(pos, node)
 end
 
 function itemframe.dig(pos, player)
+	if not player then return end
 	local meta = minetest.get_meta(pos)
-	local pname = player and player:get_player_name()
+	local player_name = player and player:get_player_name()
 	local owner = meta:get_string("owner")
+	local admin = minetest.check_player_privs(player_name, "protection_bypass")
 
-	return pname == owner
+	return admin or player_name == owner
 end
 
 xdecor.register("itemframe", {
