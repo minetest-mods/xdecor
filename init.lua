@@ -1,4 +1,18 @@
 --local t = os.clock()
+
+local mver_major, mver_minor, mver_patch = 0, 4, 16 -- Minetest 0.4.16 minimum.
+
+local client_version = minetest.get_version().string
+local major, minor, patch = client_version:match("(%d+).(%d+).(%d+)")
+
+if (major and minor and patch)     and
+   ((tonumber(major) < mver_major) or
+    (mver_major == tonumber(major) and tonumber(minor) < mver_minor)  or
+    (mver_minor == tonumber(minor) and tonumber(patch) < mver_patch)) then
+	minetest.log("error", "[xdecor] Your Minetest client is too old to run this mod. Disabling.")
+	return
+end
+
 xdecor = {}
 local modpath = minetest.get_modpath("xdecor")
 
