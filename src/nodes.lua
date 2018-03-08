@@ -167,16 +167,21 @@ xdecor.register("cobweb", {
 	sounds = default.node_sound_leaves_defaults()
 })
 
-for _, c in pairs({"red"}) do  -- Add more curtains colors simply here
+local curtain_colors = {
+	"red",
+}
+
+for _, c in pairs(curtain_colors) do
 	xdecor.register("curtain_"..c, {
 		description = c:gsub("^%l", string.upper).." Curtain",
 		walkable = false,
-		tiles = {"wool_white.png^[colorize:"..c..":170"},
+		tiles = {"wool_white.png"},
+		color = c,
 		inventory_image = "wool_white.png^[colorize:"..c..
 			":170^xdecor_curtain_open_overlay.png^[makealpha:255,126,126",
 		wield_image = "wool_white.png^[colorize:"..c..":170",
 		drawtype = "signlike",
-		paramtype2 = "wallmounted",
+		paramtype2 = "colorwallmounted",
 		groups = {dig_immediate=3, flammable=3},
 		selection_box = {type="wallmounted"},
 		on_rightclick = function(pos, node, _, itemstack)
@@ -186,10 +191,10 @@ for _, c in pairs({"red"}) do  -- Add more curtains colors simply here
 	})
 
 	xdecor.register("curtain_open_"..c, {
-		tiles = {"wool_white.png^[colorize:"..c..
-			 ":170^xdecor_curtain_open_overlay.png^[makealpha:255,126,126"},
+		tiles = {"wool_white.png^xdecor_curtain_open_overlay.png^[makealpha:255,126,126"},
+		color = c,
 		drawtype = "signlike",
-		paramtype2 = "wallmounted",
+		paramtype2 = "colorwallmounted",
 		walkable = false,
 		groups = {dig_immediate=3, flammable=3, not_in_creative_inventory=1},
 		selection_box = {type="wallmounted"},
