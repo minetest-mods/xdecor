@@ -73,7 +73,7 @@ minetest.register_craftitem("xdecor:honey", {
 	description = "Honey",
 	inventory_image = "xdecor_honey.png",
 	wield_image = "xdecor_honey.png",
-	groups = {not_in_creative_inventory=1},
+	groups = {food_honey = 1, food_sugar = 1, flammable = 2, not_in_creative_inventory=1},
 	on_use = minetest.item_eat(2)
 })
 
