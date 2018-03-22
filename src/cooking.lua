@@ -204,6 +204,7 @@ minetest.register_craftitem("xdecor:bowl", {
 	description = "Bowl",
 	inventory_image = "xdecor_bowl.png",
 	wield_image = "xdecor_bowl.png"
+	groups = {food_bowl = 1, flammable = 2},
 })
 
 minetest.register_craftitem("xdecor:bowl_soup", {
