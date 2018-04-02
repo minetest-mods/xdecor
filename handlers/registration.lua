@@ -124,8 +124,8 @@ function xdecor.register(name, def)
 
 	local workbench = minetest.settings:get_bool("enable_xdecor_workbench")
 
-	if not workbench and workbench ~= nil and
-	(minetest.get_modpath("moreblocks") or minetest.get_modpath("stairs")) then
+	if workbench == false and
+	   (minetest.get_modpath("moreblocks") or minetest.get_modpath("stairs")) then
 		if xdecor.stairs_valid_def(def) then
 			xdecor_stairs_alternative("xdecor:"..name, def)
 		end
