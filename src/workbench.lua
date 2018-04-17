@@ -70,6 +70,7 @@ function workbench:get_output(inv, input, name)
 		item = nbox[3] and item or "stairs:"..nbox[1].."_"..name:match(":(.*)")
 		output[#output+1] = item.." "..count
 	end
+
 	inv:set_list("forms", output)
 end
 
@@ -201,7 +202,7 @@ function workbench.on_take(pos, listname, index, stack, player)
 	local stackname = stack:get_name()
 
 	if listname == "input" then
-		if stackname == inputname then
+		if stackname == inputname and registered_nodes[inputname.."_cube"] then
 			workbench:get_output(inv, input, stackname)
 		else
 			inv:set_list("forms", {})
