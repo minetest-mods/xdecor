@@ -36,8 +36,6 @@ function enchanting:get_tooltip(enchant, orig_caps, fleshy)
 		durable = {"#00baff", " (+"..bonus.durable.."%)"},
 		fast    = {"#74ff49", " (+"..bonus.efficiency.."%)"},
 		sharp   = {"#ffff00", " (+"..bonus.damages.."%)"},
-		strong  = {"#ff3d3d", ""},
-		speed   = {"#fd5eff", ""}
 	}
 	return minetest.colorize and minetest.colorize(specs[enchant][1],
 			"\n"..cap(enchant)..specs[enchant][2]) or
@@ -47,10 +45,7 @@ end
 local enchant_buttons = {
 	[[ image_button[3.9,0.85;4,0.92;bg_btn.png;fast;Efficiency]
 	image_button[3.9,1.77;4,1.12;bg_btn.png;durable;Durability] ]],
-	"image_button[3.9,0.85;4,0.92;bg_btn.png;strong;Strength]",
 	"image_button[3.9,2.9;4,0.92;bg_btn.png;sharp;Sharpness]",
-	[[ image_button[3.9,0.85;4,0.92;bg_btn.png;strong;Strength]
-	image_button[3.9,1.77;4,1.12;bg_btn.png;speed;Speed] ]]
 }
 
 function enchanting.formspec(pos, num)
