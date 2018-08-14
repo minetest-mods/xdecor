@@ -12,18 +12,73 @@ local function xy_to_index(x, y)
 	return x + y * 8 + 1
 end
 
+local chat_prefix = minetest.colorize("#FFFF00", "[Chess] ")
+local letters = {'A','B','C','D','E','F','G','H'}
+
+local pieces = {
+	"realchess:rook_black_1",
+	"realchess:knight_black_1",
+	"realchess:bishop_black_1",
+	"realchess:queen_black",
+	"realchess:king_black",
+	"realchess:bishop_black_2",
+	"realchess:knight_black_2",
+	"realchess:rook_black_2",
+	"realchess:pawn_black_1",
+	"realchess:pawn_black_2",
+	"realchess:pawn_black_3",
+	"realchess:pawn_black_4",
+	"realchess:pawn_black_5",
+	"realchess:pawn_black_6",
+	"realchess:pawn_black_7",
+	"realchess:pawn_black_8",
+	'','','','','','','','','','','','','','','','',
+	'','','','','','','','','','','','','','','','',
+	"realchess:pawn_white_1",
+	"realchess:pawn_white_2",
+	"realchess:pawn_white_3",
+	"realchess:pawn_white_4",
+	"realchess:pawn_white_5",
+	"realchess:pawn_white_6",
+	"realchess:pawn_white_7",
+	"realchess:pawn_white_8",
+	"realchess:rook_white_1",
+	"realchess:knight_white_1",
+	"realchess:bishop_white_1",
+	"realchess:queen_white",
+	"realchess:king_white",
+	"realchess:bishop_white_2",
+	"realchess:knight_white_2",
+	"realchess:rook_white_2"
+}
+
+local pieces_str, x = "", 0
+for i = 1, #pieces do
+	local p = pieces[i]:match(":(%w+_%w+)")
+	if pieces[i]:find(":(%w+)_(%w+)") and not pieces_str:find(p) then
+		pieces_str = pieces_str .. x .. "=" .. p .. ".png,"
+		x = x + 1
+	end
+end
+pieces_str = pieces_str .. "69=mailbox_blank16.png"
+
+local fs = [[
+	size[14.7,10;]
+	no_prepend[]
+	bgcolor[#080808BB;true]
+	background[0,0;14.7,10;chess_bg.png]
+	list[context;board;0.3,1;8,8;]
+	listcolors[#00000000;#00000000;#00000000;#30434C;#FFF]
+	tableoptions[background=#00000000;highlight=#00000000;border=false]
+	button[10.5,8.5;2,2;new;New game]
+]] ..  "tablecolumns[image," .. pieces_str ..
+		";text;color;text;color;text;image," .. pieces_str .. "]"
+
 function realchess.init(pos)
 	local meta = minetest.get_meta(pos)
 	local inv = meta:get_inventory()
 
-	local formspec = [[ size[8,8.6;]
-			bgcolor[#080808BB;true]
-			background[0,0;8,8;chess_bg.png]
-			button[3.1,7.8;2,2;new;New game]
-			list[context;board;0,0;8,8;]
-			listcolors[#00000000;#00000000;#00000000;#30434C;#FFF] ]]
-
-	meta:set_string("formspec", formspec)
+	meta:set_string("formspec", fs)
 	meta:set_string("infotext", "Chess Board")
 	meta:set_string("playerBlack", "")
 	meta:set_string("playerWhite", "")
@@ -36,43 +91,10 @@ function realchess.init(pos)
 	meta:set_int("castlingWhiteL", 1)
 	meta:set_int("castlingWhiteR", 1)
 
-	inv:set_list("board", {
-		"realchess:rook_black_1",
-		"realchess:knight_black_1",
-		"realchess:bishop_black_1",
-		"realchess:queen_black",
-		"realchess:king_black",
-		"realchess:bishop_black_2",
-		"realchess:knight_black_2",
-		"realchess:rook_black_2",
-		"realchess:pawn_black_1",
-		"realchess:pawn_black_2",
-		"realchess:pawn_black_3",
-		"realchess:pawn_black_4",
-		"realchess:pawn_black_5",
-		"realchess:pawn_black_6",
-		"realchess:pawn_black_7",
-		"realchess:pawn_black_8",
-		'','','','','','','','','','','','','','','','',
-		'','','','','','','','','','','','','','','','',
-		"realchess:pawn_white_1",
-		"realchess:pawn_white_2",
-		"realchess:pawn_white_3",
-		"realchess:pawn_white_4",
-		"realchess:pawn_white_5",
-		"realchess:pawn_white_6",
-		"realchess:pawn_white_7",
-		"realchess:pawn_white_8",
-		"realchess:rook_white_1",
-		"realchess:knight_white_1",
-		"realchess:bishop_white_1",
-		"realchess:queen_white",
-		"realchess:king_white",
-		"realchess:bishop_white_2",
-		"realchess:knight_white_2",
-		"realchess:rook_white_2"
-	})
+	meta:set_string("moves", "")
+	meta:set_string("eaten", "")
 
+	inv:set_list("board", pieces)
 	inv:set_size("board", 64)
 end
 
@@ -85,7 +107,6 @@ function realchess.move(pos, from_list, from_index, to_list, to_index, _, player
 	local meta = minetest.get_meta(pos)
 
 	if meta:get_string("winner") ~= "" then
-		minetest.chat_send_player(playerName, "This game is over.")
 		return 0
 	end
 
@@ -99,11 +120,10 @@ function realchess.move(pos, from_list, from_index, to_list, to_index, _, player
 
 	if pieceFrom:find("white") then
 		if playerWhite ~= "" and playerWhite ~= playerName then
-			minetest.chat_send_player(playerName, "Someone else plays white pieces!")
+			minetest.chat_send_player(playerName, chat_prefix .. "Someone else plays white pieces!")
 			return 0
 		end
 		if lastMove ~= "" and lastMove ~= "black" then
-			minetest.chat_send_player(playerName, "It's not your turn, wait for your opponent to play.")
 			return 0
 		end
 		if pieceTo:find("white") then
@@ -114,11 +134,10 @@ function realchess.move(pos, from_list, from_index, to_list, to_index, _, player
 		thisMove = "white"
 	elseif pieceFrom:find("black") then
 		if playerBlack ~= "" and playerBlack ~= playerName then
-			minetest.chat_send_player(playerName, "Someone else plays black pieces!")
+			minetest.chat_send_player(playerName, chat_prefix .. "Someone else plays black pieces!")
 			return 0
 		end
 		if lastMove ~= "" and lastMove ~= "white" then
-			minetest.chat_send_player(playerName, "It's not your turn, wait for your opponent to play.")
 			return 0
 		end
 		if pieceTo:find("black") then
@@ -528,19 +547,70 @@ function realchess.move(pos, from_list, from_index, to_list, to_index, _, player
 	meta:set_string("lastMove", lastMove)
 	meta:set_int("lastMoveTime", minetest.get_gametime())
 
-	if lastMove == "black" then
-		minetest.chat_send_player(playerWhite, "["..os.date("%H:%M:%S").."] "..
-				playerName.." moved a "..pieceFrom:match(":(%a+)")..", it's now your turn.")
-	elseif lastMove == "white" then
-		minetest.chat_send_player(playerBlack, "["..os.date("%H:%M:%S").."] "..
-				playerName.." moved a "..pieceFrom:match(":(%a+)")..", it's now your turn.")
-	end
-
 	if pieceTo:sub(11,14) == "king" then
-		minetest.chat_send_player(playerBlack, playerName.." won the game.")
-		minetest.chat_send_player(playerWhite, playerName.." won the game.")
 		meta:set_string("winner", thisMove)
 	end
+
+	local moves = meta:get_string("moves")
+	local pieceFrom_s = pieceFrom:match(":(%w+_%w+)")
+	local pieceFrom_si_id = pieces_str:match("(%d+)=" .. pieceFrom_s)
+	local pieceTo_s = pieceTo_s ~= "" and pieceTo:match(":(%w+_%w+)") or ""
+	local pieceTo_si_id = pieceTo_s ~= "" and pieces_str:match("(%d+)=" .. pieceTo_s) or ""
+
+	moves = pieceFrom_si_id .. "," ..
+		letters[from_x + 1] .. (from_y + 1) .. "," ..
+			(pieceTo ~= "" and "#33FF33" or "#FFFFFF") .. ", > ,#FFFFFF," ..
+		letters[to_x + 1] .. (to_y + 1) .. "," ..
+		(pieceTo ~= "" and pieceTo_si_id or "69") .. "," ..
+		moves
+
+	meta:set_string("moves", moves)
+
+	local eaten = meta:get_string("eaten")
+	if pieceTo ~= "" then
+		eaten = eaten .. pieceTo_s .. ","
+	end
+
+	meta:set_string("eaten", eaten)
+
+	local eaten_t = string.split(eaten, ",")
+	local eaten_img = ""
+
+	local a, b = 0, 0
+	for i = 1, #eaten_t do
+		local is_white = eaten_t[i]:sub(-5,-1) == "white"
+		local X = (is_white and a or b) % 4
+		local Y = ((is_white and a or b) % 16 - X) / 4
+
+		if is_white then
+			a = a + 1
+		else
+			b = b + 1
+		end
+
+		eaten_img = eaten_img ..
+			"image[" .. ((X + (is_white and 11.7 or 8.8)) - (X * 0.45)) .. "," ..
+				    ((Y + 5.56) - (Y * 0.2)) .. ";1,1;" .. eaten_t[i] .. ".png]"
+	end
+
+	local black_win = lastMove == "black" and pieceTo:sub(11,14) == "king"
+	local white_win = lastMove == "white" and pieceTo:sub(11,14) == "king"
+
+	local formspec = fs ..
+		"label[2,0.3;" .. (black_win and
+				   minetest.colorize("#00FF00", playerBlack .. " has win") or
+				   minetest.colorize("#000001",
+					(lastMove == "white" and playerBlack ~= "" and not white_win) and
+					 playerBlack .. "..." or playerBlack)) .. "]" ..
+		"label[2,9.15;" .. (white_win and
+				    minetest.colorize("#00FF00", playerWhite .. " has win") or
+				    minetest.colorize("#000001",
+					(lastMove == "black" and playerWhite ~= "" and not black_win) and
+					 playerWhite .. "..." or playerWhite)) .. "]" ..
+		"table[8.9,1.05;5.07,3.75;moves;" .. moves:sub(1,-2) .. ";1]" ..
+		eaten_img
+
+	meta:set_string("formspec", formspec)
 
 	return 1
 end
@@ -550,8 +620,11 @@ local function timeout_format(timeout_limit)
 	local minutes = math.floor(time_remaining / 60)
 	local seconds = time_remaining % 60
 
-	if minutes == 0 then return seconds.." sec." end
-	return minutes.." min. "..seconds.." sec."
+	if minutes == 0 then
+		return seconds .. " sec."
+	end
+
+	return minutes .. " min. " .. seconds .. " sec."
 end
 
 function realchess.fields(pos, _, fields, sender)
@@ -564,14 +637,20 @@ function realchess.fields(pos, _, fields, sender)
 	if fields.quit then return end
 
 	-- timeout is 5 min. by default for resetting the game (non-players only)
-	if fields.new and (playerWhite == playerName or playerBlack == playerName) then
-		realchess.init(pos)
-	elseif fields.new and lastMoveTime ~= 0 and minetest.get_gametime() >= timeout_limit and
+	if fields.new then
+		if (playerWhite == playerName or playerBlack == playerName) then
+			realchess.init(pos)
+		else
+			minetest.chat_send_player(playerName, chat_prefix ..
+				"You can't reset the chessboard, a game has been started.\n" ..
+				"If you are not a current player, try again in " ..
+					timeout_format(timeout_limit))
+		end
+	end
+
+	if fields.new and lastMoveTime ~= 0 and minetest.get_gametime() >= timeout_limit and
 			(playerWhite ~= playerName or playerBlack ~= playerName) then
 		realchess.init(pos)
-	else
-		minetest.chat_send_player(playerName, "[!] You can't reset the chessboard, a game has been started.\n"..
-				"If you are not a current player, try again in "..timeout_format(timeout_limit))
 	end
 end
 
@@ -579,6 +658,7 @@ function realchess.dig(pos, player)
 	if not player then
 		return false
 	end
+
 	local meta = minetest.get_meta(pos)
 	local playerName = player:get_player_name()
 	local timeout_limit = meta:get_int("lastMoveTime") + 300
@@ -586,8 +666,10 @@ function realchess.dig(pos, player)
 
 	-- timeout is 5 min. by default for digging the chessboard (non-players only)
 	return (lastMoveTime == 0 and minetest.get_gametime() > timeout_limit) or
-		minetest.chat_send_player(playerName, "[!] You can't dig the chessboard, a game has been started.\n"..
-				"Reset it first if you're a current player, or dig again in "..timeout_format(timeout_limit))
+		minetest.chat_send_player(playerName, chat_prefix ..
+				"You can't dig the chessboard, a game has been started.\n" ..
+				"Reset it first if you're a current player, or dig it again in " ..
+				timeout_format(timeout_limit))
 end
 
 function realchess.on_move(pos, from_list, from_index)
@@ -620,17 +702,17 @@ minetest.register_node(":realchess:chessboard", {
 local function register_piece(name, count)
 	for _, color in pairs({"black", "white"}) do
 	if not count then
-		minetest.register_craftitem(":realchess:"..name.."_"..color, {
-			description = color:gsub("^%l", string.upper).." "..name:gsub("^%l", string.upper),
-			inventory_image = name.."_"..color..".png",
+		minetest.register_craftitem(":realchess:" .. name .. "_" .. color, {
+			description = color:gsub("^%l", string.upper) .. " " .. name:gsub("^%l", string.upper),
+			inventory_image = name .. "_" .. color .. ".png",
 			stack_max = 1,
 			groups = {not_in_creative_inventory=1}
 		})
 	else
 		for i = 1, count do
-			minetest.register_craftitem(":realchess:"..name.."_"..color.."_"..i, {
-				description = color:gsub("^%l", string.upper).." "..name:gsub("^%l", string.upper),
-				inventory_image = name.."_"..color..".png",
+			minetest.register_craftitem(":realchess:" .. name .. "_" .. color .. "_" .. i, {
+				description = color:gsub("^%l", string.upper) .. " " .. name:gsub("^%l", string.upper),
+				inventory_image = name .. "_" .. color .. ".png",
 				stack_max = 1,
 				groups = {not_in_creative_inventory=1}
 			})
