@@ -12,8 +12,84 @@ local function xy_to_index(x, y)
 	return x + y * 8 + 1
 end
 
+local function get_square(a, b)
+	return (a * 8) - (8 - b)
+end
+
 local chat_prefix = minetest.colorize("#FFFF00", "[Chess] ")
 local letters = {'A','B','C','D','E','F','G','H'}
+
+local rowDirs = {-1, -1, -1, 0, 0, 1, 1, 1}
+local colDirs = {-1, 0, 1, -1, 1, -1, 0, 1}
+
+local bishopThreats = {true,  false, true,  false, false, true,  false, true}
+local rookThreats   = {false, true,  false, true,  true,  false, true,  false}
+local queenThreats  = {true,  true,  true,  true,  true,  true,  true,  true}
+local kingThreats   = {true,  true,  true,  true,  true,  true,  true,  true}
+
+local function king_attack(color, idx, inv)
+	local threatDetected = false
+	local kill           = color == "white"
+	local pawnThreats    = {kill, false, kill, false, false, not kill, false, not kill}
+
+	for dir = 1, 8 do
+		if not threatDetected then
+			local col, row = index_to_xy(idx)
+			col, row = col + 1, row + 1
+
+			for step = 1, 8 do
+				row = row + rowDirs[dir]
+				col = col + colDirs[dir]
+
+				if row >= 1 and row <= 8 and col >= 1 and col <= 8 then
+					local square            = get_square(row, col)
+					local square_name       = inv:get_stack("board", square):get_name()
+					local piece, pieceColor = square_name:match(":(%w+)_(%w+)")
+
+					if piece then
+						if pieceColor ~= color then
+							if piece == "bishop" and bishopThreats[dir] then
+								threatDetected = true
+							elseif piece == "rook" and rookThreats[dir] then
+								threatDetected = true
+							elseif piece == "queen" and queenThreats[dir] then
+								threatDetected = true
+							else
+								if step == 1 then
+									if piece == "pawn" and pawnThreats[dir] then
+										threatDetected = true
+									end
+									if piece == "king" and kingThreats[dir] then
+										threatDetected = true
+									end
+								end
+							end
+						end
+						break
+					end
+				end
+			end
+		end
+	end
+
+	return threatDetected
+end
+
+local function locate_kings(inv)
+	local Bidx, Widx
+	for i = 1, 64 do
+		local piece, color = inv:get_stack("board", i):get_name():match(":(%w+)_(%w+)")
+		if piece == "king" then
+			if color == "black" then
+				Bidx = i
+			else
+				Widx = i
+			end
+		end
+	end
+
+	return Bidx, Widx
+end
 
 local pieces = {
 	"realchess:rook_black_1",
@@ -74,18 +150,67 @@ local fs = [[
 ]] ..  "tablecolumns[image," .. pieces_str ..
 		";text;color;text;color;text;image," .. pieces_str .. "]"
 
+local function get_moves_list(meta, pieceFrom, pieceTo, pieceTo_s, from_x, to_x, from_y, to_y)
+	local moves           = meta:get_string("moves")
+	local pieceFrom_s     = pieceFrom:match(":(%w+_%w+)")
+	local pieceFrom_si_id = pieces_str:match("(%d+)=" .. pieceFrom_s)
+	local pieceTo_si_id   = pieceTo_s ~= "" and pieces_str:match("(%d+)=" .. pieceTo_s) or ""
+
+	local coordFrom = letters[from_x + 1] .. math.abs(from_y - 8)
+	local coordTo   = letters[to_x   + 1] .. math.abs(to_y   - 8)
+
+	local new_moves = pieceFrom_si_id .. "," ..
+		coordFrom .. "," ..
+			(pieceTo ~= "" and "#33FF33" or "#FFFFFF") .. ", > ,#FFFFFF," ..
+		coordTo .. "," ..
+		(pieceTo ~= "" and pieceTo_si_id or "69") .. "," ..
+		moves
+
+	meta:set_string("moves", new_moves)
+end
+
+local function get_eaten_list(meta, pieceTo, pieceTo_s)
+	local eaten = meta:get_string("eaten")
+	if pieceTo ~= "" then
+		eaten = eaten .. pieceTo_s .. ","
+	end
+
+	meta:set_string("eaten", eaten)
+
+	local eaten_t   = string.split(eaten, ",")
+	local eaten_img = ""
+
+	local a, b = 0, 0
+	for i = 1, #eaten_t do
+		local is_white = eaten_t[i]:sub(-5,-1) == "white"
+		local X = (is_white and a or b) % 4
+		local Y = ((is_white and a or b) % 16 - X) / 4
+
+		if is_white then
+			a = a + 1
+		else
+			b = b + 1
+		end
+
+		eaten_img = eaten_img ..
+			"image[" .. ((X + (is_white and 11.7 or 8.8)) - (X * 0.45)) .. "," ..
+				    ((Y + 5.56) - (Y * 0.2)) .. ";1,1;" .. eaten_t[i] .. ".png]"
+	end
+
+	meta:set_string("eaten_img", eaten_img)
+end
+
 function realchess.init(pos)
 	local meta = minetest.get_meta(pos)
-	local inv = meta:get_inventory()
+	local inv  = meta:get_inventory()
 
 	meta:set_string("formspec", fs)
 	meta:set_string("infotext", "Chess Board")
 	meta:set_string("playerBlack", "")
 	meta:set_string("playerWhite", "")
-	meta:set_string("lastMove", "")
-	meta:set_string("winner", "")
+	meta:set_string("lastMove",    "")
 
-	meta:set_int("lastMoveTime", 0)
+	meta:set_int("lastMoveTime",   0)
 	meta:set_int("castlingBlackL", 1)
 	meta:set_int("castlingBlackR", 1)
 	meta:set_int("castlingWhiteL", 1)
@@ -103,56 +228,59 @@ function realchess.move(pos, from_list, from_index, to_list, to_index, _, player
 		return 0
 	end
 
-	local playerName = player:get_player_name()
-	local meta = minetest.get_meta(pos)
-
-	if meta:get_string("winner") ~= "" then
-		return 0
-	end
-
-	local inv = meta:get_inventory()
-	local pieceFrom = inv:get_stack(from_list, from_index):get_name()
-	local pieceTo = inv:get_stack(to_list, to_index):get_name()
-	local lastMove = meta:get_string("lastMove")
-	local thisMove -- will replace lastMove when move is legal
+	local meta        = minetest.get_meta(pos)
+	local playerName  = player:get_player_name()
+	local inv         = meta:get_inventory()
+	local pieceFrom   = inv:get_stack(from_list, from_index):get_name()
+	local pieceTo     = inv:get_stack(to_list, to_index):get_name()
+	local lastMove    = meta:get_string("lastMove")
 	local playerWhite = meta:get_string("playerWhite")
 	local playerBlack = meta:get_string("playerBlack")
+	local thisMove    -- Will replace lastMove when move is legal
 
 	if pieceFrom:find("white") then
 		if playerWhite ~= "" and playerWhite ~= playerName then
 			minetest.chat_send_player(playerName, chat_prefix .. "Someone else plays white pieces!")
 			return 0
 		end
+
 		if lastMove ~= "" and lastMove ~= "black" then
 			return 0
 		end
+
 		if pieceTo:find("white") then
 			-- Don't replace pieces of same color
 			return 0
 		end
+
 		playerWhite = playerName
 		thisMove = "white"
+
 	elseif pieceFrom:find("black") then
 		if playerBlack ~= "" and playerBlack ~= playerName then
 			minetest.chat_send_player(playerName, chat_prefix .. "Someone else plays black pieces!")
 			return 0
 		end
+
 		if lastMove ~= "" and lastMove ~= "white" then
 			return 0
 		end
+
 		if pieceTo:find("black") then
 			-- Don't replace pieces of same color
 			return 0
 		end
+
 		playerBlack = playerName
 		thisMove = "black"
 	end
 
-	-- DETERMINISTIC MOVING
+	-- MOVE LOGIC
 
 	local from_x, from_y = index_to_xy(from_index)
-	local to_x, to_y = index_to_xy(to_index)
+	local to_x, to_y     = index_to_xy(to_index)
 
+	-- PAWN
 	if pieceFrom:sub(11,14) == "pawn" then
 		if thisMove == "white" then
 			local pawnWhiteMove = inv:get_stack(from_list, xy_to_index(from_x, from_y - 1)):get_name()
@@ -181,12 +309,14 @@ function realchess.move(pos, from_list, from_index, to_list, to_index, _, player
 				return 0
 			end
 
-			-- if x not changed,
-			--   ensure that destination cell is empty
-			-- elseif x changed one unit left or right
-			--   ensure the pawn is killing opponent piece
-			-- else
-			--   move is not legal - abort
+			--[[
+			     if x not changed
+			          ensure that destination cell is empty
+			     elseif x changed one unit left or right
+			          ensure the pawn is killing opponent piece
+			     else
+			          move is not legal - abort
+			]]
 
 			if from_x == to_x then
 				if pieceTo ~= "" then
@@ -227,12 +357,14 @@ function realchess.move(pos, from_list, from_index, to_list, to_index, _, player
 				return 0
 			end
 
-			-- if x not changed,
-			--   ensure that destination cell is empty
-			-- elseif x changed one unit left or right
-			--   ensure the pawn is killing opponent piece
-			-- else
-			--   move is not legal - abort
+			--[[
+			     if x not changed
+			          ensure that destination cell is empty
+			     elseif x changed one unit left or right
+			          ensure the pawn is killing opponent piece
+			     else
+			          move is not legal - abort
+			]]
 
 			if from_x == to_x then
 				if pieceTo ~= "" then
@@ -249,20 +381,21 @@ function realchess.move(pos, from_list, from_index, to_list, to_index, _, player
 			return 0
 		end
 
+	-- ROOK
 	elseif pieceFrom:sub(11,14) == "rook" then
 		if from_x == to_x then
-			-- moving vertically
+			-- Moving vertically
 			if from_y < to_y then
-				-- moving down
-				-- ensure that no piece disturbs the way
+				-- Moving down
+				-- Ensure that no piece disturbs the way
 				for i = from_y + 1, to_y - 1 do
 					if inv:get_stack(from_list, xy_to_index(from_x, i)):get_name() ~= "" then
 						return 0
 					end
 				end
 			else
-				-- mocing up
-				-- ensure that no piece disturbs the way
+				-- Mocing up
+				-- Ensure that no piece disturbs the way
 				for i = to_y + 1, from_y - 1 do
 					if inv:get_stack(from_list, xy_to_index(from_x, i)):get_name() ~= "" then
 						return 0
@@ -270,7 +403,7 @@ function realchess.move(pos, from_list, from_index, to_list, to_index, _, player
 				end
 			end
 		elseif from_y == to_y then
-			-- mocing horizontally
+			-- Mocing horizontally
 			if from_x < to_x then
 				-- mocing right
 				-- ensure that no piece disturbs the way
@@ -280,8 +413,8 @@ function realchess.move(pos, from_list, from_index, to_list, to_index, _, player
 					end
 				end
 			else
-				-- mocing left
-				-- ensure that no piece disturbs the way
+				-- Mocing left
+				-- Ensure that no piece disturbs the way
 				for i = to_x + 1, from_x - 1 do
 					if inv:get_stack(from_list, xy_to_index(i, from_y)):get_name() ~= "" then
 						return 0
@@ -289,7 +422,7 @@ function realchess.move(pos, from_list, from_index, to_list, to_index, _, player
 				end
 			end
 		else
-			-- attempt to move arbitrarily -> abort
+			-- Attempt to move arbitrarily -> abort
 			return 0
 		end
 
@@ -301,49 +434,51 @@ function realchess.move(pos, from_list, from_index, to_list, to_index, _, player
 			end
 		end
 
+	-- KNIGHT
 	elseif pieceFrom:sub(11,16) == "knight" then
-		-- get relative pos
+		-- Get relative pos
 		local dx = from_x - to_x
 		local dy = from_y - to_y
 
-		-- get absolute values
+		-- Get absolute values
 		if dx < 0 then dx = -dx end
 		if dy < 0 then dy = -dy end
 
-		-- sort x and y
+		-- Sort x and y
 		if dx > dy then dx, dy = dy, dx end
 
-		-- ensure that dx == 1 and dy == 2
+		-- Ensure that dx == 1 and dy == 2
 		if dx ~= 1 or dy ~= 2 then
 			return 0
 		end
-		-- just ensure that destination cell does not contain friend piece
-		-- ^ it was done already thus everything ok
+		-- Just ensure that destination cell does not contain friend piece
+		-- ^ It was done already thus everything ok
 
+	-- BISHOP
 	elseif pieceFrom:sub(11,16) == "bishop" then
-		-- get relative pos
+		-- Get relative pos
 		local dx = from_x - to_x
 		local dy = from_y - to_y
 
-		-- get absolute values
+		-- Get absolute values
 		if dx < 0 then dx = -dx end
 		if dy < 0 then dy = -dy end
 
-		-- ensure dx and dy are equal
+		-- Ensure dx and dy are equal
 		if dx ~= dy then return 0 end
 
 		if from_x < to_x then
 			if from_y < to_y then
-				-- moving right-down
-				-- ensure that no piece disturbs the way
+				-- Moving right-down
+				-- Ensure that no piece disturbs the way
 				for i = 1, dx - 1 do
 					if inv:get_stack(from_list, xy_to_index(from_x + i, from_y + i)):get_name() ~= "" then
 						return 0
 					end
 				end
 			else
-				-- moving right-up
-				-- ensure that no piece disturbs the way
+				-- Moving right-up
+				-- Ensure that no piece disturbs the way
 				for i = 1, dx - 1 do
 					if inv:get_stack(from_list, xy_to_index(from_x + i, from_y - i)):get_name() ~= "" then
 						return 0
@@ -352,15 +487,15 @@ function realchess.move(pos, from_list, from_index, to_list, to_index, _, player
 			end
 		else
 			if from_y < to_y then
-				-- moving left-down
-				-- ensure that no piece disturbs the way
+				-- Moving left-down
+				-- Ensure that no piece disturbs the way
 				for i = 1, dx - 1 do
 					if inv:get_stack(from_list, xy_to_index(from_x - i, from_y + i)):get_name() ~= "" then
 						return 0
 					end
 				end
 			else
-				-- moving left-up
+				-- Moving left-up
 				-- ensure that no piece disturbs the way
 				for i = 1, dx - 1 do
 					if inv:get_stack(from_list, xy_to_index(from_x - i, from_y - i)):get_name() ~= "" then
@@ -370,31 +505,32 @@ function realchess.move(pos, from_list, from_index, to_list, to_index, _, player
 			end
 		end
 
+	-- QUEEN
 	elseif pieceFrom:sub(11,15) == "queen" then
 		local dx = from_x - to_x
 		local dy = from_y - to_y
 
-		-- get absolute values
+		-- Get absolute values
 		if dx < 0 then dx = -dx end
 		if dy < 0 then dy = -dy end
 
-		-- ensure valid relative move
+		-- Ensure valid relative move
 		if dx ~= 0 and dy ~= 0 and dx ~= dy then
 			return 0
 		end
 
 		if from_x == to_x then
 			if from_y < to_y then
-				-- goes down
-				-- ensure that no piece disturbs the way
+				-- Goes down
+				-- Ensure that no piece disturbs the way
 				for i = 1, dx - 1 do
 					if inv:get_stack(from_list, xy_to_index(from_x, from_y + i)):get_name() ~= "" then
 						return 0
 					end
 				end
 			else
-				-- goes up
-				-- ensure that no piece disturbs the way
+				-- Goes up
+				-- Ensure that no piece disturbs the way
 				for i = 1, dx - 1 do
 					if inv:get_stack(from_list, xy_to_index(from_x, from_y - i)):get_name() ~= "" then
 						return 0
@@ -403,24 +539,24 @@ function realchess.move(pos, from_list, from_index, to_list, to_index, _, player
 			end
 		elseif from_x < to_x then
 			if from_y == to_y then
-				-- goes right
-				-- ensure that no piece disturbs the way
+				-- Goes right
+				-- Ensure that no piece disturbs the way
 				for i = 1, dx - 1 do
 					if inv:get_stack(from_list, xy_to_index(from_x + i, from_y)):get_name() ~= "" then
 						return 0
 					end
 				end
 			elseif from_y < to_y then
-				-- goes right-down
-				-- ensure that no piece disturbs the way
+				-- Goes right-down
+				-- Ensure that no piece disturbs the way
 				for i = 1, dx - 1 do
 					if inv:get_stack(from_list, xy_to_index(from_x + i, from_y + i)):get_name() ~= "" then
 						return 0
 					end
 				end
 			else
-				-- goes right-up
-				-- ensure that no piece disturbs the way
+				-- Goes right-up
+				-- Ensure that no piece disturbs the way
 				for i = 1, dx - 1 do
 					if inv:get_stack(from_list, xy_to_index(from_x + i, from_y - i)):get_name() ~= "" then
 						return 0
@@ -429,24 +565,24 @@ function realchess.move(pos, from_list, from_index, to_list, to_index, _, player
 			end
 		else
 			if from_y == to_y then
-				-- goes left
-				-- ensure that no piece disturbs the way and destination cell does
+				-- Goes left
+				-- Ensure that no piece disturbs the way and destination cell does
 				for i = 1, dx - 1 do
 					if inv:get_stack(from_list, xy_to_index(from_x - i, from_y)):get_name() ~= "" then
 						return 0
 					end
 				end
 			elseif from_y < to_y then
-				-- goes left-down
-				-- ensure that no piece disturbs the way
+				-- Goes left-down
+				-- Ensure that no piece disturbs the way
 				for i = 1, dx - 1 do
 					if inv:get_stack(from_list, xy_to_index(from_x - i, from_y + i)):get_name() ~= "" then
 						return 0
 					end
 				end
 			else
-				-- goes left-up
-				-- ensure that no piece disturbs the way
+				-- Goes left-up
+				-- Ensure that no piece disturbs the way
 				for i = 1, dx - 1 do
 					if inv:get_stack(from_list, xy_to_index(from_x - i, from_y - i)):get_name() ~= "" then
 						return 0
@@ -455,6 +591,7 @@ function realchess.move(pos, from_list, from_index, to_list, to_index, _, player
 			end
 		end
 
+	-- KING
 	elseif pieceFrom:sub(11,14) == "king" then
 		local dx = from_x - to_x
 		local dy = from_y - to_y
@@ -504,6 +641,7 @@ function realchess.move(pos, from_list, from_index, to_list, to_index, _, player
 								return 0
 							end
 						end
+
 						inv:set_stack(from_list, 1, "")
 						inv:set_stack(from_list, 3, "realchess:rook_black_1")
 						check = false
@@ -518,6 +656,7 @@ function realchess.move(pos, from_list, from_index, to_list, to_index, _, player
 								return 0
 							end
 						end
+
 						inv:set_stack(from_list, 6, "realchess:rook_black_2")
 						inv:set_stack(from_list, 8, "")
 						check = false
@@ -527,98 +666,57 @@ function realchess.move(pos, from_list, from_index, to_list, to_index, _, player
 		end
 
 		if check then
-			if dx < 0 then dx = -dx end
-			if dy < 0 then dy = -dy end
-			if dx > 1 or dy > 1 then return 0 end
+			if dx < 0 then
+				dx = -dx
+			end
+
+			if dy < 0 then
+				dy = -dy
+			end
+
+			if dx > 1 or dy > 1 then
+				return 0
+			end
 		end
 
 		if thisMove == "white" then
 			meta:set_int("castlingWhiteL", 0)
 			meta:set_int("castlingWhiteR", 0)
+
+			local whiteAttacked = king_attack("white", to_index, inv)
+			if whiteAttacked then
+				return 0
+			end
+
 		elseif thisMove == "black" then
 			meta:set_int("castlingBlackL", 0)
 			meta:set_int("castlingBlackR", 0)
+
+			local blackAttacked = king_attack("black", to_index, inv)
+			if blackAttacked then
+				return 0
+			end
 		end
 	end
 
-	meta:set_string("playerWhite", playerWhite)
-	meta:set_string("playerBlack", playerBlack)
 	lastMove = thisMove
+
 	meta:set_string("lastMove", lastMove)
 	meta:set_int("lastMoveTime", minetest.get_gametime())
+	meta:set_string("playerWhite", playerWhite)
+	meta:set_string("playerBlack", playerBlack)
 
-	if pieceTo:sub(11,14) == "king" then
-		meta:set_string("winner", thisMove)
-	end
-
-	local moves = meta:get_string("moves")
-	local pieceFrom_s = pieceFrom:match(":(%w+_%w+)")
-	local pieceFrom_si_id = pieces_str:match("(%d+)=" .. pieceFrom_s)
-	local pieceTo_s = pieceTo_s ~= "" and pieceTo:match(":(%w+_%w+)") or ""
-	local pieceTo_si_id = pieceTo_s ~= "" and pieces_str:match("(%d+)=" .. pieceTo_s) or ""
-
-	moves = pieceFrom_si_id .. "," ..
-		letters[from_x + 1] .. (from_y + 1) .. "," ..
-			(pieceTo ~= "" and "#33FF33" or "#FFFFFF") .. ", > ,#FFFFFF," ..
-		letters[to_x + 1] .. (to_y + 1) .. "," ..
-		(pieceTo ~= "" and pieceTo_si_id or "69") .. "," ..
-		moves
-
-	meta:set_string("moves", moves)
-
-	local eaten = meta:get_string("eaten")
-	if pieceTo ~= "" then
-		eaten = eaten .. pieceTo_s .. ","
-	end
-
-	meta:set_string("eaten", eaten)
-
-	local eaten_t = string.split(eaten, ",")
-	local eaten_img = ""
-
-	local a, b = 0, 0
-	for i = 1, #eaten_t do
-		local is_white = eaten_t[i]:sub(-5,-1) == "white"
-		local X = (is_white and a or b) % 4
-		local Y = ((is_white and a or b) % 16 - X) / 4
-
-		if is_white then
-			a = a + 1
-		else
-			b = b + 1
-		end
-
-		eaten_img = eaten_img ..
-			"image[" .. ((X + (is_white and 11.7 or 8.8)) - (X * 0.45)) .. "," ..
-				    ((Y + 5.56) - (Y * 0.2)) .. ";1,1;" .. eaten_t[i] .. ".png]"
-	end
-
-	local black_win = lastMove == "black" and pieceTo:sub(11,14) == "king"
-	local white_win = lastMove == "white" and pieceTo:sub(11,14) == "king"
-
-	local formspec = fs ..
-		"label[2,0.3;" .. (black_win and
-				   minetest.colorize("#00FF00", playerBlack .. " has win") or
-				   minetest.colorize("#000001",
-					(lastMove == "white" and playerBlack ~= "" and not white_win) and
-					 playerBlack .. "..." or playerBlack)) .. "]" ..
-		"label[2,9.15;" .. (white_win and
-				    minetest.colorize("#00FF00", playerWhite .. " has win") or
-				    minetest.colorize("#000001",
-					(lastMove == "black" and playerWhite ~= "" and not black_win) and
-					 playerWhite .. "..." or playerWhite)) .. "]" ..
-		"table[8.9,1.05;5.07,3.75;moves;" .. moves:sub(1,-2) .. ";1]" ..
-		eaten_img
-
-	meta:set_string("formspec", formspec)
+	local pieceTo_s = pieceTo ~= "" and pieceTo:match(":(%w+_%w+)") or ""
+	get_moves_list(meta, pieceFrom, pieceTo, pieceTo_s, from_x, to_x, from_y, to_y)
+	get_eaten_list(meta, pieceTo, pieceTo_s)
 
 	return 1
 end
 
 local function timeout_format(timeout_limit)
 	local time_remaining = timeout_limit - minetest.get_gametime()
-	local minutes = math.floor(time_remaining / 60)
-	local seconds = time_remaining % 60
+	local minutes        = math.floor(time_remaining / 60)
+	local seconds        = time_remaining % 60
 
 	if minutes == 0 then
 		return seconds .. " sec."
@@ -628,29 +726,30 @@ local function timeout_format(timeout_limit)
 end
 
 function realchess.fields(pos, _, fields, sender)
-	local playerName = sender:get_player_name()
-	local meta = minetest.get_meta(pos)
+	local playerName    = sender:get_player_name()
+	local meta          = minetest.get_meta(pos)
 	local timeout_limit = meta:get_int("lastMoveTime") + 300
-	local playerWhite = meta:get_string("playerWhite")
-	local playerBlack = meta:get_string("playerBlack")
-	local lastMoveTime = meta:get_int("lastMoveTime")
+	local playerWhite   = meta:get_string("playerWhite")
+	local playerBlack   = meta:get_string("playerBlack")
+	local lastMoveTime  = meta:get_int("lastMoveTime")
 	if fields.quit then return end
 
-	-- timeout is 5 min. by default for resetting the game (non-players only)
+	-- Timeout is 5 min. by default for resetting the game (non-players only)
 	if fields.new then
 		if (playerWhite == playerName or playerBlack == playerName) then
 			realchess.init(pos)
-		else
-			minetest.chat_send_player(playerName, chat_prefix ..
-				"You can't reset the chessboard, a game has been started.\n" ..
-				"If you are not a current player, try again in " ..
-					timeout_format(timeout_limit))
-		end
-	end
 
-	if fields.new and lastMoveTime ~= 0 and minetest.get_gametime() >= timeout_limit and
-			(playerWhite ~= playerName or playerBlack ~= playerName) then
-		realchess.init(pos)
+		elseif lastMoveTime ~= 0 then
+			if minetest.get_gametime() >= timeout_limit and
+					(playerWhite ~= playerName or playerBlack ~= playerName) then
+				realchess.init(pos)
+			else
+				minetest.chat_send_player(playerName, chat_prefix ..
+					"You can't reset the chessboard, a game has been started. " ..
+					"If you aren't a current player, try again in " ..
+					timeout_format(timeout_limit))
+			end
+		end
 	end
 end
 
@@ -659,22 +758,48 @@ function realchess.dig(pos, player)
 		return false
 	end
 
-	local meta = minetest.get_meta(pos)
-	local playerName = player:get_player_name()
+	local meta          = minetest.get_meta(pos)
+	local playerName    = player:get_player_name()
 	local timeout_limit = meta:get_int("lastMoveTime") + 300
-	local lastMoveTime = meta:get_int("lastMoveTime")
+	local lastMoveTime  = meta:get_int("lastMoveTime")
 
-	-- timeout is 5 min. by default for digging the chessboard (non-players only)
+	-- Timeout is 5 min. by default for digging the chessboard (non-players only)
 	return (lastMoveTime == 0 and minetest.get_gametime() > timeout_limit) or
 		minetest.chat_send_player(playerName, chat_prefix ..
-				"You can't dig the chessboard, a game has been started.\n" ..
+				"You can't dig the chessboard, a game has been started. " ..
 				"Reset it first if you're a current player, or dig it again in " ..
 				timeout_format(timeout_limit))
 end
 
 function realchess.on_move(pos, from_list, from_index)
-	local inv = minetest.get_meta(pos):get_inventory()
+	local meta = minetest.get_meta(pos)
+	local inv  = minetest.get_meta(pos):get_inventory()
 	inv:set_stack(from_list, from_index, '')
+
+	local black_king_idx, white_king_idx = locate_kings(inv)
+	local black_king_attacked = king_attack("black", black_king_idx, inv)
+	local white_king_attacked = king_attack("white", white_king_idx, inv)
+
+	local playerWhite = meta:get_string("playerWhite")
+	local playerBlack = meta:get_string("playerBlack")
+
+	local moves       = meta:get_string("moves")
+	local eaten_img   = meta:get_string("eaten_img")
+	local lastMove    = meta:get_string("lastMove")
+	local turnBlack   = minetest.colorize("#000001", (lastMove == "white" and playerBlack ~= "") and
+			    playerBlack .. "..." or playerBlack)
+	local turnWhite   = minetest.colorize("#000001", (lastMove == "black" and playerWhite ~= "") and
+			    playerWhite .. "..." or playerWhite)
+	local check_s     = minetest.colorize("#FF0000", "\\[check\\]")
+
+	local formspec = fs ..
+		"label[1.9,0.3;"  .. turnBlack .. (black_king_attacked and " " .. check_s or "") .. "]" ..
+		"label[1.9,9.15;" .. turnWhite .. (white_king_attacked and " " .. check_s or "") .. "]" ..
+		"table[8.9,1.05;5.07,3.75;moves;" .. moves:sub(1,-2) .. ";1]" ..
+		eaten_img
+
+	meta:set_string("formspec", formspec)
+
 	return false
 end
 
