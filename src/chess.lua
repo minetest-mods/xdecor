@@ -218,6 +218,8 @@ function realchess.init(pos)
 	meta:set_string("playerBlack", "")
 	meta:set_string("playerWhite", "")
 	meta:set_string("lastMove",    "")
+	meta:set_string("blackAttacked", "")
+	meta:set_string("whiteAttacked", "")
 
 	meta:set_int("lastMoveTime",   0)
 	meta:set_int("castlingBlackL", 1)
@@ -706,9 +708,24 @@ function realchess.move(pos, from_list, from_index, to_list, to_index, _, player
 	local blackAttacked = attacked("black", black_king_idx, board)
 	local whiteAttacked = attacked("white", white_king_idx, board)
 
-	if (thisMove == "black" and blackAttacked) or
-	   (thisMove == "white" and whiteAttacked) then
-		return 0
+	if blackAttacked then
+		if thisMove == "black" and meta:get_string("blackAttacked") == "true" then
+			return 0
+		else
+			meta:set_string("blackAttacked", "true")
+		end
+	else
+		meta:set_string("blackAttacked", "")
+	end
+
+	if whiteAttacked then
+		if thisMove == "white" and meta:get_string("whiteAttacked") == "true" then
+			return 0
+		else
+			meta:set_string("whiteAttacked", "true")
+		end
+	else
+		meta:set_string("whiteAttacked", "")
 	end
 
 	lastMove = thisMove
@@ -730,10 +747,8 @@ function realchess.on_move(pos, from_list, from_index)
 	local inv  = meta:get_inventory()
 	inv:set_stack(from_list, from_index, '')
 
-	local board = board_to_table(inv)
-	local black_king_idx, white_king_idx = locate_kings(board)
-	local black_king_attacked = attacked("black", black_king_idx, board)
-	local white_king_attacked = attacked("white", white_king_idx, board)
+	local black_king_attacked = meta:get_string("blackAttacked") == "true"
+	local white_king_attacked = meta:get_string("whiteAttacked") == "true"
 
 	local playerWhite = meta:get_string("playerWhite")
 	local playerBlack = meta:get_string("playerBlack")
