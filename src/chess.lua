@@ -27,7 +27,7 @@ local rookThreats   = {false, true,  false, true,  true,  false, true,  false}
 local queenThreats  = {true,  true,  true,  true,  true,  true,  true,  true}
 local kingThreats   = {true,  true,  true,  true,  true,  true,  true,  true}
 
-local function king_attack(color, idx, inv)
+local function attacked(color, idx, inv)
 	local threatDetected = false
 	local kill           = color == "white"
 	local pawnThreats    = {kill, false, kill, false, false, not kill, false, not kill}
@@ -683,7 +683,7 @@ function realchess.move(pos, from_list, from_index, to_list, to_index, _, player
 			meta:set_int("castlingWhiteL", 0)
 			meta:set_int("castlingWhiteR", 0)
 
-			local whiteAttacked = king_attack("white", to_index, inv)
+			local whiteAttacked = attacked("white", to_index, inv)
 			if whiteAttacked then
 				return 0
 			end
@@ -692,7 +692,7 @@ function realchess.move(pos, from_list, from_index, to_list, to_index, _, player
 			meta:set_int("castlingBlackL", 0)
 			meta:set_int("castlingBlackR", 0)
 
-			local blackAttacked = king_attack("black", to_index, inv)
+			local blackAttacked = attacked("black", to_index, inv)
 			if blackAttacked then
 				return 0
 			end
@@ -773,12 +773,12 @@ end
 
 function realchess.on_move(pos, from_list, from_index)
 	local meta = minetest.get_meta(pos)
-	local inv  = minetest.get_meta(pos):get_inventory()
+	local inv  = meta:get_inventory()
 	inv:set_stack(from_list, from_index, '')
 
 	local black_king_idx, white_king_idx = locate_kings(inv)
-	local black_king_attacked = king_attack("black", black_king_idx, inv)
-	local white_king_attacked = king_attack("white", white_king_idx, inv)
+	local black_king_attacked = attacked("black", black_king_idx, inv)
+	local white_king_attacked = attacked("white", white_king_idx, inv)
 
 	local playerWhite = meta:get_string("playerWhite")
 	local playerBlack = meta:get_string("playerBlack")
