@@ -27,7 +27,16 @@ local rookThreats   = {false, true,  false, true,  true,  false, true,  false}
 local queenThreats  = {true,  true,  true,  true,  true,  true,  true,  true}
 local kingThreats   = {true,  true,  true,  true,  true,  true,  true,  true}
 
-local function attacked(color, idx, inv)
+local function board_to_table(inv)
+	local t = {}
+	for i = 1, 64 do
+		t[#t + 1] = inv:get_stack("board", i):get_name()
+	end
+
+	return t
+end
+
+local function attacked(color, idx, board)
 	local threatDetected = false
 	local kill           = color == "white"
 	local pawnThreats    = {kill, false, kill, false, false, not kill, false, not kill}
@@ -43,7 +52,7 @@ local function attacked(color, idx, inv)
 
 				if row >= 1 and row <= 8 and col >= 1 and col <= 8 then
 					local square            = get_square(row, col)
-					local square_name       = inv:get_stack("board", square):get_name()
+					local square_name       = board[square]
 					local piece, pieceColor = square_name:match(":(%w+)_(%w+)")
 
 					if piece then
@@ -75,10 +84,10 @@ local function attacked(color, idx, inv)
 	return threatDetected
 end
 
-local function locate_kings(inv)
+local function locate_kings(board)
 	local Bidx, Widx
 	for i = 1, 64 do
-		local piece, color = inv:get_stack("board", i):get_name():match(":(%w+)_(%w+)")
+		local piece, color = board[i]:match(":(%w+)_(%w+)")
 		if piece == "king" then
 			if color == "black" then
 				Bidx = i
@@ -683,20 +692,23 @@ function realchess.move(pos, from_list, from_index, to_list, to_index, _, player
 			meta:set_int("castlingWhiteL", 0)
 			meta:set_int("castlingWhiteR", 0)
 
-			local whiteAttacked = attacked("white", to_index, inv)
-			if whiteAttacked then
-				return 0
-			end
-
 		elseif thisMove == "black" then
 			meta:set_int("castlingBlackL", 0)
 			meta:set_int("castlingBlackR", 0)
-
-			local blackAttacked = attacked("black", to_index, inv)
-			if blackAttacked then
-				return 0
-			end
 		end
+	end
+
+	local board       = board_to_table(inv)
+	board[to_index]   = board[from_index]
+	board[from_index] = ""
+
+	local black_king_idx, white_king_idx = locate_kings(board)
+	local blackAttacked = attacked("black", black_king_idx, board)
+	local whiteAttacked = attacked("white", white_king_idx, board)
+
+	if (thisMove == "black" and blackAttacked) or
+	   (thisMove == "white" and whiteAttacked) then
+		return 0
 	end
 
 	lastMove = thisMove
@@ -711,6 +723,39 @@ function realchess.move(pos, from_list, from_index, to_list, to_index, _, player
 	get_eaten_list(meta, pieceTo, pieceTo_s)
 
 	return 1
+end
+
+function realchess.on_move(pos, from_list, from_index)
+	local meta = minetest.get_meta(pos)
+	local inv  = meta:get_inventory()
+	inv:set_stack(from_list, from_index, '')
+
+	local board = board_to_table(inv)
+	local black_king_idx, white_king_idx = locate_kings(board)
+	local black_king_attacked = attacked("black", black_king_idx, board)
+	local white_king_attacked = attacked("white", white_king_idx, board)
+
+	local playerWhite = meta:get_string("playerWhite")
+	local playerBlack = meta:get_string("playerBlack")
+
+	local moves       = meta:get_string("moves")
+	local eaten_img   = meta:get_string("eaten_img")
+	local lastMove    = meta:get_string("lastMove")
+	local turnBlack   = minetest.colorize("#000001", (lastMove == "white" and playerBlack ~= "") and
+			    playerBlack .. "..." or playerBlack)
+	local turnWhite   = minetest.colorize("#000001", (lastMove == "black" and playerWhite ~= "") and
+			    playerWhite .. "..." or playerWhite)
+	local check_s     = minetest.colorize("#FF0000", "\\[check\\]")
+
+	local formspec = fs ..
+		"label[1.9,0.3;"  .. turnBlack .. (black_king_attacked and " " .. check_s or "") .. "]" ..
+		"label[1.9,9.15;" .. turnWhite .. (white_king_attacked and " " .. check_s or "") .. "]" ..
+		"table[8.9,1.05;5.07,3.75;moves;" .. moves:sub(1,-2) .. ";1]" ..
+		eaten_img
+
+	meta:set_string("formspec", formspec)
+
+	return false
 end
 
 local function timeout_format(timeout_limit)
@@ -769,38 +814,6 @@ function realchess.dig(pos, player)
 				"You can't dig the chessboard, a game has been started. " ..
 				"Reset it first if you're a current player, or dig it again in " ..
 				timeout_format(timeout_limit))
-end
-
-function realchess.on_move(pos, from_list, from_index)
-	local meta = minetest.get_meta(pos)
-	local inv  = meta:get_inventory()
-	inv:set_stack(from_list, from_index, '')
-
-	local black_king_idx, white_king_idx = locate_kings(inv)
-	local black_king_attacked = attacked("black", black_king_idx, inv)
-	local white_king_attacked = attacked("white", white_king_idx, inv)
-
-	local playerWhite = meta:get_string("playerWhite")
-	local playerBlack = meta:get_string("playerBlack")
-
-	local moves       = meta:get_string("moves")
-	local eaten_img   = meta:get_string("eaten_img")
-	local lastMove    = meta:get_string("lastMove")
-	local turnBlack   = minetest.colorize("#000001", (lastMove == "white" and playerBlack ~= "") and
-			    playerBlack .. "..." or playerBlack)
-	local turnWhite   = minetest.colorize("#000001", (lastMove == "black" and playerWhite ~= "") and
-			    playerWhite .. "..." or playerWhite)
-	local check_s     = minetest.colorize("#FF0000", "\\[check\\]")
-
-	local formspec = fs ..
-		"label[1.9,0.3;"  .. turnBlack .. (black_king_attacked and " " .. check_s or "") .. "]" ..
-		"label[1.9,9.15;" .. turnWhite .. (white_king_attacked and " " .. check_s or "") .. "]" ..
-		"table[8.9,1.05;5.07,3.75;moves;" .. moves:sub(1,-2) .. ";1]" ..
-		eaten_img
-
-	meta:set_string("formspec", formspec)
-
-	return false
 end
 
 minetest.register_node(":realchess:chessboard", {
