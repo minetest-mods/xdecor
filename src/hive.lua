@@ -10,7 +10,9 @@ function hive.construct(pos)
 			image[6,0;1,1;hive_bee.png]
 			image[5,0;1,1;hive_layout.png]
 			list[context;honey;5,0;1,1;]
-			list[current_player;main;0,1.35;8,4;] ]]
+			list[current_player;main;0,1.35;8,4;]
+			listring[current_player;main]
+			listring[context;honey] ]]
 			..xbg..default.get_hotbar_bg(0,1.35)
 
 	meta:set_string("formspec", formspec)
