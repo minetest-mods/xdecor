@@ -75,7 +75,17 @@ local function register_storage(name, desc, def)
 		on_rotate = def.on_rotate,
 		on_place = def.on_place,
 		groups = def.groups or {choppy=2, oddly_breakable_by_hand=1, flammable=2},
-		sounds = default.node_sound_wood_defaults()
+		sounds = default.node_sound_wood_defaults(),
+	    on_metadata_inventory_put = function(pos, listname, index, stack, player)
+			minetest.log("action", player:get_player_name() ..
+			" moves " .. stack:to_string() .. " to " .. name .. " at " ..
+			minetest.pos_to_string(pos))
+	    end,
+	    on_metadata_inventory_take = function(pos, listname, index, stack, player)
+			minetest.log("action", player:get_player_name() ..
+			" takes " .. stack:to_string() .. " from " .. name .. " at " ..
+			minetest.pos_to_string(pos))
+		end
 	})
 end
 

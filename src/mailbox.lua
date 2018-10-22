@@ -130,6 +130,10 @@ function mailbox.on_put(pos, listname, _, stack, player)
 
 		meta:set_string("giver1", player:get_player_name())
 		meta:set_string("stack1", stack:to_string())
+
+        minetest.log("action", player:get_player_name() ..
+                " put " .. stack:to_string() .. " in the mailbox at " ..
+                minetest.pos_to_string(pos))
 	end
 end
 
