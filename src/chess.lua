@@ -5,6 +5,7 @@ local function index_to_xy(idx)
 	idx = idx - 1
 	local x = idx % 8
 	local y = (idx - x) / 8
+
 	return x, y
 end
 
@@ -19,14 +20,6 @@ end
 local chat_prefix = minetest.colorize("#FFFF00", "[Chess] ")
 local letters = {'A','B','C','D','E','F','G','H'}
 
-local rowDirs = {-1, -1, -1, 0, 0, 1, 1, 1}
-local colDirs = {-1, 0, 1, -1, 1, -1, 0, 1}
-
-local bishopThreats = {true,  false, true,  false, false, true,  false, true}
-local rookThreats   = {false, true,  false, true,  true,  false, true,  false}
-local queenThreats  = {true,  true,  true,  true,  true,  true,  true,  true}
-local kingThreats   = {true,  true,  true,  true,  true,  true,  true,  true}
-
 local function board_to_table(inv)
 	local t = {}
 	for i = 1, 64 do
@@ -35,6 +28,431 @@ local function board_to_table(inv)
 
 	return t
 end
+
+local piece_values = {
+	pawn   = 10,
+	knight = 30,
+	bishop = 30,
+	rook   = 50,
+	queen  = 90,
+	king   = 900
+}
+
+local function get_possible_moves(board, from_idx)
+	local piece, color = board[from_idx]:match(":(%w+)_(%w+)")
+	if not piece then return end
+	local moves = {}
+	local from_x, from_y = index_to_xy(from_idx)
+
+	for i = 1, 64 do
+		local stack_name = board[i]
+		if stack_name:find((color == "black" and "white" or "black")) or
+				stack_name == "" then
+			moves[i] = 0
+		end
+	end
+
+	for to_idx in pairs(moves) do
+		local pieceTo    = board[to_idx]
+		local to_x, to_y = index_to_xy(to_idx)
+
+		-- PAWN
+		if piece == "pawn" then
+			if color == "white" then
+				local pawnWhiteMove = board[xy_to_index(from_x, from_y - 1)]
+				-- white pawns can go up only
+				if from_y - 1 == to_y then
+					if from_x == to_x then
+						if pieceTo ~= "" then
+							moves[to_idx] = nil
+						end
+					elseif from_x - 1 == to_x or from_x + 1 == to_x then
+						if not pieceTo:find("black") then
+							moves[to_idx] = nil
+						end
+					else
+						moves[to_idx] = nil
+					end
+				elseif from_y - 2 == to_y then
+					if pieceTo ~= "" or from_y < 6 or pawnWhiteMove ~= "" then
+						moves[to_idx] = nil
+					end
+				else
+					moves[to_idx] = nil
+				end
+
+				--[[
+				     if x not changed
+				          ensure that destination cell is empty
+				     elseif x changed one unit left or right
+				          ensure the pawn is killing opponent piece
+				     else
+				          move is not legal - abort
+				]]
+
+				if from_x == to_x then
+					if pieceTo ~= "" then
+						moves[to_idx] = nil
+					end
+				elseif from_x - 1 == to_x or from_x + 1 == to_x then
+					if not pieceTo:find("black") then
+						moves[to_idx] = nil
+					end
+				else
+					moves[to_idx] = nil
+				end
+
+			elseif color == "black" then
+				local pawnBlackMove = board[xy_to_index(from_x, from_y + 1)]
+				-- black pawns can go down only
+				if from_y + 1 == to_y then
+					if from_x == to_x then
+						if pieceTo ~= "" then
+							moves[to_idx] = nil
+						end
+					elseif from_x - 1 == to_x or from_x + 1 == to_x then
+						if not pieceTo:find("white") then
+							moves[to_idx] = nil
+						end
+					else
+						moves[to_idx] = nil
+					end
+				elseif from_y + 2 == to_y then
+					if pieceTo ~= "" or from_y > 1 or pawnBlackMove ~= "" then
+						moves[to_idx] = nil
+					end
+				else
+					moves[to_idx] = nil
+				end
+
+				--[[
+				     if x not changed
+				          ensure that destination cell is empty
+				     elseif x changed one unit left or right
+				          ensure the pawn is killing opponent piece
+				     else
+				          move is not legal - abort
+				]]
+
+				if from_x == to_x then
+					if pieceTo ~= "" then
+						moves[to_idx] = nil
+					end
+				elseif from_x - 1 == to_x or from_x + 1 == to_x then
+					if not pieceTo:find("white") then
+						moves[to_idx] = nil
+					end
+				else
+					moves[to_idx] = nil
+				end
+			else
+				moves[to_idx] = nil
+			end
+
+		-- ROOK
+		elseif piece == "rook" then
+			if from_x == to_x then
+				-- Moving vertically
+				if from_y < to_y then
+					-- Moving down
+					-- Ensure that no piece disturbs the way
+					for i = from_y + 1, to_y - 1 do
+						if board[xy_to_index(from_x, i)] ~= "" then
+							moves[to_idx] = nil
+						end
+					end
+				else
+					-- Mocing up
+					-- Ensure that no piece disturbs the way
+					for i = to_y + 1, from_y - 1 do
+						if board[xy_to_index(from_x, i)] ~= "" then
+							moves[to_idx] = nil
+						end
+					end
+				end
+			elseif from_y == to_y then
+				-- Mocing horizontally
+				if from_x < to_x then
+					-- mocing right
+					-- ensure that no piece disturbs the way
+					for i = from_x + 1, to_x - 1 do
+						if board[xy_to_index(i, from_y)] ~= "" then
+							moves[to_idx] = nil
+						end
+					end
+				else
+					-- Mocing left
+					-- Ensure that no piece disturbs the way
+					for i = to_x + 1, from_x - 1 do
+						if board[xy_to_index(i, from_y)] ~= "" then
+							moves[to_idx] = nil
+						end
+					end
+				end
+			else
+				-- Attempt to move arbitrarily -> abort
+				moves[to_idx] = nil
+			end
+
+		-- KNIGHT
+		elseif piece == "knight" then
+			-- Get relative pos
+			local dx = from_x - to_x
+			local dy = from_y - to_y
+
+			-- Get absolute values
+			if dx < 0 then
+				dx = -dx
+			end
+
+			if dy < 0 then
+				dy = -dy
+			end
+
+			-- Sort x and y
+			if dx > dy then
+				dx, dy = dy, dx
+			end
+
+			-- Ensure that dx == 1 and dy == 2
+			if dx ~= 1 or dy ~= 2 then
+				moves[to_idx] = nil
+			end
+			-- Just ensure that destination cell does not contain friend piece
+			-- ^ It was done already thus everything ok
+
+		-- BISHOP
+		elseif piece == "bishop" then
+			-- Get relative pos
+			local dx = from_x - to_x
+			local dy = from_y - to_y
+
+			-- Get absolute values
+			if dx < 0 then
+				dx = -dx
+			end
+
+			if dy < 0 then
+				dy = -dy
+			end
+
+			-- Ensure dx and dy are equal
+			if dx ~= dy then
+				moves[to_idx] = nil
+			end
+
+			if from_x < to_x then
+				if from_y < to_y then
+					-- Moving right-down
+					-- Ensure that no piece disturbs the way
+					for i = 1, dx - 1 do
+						if board[xy_to_index(from_x + i, from_y + i)] ~= "" then
+							moves[to_idx] = nil
+						end
+					end
+				else
+					-- Moving right-up
+					-- Ensure that no piece disturbs the way
+					for i = 1, dx - 1 do
+						if board[xy_to_index(from_x + i, from_y - i)] ~= "" then
+							moves[to_idx] = nil
+						end
+					end
+				end
+			else
+				if from_y < to_y then
+					-- Moving left-down
+					-- Ensure that no piece disturbs the way
+					for i = 1, dx - 1 do
+						if board[xy_to_index(from_x - i, from_y + i)] ~= "" then
+							moves[to_idx] = nil
+						end
+					end
+				else
+					-- Moving left-up
+					-- ensure that no piece disturbs the way
+					for i = 1, dx - 1 do
+						if board[xy_to_index(from_x - i, from_y - i)] ~= "" then
+							moves[to_idx] = nil
+						end
+					end
+				end
+			end
+
+		-- QUEEN
+		elseif piece == "queen" then
+			local dx = from_x - to_x
+			local dy = from_y - to_y
+
+			-- Get absolute values
+			if dx < 0 then
+				dx = -dx
+			end
+
+			if dy < 0 then
+				dy = -dy
+			end
+
+			-- Ensure valid relative move
+			if dx ~= 0 and dy ~= 0 and dx ~= dy then
+				moves[to_idx] = nil
+			end
+
+			if from_x == to_x then
+				-- Moving vertically
+				if from_y < to_y then
+					-- Moving down
+					-- Ensure that no piece disturbs the way
+					for i = from_y + 1, to_y - 1 do
+						if board[xy_to_index(from_x, i)] ~= "" then
+							moves[to_idx] = nil
+						end
+					end
+				else
+					-- Mocing up
+					-- Ensure that no piece disturbs the way
+					for i = to_y + 1, from_y - 1 do
+						if board[xy_to_index(from_x, i)] ~= "" then
+							moves[to_idx] = nil
+						end
+					end
+				end
+			elseif from_x < to_x then
+				if from_y == to_y then
+					-- Goes right
+					-- Ensure that no piece disturbs the way
+					for i = 1, dx - 1 do
+						if board[xy_to_index(from_x + i, from_y)] ~= "" then
+							moves[to_idx] = nil
+						end
+					end
+				elseif from_y < to_y then
+					-- Goes right-down
+					-- Ensure that no piece disturbs the way
+					for i = 1, dx - 1 do
+						if board[xy_to_index(from_x + i, from_y + i)] ~= "" then
+							moves[to_idx] = nil
+						end
+					end
+				else
+					-- Goes right-up
+					-- Ensure that no piece disturbs the way
+					for i = 1, dx - 1 do
+						if board[xy_to_index(from_x + i, from_y - i)] ~= "" then
+							moves[to_idx] = nil
+						end
+					end
+				end
+			else
+				if from_y == to_y then
+					-- Mocing horizontally
+					if from_x < to_x then
+						-- mocing right
+						-- ensure that no piece disturbs the way
+						for i = from_x + 1, to_x - 1 do
+							if board[xy_to_index(i, from_y)] ~= "" then
+								moves[to_idx] = nil
+							end
+						end
+					else
+						-- Mocing left
+						-- Ensure that no piece disturbs the way
+						for i = to_x + 1, from_x - 1 do
+							if board[xy_to_index(i, from_y)] ~= "" then
+								moves[to_idx] = nil
+							end
+						end
+					end
+				elseif from_y < to_y then
+					-- Goes left-down
+					-- Ensure that no piece disturbs the way
+					for i = 1, dx - 1 do
+						if board[xy_to_index(from_x - i, from_y + i)] ~= "" then
+							moves[to_idx] = nil
+						end
+					end
+				else
+					-- Goes left-up
+					-- Ensure that no piece disturbs the way
+					for i = 1, dx - 1 do
+						if board[xy_to_index(from_x - i, from_y - i)] ~= "" then
+							moves[to_idx] = nil
+						end
+					end
+				end
+			end
+
+		-- KING
+		elseif piece == "king" then
+			local dx = from_x - to_x
+			local dy = from_y - to_y
+
+			if dx < 0 then
+				dx = -dx
+			end
+
+			if dy < 0 then
+				dy = -dy
+			end
+
+			if dx > 1 or dy > 1 then
+				moves[to_idx] = nil
+			end
+		end
+	end
+
+	if not next(moves) then return end
+
+	for i in pairs(moves) do
+		local stack_name = board[tonumber(i)]
+		if stack_name ~= "" then
+			for p, value in pairs(piece_values) do
+				if stack_name:find(p) then
+					moves[i] = value
+				end
+			end
+		end
+	end
+
+	return moves
+end
+
+local function best_move(moves)
+	local value, choices = 0, {}
+
+	for from, _ in pairs(moves) do
+	for to, val in pairs(_) do
+		if val > value then
+			value = val
+			choices = {{
+				from = from,
+				to = to
+			}}
+		elseif val == value then
+			choices[#choices + 1] = {
+				from = from,
+				to = to
+			}
+		end
+	end
+	end
+
+	local random = math.random(1, #choices)
+	local choice_from, choice_to = choices[random].from, choices[random].to
+
+	return tonumber(choice_from), choice_to
+end
+
+local rowDirs = {-1, -1, -1, 0, 0, 1, 1, 1}
+local colDirs = {-1, 0, 1, -1, 1, -1, 0, 1}
+
+local rowDirsKnight = { 2,  1, 2, 1, -2, -1, -2, -1}
+local colDirsKnight = {-1, -2, 1, 2,  1,  2, -1, -2}
+
+local bishopThreats = {true,  false, true,  false, false, true,  false, true}
+local rookThreats   = {false, true,  false, true,  true,  false, true,  false}
+local queenThreats  = {true,  true,  true,  true,  true,  true,  true,  true}
+local kingThreats   = {true,  true,  true,  true,  true,  true,  true,  true}
 
 local function attacked(color, idx, board)
 	local threatDetected = false
@@ -76,6 +494,21 @@ local function attacked(color, idx, board)
 						end
 						break
 					end
+				end
+			end
+
+			local colK, rowK = index_to_xy(idx)
+			colK, rowK = colK + 1, rowK + 1
+			rowK = rowK + rowDirsKnight[dir]
+			colK = colK + colDirsKnight[dir]
+
+			if rowK >= 1 and rowK <= 8 and colK >= 1 and colK <= 8 then
+				local square            = get_square(rowK, colK)
+				local square_name       = board[square]
+				local piece, pieceColor = square_name:match(":(%w+)_(%w+)")
+
+				if piece and pieceColor ~= color and piece == "knight" then
+					threatDetected = true
 				end
 			end
 		end
@@ -147,6 +580,14 @@ for i = 1, #pieces do
 end
 pieces_str = pieces_str .. "69=mailbox_blank16.png"
 
+local fs_init = [[
+	size[4,1.2;]
+	no_prepend[]
+	label[0,0;Select a mode:]
+	button[0,0.5;2,1;single;Singleplayer]
+	button[2,0.5;2,1;multi;Multiplayer]
+]]
+
 local fs = [[
 	size[14.7,10;]
 	no_prepend[]
@@ -159,7 +600,34 @@ local fs = [[
 ]] ..  "tablecolumns[image," .. pieces_str ..
 		";text;color;text;color;text;image," .. pieces_str .. "]"
 
-local function get_moves_list(meta, pieceFrom, pieceTo, pieceTo_s, from_x, to_x, from_y, to_y)
+local function update_formspec(meta)
+	local black_king_attacked = meta:get_string("blackAttacked") == "true"
+	local white_king_attacked = meta:get_string("whiteAttacked") == "true"
+
+	local playerWhite = meta:get_string("playerWhite")
+	local playerBlack = meta:get_string("playerBlack")
+
+	local moves     = meta:get_string("moves")
+	local eaten_img = meta:get_string("eaten_img")
+	local lastMove  = meta:get_string("lastMove")
+	local turnBlack = minetest.colorize("#000001", (lastMove == "white" and playerBlack ~= "") and
+			  playerBlack .. "..." or playerBlack)
+	local turnWhite = minetest.colorize("#000001", (lastMove == "black" and playerWhite ~= "") and
+			  playerWhite .. "..." or playerWhite)
+	local check_s   = minetest.colorize("#FF0000", "\\[check\\]")
+
+	local formspec = fs ..
+		"label[1.9,0.3;"  .. turnBlack .. (black_king_attacked and " " .. check_s or "") .. "]" ..
+		"label[1.9,9.15;" .. turnWhite .. (white_king_attacked and " " .. check_s or "") .. "]" ..
+		"table[8.9,1.05;5.07,3.75;moves;" .. moves:sub(1,-2) .. ";1]" ..
+		eaten_img
+
+	meta:set_string("formspec", formspec)
+end
+
+local function get_moves_list(meta, pieceFrom, pieceTo, pieceTo_s, from_idx, to_idx)
+	local from_x, from_y  = index_to_xy(from_idx)
+	local to_x, to_y      = index_to_xy(to_idx)
 	local moves           = meta:get_string("moves")
 	local pieceFrom_s     = pieceFrom:match(":(%w+_%w+)")
 	local pieceFrom_si_id = pieces_str:match("(%d+)=" .. pieceFrom_s)
@@ -202,7 +670,7 @@ local function get_eaten_list(meta, pieceTo, pieceTo_s)
 		end
 
 		eaten_img = eaten_img ..
-			"image[" .. ((X + (is_white and 11.7 or 8.8)) - (X * 0.45)) .. "," ..
+			"image[" .. ((X + (is_white and 11.67 or 8.8)) - (X * 0.45)) .. "," ..
 				    ((Y + 5.56) - (Y * 0.2)) .. ";1,1;" .. eaten_t[i] .. ".png]"
 	end
 
@@ -213,7 +681,7 @@ function realchess.init(pos)
 	local meta = minetest.get_meta(pos)
 	local inv  = meta:get_inventory()
 
-	meta:set_string("formspec", fs)
+	meta:set_string("formspec", fs_init)
 	meta:set_string("infotext", "Chess Board")
 	meta:set_string("playerBlack", "")
 	meta:set_string("playerWhite", "")
@@ -229,6 +697,7 @@ function realchess.init(pos)
 
 	meta:set_string("moves", "")
 	meta:set_string("eaten", "")
+	meta:set_string("mode", "")
 
 	inv:set_list("board", pieces)
 	inv:set_size("board", 64)
@@ -483,7 +952,8 @@ function realchess.move(pos, from_list, from_index, to_list, to_index, _, player
 				-- Moving right-down
 				-- Ensure that no piece disturbs the way
 				for i = 1, dx - 1 do
-					if inv:get_stack(from_list, xy_to_index(from_x + i, from_y + i)):get_name() ~= "" then
+					if inv:get_stack(
+						from_list, xy_to_index(from_x + i, from_y + i)):get_name() ~= "" then
 						return 0
 					end
 				end
@@ -491,7 +961,8 @@ function realchess.move(pos, from_list, from_index, to_list, to_index, _, player
 				-- Moving right-up
 				-- Ensure that no piece disturbs the way
 				for i = 1, dx - 1 do
-					if inv:get_stack(from_list, xy_to_index(from_x + i, from_y - i)):get_name() ~= "" then
+					if inv:get_stack(
+						from_list, xy_to_index(from_x + i, from_y - i)):get_name() ~= "" then
 						return 0
 					end
 				end
@@ -501,7 +972,8 @@ function realchess.move(pos, from_list, from_index, to_list, to_index, _, player
 				-- Moving left-down
 				-- Ensure that no piece disturbs the way
 				for i = 1, dx - 1 do
-					if inv:get_stack(from_list, xy_to_index(from_x - i, from_y + i)):get_name() ~= "" then
+					if inv:get_stack(
+						from_list, xy_to_index(from_x - i, from_y + i)):get_name() ~= "" then
 						return 0
 					end
 				end
@@ -509,7 +981,8 @@ function realchess.move(pos, from_list, from_index, to_list, to_index, _, player
 				-- Moving left-up
 				-- ensure that no piece disturbs the way
 				for i = 1, dx - 1 do
-					if inv:get_stack(from_list, xy_to_index(from_x - i, from_y - i)):get_name() ~= "" then
+					if inv:get_stack(
+						from_list, xy_to_index(from_x - i, from_y - i)):get_name() ~= "" then
 						return 0
 					end
 				end
@@ -535,7 +1008,8 @@ function realchess.move(pos, from_list, from_index, to_list, to_index, _, player
 				-- Goes down
 				-- Ensure that no piece disturbs the way
 				for i = 1, dx - 1 do
-					if inv:get_stack(from_list, xy_to_index(from_x, from_y + i)):get_name() ~= "" then
+					if inv:get_stack(
+						from_list, xy_to_index(from_x, from_y + i)):get_name() ~= "" then
 						return 0
 					end
 				end
@@ -543,7 +1017,8 @@ function realchess.move(pos, from_list, from_index, to_list, to_index, _, player
 				-- Goes up
 				-- Ensure that no piece disturbs the way
 				for i = 1, dx - 1 do
-					if inv:get_stack(from_list, xy_to_index(from_x, from_y - i)):get_name() ~= "" then
+					if inv:get_stack(
+						from_list, xy_to_index(from_x, from_y - i)):get_name() ~= "" then
 						return 0
 					end
 				end
@@ -553,7 +1028,8 @@ function realchess.move(pos, from_list, from_index, to_list, to_index, _, player
 				-- Goes right
 				-- Ensure that no piece disturbs the way
 				for i = 1, dx - 1 do
-					if inv:get_stack(from_list, xy_to_index(from_x + i, from_y)):get_name() ~= "" then
+					if inv:get_stack(
+						from_list, xy_to_index(from_x + i, from_y)):get_name() ~= "" then
 						return 0
 					end
 				end
@@ -561,7 +1037,8 @@ function realchess.move(pos, from_list, from_index, to_list, to_index, _, player
 				-- Goes right-down
 				-- Ensure that no piece disturbs the way
 				for i = 1, dx - 1 do
-					if inv:get_stack(from_list, xy_to_index(from_x + i, from_y + i)):get_name() ~= "" then
+					if inv:get_stack(
+						from_list, xy_to_index(from_x + i, from_y + i)):get_name() ~= "" then
 						return 0
 					end
 				end
@@ -569,7 +1046,8 @@ function realchess.move(pos, from_list, from_index, to_list, to_index, _, player
 				-- Goes right-up
 				-- Ensure that no piece disturbs the way
 				for i = 1, dx - 1 do
-					if inv:get_stack(from_list, xy_to_index(from_x + i, from_y - i)):get_name() ~= "" then
+					if inv:get_stack(
+						from_list, xy_to_index(from_x + i, from_y - i)):get_name() ~= "" then
 						return 0
 					end
 				end
@@ -579,7 +1057,8 @@ function realchess.move(pos, from_list, from_index, to_list, to_index, _, player
 				-- Goes left
 				-- Ensure that no piece disturbs the way and destination cell does
 				for i = 1, dx - 1 do
-					if inv:get_stack(from_list, xy_to_index(from_x - i, from_y)):get_name() ~= "" then
+					if inv:get_stack(
+						from_list, xy_to_index(from_x - i, from_y)):get_name() ~= "" then
 						return 0
 					end
 				end
@@ -587,7 +1066,8 @@ function realchess.move(pos, from_list, from_index, to_list, to_index, _, player
 				-- Goes left-down
 				-- Ensure that no piece disturbs the way
 				for i = 1, dx - 1 do
-					if inv:get_stack(from_list, xy_to_index(from_x - i, from_y + i)):get_name() ~= "" then
+					if inv:get_stack(
+						from_list, xy_to_index(from_x - i, from_y + i)):get_name() ~= "" then
 						return 0
 					end
 				end
@@ -595,7 +1075,8 @@ function realchess.move(pos, from_list, from_index, to_list, to_index, _, player
 				-- Goes left-up
 				-- Ensure that no piece disturbs the way
 				for i = 1, dx - 1 do
-					if inv:get_stack(from_list, xy_to_index(from_x - i, from_y - i)):get_name() ~= "" then
+					if inv:get_stack(
+						from_list, xy_to_index(from_x - i, from_y - i)):get_name() ~= "" then
 						return 0
 					end
 				end
@@ -620,6 +1101,7 @@ function realchess.move(pos, from_list, from_index, to_list, to_index, _, player
 								return 0
 							end
 						end
+
 						inv:set_stack(from_list, 57, "")
 						inv:set_stack(from_list, 59, "realchess:rook_white_1")
 						check = false
@@ -634,6 +1116,7 @@ function realchess.move(pos, from_list, from_index, to_list, to_index, _, player
 								return 0
 							end
 						end
+
 						inv:set_stack(from_list, 62, "realchess:rook_white_2")
 						inv:set_stack(from_list, 64, "")
 						check = false
@@ -709,7 +1192,8 @@ function realchess.move(pos, from_list, from_index, to_list, to_index, _, player
 	local whiteAttacked = attacked("white", white_king_idx, board)
 
 	if blackAttacked then
-		if thisMove == "black" and meta:get_string("blackAttacked") == "true" then
+		if thisMove == "black" then
+			--[(*)[ and meta:get_string("blackAttacked") == "true" ]] then
 			return 0
 		else
 			meta:set_string("blackAttacked", "true")
@@ -719,7 +1203,8 @@ function realchess.move(pos, from_list, from_index, to_list, to_index, _, player
 	end
 
 	if whiteAttacked then
-		if thisMove == "white" and meta:get_string("whiteAttacked") == "true" then
+		if thisMove == "white" then
+			--[(*)[ and meta:get_string("whiteAttacked") == "true" ]] then
 			return 0
 		else
 			meta:set_string("whiteAttacked", "true")
@@ -728,47 +1213,139 @@ function realchess.move(pos, from_list, from_index, to_list, to_index, _, player
 		meta:set_string("whiteAttacked", "")
 	end
 
-	lastMove = thisMove
+	--(*) Allow a piece to move and put its king in check. Maybe not in the chess rules though?
 
+	lastMove = thisMove
 	meta:set_string("lastMove", lastMove)
 	meta:set_int("lastMoveTime", minetest.get_gametime())
-	meta:set_string("playerWhite", playerWhite)
-	meta:set_string("playerBlack", playerBlack)
+
+	if meta:get_string("playerWhite") == "" then
+		meta:set_string("playerWhite", playerWhite)
+	elseif meta:get_string("playerBlack") == "" then
+		meta:set_string("playerBlack", playerBlack)
+	end
 
 	local pieceTo_s = pieceTo ~= "" and pieceTo:match(":(%w+_%w+)") or ""
-	get_moves_list(meta, pieceFrom, pieceTo, pieceTo_s, from_x, to_x, from_y, to_y)
+	get_moves_list(meta, pieceFrom, pieceTo, pieceTo_s, from_index, to_index)
 	get_eaten_list(meta, pieceTo, pieceTo_s)
 
 	return 1
 end
 
+local function ai_move(inv, meta)
+	local board_t = board_to_table(inv)
+	local lastMove = meta:get_string("lastMove")
+
+	if lastMove == "white" then
+		update_formspec(meta)
+		local moves = {}
+
+		for i = 1, 64 do
+			local possibleMoves = get_possible_moves(board_t, i)
+			local stack_name    = inv:get_stack("board", i):get_name()
+
+			if stack_name:find("black") then
+				moves[tostring(i)] = possibleMoves
+			end
+		end
+
+		local choice_from, choice_to = best_move(moves)
+
+		local pieceFrom = inv:get_stack("board", choice_from):get_name()
+		local pieceTo   = inv:get_stack("board", choice_to):get_name()
+		local pieceTo_s = pieceTo ~= "" and pieceTo:match(":(%w+_%w+)") or ""
+
+		local board          = board_to_table(inv)
+		local black_king_idx = locate_kings(board)
+		local blackAttacked  = attacked("black", black_king_idx, board)
+		local kingSafe       = true
+		local bestMoveSaveFrom, bestMoveSaveTo
+
+		if blackAttacked then
+			kingSafe = false
+			meta:set_string("blackAttacked", "true")
+			local save_moves = {}
+
+			for from_idx, _ in pairs(moves) do
+			for to_idx, value in pairs(_) do
+				from_idx = tonumber(from_idx)
+				local from_idx_bak, to_idx_bak = board[from_idx], board[to_idx]
+				board[to_idx]   = board[from_idx]
+				board[from_idx] = ""
+				black_king_idx  = locate_kings(board)
+
+				if black_king_idx then
+					blackAttacked = attacked("black", black_king_idx, board)
+					if not blackAttacked then
+						save_moves[from_idx] = save_moves[from_idx] or {}
+						save_moves[from_idx][to_idx] = value
+					end
+				end
+
+				board[from_idx], board[to_idx] = from_idx_bak, to_idx_bak
+			end
+			end
+
+			if next(save_moves) then
+				bestMoveSaveFrom, bestMoveSaveTo = best_move(save_moves)
+			end
+		end
+
+		minetest.after(1.0, function()
+			local lastMoveTime = meta:get_int("lastMoveTime")
+			if lastMoveTime > 0 then
+				if not kingSafe then
+					if bestMoveSaveTo then
+						inv:set_stack("board", bestMoveSaveTo, board[bestMoveSaveFrom])
+						inv:set_stack("board", bestMoveSaveFrom, "")
+						meta:set_string("blackAttacked", "")
+					else
+						return
+					end
+				else
+					if pieceFrom:find("pawn") and choice_to >= 57 and choice_to <= 64 then
+						inv:set_stack("board", choice_to, "realchess:queen_black")
+					else
+						inv:set_stack("board", choice_to, pieceFrom)
+					end
+
+					inv:set_stack("board", choice_from, "")
+				end
+
+				board = board_to_table(inv)
+				local _, white_king_idx = locate_kings(board)
+				local whiteAttacked = attacked("white", white_king_idx, board)
+
+				if whiteAttacked then
+					meta:set_string("whiteAttacked", "true")
+				end
+
+				if meta:get_string("playerBlack") == "" then
+					meta:set_string("playerBlack", "Dumb AI")
+				end
+
+				meta:set_string("lastMove", "black")
+				meta:set_int("lastMoveTime", minetest.get_gametime())
+
+				get_moves_list(meta, pieceFrom, pieceTo, pieceTo_s, choice_from, choice_to)
+				get_eaten_list(meta, pieceTo, pieceTo_s)
+
+				update_formspec(meta)
+			end
+		end)
+	else
+		update_formspec(meta)
+	end
+end
+
 function realchess.on_move(pos, from_list, from_index)
 	local meta = minetest.get_meta(pos)
 	local inv  = meta:get_inventory()
-	inv:set_stack(from_list, from_index, '')
+	inv:set_stack(from_list, from_index, "")
 
-	local black_king_attacked = meta:get_string("blackAttacked") == "true"
-	local white_king_attacked = meta:get_string("whiteAttacked") == "true"
-
-	local playerWhite = meta:get_string("playerWhite")
-	local playerBlack = meta:get_string("playerBlack")
-
-	local moves       = meta:get_string("moves")
-	local eaten_img   = meta:get_string("eaten_img")
-	local lastMove    = meta:get_string("lastMove")
-	local turnBlack   = minetest.colorize("#000001", (lastMove == "white" and playerBlack ~= "") and
-			    playerBlack .. "..." or playerBlack)
-	local turnWhite   = minetest.colorize("#000001", (lastMove == "black" and playerWhite ~= "") and
-			    playerWhite .. "..." or playerWhite)
-	local check_s     = minetest.colorize("#FF0000", "\\[check\\]")
-
-	local formspec = fs ..
-		"label[1.9,0.3;"  .. turnBlack .. (black_king_attacked and " " .. check_s or "") .. "]" ..
-		"label[1.9,9.15;" .. turnWhite .. (white_king_attacked and " " .. check_s or "") .. "]" ..
-		"table[8.9,1.05;5.07,3.75;moves;" .. moves:sub(1,-2) .. ";1]" ..
-		eaten_img
-
-	meta:set_string("formspec", formspec)
+	if meta:get_string("mode") == "single" then
+		ai_move(inv, meta)
+	end
 
 	return false
 end
@@ -794,12 +1371,18 @@ function realchess.fields(pos, _, fields, sender)
 	local lastMoveTime  = meta:get_int("lastMoveTime")
 	if fields.quit then return end
 
+	if fields.single or fields.multi then
+		meta:set_string("mode", (fields.single and "single" or "multi"))
+		update_formspec(meta)
+		return
+	end
+
 	-- Timeout is 5 min. by default for resetting the game (non-players only)
 	if fields.new then
 		if (playerWhite == playerName or playerBlack == playerName) then
 			realchess.init(pos)
 
-		elseif lastMoveTime ~= 0 then
+		elseif lastMoveTime > 0 then
 			if minetest.get_gametime() >= timeout_limit and
 					(playerWhite ~= playerName or playerBlack ~= playerName) then
 				realchess.init(pos)
