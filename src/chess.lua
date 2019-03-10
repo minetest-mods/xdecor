@@ -38,30 +38,28 @@ local piece_values = {
 	king   = 900
 }
 
-local function get_possible_moves(inv, from_idx)
-	local piece, color = inv:get_stack("board", from_idx):get_name():match(":(%w+)_(%w+)")
+local function get_possible_moves(board, from_idx)
+	local piece, color = board[from_idx]:match(":(%w+)_(%w+)")
 	if not piece then return end
 	local moves = {}
 	local from_x, from_y = index_to_xy(from_idx)
 
 	for i = 1, 64 do
-		local stack = inv:get_stack("board", i)
-		local stack_name = stack:get_name()
-
+		local stack_name = board[i]
 		if stack_name:find((color == "black" and "white" or "black")) or
-				stack:is_empty() then
+				stack_name == "" then
 			moves[i] = 0
 		end
 	end
 
 	for to_idx in pairs(moves) do
-		local pieceTo    = inv:get_stack("board", to_idx):get_name()
+		local pieceTo    = board[to_idx]
 		local to_x, to_y = index_to_xy(to_idx)
 
 		-- PAWN
 		if piece == "pawn" then
 			if color == "white" then
-				local pawnWhiteMove = inv:get_stack("board", xy_to_index(from_x, from_y - 1)):get_name()
+				local pawnWhiteMove = board[xy_to_index(from_x, from_y - 1)]
 				-- white pawns can go up only
 				if from_y - 1 == to_y then
 					if from_x == to_x then
@@ -105,7 +103,7 @@ local function get_possible_moves(inv, from_idx)
 				end
 
 			elseif color == "black" then
-				local pawnBlackMove = inv:get_stack("board", xy_to_index(from_x, from_y + 1)):get_name()
+				local pawnBlackMove = board[xy_to_index(from_x, from_y + 1)]
 				-- black pawns can go down only
 				if from_y + 1 == to_y then
 					if from_x == to_x then
@@ -159,7 +157,7 @@ local function get_possible_moves(inv, from_idx)
 					-- Moving down
 					-- Ensure that no piece disturbs the way
 					for i = from_y + 1, to_y - 1 do
-						if inv:get_stack("board", xy_to_index(from_x, i)):get_name() ~= "" then
+						if board[xy_to_index(from_x, i)] ~= "" then
 							moves[to_idx] = nil
 						end
 					end
@@ -167,7 +165,7 @@ local function get_possible_moves(inv, from_idx)
 					-- Mocing up
 					-- Ensure that no piece disturbs the way
 					for i = to_y + 1, from_y - 1 do
-						if inv:get_stack("board", xy_to_index(from_x, i)):get_name() ~= "" then
+						if board[xy_to_index(from_x, i)] ~= "" then
 							moves[to_idx] = nil
 						end
 					end
@@ -178,7 +176,7 @@ local function get_possible_moves(inv, from_idx)
 					-- mocing right
 					-- ensure that no piece disturbs the way
 					for i = from_x + 1, to_x - 1 do
-						if inv:get_stack("board", xy_to_index(i, from_y)):get_name() ~= "" then
+						if board[xy_to_index(i, from_y)] ~= "" then
 							moves[to_idx] = nil
 						end
 					end
@@ -186,7 +184,7 @@ local function get_possible_moves(inv, from_idx)
 					-- Mocing left
 					-- Ensure that no piece disturbs the way
 					for i = to_x + 1, from_x - 1 do
-						if inv:get_stack("board", xy_to_index(i, from_y)):get_name() ~= "" then
+						if board[xy_to_index(i, from_y)] ~= "" then
 							moves[to_idx] = nil
 						end
 					end
@@ -248,8 +246,7 @@ local function get_possible_moves(inv, from_idx)
 					-- Moving right-down
 					-- Ensure that no piece disturbs the way
 					for i = 1, dx - 1 do
-						if inv:get_stack(
-							"board", xy_to_index(from_x + i, from_y + i)):get_name() ~= "" then
+						if board[xy_to_index(from_x + i, from_y + i)] ~= "" then
 							moves[to_idx] = nil
 						end
 					end
@@ -257,8 +254,7 @@ local function get_possible_moves(inv, from_idx)
 					-- Moving right-up
 					-- Ensure that no piece disturbs the way
 					for i = 1, dx - 1 do
-						if inv:get_stack(
-							"board", xy_to_index(from_x + i, from_y - i)):get_name() ~= "" then
+						if board[xy_to_index(from_x + i, from_y - i)] ~= "" then
 							moves[to_idx] = nil
 						end
 					end
@@ -268,8 +264,7 @@ local function get_possible_moves(inv, from_idx)
 					-- Moving left-down
 					-- Ensure that no piece disturbs the way
 					for i = 1, dx - 1 do
-						if inv:get_stack(
-							"board", xy_to_index(from_x - i, from_y + i)):get_name() ~= "" then
+						if board[xy_to_index(from_x - i, from_y + i)] ~= "" then
 							moves[to_idx] = nil
 						end
 					end
@@ -277,8 +272,7 @@ local function get_possible_moves(inv, from_idx)
 					-- Moving left-up
 					-- ensure that no piece disturbs the way
 					for i = 1, dx - 1 do
-						if inv:get_stack(
-							"board", xy_to_index(from_x - i, from_y - i)):get_name() ~= "" then
+						if board[xy_to_index(from_x - i, from_y - i)] ~= "" then
 							moves[to_idx] = nil
 						end
 					end
@@ -310,7 +304,7 @@ local function get_possible_moves(inv, from_idx)
 					-- Moving down
 					-- Ensure that no piece disturbs the way
 					for i = from_y + 1, to_y - 1 do
-						if inv:get_stack("board", xy_to_index(from_x, i)):get_name() ~= "" then
+						if board[xy_to_index(from_x, i)] ~= "" then
 							moves[to_idx] = nil
 						end
 					end
@@ -318,7 +312,7 @@ local function get_possible_moves(inv, from_idx)
 					-- Mocing up
 					-- Ensure that no piece disturbs the way
 					for i = to_y + 1, from_y - 1 do
-						if inv:get_stack("board", xy_to_index(from_x, i)):get_name() ~= "" then
+						if board[xy_to_index(from_x, i)] ~= "" then
 							moves[to_idx] = nil
 						end
 					end
@@ -328,8 +322,7 @@ local function get_possible_moves(inv, from_idx)
 					-- Goes right
 					-- Ensure that no piece disturbs the way
 					for i = 1, dx - 1 do
-						if inv:get_stack(
-							"board", xy_to_index(from_x + i, from_y)):get_name() ~= "" then
+						if board[xy_to_index(from_x + i, from_y)] ~= "" then
 							moves[to_idx] = nil
 						end
 					end
@@ -337,8 +330,7 @@ local function get_possible_moves(inv, from_idx)
 					-- Goes right-down
 					-- Ensure that no piece disturbs the way
 					for i = 1, dx - 1 do
-						if inv:get_stack(
-							"board", xy_to_index(from_x + i, from_y + i)):get_name() ~= "" then
+						if board[xy_to_index(from_x + i, from_y + i)] ~= "" then
 							moves[to_idx] = nil
 						end
 					end
@@ -346,8 +338,7 @@ local function get_possible_moves(inv, from_idx)
 					-- Goes right-up
 					-- Ensure that no piece disturbs the way
 					for i = 1, dx - 1 do
-						if inv:get_stack(
-							"board", xy_to_index(from_x + i, from_y - i)):get_name() ~= "" then
+						if board[xy_to_index(from_x + i, from_y - i)] ~= "" then
 							moves[to_idx] = nil
 						end
 					end
@@ -359,7 +350,7 @@ local function get_possible_moves(inv, from_idx)
 						-- mocing right
 						-- ensure that no piece disturbs the way
 						for i = from_x + 1, to_x - 1 do
-							if inv:get_stack("board", xy_to_index(i, from_y)):get_name() ~= "" then
+							if board[xy_to_index(i, from_y)] ~= "" then
 								moves[to_idx] = nil
 							end
 						end
@@ -367,7 +358,7 @@ local function get_possible_moves(inv, from_idx)
 						-- Mocing left
 						-- Ensure that no piece disturbs the way
 						for i = to_x + 1, from_x - 1 do
-							if inv:get_stack("board", xy_to_index(i, from_y)):get_name() ~= "" then
+							if board[xy_to_index(i, from_y)] ~= "" then
 								moves[to_idx] = nil
 							end
 						end
@@ -376,8 +367,7 @@ local function get_possible_moves(inv, from_idx)
 					-- Goes left-down
 					-- Ensure that no piece disturbs the way
 					for i = 1, dx - 1 do
-						if inv:get_stack(
-							"board", xy_to_index(from_x - i, from_y + i)):get_name() ~= "" then
+						if board[xy_to_index(from_x - i, from_y + i)] ~= "" then
 							moves[to_idx] = nil
 						end
 					end
@@ -385,8 +375,7 @@ local function get_possible_moves(inv, from_idx)
 					-- Goes left-up
 					-- Ensure that no piece disturbs the way
 					for i = 1, dx - 1 do
-						if inv:get_stack(
-							"board", xy_to_index(from_x - i, from_y - i)):get_name() ~= "" then
+						if board[xy_to_index(from_x - i, from_y - i)] ~= "" then
 							moves[to_idx] = nil
 						end
 					end
@@ -415,9 +404,7 @@ local function get_possible_moves(inv, from_idx)
 	if not next(moves) then return end
 
 	for i in pairs(moves) do
-		local stack = inv:get_stack("board", tonumber(i))
-		local stack_name = stack:get_name()
-
+		local stack_name = board[tonumber(i)]
 		if stack_name ~= "" then
 			for p, value in pairs(piece_values) do
 				if stack_name:find(p) then
@@ -593,6 +580,14 @@ for i = 1, #pieces do
 end
 pieces_str = pieces_str .. "69=mailbox_blank16.png"
 
+local fs_init = [[
+	size[4,1.2;]
+	no_prepend[]
+	label[0,0;Select a mode:]
+	button[0,0.5;2,1;single;Singleplayer]
+	button[2,0.5;2,1;multi;Multiplayer]
+]]
+
 local fs = [[
 	size[14.7,10;]
 	no_prepend[]
@@ -686,7 +681,7 @@ function realchess.init(pos)
 	local meta = minetest.get_meta(pos)
 	local inv  = meta:get_inventory()
 
-	meta:set_string("formspec", fs)
+	meta:set_string("formspec", fs_init)
 	meta:set_string("infotext", "Chess Board")
 	meta:set_string("playerBlack", "")
 	meta:set_string("playerWhite", "")
@@ -702,6 +697,7 @@ function realchess.init(pos)
 
 	meta:set_string("moves", "")
 	meta:set_string("eaten", "")
+	meta:set_string("mode", "")
 
 	inv:set_list("board", pieces)
 	inv:set_size("board", 64)
@@ -1233,24 +1229,19 @@ function realchess.move(pos, from_list, from_index, to_list, to_index, _, player
 	get_moves_list(meta, pieceFrom, pieceTo, pieceTo_s, from_index, to_index)
 	get_eaten_list(meta, pieceTo, pieceTo_s)
 
-	--print("from_index: " .. from_index)
-	--print("to_index: " .. to_index)
-
 	return 1
 end
 
-function realchess.on_move(pos, from_list, from_index)
-	local meta = minetest.get_meta(pos)
-	local inv  = meta:get_inventory()
-	inv:set_stack(from_list, from_index, "")
-
+local function ai_move(inv, meta)
+	local board_t = board_to_table(inv)
 	local lastMove = meta:get_string("lastMove")
+
 	if lastMove == "white" then
 		update_formspec(meta)
 		local moves = {}
 
 		for i = 1, 64 do
-			local possibleMoves = get_possible_moves(inv, i)
+			local possibleMoves = get_possible_moves(board_t, i)
 			local stack_name    = inv:get_stack("board", i):get_name()
 
 			if stack_name:find("black") then
@@ -1258,9 +1249,8 @@ function realchess.on_move(pos, from_list, from_index)
 			end
 		end
 
-		--minetest.log("warning", "moves: " .. dump(moves))
-
 		local choice_from, choice_to = best_move(moves)
+
 		local pieceFrom = inv:get_stack("board", choice_from):get_name()
 		local pieceTo   = inv:get_stack("board", choice_to):get_name()
 		local pieceTo_s = pieceTo ~= "" and pieceTo:match(":(%w+_%w+)") or ""
@@ -1313,7 +1303,12 @@ function realchess.on_move(pos, from_list, from_index)
 						return
 					end
 				else
-					inv:set_stack("board", choice_to, pieceFrom)
+					if pieceFrom:find("pawn") and choice_to >= 57 and choice_to <= 64 then
+						inv:set_stack("board", choice_to, "realchess:queen_black")
+					else
+						inv:set_stack("board", choice_to, pieceFrom)
+					end
+
 					inv:set_stack("board", choice_from, "")
 				end
 
@@ -1341,6 +1336,16 @@ function realchess.on_move(pos, from_list, from_index)
 	else
 		update_formspec(meta)
 	end
+end
+
+function realchess.on_move(pos, from_list, from_index)
+	local meta = minetest.get_meta(pos)
+	local inv  = meta:get_inventory()
+	inv:set_stack(from_list, from_index, "")
+
+	if meta:get_string("mode") == "single" then
+		ai_move(inv, meta)
+	end
 
 	return false
 end
@@ -1365,6 +1370,12 @@ function realchess.fields(pos, _, fields, sender)
 	local playerBlack   = meta:get_string("playerBlack")
 	local lastMoveTime  = meta:get_int("lastMoveTime")
 	if fields.quit then return end
+
+	if fields.single or fields.multi then
+		meta:set_string("mode", (fields.single and "single" or "multi"))
+		update_formspec(meta)
+		return
+	end
 
 	-- Timeout is 5 min. by default for resetting the game (non-players only)
 	if fields.new then
