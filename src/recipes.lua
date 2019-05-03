@@ -95,14 +95,16 @@ minetest.register_craft({
 	}
 })
 
-minetest.register_craft({
-	output = "xdecor:empty_shelf",
-	recipe = {
-		{"group:wood", "group:wood", "group:wood"},
-		{"", "", ""},
-		{"group:wood", "group:wood", "group:wood"}
-	}
-})
+if not minetest.get_modpath("moreblocks") then
+	minetest.register_craft({
+		output = "xdecor:empty_shelf",
+		recipe = {
+			{"group:wood", "group:wood", "group:wood"},
+			{"", "", ""},
+			{"group:wood", "group:wood", "group:wood"}
+		}
+	})
+end
 
 minetest.register_craft({
 	output = "xdecor:enderchest",

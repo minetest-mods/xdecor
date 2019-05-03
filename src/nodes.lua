@@ -95,11 +95,15 @@ register_storage("cabinet_half", "Half Wooden Cabinet", {
 		 "xdecor_half_cabinet_sides.png", "xdecor_half_cabinet_front.png"}
 })
 
-register_storage("empty_shelf", "Empty Shelf", {
-	on_rotate = screwdriver.rotate_simple,
-	tiles = {"default_wood.png", "default_wood.png", "default_wood.png",
-		 "default_wood.png", "default_wood.png^xdecor_empty_shelf.png"}
-})
+if minetest.get_modpath("moreblocks") then
+	minetest.register_alias("xdecor:empty_shelf", "moreblocks:empty_shelf")
+else
+	register_storage("empty_shelf", "Empty Shelf", {
+		on_rotate = screwdriver.rotate_simple,
+		tiles = {"default_wood.png", "default_wood.png", "default_wood.png",
+			 "default_wood.png", "default_wood.png^xdecor_empty_shelf.png"}
+	})
+end
 
 register_storage("multishelf", "Multi Shelf", {
 	on_rotate = screwdriver.rotate_simple,
