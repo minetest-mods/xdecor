@@ -263,9 +263,8 @@ local xdecor_doors = {
 		{"group:wood", "group:wood"} }
 }
 
-if not minetest.global_exists("mesecon") then
-	mesecons_register = nil
-else
+local mesecons_register
+if minetest.global_exists("mesecon") then
 	mesecons_register = { effector = {
 		action_on = function(pos, node)
 			local door = doors.get(pos)
