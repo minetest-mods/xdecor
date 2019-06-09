@@ -263,7 +263,7 @@ local xdecor_doors = {
 		{"group:wood", "group:wood"} }
 }
 
-if not mesecon then
+if not minetest.global_exists("mesecon") then
 	mesecons_register = nil
 else
 	mesecons_register = { effector = {
