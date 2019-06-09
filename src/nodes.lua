@@ -263,6 +263,25 @@ local xdecor_doors = {
 		{"group:wood", "group:wood"} }
 }
 
+local mesecons_register
+if minetest.global_exists("mesecon") then
+	mesecons_register = { effector = {
+		action_on = function(pos, node)
+			local door = doors.get(pos)
+			if door then
+				door:open()
+			end
+		end,
+		action_off = function(pos, node)
+			local door = doors.get(pos)
+			if door then
+				door:close()
+			end
+		end,
+		rules = mesecon.rules.pplate
+	}}
+end
+
 for name, recipe in pairs(xdecor_doors) do
 	if not doors.register then break end
 	doors.register(name.."_door", {
@@ -271,7 +290,8 @@ for name, recipe in pairs(xdecor_doors) do
 		inventory_image = "xdecor_"..name.."_door_inv.png",
 		protected = door_access(name),
 		groups = {choppy=2, cracky=2, oddly_breakable_by_hand=1, door=1},
-		recipe = recipe
+		recipe = recipe,
+		mesecons = mesecons_register
 	})
 end
 
