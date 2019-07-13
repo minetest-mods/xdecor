@@ -20,7 +20,7 @@ function xdecor.sit(pos, node, clicker, pointed_thing)
 		pos.y = pos.y - 0.5
 		clicker:setpos(pos)
 		clicker:set_eye_offset({x=0, y=0, z=0}, {x=0, y=0, z=0})
-		clicker:set_physics_override(1, 1, 1)
+		clicker:set_physics_override({speed = 1, jump = 1, gravity = 1})
 		default.player_attached[player_name] = false
 		default.player_set_animation(clicker, "stand", 30)
 
@@ -28,7 +28,7 @@ function xdecor.sit(pos, node, clicker, pointed_thing)
 			not ctrl.sneak and vector.equals(vel, {x=0,y=0,z=0}) then
 
 		clicker:set_eye_offset({x=0, y=-7, z=2}, {x=0, y=0, z=0})
-		clicker:set_physics_override(0, 0, 0)
+		clicker:set_physics_override({speed = 0, jump = 0, gravity = 1})
 		clicker:setpos(pos)
 		default.player_attached[player_name] = true
 		default.player_set_animation(clicker, "sit", 30)
