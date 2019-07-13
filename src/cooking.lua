@@ -119,8 +119,9 @@ end
 function cauldron.take_soup(pos, node, clicker, itemstack)
 	local inv = clicker:get_inventory()
 	local wield_item = clicker:get_wielded_item()
+	local item_name = wield_item:get_name()
 
-	if wield_item:get_name() == "xdecor:bowl" then
+	if item_name == "xdecor:bowl" or item_name == "farming:bowl" then
 		if wield_item:get_count() > 1 then
 			if inv:room_for_item("main", "xdecor:bowl_soup 1") then
 				itemstack:take_item()
