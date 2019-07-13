@@ -2,6 +2,9 @@ local realchess = {}
 screwdriver = screwdriver or {}
 
 local function index_to_xy(idx)
+	if not idx then
+		return nil
+	end
 	idx = idx - 1
 	local x = idx % 8
 	local y = (idx - x) / 8
@@ -1188,6 +1191,9 @@ function realchess.move(pos, from_list, from_index, to_list, to_index, _, player
 	board[from_index] = ""
 
 	local black_king_idx, white_king_idx = locate_kings(board)
+	if not black_king_idx or not white_king_idx then
+		return 0
+	end
 	local blackAttacked = attacked("black", black_king_idx, board)
 	local whiteAttacked = attacked("white", white_king_idx, board)
 
