@@ -240,7 +240,7 @@ xdecor.register("workbench", {
 for _, d in pairs(workbench.defs) do
 for i=1, #nodes do
 	local node = nodes[i]
-	local mod_name, item_name = node:match("^([^:]+):[^:]+)$")
+	local mod_name, item_name = node:match("^([^:]+):([^:]+)$")
 	local def = registered_nodes[node]
 
 	if item_name and d[3] then
