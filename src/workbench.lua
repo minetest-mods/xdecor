@@ -240,9 +240,10 @@ xdecor.register("workbench", {
 for _, d in pairs(workbench.defs) do
 for i=1, #nodes do
 	local node = nodes[i]
+	local mod_name, item_name = node:match("^(.-):(.*)")
 	local def = registered_nodes[node]
 
-	if d[3] then
+	if item_name and d[3] then
 		local groups = {}
 		local tiles
 		groups.not_in_creative_inventory = 1
@@ -263,8 +264,8 @@ for i=1, #nodes do
 			tiles = {def.tile_images[1]}
 		end
 
-		if not registered_nodes["stairs:slab_"..node:match(":(.*)")] then
-			stairs.register_stair_and_slab(node:match(":(.*)"), node,
+		if not registered_nodes["stairs:slab_"..item_name] then
+			stairs.register_stair_and_slab(item_name, node,
 				groups, tiles, def.description.." Stair",
 				def.description.." Slab", def.sounds)
 		end
@@ -282,6 +283,15 @@ for i=1, #nodes do
 			sunlight_propagates = true,
 			on_place = minetest.rotate_node
 		})
+	elseif item_name and mod_name then
+		minetest.register_alias_force(
+			('%s:%s_innerstair'):format(mod_name, item_name),
+			('stairs:stair_inner_%s'):format(item_name)
+		)
+		minetest.register_alias_force(
+			('%s:%s_outerstair'):format(mod_name, item_name),
+			('stairs:stair_outer_%s'):format(item_name)
+		)
 	end
 end
 end
