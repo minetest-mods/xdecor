@@ -7,6 +7,9 @@ read_globals = {
 	"default",
 	"stairs", "doors", "xpanes",
 	"xdecor", "xbg",
-	table = { fields = { "copy" } },
+	table = {fields = {"copy"}},
+	string = {fields = {"split"}},
 	"unpack",
+	"stairsplus",
+	"mesecon"
 }

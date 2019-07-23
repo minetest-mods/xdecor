@@ -5,7 +5,9 @@ local function index_to_xy(idx)
 	if not idx then
 		return nil
 	end
+
 	idx = idx - 1
+
 	local x = idx % 8
 	local y = (idx - x) / 8
 

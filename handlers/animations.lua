@@ -19,24 +19,29 @@ function xdecor.sit(pos, node, clicker, pointed_thing)
 	if default.player_attached[player_name] then
 		pos.y = pos.y - 0.5
 		clicker:setpos(pos)
-		clicker:set_eye_offset({x=0, y=0, z=0}, {x=0, y=0, z=0})
+		clicker:set_eye_offset(vector.new(), vector.new())
 		clicker:set_physics_override({speed = 1, jump = 1, gravity = 1})
 		default.player_attached[player_name] = false
 		default.player_set_animation(clicker, "stand", 30)
 
 	elseif not default.player_attached[player_name] and node.param2 <= 3 and
-			not ctrl.sneak and vector.equals(vel, {x=0,y=0,z=0}) then
+			not ctrl.sneak and vector.equals(vel, vector.new()) then
 
-		clicker:set_eye_offset({x=0, y=-7, z=2}, {x=0, y=0, z=0})
+		clicker:set_eye_offset({x = 0, y = -7, z = 2}, vector.new())
 		clicker:set_physics_override({speed = 0, jump = 0, gravity = 1})
 		clicker:setpos(pos)
 		default.player_attached[player_name] = true
 		default.player_set_animation(clicker, "sit", 30)
 
-		if     node.param2 == 0 then clicker:set_look_yaw(3.15)
-		elseif node.param2 == 1 then clicker:set_look_yaw(7.9)
-		elseif node.param2 == 2 then clicker:set_look_yaw(6.28)
-		elseif node.param2 == 3 then clicker:set_look_yaw(4.75) end
+		if node.param2 == 0 then
+			clicker:set_look_yaw(3.15)
+		elseif node.param2 == 1 then
+			clicker:set_look_yaw(7.9)
+		elseif node.param2 == 2 then
+			clicker:set_look_yaw(6.28)
+		elseif node.param2 == 3 then
+			clicker:set_look_yaw(4.75)
+		end
 	end
 end
 
@@ -47,6 +52,7 @@ function xdecor.sit_dig(pos, digger)
 			return false
 		end
 	end
+
 	return true
 end
 

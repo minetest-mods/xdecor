@@ -17,7 +17,9 @@ cauldron.cbox = {
 
 function cauldron.stop_sound(pos)
 	local spos = minetest.hash_node_position(pos)
-	if sounds[spos] then minetest.sound_stop(sounds[spos]) end
+	if sounds[spos] then
+		minetest.sound_stop(sounds[spos])
+	end
 end
 
 function cauldron.idle_construct(pos)
@@ -29,7 +31,10 @@ end
 function cauldron.boiling_construct(pos)
 	local spos = minetest.hash_node_position(pos)
 	sounds[spos] = minetest.sound_play("xdecor_boiling_water", {
-		pos=pos, max_hear_distance=5, gain=0.8, loop=true
+		pos = pos,
+		max_hear_distance = 5,
+		gain = 0.8,
+		loop = true
 	})
 
 	local meta = minetest.get_meta(pos)
@@ -57,23 +62,25 @@ function cauldron.filling(pos, node, clicker, itemstack)
 			else
 				itemstack:replace("bucket:bucket_water")
 			end
-			minetest.set_node(pos, {name="xdecor:cauldron_empty", param2=node.param2})
+			minetest.set_node(pos, {name = "xdecor:cauldron_empty", param2 = node.param2})
+
 		elseif wield_item:sub(-6) == "_water" and node.name:sub(-6) == "_empty" then
-			minetest.set_node(pos, {name="xdecor:cauldron_idle", param2=node.param2})
+			minetest.set_node(pos, {name = "xdecor:cauldron_idle", param2 = node.param2})
 			itemstack:replace("bucket:bucket_empty")
 		end
+
 		return itemstack
 	end
 end
 
 function cauldron.idle_timer(pos)
-	local below_node = {x=pos.x, y=pos.y-1, z=pos.z}
+	local below_node = {x = pos.x, y = pos.y - 1, z = pos.z}
 	if not minetest.get_node(below_node).name:find("fire") then
 		return true
 	end
 
 	local node = minetest.get_node(pos)
-	minetest.set_node(pos, {name="xdecor:cauldron_boiling", param2=node.param2})
+	minetest.set_node(pos, {name = "xdecor:cauldron_boiling", param2 = node.param2})
 	return true
 end
 
@@ -82,13 +89,17 @@ local function eatable(itemstring)
 	local item = itemstring:match("[%w_:]+")
 	local on_use_def = minetest.registered_items[item].on_use
 	if not on_use_def then return end
+
 	return string.format("%q", string.dump(on_use_def)):find("item_eat")
 end
 
 function cauldron.boiling_timer(pos)
 	local node = minetest.get_node(pos)
 	local objs = minetest.get_objects_inside_radius(pos, 0.5)
-	if not next(objs) then return true end
+
+	if not next(objs) then
+		return true
+	end
 
 	local ingredients = {}
 	for _, obj in pairs(objs) do
@@ -96,23 +107,29 @@ function cauldron.boiling_timer(pos)
 			local itemstring = obj:get_luaentity().itemstring
 			local food = itemstring:match(":([%w_]+)")
 
-			for _, ingredient in pairs(ingredients_list) do
+			for _, ingredient in ipairs(ingredients_list) do
 				if food and (eatable(itemstring) or food:find(ingredient)) then
-					ingredients[#ingredients+1] = food break
+					ingredients[#ingredients + 1] = food
+					break
 				end
 			end
 		end
 	end
 
 	if #ingredients >= 2 then
-		for _, obj in pairs(objs) do obj:remove() end
-		minetest.set_node(pos, {name="xdecor:cauldron_soup", param2=node.param2})
+		for _, obj in pairs(objs) do
+			obj:remove()
+		end
+
+		minetest.set_node(pos, {name = "xdecor:cauldron_soup", param2 = node.param2})
 	end
 
-	local node_under = {x=pos.x, y=pos.y-1, z=pos.z}
+	local node_under = {x = pos.x, y = pos.y - 1, z = pos.z}
+
 	if not minetest.get_node(node_under).name:find("fire") then
-		minetest.set_node(pos, {name="xdecor:cauldron_idle", param2=node.param2})
+		minetest.set_node(pos, {name = "xdecor:cauldron_idle", param2 = node.param2})
 	end
+
 	return true
 end
 
@@ -135,8 +152,9 @@ function cauldron.take_soup(pos, node, clicker, itemstack)
 			itemstack:replace("xdecor:bowl_soup 1")
 		end
 
-		minetest.set_node(pos, {name="xdecor:cauldron_empty", param2=node.param2})
+		minetest.set_node(pos, {name = "xdecor:cauldron_empty", param2 = node.param2})
 	end
+
 	return itemstack
 end
 
@@ -146,11 +164,11 @@ xdecor.register("cauldron_empty", {
 	on_rotate = screwdriver.rotate_simple,
 	tiles = {"xdecor_cauldron_top_empty.png", "xdecor_cauldron_sides.png"},
 	infotext = "Cauldron (empty)",
+	collision_box = xdecor.pixelbox(16, cauldron.cbox),
+	on_rightclick = cauldron.filling,
 	on_construct = function(pos)
 		cauldron.stop_sound(pos)
 	end,
-	on_rightclick = cauldron.filling,
-	collision_box = xdecor.pixelbox(16, cauldron.cbox)
 })
 
 xdecor.register("cauldron_idle", {
@@ -162,7 +180,7 @@ xdecor.register("cauldron_idle", {
 	collision_box = xdecor.pixelbox(16, cauldron.cbox),
 	on_rightclick = cauldron.filling,
 	on_construct = cauldron.idle_construct,
-	on_timer = cauldron.idle_timer
+	on_timer = cauldron.idle_timer,
 })
 
 xdecor.register("cauldron_boiling", {
@@ -171,32 +189,40 @@ xdecor.register("cauldron_boiling", {
 	drop = "xdecor:cauldron_empty",
 	infotext = "Cauldron (active) - Drop foods inside to make a soup",
 	damage_per_second = 2,
-	tiles = {{name="xdecor_cauldron_top_anim_boiling_water.png",
-			animation={type="vertical_frames", length=3.0}},
-		"xdecor_cauldron_sides.png"},
+	tiles = {
+		{
+			name = "xdecor_cauldron_top_anim_boiling_water.png",
+			animation = {type = "vertical_frames", length = 3.0}
+		},
+		"xdecor_cauldron_sides.png"
+	},
 	collision_box = xdecor.pixelbox(16, cauldron.cbox),
 	on_rightclick = cauldron.filling,
 	on_construct = cauldron.boiling_construct,
+	on_timer = cauldron.boiling_timer,
 	on_destruct = function(pos)
 		cauldron.stop_sound(pos)
 	end,
-	on_timer = cauldron.boiling_timer
 })
 
 xdecor.register("cauldron_soup", {
-	groups = {cracky=2, oddly_breakable_by_hand=1, not_in_creative_inventory=1},
+	groups = {cracky = 2, oddly_breakable_by_hand = 1, not_in_creative_inventory = 1},
 	on_rotate = screwdriver.rotate_simple,
 	drop = "xdecor:cauldron_empty",
 	infotext = "Cauldron (active) - Use a bowl to eat the soup",
 	damage_per_second = 2,
-	tiles = {{name="xdecor_cauldron_top_anim_soup.png",
-			animation={type="vertical_frames", length=3.0}},
-		"xdecor_cauldron_sides.png"},
+	tiles = {
+		{
+			name = "xdecor_cauldron_top_anim_soup.png",
+			animation = {type = "vertical_frames", length = 3.0}
+		},
+		"xdecor_cauldron_sides.png"
+	},
 	collision_box = xdecor.pixelbox(16, cauldron.cbox),
 	on_rightclick = cauldron.take_soup,
 	on_destruct = function(pos)
 		cauldron.stop_sound(pos)
-	end
+	end,
 })
 
 -- Craft items
