@@ -1,3 +1,7 @@
+local function log(level, message, ...)
+	minetest.log(level, '[xdecor] ' .. message:format(...))
+end
+
 local workbench = {}
 WB = {}
 screwdriver = screwdriver or {}
@@ -69,7 +73,7 @@ function workbench:get_output(inv, input, name)
 		local item = name .. "_" .. nbox[1]
 
 		item = nbox[3] and item or "stairs:" .. nbox[1] .. "_" .. name:match(":(.*)")
-		output[#output + 1] = item .. " " .. count
+		output[i] = item .. " " .. count
 	end
 
 	inv:set_list("forms", output)
@@ -184,7 +188,16 @@ function workbench.timer(pos)
 	return true
 end
 
-function workbench.put(_, listname, _, stack)
+function workbench.allow_put(pos, listname, index, stack, player)
+	local player_name = player:get_player_name()
+	if (
+		minetest.is_protected(pos, player_name) and
+		not minetest.check_player_privs(player_name, {protection_bypass=true})
+	) then
+		minetest.record_protection_violation(pos, player_name)
+		return 0
+	end
+
 	local stackname = stack:get_name()
 	if (listname == "tool" and stack:get_wear() > 0 and
 		workbench:repairable(stackname)) or
@@ -197,11 +210,13 @@ function workbench.put(_, listname, _, stack)
 	return 0
 end
 
-function workbench.move(_, from_list, _, to_list, _, count)
-	return (to_list == "storage" and from_list ~= "forms") and count or 0
-end
+function workbench.on_put(pos, listname, index, stack, player)
+	log('action',
+		'%s put %s in workbench at %s',
+		player:get_player_name(),
+		stack:get_name(),
+		minetest.pos_to_string(pos))
 
-function workbench.on_put(pos, listname, _, stack)
 	local inv = minetest.get_meta(pos):get_inventory()
 	if listname == "input" then
 		local input = inv:get_stack("input", 1)
@@ -212,7 +227,55 @@ function workbench.on_put(pos, listname, _, stack)
 	end
 end
 
+function workbench.allow_move(pos, from_list, from_index, to_list, to_index, count, player)
+	local player_name = player:get_player_name()
+	if (
+		minetest.is_protected(pos, player_name) and
+		not minetest.check_player_privs(player_name, {protection_bypass=true})
+	) then
+		minetest.record_protection_violation(pos, player_name)
+		return 0
+	end
+
+	return (to_list == "storage" and from_list ~= "forms") and count or 0
+end
+
+function workbench.on_move(pos, from_list, from_index, to_list, to_index, count, player)
+	local meta = minetest.get_meta(pos)
+	local inv = meta:get_inventory()
+	local from_stack = inv:get_stack(from_list, from_index)
+	local to_stack = inv:get_stack(to_list, to_index)
+
+	log('action',
+		'%s moved %s in workbench at %s',
+		player:get_player_name(),
+		to_stack:get_name(),
+		minetest.pos_to_string(pos))
+
+	workbench.on_take(pos, from_list, from_index, from_stack, player)
+	workbench.on_put(pos, to_list, to_index, to_stack, player)
+end
+
+function workbench.allow_take(pos, listname, index, stack, player)
+	local player_name = player:get_player_name()
+	if (
+		minetest.is_protected(pos, player_name) and
+		not minetest.check_player_privs(player_name, {protection_bypass=true})
+	) then
+		minetest.record_protection_violation(pos, player_name)
+		return 0
+	end
+
+	return stack:get_count()
+end
+
 function workbench.on_take(pos, listname, index, stack, player)
+	log('action',
+		'%s took %s from workbench at %s',
+		player:get_player_name(),
+		stack:get_name(),
+		minetest.pos_to_string(pos))
+
 	local inv = minetest.get_meta(pos):get_inventory()
 	local input = inv:get_stack("input", 1)
 	local inputname = input:get_name()
@@ -255,8 +318,10 @@ xdecor.register("workbench", {
 	on_receive_fields = workbench.fields,
 	on_metadata_inventory_put = workbench.on_put,
 	on_metadata_inventory_take = workbench.on_take,
-	allow_metadata_inventory_put = workbench.put,
-	allow_metadata_inventory_move = workbench.move
+	on_metadata_inventory_move = workbench.on_move,
+	allow_metadata_inventory_put = workbench.allow_put,
+	allow_metadata_inventory_take = workbench.allow_take,
+	allow_metadata_inventory_move = workbench.allow_move
 })
 
 for _, d in ipairs(workbench.defs) do
