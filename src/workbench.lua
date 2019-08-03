@@ -190,10 +190,7 @@ end
 
 function workbench.allow_put(pos, listname, index, stack, player)
 	local player_name = player:get_player_name()
-	if (
-		minetest.is_protected(pos, player_name) and
-		not minetest.check_player_privs(player_name, {protection_bypass=true})
-	) then
+	if minetest.is_protected(pos, player_name) then
 		minetest.record_protection_violation(pos, player_name)
 		return 0
 	end
@@ -229,10 +226,7 @@ end
 
 function workbench.allow_move(pos, from_list, from_index, to_list, to_index, count, player)
 	local player_name = player:get_player_name()
-	if (
-		minetest.is_protected(pos, player_name) and
-		not minetest.check_player_privs(player_name, {protection_bypass=true})
-	) then
+	if minetest.is_protected(pos, player_name) then
 		minetest.record_protection_violation(pos, player_name)
 		return 0
 	end
@@ -258,10 +252,7 @@ end
 
 function workbench.allow_take(pos, listname, index, stack, player)
 	local player_name = player:get_player_name()
-	if (
-		minetest.is_protected(pos, player_name) and
-		not minetest.check_player_privs(player_name, {protection_bypass=true})
-	) then
+	if minetest.is_protected(pos, player_name) then
 		minetest.record_protection_violation(pos, player_name)
 		return 0
 	end
