@@ -237,7 +237,7 @@ minetest.register_entity("xdecor:book_open", {
 	physical = false,
 	textures = {"xdecor_book_open.png"},
 	on_activate = function(self)
-		local pos = self.object:getpos()
+		local pos = self.object:get_pos()
 		local pos_under = {x = pos.x, y = pos.y - 1, z = pos.z}
 
 		if minetest.get_node(pos_under).name ~= "xdecor:enchantment_table" then
