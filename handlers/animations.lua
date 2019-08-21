@@ -18,7 +18,7 @@ function xdecor.sit(pos, node, clicker, pointed_thing)
 
 	if default.player_attached[player_name] then
 		pos.y = pos.y - 0.5
-		clicker:setpos(pos)
+		clicker:set_pos(pos)
 		clicker:set_eye_offset(vector.new(), vector.new())
 		clicker:set_physics_override({speed = 1, jump = 1, gravity = 1})
 		default.player_attached[player_name] = false
@@ -29,7 +29,7 @@ function xdecor.sit(pos, node, clicker, pointed_thing)
 
 		clicker:set_eye_offset({x = 0, y = -7, z = 2}, vector.new())
 		clicker:set_physics_override({speed = 0, jump = 0, gravity = 1})
-		clicker:setpos(pos)
+		clicker:set_pos(pos)
 		default.player_attached[player_name] = true
 		default.player_set_animation(clicker, "sit", 30)
 
@@ -55,4 +55,3 @@ function xdecor.sit_dig(pos, digger)
 
 	return true
 end
-
