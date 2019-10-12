@@ -85,6 +85,7 @@ function itemframe.rightclick(pos, node, clicker, itemstack)
 	local itemstring = itemstack:take_item():to_string()
 	meta:set_string("item", itemstring)
 	update_item(pos, node)
+	meta:set_string("infotext", itemstring.." (owned by " .. owner .. ")")
 
 	return itemstack
 end
