@@ -1147,7 +1147,7 @@ function realchess.move(pos, from_list, from_index, to_list, to_index, _, player
 					end
 				elseif to_x == 6 then
 					local castlingBlackR = meta:get_int("castlingBlackR")
-					local idx8 = inv:get_stack(from_list, 1):get_name()
+					local idx8 = inv:get_stack(from_list, 8):get_name()
 
 					if castlingBlackR == 1 and idx8 == "realchess:rook_black_2" then
 						for i = from_index + 1, 7 do
