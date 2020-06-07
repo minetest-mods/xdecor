@@ -1096,7 +1096,7 @@ function realchess.move(pos, from_list, from_index, to_list, to_index, _, player
 
 		if thisMove == "white" then
 			if from_y == 7 and to_y == 7 then
-				if to_x == 1 then
+				if to_x == 2 then
 					local castlingWhiteL = meta:get_int("castlingWhiteL")
 					local idx57 = inv:get_stack(from_list, 57):get_name()
 
@@ -1108,7 +1108,7 @@ function realchess.move(pos, from_list, from_index, to_list, to_index, _, player
 						end
 
 						inv:set_stack(from_list, 57, "")
-						inv:set_stack(from_list, 59, "realchess:rook_white_1")
+						inv:set_stack(from_list, 60, "realchess:rook_white_1")
 						check = false
 					end
 				elseif to_x == 6 then
@@ -1130,7 +1130,7 @@ function realchess.move(pos, from_list, from_index, to_list, to_index, _, player
 			end
 		elseif thisMove == "black" then
 			if from_y == 0 and to_y == 0 then
-				if to_x == 1 then
+				if to_x == 2 then
 					local castlingBlackL = meta:get_int("castlingBlackL")
 					local idx1 = inv:get_stack(from_list, 1):get_name()
 
@@ -1142,7 +1142,7 @@ function realchess.move(pos, from_list, from_index, to_list, to_index, _, player
 						end
 
 						inv:set_stack(from_list, 1, "")
-						inv:set_stack(from_list, 3, "realchess:rook_black_1")
+						inv:set_stack(from_list, 4, "realchess:rook_black_1")
 						check = false
 					end
 				elseif to_x == 6 then
