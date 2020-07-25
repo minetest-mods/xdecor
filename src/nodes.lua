@@ -6,7 +6,7 @@ local function register_pane(name, desc, def)
 		tiles = {"xdecor_" .. name .. ".png"},
 		drawtype = "airlike",
 		paramtype = "light",
-		textures = {"xdecor_" .. name .. ".png", "xdecor_" .. name .. ".png", "xpanes_space.png"},
+		textures = {"xdecor_" .. name .. ".png", "" ,"xdecor_" .. name .. ".png"},
 		inventory_image = "xdecor_" .. name .. ".png",
 		wield_image = "xdecor_" .. name .. ".png",
 		groups = def.groups,
