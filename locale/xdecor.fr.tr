@@ -61,3 +61,9 @@ Sword=Épée
 Your tool digs faster=Votre outil creuse plus vite
 Your tool last longer=Votre outil dure plus longtemps
 Your weapon inflicts more damages=Votre arme inflige plus de dégâts
+
+### hive.lua ###
+
+Artificial Hive=Ruche artificielle
+Bees are busy making honey…=Les abeilles sont occupées à fabriquer du miel…
+Honey=Miel

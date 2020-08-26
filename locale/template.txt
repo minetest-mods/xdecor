@@ -61,3 +61,9 @@ Sword=
 Your tool digs faster=
 Your tool last longer=
 Your weapon inflicts more damages=
+
+### hive.lua ###
+
+Artificial Hive=
+Bees are busy making honey…=
+Honey=

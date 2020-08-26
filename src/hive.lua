@@ -1,22 +1,24 @@
 local hive = {}
+local S = minetest.get_translator("xdecor")
+local F = minetest.formspec_escape
 local honey_max = 16
 
 function hive.construct(pos)
 	local meta = minetest.get_meta(pos)
 	local inv = meta:get_inventory()
 
-	local formspec = [[ size[8,5;]
-			label[0.5,0;Bees are busy making honey...]
-			image[6,0;1,1;hive_bee.png]
-			image[5,0;1,1;hive_layout.png]
-			list[context;honey;5,0;1,1;]
-			list[current_player;main;0,1.35;8,4;]
+	local formspec = "size[8,6;]"
+			.."label[0.5,0;"..F(S("Bees are busy making honey…")).."]"
+			..[[ image[6,1;1,1;hive_bee.png]
+			image[5,1;1,1;hive_layout.png]
+			list[context;honey;5,1;1,1;]
+			list[current_player;main;0,2.35;8,4;]
 			listring[current_player;main]
 			listring[context;honey] ]] ..
-			xbg .. default.get_hotbar_bg(0,1.35)
+			xbg .. default.get_hotbar_bg(0,2.35)
 
 	meta:set_string("formspec", formspec)
-	meta:set_string("infotext", "Artificial Hive")
+	meta:set_string("infotext", S("Artificial Hive"))
 	inv:set_size("honey", 1)
 
 	local timer = minetest.get_node_timer(pos)
@@ -50,7 +52,7 @@ function hive.timer(pos)
 end
 
 xdecor.register("hive", {
-	description = "Artificial Hive",
+	description = S("Artificial Hive"),
 	tiles = {"xdecor_hive_top.png", "xdecor_hive_top.png",
 		 "xdecor_hive_side.png", "xdecor_hive_side.png",
 		 "xdecor_hive_side.png", "xdecor_hive_front.png"},
@@ -82,7 +84,7 @@ xdecor.register("hive", {
 -- Craft items
 
 minetest.register_craftitem("xdecor:honey", {
-	description = "Honey",
+	description = S("Honey"),
 	inventory_image = "xdecor_honey.png",
 	wield_image = "xdecor_honey.png",
 	on_use = minetest.item_eat(2),
