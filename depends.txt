@@ -1,6 +1,7 @@
 default
 bucket
 doors
+farming
 stairs
 xpanes
 fire?

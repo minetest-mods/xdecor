@@ -66,9 +66,9 @@ minetest.register_craft({
 minetest.register_craft({
 	output = "xdecor:cobweb",
 	recipe = {
-		{"farming:cotton", "", "farming:cotton"},
-		{"", "farming:cotton", ""},
-		{"farming:cotton", "", "farming:cotton"}
+		{"farming:string", "", "farming:string"},
+		{"", "farming:string", ""},
+		{"farming:string", "", "farming:string"}
 	}
 })
 
