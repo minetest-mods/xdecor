@@ -1,4 +1,5 @@
 local cauldron, sounds = {}, {}
+local S = minetest.get_translator("xdecor")
 
 -- Add more ingredients here that make a soup.
 local ingredients_list = {
@@ -38,7 +39,7 @@ function cauldron.boiling_construct(pos)
 	})
 
 	local meta = minetest.get_meta(pos)
-	meta:set_string("infotext", "Cauldron (active) - Drop some foods inside to make a soup")
+	meta:set_string("infotext", S("Cauldron (active) - Drop foods inside to make a soup"))
 
 	local timer = minetest.get_node_timer(pos)
 	timer:start(5.0)
@@ -56,7 +57,7 @@ function cauldron.filling(pos, node, clicker, itemstack)
 					inv:add_item("main", "bucket:bucket_water 1")
 				else
 					minetest.chat_send_player(clicker:get_player_name(),
-						"No room in your inventory to add a bucket of water.")
+						S("No room in your inventory to add a bucket of water."))
 					return itemstack
 				end
 			else
@@ -145,7 +146,7 @@ function cauldron.take_soup(pos, node, clicker, itemstack)
 				inv:add_item("main", "xdecor:bowl_soup 1")
 			else
 				minetest.chat_send_player(clicker:get_player_name(),
-					"No room in your inventory to add a bowl of soup.")
+					S("No room in your inventory to add a bowl of soup."))
 				return itemstack
 			end
 		else
@@ -159,11 +160,11 @@ function cauldron.take_soup(pos, node, clicker, itemstack)
 end
 
 xdecor.register("cauldron_empty", {
-	description = "Cauldron",
+	description = S("Cauldron"),
 	groups = {cracky=2, oddly_breakable_by_hand=1},
 	on_rotate = screwdriver.rotate_simple,
 	tiles = {"xdecor_cauldron_top_empty.png", "xdecor_cauldron_sides.png"},
-	infotext = "Cauldron (empty)",
+	infotext = S("Cauldron (empty)"),
 	collision_box = xdecor.pixelbox(16, cauldron.cbox),
 	on_rightclick = cauldron.filling,
 	on_construct = function(pos)
@@ -176,7 +177,7 @@ xdecor.register("cauldron_idle", {
 	on_rotate = screwdriver.rotate_simple,
 	tiles = {"xdecor_cauldron_top_idle.png", "xdecor_cauldron_sides.png"},
 	drop = "xdecor:cauldron_empty",
-	infotext = "Cauldron (idle)",
+	infotext = S("Cauldron (idle)"),
 	collision_box = xdecor.pixelbox(16, cauldron.cbox),
 	on_rightclick = cauldron.filling,
 	on_construct = cauldron.idle_construct,
@@ -187,7 +188,7 @@ xdecor.register("cauldron_boiling", {
 	groups = {cracky=2, oddly_breakable_by_hand=1, not_in_creative_inventory=1},
 	on_rotate = screwdriver.rotate_simple,
 	drop = "xdecor:cauldron_empty",
-	infotext = "Cauldron (active) - Drop foods inside to make a soup",
+	infotext = S("Cauldron (active) - Drop foods inside to make a soup"),
 	damage_per_second = 2,
 	tiles = {
 		{
@@ -209,7 +210,7 @@ xdecor.register("cauldron_soup", {
 	groups = {cracky = 2, oddly_breakable_by_hand = 1, not_in_creative_inventory = 1},
 	on_rotate = screwdriver.rotate_simple,
 	drop = "xdecor:cauldron_empty",
-	infotext = "Cauldron (active) - Use a bowl to eat the soup",
+	infotext = S("Cauldron (active) - Use a bowl to eat the soup"),
 	damage_per_second = 2,
 	tiles = {
 		{
@@ -228,14 +229,14 @@ xdecor.register("cauldron_soup", {
 -- Craft items
 
 minetest.register_craftitem("xdecor:bowl", {
-	description = "Bowl",
+	description = S("Bowl"),
 	inventory_image = "xdecor_bowl.png",
 	wield_image = "xdecor_bowl.png",
 	groups = {food_bowl = 1, flammable = 2},
 })
 
 minetest.register_craftitem("xdecor:bowl_soup", {
-	description = "Bowl of soup",
+	description = S("Bowl of soup"),
 	inventory_image = "xdecor_bowl_soup.png",
 	wield_image = "xdecor_bowl_soup.png",
 	groups = {not_in_creative_inventory=1},
