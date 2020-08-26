@@ -73,6 +73,14 @@ Honey=Miel
 @1 (owned by @2)=@1 (propriété de @2)
 Item Frame=Cadre
 
+### mailbox.lua ###
+
+@1's Mailbox=Boite aux lettres de @1
+Last donators=Derniers donateurs
+Mailbox=Boite aux lettres
+Send your goods to@n@1=Envoyer vos biens à@n@1
+The mailbox is full.=La boite aux lettres est pleine.
+
 ### rope.lua ###
 
 Rope=Corde

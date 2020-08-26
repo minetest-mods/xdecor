@@ -73,6 +73,14 @@ Honey=
 @1 (owned by @2)=
 Item Frame=
 
+### mailbox.lua ###
+
+@1's Mailbox=
+Last donators=
+Mailbox=
+Send your goods to@n@1=
+The mailbox is full.=
+
 ### rope.lua ###
 
 Rope=
