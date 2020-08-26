@@ -30,3 +30,34 @@ You can't dig the chessboard, a game has been started. Reset it first if you're 
 You can't reset the chessboard, a game has been started. If you aren't a current player, try again in @1=
 
 check=
+
+### cooking.lua ###
+
+Bowl=
+Bowl of soup=
+Cauldron=
+Cauldron (active) - Drop foods inside to make a soup=
+Cauldron (active) - Use a bowl to eat the soup=
+Cauldron (empty)=
+Cauldron (idle)=
+No room in your inventory to add a bowl of soup.=
+No room in your inventory to add a bucket of water.=
+
+### enchanting.lua ###
+
+Axe=
+Bronze=
+Diamond=
+Durability=
+Efficiency=
+Enchanted @1 @2 @3=
+Enchantment Table=
+Mese=
+Pickaxe=
+Sharpness=
+Shovel=
+Steel=
+Sword=
+Your tool digs faster=
+Your tool last longer=
+Your weapon inflicts more damages=

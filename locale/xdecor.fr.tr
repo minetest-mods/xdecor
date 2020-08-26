@@ -30,3 +30,34 @@ You can't dig the chessboard, a game has been started. Reset it first if you're 
 You can't reset the chessboard, a game has been started. If you aren't a current player, try again in @1=Vous ne pouvez pas mettre à zéro l’échiquier, une partie a été commencée. Si ce n’est pas votre tour de jouer, réessayez dans @1
 
 check=échec
+
+### cooking.lua ###
+
+Bowl=Bol
+Bowl of soup=Bol de soupe
+Cauldron=Chaudron
+Cauldron (active) - Drop foods inside to make a soup=Chaudron (actif) - Placez des ingrédients à l’intérieur pour faire une soupe
+Cauldron (active) - Use a bowl to eat the soup=Chaudron (actif) - Utilisez un bol pour boire la soupe
+Cauldron (empty)=Chaudron (vide)
+Cauldron (idle)=Chaudron (inactif)
+No room in your inventory to add a bowl of soup.=Pas de place dans votre inventaire pour ajouter un bol de soupe.
+No room in your inventory to add a bucket of water.=Pas de place dans votre inventaire pour ajouter un seau d’eau.
+
+### enchanting.lua ###
+
+Axe=Hache
+Bronze=Bronze
+Diamond=Diamant
+Durability=Durabilité
+Efficiency=Efficacité
+Enchanted @1 @2 @3=@2 en @1 enchantée @3
+Enchantment Table=Table d’enchantements
+Mese=Mese
+Pickaxe=Pioche
+Sharpness=Tranchant
+Shovel=Pelle
+Steel=Fer
+Sword=Épée
+Your tool digs faster=Votre outil creuse plus vite
+Your tool last longer=Votre outil dure plus longtemps
+Your weapon inflicts more damages=Votre arme inflige plus de dégâts
