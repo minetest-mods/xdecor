@@ -72,3 +72,7 @@ Honey=Miel
 
 @1 (owned by @2)=@1 (propriété de @2)
 Item Frame=Cadre
+
+### rope.lua ###
+
+Rope=Corde

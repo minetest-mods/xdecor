@@ -72,3 +72,7 @@ Honey=
 
 @1 (owned by @2)=
 Item Frame=
+
+### rope.lua ###
+
+Rope=
