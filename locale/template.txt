@@ -142,3 +142,13 @@ Woodglass Door=
 ### rope.lua ###
 
 Rope=
+
+### workbench.lua ###
+
+Back=
+Crafting=
+Cut=
+Hammer=
+Repair=
+Storage=
+Work Bench=
