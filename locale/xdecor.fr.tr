@@ -81,6 +81,12 @@ Mailbox=Boite aux lettres
 Send your goods to@n@1=Envoyer vos biens à@n@1
 The mailbox is full.=La boite aux lettres est pleine.
 
+### mechanisms.lua ###
+
+Lever=Levier
+Stone Pressure Plate=Plaque de pression en pierre
+Wooden Pressure Plate=Plaque de pression en bois
+
 ### rope.lua ###
 
 Rope=Corde

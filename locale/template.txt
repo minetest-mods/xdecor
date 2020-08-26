@@ -81,6 +81,12 @@ Mailbox=
 Send your goods to@n@1=
 The mailbox is full.=
 
+### mechanisms.lua ###
+
+Lever=
+Stone Pressure Plate=
+Wooden Pressure Plate=
+
 ### rope.lua ###
 
 Rope=
