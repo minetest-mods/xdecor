@@ -87,6 +87,58 @@ Lever=Levier
 Stone Pressure Plate=Plaque de pression en pierre
 Wooden Pressure Plate=Plaque de pression en bois
 
+### nodes.lua ###
+
+Bamboo Frame=Cadre en bambou
+Baricade=Barricade
+Barrel=Tonneau
+Cactus Brick=Brique en cactus
+Candle=Bougie
+Chainlink=Maillon de chaîne
+Chair=Chaise
+Coal Stone Tile=Carreau en charbon et pierre
+Cobweb=Toile d’araignée
+Cushion=Coussin
+Cushion Block=Bloc de coussin
+Desert Stone Tile=Carreau en pierre du désert
+Empty Shelf=Étagère vide
+Ender Chest=Coffre de l’End
+Garden Stone Path=Chemin de pierres de jardin
+Half Wooden Cabinet=Demi meuble en bois
+Hardened Clay=Argile durcie
+Iron Light Box=Boite lumineuse en fer
+Ivy=Lierre
+Japanese Door=Porte japonaise
+Lantern=Lanterne
+Moon Brick=Brique lunaire
+Multi Shelf=Étagères multiple
+Packed Ice=Glace compactée
+Painting=Tableau
+Potted Geranium=Géranium en pot
+Potted Rose=Rose en pot
+Potted Tulip=Tulipe en pot
+Potted Viola=Violette en pot
+Potted White Dandelion=Pissenlit blanc en pot
+Potted Yellow Dandelion=Pissenlit jaune en pot
+Prison Door=Porte de prison
+Red Curtain=Rideaux rouge
+Runestone=Pierre runique
+Rusty Iron Bars=Barreaux en fer rouillé
+Rusty Prison Door=Barreaux de prison rouillés
+Screen Door=Porte avec moustiquaire
+Slide Door=Porte coulissante
+Stone Tile=Carreau en pierre
+Table=Table
+Tatami=Tatami
+Television=Télévision
+Trampoline=Trampoline
+Wood Frame=Cadre en bois
+Wood Framed Glass=Verre encadré par du bois
+Wooden Cabinet=Meuble en bois
+Wooden Light Box=Boite lumineuse en bois
+Wooden Tile=Carreau en bois
+Woodglass Door=Porte vitrée
+
 ### rope.lua ###
 
 Rope=Corde

@@ -87,6 +87,58 @@ Lever=
 Stone Pressure Plate=
 Wooden Pressure Plate=
 
+### nodes.lua ###
+
+Bamboo Frame=
+Baricade=
+Barrel=
+Cactus Brick=
+Candle=
+Chainlink=
+Chair=
+Coal Stone Tile=
+Cobweb=
+Cushion=
+Cushion Block=
+Desert Stone Tile=
+Empty Shelf=
+Ender Chest=
+Garden Stone Path=
+Half Wooden Cabinet=
+Hardened Clay=
+Iron Light Box=
+Ivy=
+Japanese Door=
+Lantern=
+Moon Brick=
+Multi Shelf=
+Packed Ice=
+Painting=
+Potted Geranium=
+Potted Rose=
+Potted Tulip=
+Potted Viola=
+Potted White Dandelion=
+Potted Yellow Dandelion=
+Prison Door=
+Red Curtain=
+Runestone=
+Rusty Iron Bars=
+Rusty Prison Door=
+Screen Door=
+Slide Door=
+Stone Tile=
+Table=
+Tatami=
+Television=
+Trampoline=
+Wood Frame=
+Wood Framed Glass=
+Wooden Cabinet=
+Wooden Light Box=
+Wooden Tile=
+Woodglass Door=
+
 ### rope.lua ###
 
 Rope=
