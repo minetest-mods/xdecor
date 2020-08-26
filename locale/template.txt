@@ -67,3 +67,8 @@ Your weapon inflicts more damages=
 Artificial Hive=
 Bees are busy making honey…=
 Honey=
+
+### itemframe.lua ###
+
+@1 (owned by @2)=
+Item Frame=

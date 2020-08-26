@@ -67,3 +67,8 @@ Your weapon inflicts more damages=Votre arme inflige plus de dégâts
 Artificial Hive=Ruche artificielle
 Bees are busy making honey…=Les abeilles sont occupées à fabriquer du miel…
 Honey=Miel
+
+### itemframe.lua ###
+
+@1 (owned by @2)=@1 (propriété de @2)
+Item Frame=Cadre
