@@ -1,0 +1,32 @@
+# textdomain: xdecor
+
+
+### chess.lua ###
+
+Black Bishop=Fou noir
+Black King=Roi noir
+Black Knight=Cavalier noir
+Black Pawn=Pion noir
+Black Queen=Reine noire
+Black Rook=Tour noire
+Chess=Echecs
+Chess Board=Echiquier
+Dumb AI=IA stupide
+Multiplayer=Multijoueur
+New game=Nouvelle partie
+Select a mode:=Sélectionnez un mode de jeu:
+Singleplayer=Solo
+Someone else plays black pieces!=Quelqu’un d’autre joue les pièces noires !
+Someone else plays white pieces!=Quelqu’un d’autre joue les pièces blanches !
+White Bishop=Fou blanc
+White King=Roi blanc
+White Knight=Cavalier blanc
+White Pawn=Pion blanc
+White Queen=Reine blanche
+White Rook=Tour blanche
+
+You can't dig the chessboard, a game has been started. Reset it first if you're a current player, or dig it again in @1=Vous ne pouvez pas récupérer l’échiquier, une partie à été commencée. Remettez le à zéro si vous c’est votre tour de jouer, ou réessayez dans @1
+
+You can't reset the chessboard, a game has been started. If you aren't a current player, try again in @1=Vous ne pouvez pas mettre à zéro l’échiquier, une partie a été commencée. Si ce n’est pas votre tour de jouer, réessayez dans @1
+
+check=échec

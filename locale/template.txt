@@ -1,0 +1,32 @@
+# textdomain: xdecor
+
+
+### chess.lua ###
+
+Black Bishop=
+Black King=
+Black Knight=
+Black Pawn=
+Black Queen=
+Black Rook=
+Chess=
+Chess Board=
+Dumb AI=
+Multiplayer=
+New game=
+Select a mode:=
+Singleplayer=
+Someone else plays black pieces!=
+Someone else plays white pieces!=
+White Bishop=
+White King=
+White Knight=
+White Pawn=
+White Queen=
+White Rook=
+
+You can't dig the chessboard, a game has been started. Reset it first if you're a current player, or dig it again in @1=
+
+You can't reset the chessboard, a game has been started. If you aren't a current player, try again in @1=
+
+check=

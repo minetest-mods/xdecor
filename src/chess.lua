@@ -1,4 +1,6 @@
 local realchess = {}
+local S = minetest.get_translator("xdecor")
+local F = minetest.formspec_escape
 screwdriver = screwdriver or {}
 
 local function index_to_xy(idx)
@@ -22,7 +24,7 @@ local function get_square(a, b)
 	return (a * 8) - (8 - b)
 end
 
-local chat_prefix = minetest.colorize("#FFFF00", "[Chess] ")
+local chat_prefix = minetest.colorize("#FFFF00", "["..S("Chess").."] ")
 local letters = {'A','B','C','D','E','F','G','H'}
 
 local function board_to_table(inv)
@@ -588,10 +590,10 @@ pieces_str = pieces_str .. "69=mailbox_blank16.png"
 local fs_init = [[
 	size[4,1.2;]
 	no_prepend[]
-	label[0,0;Select a mode:]
-	button[0,0.5;2,1;single;Singleplayer]
-	button[2,0.5;2,1;multi;Multiplayer]
-]]
+	]]
+	.."label[0,0;"..F(S("Select a mode:")).."]"
+	.."button[0,0.5;2,1;single;"..F(S("Singleplayer")).."]"
+	.."button[2,0.5;2,1;multi;"..F(S("Multiplayer")).."]"
 
 local fs = [[
 	size[14.7,10;]
@@ -601,8 +603,9 @@ local fs = [[
 	list[context;board;0.3,1;8,8;]
 	listcolors[#00000000;#00000000;#00000000;#30434C;#FFF]
 	tableoptions[background=#00000000;highlight=#00000000;border=false]
-	button[10.5,8.5;2,2;new;New game]
-]] ..  "tablecolumns[image," .. pieces_str ..
+	]]
+	.."button[10.5,8.5;2,2;new;"..F(S("New game")).."]"
+	.."tablecolumns[image," .. pieces_str ..
 		";text;color;text;color;text;image," .. pieces_str .. "]"
 
 local function update_formspec(meta)
@@ -619,7 +622,7 @@ local function update_formspec(meta)
 			  playerBlack .. "..." or playerBlack)
 	local turnWhite = minetest.colorize("#000001", (lastMove == "black" and playerWhite ~= "") and
 			  playerWhite .. "..." or playerWhite)
-	local check_s   = minetest.colorize("#FF0000", "\\[check\\]")
+	local check_s   = minetest.colorize("#FF0000", "\\["..S("check").."\\]")
 
 	local formspec = fs ..
 		"label[1.9,0.3;"  .. turnBlack .. (black_king_attacked and " " .. check_s or "") .. "]" ..
@@ -687,7 +690,7 @@ function realchess.init(pos)
 	local inv  = meta:get_inventory()
 
 	meta:set_string("formspec", fs_init)
-	meta:set_string("infotext", "Chess Board")
+	meta:set_string("infotext", S("Chess Board"))
 	meta:set_string("playerBlack", "")
 	meta:set_string("playerWhite", "")
 	meta:set_string("lastMove",    "")
@@ -725,7 +728,7 @@ function realchess.move(pos, from_list, from_index, to_list, to_index, _, player
 
 	if pieceFrom:find("white") then
 		if playerWhite ~= "" and playerWhite ~= playerName then
-			minetest.chat_send_player(playerName, chat_prefix .. "Someone else plays white pieces!")
+			minetest.chat_send_player(playerName, chat_prefix .. S("Someone else plays white pieces!"))
 			return 0
 		end
 
@@ -743,7 +746,7 @@ function realchess.move(pos, from_list, from_index, to_list, to_index, _, player
 
 	elseif pieceFrom:find("black") then
 		if playerBlack ~= "" and playerBlack ~= playerName then
-			minetest.chat_send_player(playerName, chat_prefix .. "Someone else plays black pieces!")
+			minetest.chat_send_player(playerName, chat_prefix .. S("Someone else plays black pieces!"))
 			return 0
 		end
 
@@ -1329,7 +1332,7 @@ local function ai_move(inv, meta)
 				end
 
 				if meta:get_string("playerBlack") == "" then
-					meta:set_string("playerBlack", "Dumb AI")
+					meta:set_string("playerBlack", S("Dumb AI"))
 				end
 
 				meta:set_string("lastMove", "black")
@@ -1396,9 +1399,9 @@ function realchess.fields(pos, _, fields, sender)
 				realchess.init(pos)
 			else
 				minetest.chat_send_player(playerName, chat_prefix ..
-					"You can't reset the chessboard, a game has been started. " ..
-					"If you aren't a current player, try again in " ..
-					timeout_format(timeout_limit))
+					S("You can't reset the chessboard, a game has been started. " ..
+					"If you aren't a current player, try again in @1",
+					timeout_format(timeout_limit)))
 			end
 		end
 	end
@@ -1417,13 +1420,13 @@ function realchess.dig(pos, player)
 	-- Timeout is 5 min. by default for digging the chessboard (non-players only)
 	return (lastMoveTime == 0 and minetest.get_gametime() > timeout_limit) or
 		minetest.chat_send_player(playerName, chat_prefix ..
-				"You can't dig the chessboard, a game has been started. " ..
-				"Reset it first if you're a current player, or dig it again in " ..
-				timeout_format(timeout_limit))
+				S("You can't dig the chessboard, a game has been started. " ..
+				"Reset it first if you're a current player, or dig it again in @1",
+				timeout_format(timeout_limit)))
 end
 
 minetest.register_node(":realchess:chessboard", {
-	description = "Chess Board",
+	description = S("Chess Board"),
 	drawtype = "nodebox",
 	paramtype = "light",
 	paramtype2 = "facedir",
@@ -1443,11 +1446,11 @@ minetest.register_node(":realchess:chessboard", {
 	allow_metadata_inventory_take = function() return 0 end
 })
 
-local function register_piece(name, count)
+local function register_piece(name, white_desc, black_desc, count)
 	for _, color in pairs({"black", "white"}) do
 	if not count then
 		minetest.register_craftitem(":realchess:" .. name .. "_" .. color, {
-			description = color:gsub("^%l", string.upper) .. " " .. name:gsub("^%l", string.upper),
+			description = (color == "black") and black_desc or white_desc,
 			inventory_image = name .. "_" .. color .. ".png",
 			stack_max = 1,
 			groups = {not_in_creative_inventory=1}
@@ -1455,7 +1458,7 @@ local function register_piece(name, count)
 	else
 		for i = 1, count do
 			minetest.register_craftitem(":realchess:" .. name .. "_" .. color .. "_" .. i, {
-				description = color:gsub("^%l", string.upper) .. " " .. name:gsub("^%l", string.upper),
+				description = (color == "black") and black_desc or white_desc,
 				inventory_image = name .. "_" .. color .. ".png",
 				stack_max = 1,
 				groups = {not_in_creative_inventory=1}
@@ -1465,12 +1468,12 @@ local function register_piece(name, count)
 	end
 end
 
-register_piece("pawn", 8)
-register_piece("rook", 2)
-register_piece("knight", 2)
-register_piece("bishop", 2)
-register_piece("queen")
-register_piece("king")
+register_piece("pawn", S("White Pawn"), S("Black Pawn"), 8)
+register_piece("rook", S("White Rook"), S("Black Rook"), 2)
+register_piece("knight", S("White Knight"), S("Black Knight"), 2)
+register_piece("bishop", S("White Bishop"), S("Black Bishop"), 2)
+register_piece("queen", S("White Queen"), S("Black Queen"))
+register_piece("king", S("White King"), S("Black King"))
 
 -- Recipes
 
