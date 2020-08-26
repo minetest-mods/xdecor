@@ -9,7 +9,8 @@ local function door_toggle(pos_actuator, pos_door, player)
 	local player_name = player:get_player_name()
 	local actuator = minetest.get_node(pos_actuator)
 	local door = doors.get(pos_door)
-
+	if not door then return end
+		
 	if actuator.name:sub(-4) == "_off" then
 		minetest.set_node(pos_actuator,
 			{name = actuator.name:gsub("_off", "_on"), param2 = actuator.param2})
