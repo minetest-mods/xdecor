@@ -1,6 +1,6 @@
 local hive = {}
 local S = minetest.get_translator("xdecor")
-local F = minetest.formspec_escape
+local FS = function(...) return minetest.formspec_escape(S(...)) end
 local honey_max = 16
 
 function hive.construct(pos)
@@ -8,7 +8,7 @@ function hive.construct(pos)
 	local inv = meta:get_inventory()
 
 	local formspec = "size[8,6;]"
-			.."label[0.5,0;"..F(S("Bees are busy making honey…")).."]"
+			.."label[0.5,0;"..FS("Bees are busy making honey…").."]"
 			..[[ image[6,1;1,1;hive_bee.png]
 			image[5,1;1,1;hive_layout.png]
 			list[context;honey;5,1;1,1;]

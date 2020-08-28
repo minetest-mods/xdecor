@@ -1,6 +1,6 @@
 local realchess = {}
 local S = minetest.get_translator("xdecor")
-local F = minetest.formspec_escape
+local FS = function(...) return minetest.formspec_escape(S(...)) end
 screwdriver = screwdriver or {}
 
 local function index_to_xy(idx)
@@ -591,9 +591,9 @@ local fs_init = [[
 	size[4,1.2;]
 	no_prepend[]
 	]]
-	.."label[0,0;"..F(S("Select a mode:")).."]"
-	.."button[0,0.5;2,1;single;"..F(S("Singleplayer")).."]"
-	.."button[2,0.5;2,1;multi;"..F(S("Multiplayer")).."]"
+	.."label[0,0;"..FS("Select a mode:").."]"
+	.."button[0,0.5;2,1;single;"..FS("Singleplayer").."]"
+	.."button[2,0.5;2,1;multi;"..FS("Multiplayer").."]"
 
 local fs = [[
 	size[14.7,10;]
@@ -604,7 +604,7 @@ local fs = [[
 	listcolors[#00000000;#00000000;#00000000;#30434C;#FFF]
 	tableoptions[background=#00000000;highlight=#00000000;border=false]
 	]]
-	.."button[10.5,8.5;2,2;new;"..F(S("New game")).."]"
+	.."button[10.5,8.5;2,2;new;"..FS("New game").."]"
 	.."tablecolumns[image," .. pieces_str ..
 		";text;color;text;color;text;image," .. pieces_str .. "]"
 
@@ -622,7 +622,7 @@ local function update_formspec(meta)
 			  playerBlack .. "..." or playerBlack)
 	local turnWhite = minetest.colorize("#000001", (lastMove == "black" and playerWhite ~= "") and
 			  playerWhite .. "..." or playerWhite)
-	local check_s   = minetest.colorize("#FF0000", "\\["..S("check").."\\]")
+	local check_s   = minetest.colorize("#FF0000", "\\["..FS("check").."\\]")
 
 	local formspec = fs ..
 		"label[1.9,0.3;"  .. turnBlack .. (black_king_attacked and " " .. check_s or "") .. "]" ..

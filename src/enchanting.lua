@@ -1,6 +1,6 @@
 screwdriver = screwdriver or {}
 local S = minetest.get_translator("xdecor")
-local F = minetest.formspec_escape
+local FS = function(...) return minetest.formspec_escape(S(...)) end
 local ceil, abs, random = math.ceil, math.abs, math.random
 local reg_tools = minetest.registered_tools
 
@@ -53,14 +53,14 @@ function enchanting:get_tooltip(enchant, orig_caps, fleshy)
 	}
 
 	return minetest.colorize and minetest.colorize(specs[enchant][1],
-			"\n" .. (enchant_loc[enchant] or cap(enchant)) .. specs[enchant][2]) or
-			"\n" .. (enchant_loc[enchant] or cap(enchant)) .. specs[enchant][2]
+			"\n" .. enchant_loc[enchant] .. specs[enchant][2]) or
+			"\n" .. enchant_loc[enchant] .. specs[enchant][2]
 end
 
 local enchant_buttons = {
-	"image_button[3.9,0.85;4,0.92;bg_btn.png;fast;"..F(S("Efficiency")).."]" ..
-	"image_button[3.9,1.77;4,1.12;bg_btn.png;durable;"..F(S("Durability")).."]",
-	"image_button[3.9,2.9;4,0.92;bg_btn.png;sharp;"..F(S("Sharpness")).."]",
+	"image_button[3.9,0.85;4,0.92;bg_btn.png;fast;"..FS("Efficiency").."]" ..
+	"image_button[3.9,1.77;4,1.12;bg_btn.png;durable;"..FS("Durability").."]",
+	"image_button[3.9,2.9;4,0.92;bg_btn.png;sharp;"..FS("Sharpness").."]",
 }
 
 function enchanting.formspec(pos, num)
@@ -77,9 +77,9 @@ function enchanting.formspec(pos, num)
 			listring[context;mese]
 			image[2,2.9;1,1;mese_layout.png]
 			]]
-			.."tooltip[sharp;"..F(S("Your weapon inflicts more damages")).."]"
-			.."tooltip[durable;"..F(S("Your tool last longer")).."]"
-			.."tooltip[fast;"..F(S("Your tool digs faster")).."]"
+			.."tooltip[sharp;"..FS("Your weapon inflicts more damages").."]"
+			.."tooltip[durable;"..FS("Your tool last longer").."]"
+			.."tooltip[fast;"..FS("Your tool digs faster").."]"
 			..default.gui_slots .. default.get_hotbar_bg(0.5,4.5)
 
 	formspec = formspec .. (enchant_buttons[num] or "")
@@ -285,7 +285,7 @@ function enchanting:register_tools(mod, def)
 
 			minetest.register_tool(":" .. mod .. ":enchanted_" .. tool .. "_" .. material .. "_" .. enchant, {
 				description = S("Enchanted @1 @2 @3",
-					def.material_desc[material] or cap(material), def.tool_desc[tool] or cap(tool),
+					def.material_desc[material] or cap(material), def.tools[tool].desc or cap(tool),
 					self:get_tooltip(enchant, original_groupcaps[group], fleshy)),
 				inventory_image = original_tool.inventory_image .. "^[colorize:violet:50",
 				wield_image = original_tool.wield_image,
@@ -306,12 +306,11 @@ enchanting:register_tools("default", {
 	materials = "steel, bronze, mese, diamond",
 	material_desc = {steel = S("Steel"), bronze = S("Bronze"), mese = S("Mese"), diamond = S("Diamond")},
 	tools = {
-		axe    = {enchants = "durable, fast"},
-		pick   = {enchants = "durable, fast"},
-		shovel = {enchants = "durable, fast"},
-		sword  = {enchants = "sharp"}
+		axe    = {enchants = "durable, fast", desc = S("Axe")},
+		pick   = {enchants = "durable, fast", desc = S("Pickaxe")},
+		shovel = {enchants = "durable, fast", desc = S("Shovel")},
+		sword  = {enchants = "sharp", desc = S("Sword")}
 	},
-	tool_desc = {axe = S("Axe"), pick = S("Pickaxe"), shovel = S("Shovel"), sword = S("Sword")},
 })
 
 -- Recipes

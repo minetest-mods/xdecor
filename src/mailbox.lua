@@ -1,7 +1,7 @@
 local mailbox = {}
 screwdriver = screwdriver or {}
 local S = minetest.get_translator("xdecor")
-local F = minetest.formspec_escape
+local FS = function(...) return minetest.formspec_escape(S(...)) end
 
 local function get_img(img)
 	if not img then return end
@@ -64,8 +64,8 @@ function mailbox:formspec(pos, owner, is_owner)
 		end
 
 		return "size[9.5,9]"
-			.."label[0,0;"..F(S("Mailbox")).."]"
-			.."label[6,0;"..F(S("Last donators")).."]"
+			.."label[0,0;"..FS("Mailbox").."]"
+			.."label[6,0;"..FS("Last donators").."]"
 			..[[ box[6,0.72;3.3,3.5;#555555]
 			listring[current_player;main]
 			list[current_player;main;0.75,5.25;8,4;]
@@ -79,9 +79,9 @@ function mailbox:formspec(pos, owner, is_owner)
 
 	return  "size[8,5]" ..
 		"list[current_player;main;0,1.25;8,4;]" ..
-		"label[0,0;"..F(S("Send your goods to\n@1",
+		"label[0,0;"..FS("Send your goods to\n@1",
 		(minetest.colorize and
-			minetest.colorize("#FFFF00", owner) or owner))) .. "]" ..
+			minetest.colorize("#FFFF00", owner) or owner)) .. "]" ..
 		"list[nodemeta:" .. spos .. ";drop;3.5,0;1,1;]" ..
 		xbg .. default.get_hotbar_bg(0, 1.25)
 end

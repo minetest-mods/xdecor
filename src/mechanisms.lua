@@ -55,9 +55,9 @@ function plate.timer(pos)
 	return true
 end
 
-function plate.register(material, desc, def, fulldesc)
+function plate.register(material, desc, def)
 	xdecor.register("pressure_" .. material .. "_off", {
-		description = fulldesc or (desc .. " Pressure Plate"),
+		description = def.description or (desc .. " Pressure Plate"),
 		tiles = {"xdecor_pressure_" .. material .. ".png"},
 		drawtype = "nodebox",
 		node_box = xdecor.pixelbox(16, {{1, 0, 1, 14, 1, 14}}),
@@ -82,13 +82,15 @@ end
 
 plate.register("wood", "Wooden", {
 	sounds = default.node_sound_wood_defaults(),
-	groups = {choppy = 3, oddly_breakable_by_hand = 2, flammable = 2}
-}, S("Wooden Pressure Plate"))
+	groups = {choppy = 3, oddly_breakable_by_hand = 2, flammable = 2},
+	description = S("Wooden Pressure Plate"),
+})
 
 plate.register("stone", "Stone", {
 	sounds = default.node_sound_stone_defaults(),
-	groups = {cracky = 3, oddly_breakable_by_hand = 2}
-}, S("Stone Pressure Plate"))
+	groups = {cracky = 3, oddly_breakable_by_hand = 2},
+	description =  S("Stone Pressure Plate"),
+})
 
 xdecor.register("lever_off", {
 	description = S("Lever"),

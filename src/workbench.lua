@@ -4,7 +4,7 @@ screwdriver = screwdriver or {}
 local min, ceil = math.min, math.ceil
 local registered_nodes = minetest.registered_nodes
 local S = minetest.get_translator("xdecor")
-local F = minetest.formspec_escape
+local FS = function(...) return minetest.formspec_escape(S(...)) end
 
 -- Nodes allowed to be cut
 -- Only the regular, solid blocks without metas or explosivity can be cut
@@ -77,12 +77,12 @@ function workbench:get_output(inv, input, name)
 	inv:set_list("forms", output)
 end
 
-local main_fs = "label[0.9,1.23;"..F(S("Cut")).."]"
-	.."label[0.9,2.23;"..F(S("Repair")).."]"
+local main_fs = "label[0.9,1.23;"..FS("Cut").."]"
+	.."label[0.9,2.23;"..FS("Repair").."]"
 	..[[ box[-0.05,1;2.05,0.9;#555555]
 	box[-0.05,2;2.05,0.9;#555555] ]]
-	.."button[0,0;2,1;craft;"..F(S("Crafting")).."]"
-	.."button[2,0;2,1;storage;"..F(S("Storage")).."]"
+	.."button[0,0;2,1;craft;"..FS("Crafting").."]"
+	.."button[2,0;2,1;storage;"..FS("Storage").."]"
 	..[[ image[3,1;1,1;gui_furnace_arrow_bg.png^[transformR270]
 	image[0,1;1,1;worktable_saw.png]
 	image[0,2;1,1;worktable_anvil.png]
@@ -102,7 +102,7 @@ local main_fs = "label[0.9,1.23;"..F(S("Cut")).."]"
 ]]
 
 local crafting_fs = "image[5,1;1,1;gui_furnace_arrow_bg.png^[transformR270]"
-	.."button[0,0;1.5,1;back;< "..F(S("Back")).."]"
+	.."button[0,0;1.5,1;back;< "..FS("Back").."]"
 	..[[ list[current_player;craft;2,0;3,3;]
 	list[current_player;craftpreview;6,1;1,1;]
 	listring[current_player;main]
@@ -110,7 +110,7 @@ local crafting_fs = "image[5,1;1,1;gui_furnace_arrow_bg.png^[transformR270]"
 ]]
 
 local storage_fs = "list[context;storage;0,1;8,2;]"
-	.."button[0,0;1.5,1;back;< "..F(S("Back")).."]"
+	.."button[0,0;1.5,1;back;< "..FS("Back").."]"
 	..[[listring[context;storage]
 	listring[current_player;main]
 ]]

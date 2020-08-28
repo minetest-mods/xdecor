@@ -11,3 +11,6 @@
 ##### Thanks to all contributors that keep this mod alive. #####
 
 ![Preview](http://i.imgur.com/AVoyCQy.png)
+
+### Requirements ###
+This mod requires at least version 5.0.0 of minetest.
