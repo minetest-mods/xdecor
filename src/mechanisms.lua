@@ -5,12 +5,14 @@ minetest.setting_set("nodetimer_interval", 0.1)
 local plate = {}
 screwdriver = screwdriver or {}
 
+local S = minetest.get_translator("xdecor")
+
 local function door_toggle(pos_actuator, pos_door, player)
 	local player_name = player:get_player_name()
 	local actuator = minetest.get_node(pos_actuator)
 	local door = doors.get(pos_door)
 	if not door then return end
-		
+
 	if actuator.name:sub(-4) == "_off" then
 		minetest.set_node(pos_actuator,
 			{name = actuator.name:gsub("_off", "_on"), param2 = actuator.param2})
@@ -55,7 +57,7 @@ end
 
 function plate.register(material, desc, def)
 	xdecor.register("pressure_" .. material .. "_off", {
-		description = desc .. " Pressure Plate",
+		description = def.description or (desc .. " Pressure Plate"),
 		tiles = {"xdecor_pressure_" .. material .. ".png"},
 		drawtype = "nodebox",
 		node_box = xdecor.pixelbox(16, {{1, 0, 1, 14, 1, 14}}),
@@ -80,16 +82,18 @@ end
 
 plate.register("wood", "Wooden", {
 	sounds = default.node_sound_wood_defaults(),
-	groups = {choppy = 3, oddly_breakable_by_hand = 2, flammable = 2}
+	groups = {choppy = 3, oddly_breakable_by_hand = 2, flammable = 2},
+	description = S("Wooden Pressure Plate"),
 })
 
 plate.register("stone", "Stone", {
 	sounds = default.node_sound_stone_defaults(),
-	groups = {cracky = 3, oddly_breakable_by_hand = 2}
+	groups = {cracky = 3, oddly_breakable_by_hand = 2},
+	description =  S("Stone Pressure Plate"),
 })
 
 xdecor.register("lever_off", {
-	description = "Lever",
+	description = S("Lever"),
 	tiles = {"xdecor_lever_off.png"},
 	drawtype = "nodebox",
 	node_box = xdecor.pixelbox(16, {{2, 1, 15, 12, 14, 1}}),

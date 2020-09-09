@@ -1,4 +1,5 @@
 local rope = {}
+local S = minetest.get_translator("xdecor")
 
 -- Code by Mirko K. (modified by Temperest, Wulfsdad and kilbith) (License: GPL).
 function rope.place(itemstack, placer, pointed_thing)
@@ -41,7 +42,7 @@ function rope.remove(pos, oldnode, digger, rope_name)
 end
 
 xdecor.register("rope", {
-	description = "Rope",
+	description = S("Rope"),
 	drawtype = "plantlike",
 	walkable = false,
 	climbable = true,

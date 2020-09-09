@@ -1,0 +1,154 @@
+# textdomain: xdecor
+
+
+### chess.lua ###
+
+Black Bishop=
+Black King=
+Black Knight=
+Black Pawn=
+Black Queen=
+Black Rook=
+Chess=
+Chess Board=
+Dumb AI=
+Multiplayer=
+New game=
+Select a mode:=
+Singleplayer=
+Someone else plays black pieces!=
+Someone else plays white pieces!=
+White Bishop=
+White King=
+White Knight=
+White Pawn=
+White Queen=
+White Rook=
+
+You can't dig the chessboard, a game has been started. Reset it first if you're a current player, or dig it again in @1=
+
+You can't reset the chessboard, a game has been started. If you aren't a current player, try again in @1=
+
+check=
+
+### cooking.lua ###
+
+Bowl=
+Bowl of soup=
+Cauldron=
+Cauldron (active) - Drop foods inside to make a soup=
+Cauldron (active) - Use a bowl to eat the soup=
+Cauldron (empty)=
+Cauldron (idle)=
+No room in your inventory to add a bowl of soup.=
+No room in your inventory to add a bucket of water.=
+
+### enchanting.lua ###
+
+Axe=
+Bronze=
+Diamond=
+Durability=
+Efficiency=
+Enchanted @1 @2 @3=
+Enchantment Table=
+Mese=
+Pickaxe=
+Sharpness=
+Shovel=
+Steel=
+Sword=
+Your tool digs faster=
+Your tool last longer=
+Your weapon inflicts more damages=
+
+### hive.lua ###
+
+Artificial Hive=
+Bees are busy making honey…=
+Honey=
+
+### itemframe.lua ###
+
+@1 (owned by @2)=
+Item Frame=
+
+### mailbox.lua ###
+
+@1's Mailbox=
+Last donators=
+Mailbox=
+Send your goods to@n@1=
+The mailbox is full.=
+
+### mechanisms.lua ###
+
+Lever=
+Stone Pressure Plate=
+Wooden Pressure Plate=
+
+### nodes.lua ###
+
+Bamboo Frame=
+Baricade=
+Barrel=
+Cactus Brick=
+Candle=
+Chainlink=
+Chair=
+Coal Stone Tile=
+Cobweb=
+Cushion=
+Cushion Block=
+Desert Stone Tile=
+Empty Shelf=
+Ender Chest=
+Garden Stone Path=
+Half Wooden Cabinet=
+Hardened Clay=
+Iron Light Box=
+Ivy=
+Japanese Door=
+Lantern=
+Moon Brick=
+Multi Shelf=
+Packed Ice=
+Painting=
+Potted Geranium=
+Potted Rose=
+Potted Tulip=
+Potted Viola=
+Potted White Dandelion=
+Potted Yellow Dandelion=
+Prison Door=
+Red Curtain=
+Runestone=
+Rusty Iron Bars=
+Rusty Prison Door=
+Screen Door=
+Slide Door=
+Stone Tile=
+Table=
+Tatami=
+Television=
+Trampoline=
+Wood Frame=
+Wood Framed Glass=
+Wooden Cabinet=
+Wooden Light Box=
+Wooden Tile=
+Woodglass Door=
+
+### rope.lua ###
+
+Rope=
+
+### workbench.lua ###
+
+Back=
+Crafting=
+Cut=
+Hammer=
+Repair=
+Storage=
+Work Bench=

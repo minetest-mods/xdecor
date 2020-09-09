@@ -1,4 +1,5 @@
 local itemframe, tmp = {}, {}
+local S = minetest.get_translator("xdecor")
 screwdriver = screwdriver or {}
 
 local function remove_item(pos, node)
@@ -56,7 +57,7 @@ function itemframe.after_place(pos, placer, itemstack)
 	local meta = minetest.get_meta(pos)
 	local name = placer:get_player_name()
 	meta:set_string("owner", name)
-	meta:set_string("infotext", "Item Frame (owned by " .. name .. ")")
+	meta:set_string("infotext", S("@1 (owned by @2)", S("Item Frame"), name))
 end
 
 function itemframe.timer(pos)
@@ -86,9 +87,9 @@ function itemframe.rightclick(pos, node, clicker, itemstack)
 	meta:set_string("item", itemstring)
 	update_item(pos, node)
 	if itemstring == "" then
-		meta:set_string("infotext", "Item Frame (owned by " .. owner .. ")")
+		meta:set_string("infotext", S("@1 (owned by @2)", S("Item Frame"), owner))
 	else
-		meta:set_string("infotext", itemstring.." (owned by " .. owner .. ")")
+		meta:set_string("infotext", S("@1 (owned by @2)", itemstring, owner))
 	end
 	return itemstack
 end
@@ -115,7 +116,7 @@ function itemframe.dig(pos, player)
 end
 
 xdecor.register("itemframe", {
-	description = "Item Frame",
+	description = S("Item Frame"),
 	groups = {choppy = 3, oddly_breakable_by_hand = 2, flammable = 3},
 	sounds = default.node_sound_wood_defaults(),
 	on_rotate = screwdriver.disallow,

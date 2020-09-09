@@ -3,6 +3,8 @@ WB = {}
 screwdriver = screwdriver or {}
 local min, ceil = math.min, math.ceil
 local registered_nodes = minetest.registered_nodes
+local S = minetest.get_translator("xdecor")
+local FS = function(...) return minetest.formspec_escape(S(...)) end
 
 -- Nodes allowed to be cut
 -- Only the regular, solid blocks without metas or explosivity can be cut
@@ -75,14 +77,13 @@ function workbench:get_output(inv, input, name)
 	inv:set_list("forms", output)
 end
 
-local main_fs = [[
-	label[0.9,1.23;Cut]
-	label[0.9,2.23;Repair]
-	box[-0.05,1;2.05,0.9;#555555]
-	box[-0.05,2;2.05,0.9;#555555]
-	button[0,0;2,1;craft;Crafting]
-	button[2,0;2,1;storage;Storage]
-	image[3,1;1,1;gui_furnace_arrow_bg.png^[transformR270]
+local main_fs = "label[0.9,1.23;"..FS("Cut").."]"
+	.."label[0.9,2.23;"..FS("Repair").."]"
+	..[[ box[-0.05,1;2.05,0.9;#555555]
+	box[-0.05,2;2.05,0.9;#555555] ]]
+	.."button[0,0;2,1;craft;"..FS("Crafting").."]"
+	.."button[2,0;2,1;storage;"..FS("Storage").."]"
+	..[[ image[3,1;1,1;gui_furnace_arrow_bg.png^[transformR270]
 	image[0,1;1,1;worktable_saw.png]
 	image[0,2;1,1;worktable_anvil.png]
 	image[3,2;1,1;hammer_layout.png]
@@ -100,19 +101,17 @@ local main_fs = [[
 	listring[context;input]
 ]]
 
-local crafting_fs = [[
-	image[5,1;1,1;gui_furnace_arrow_bg.png^[transformR270]
-	button[0,0;1.5,1;back;< Back]
-	list[current_player;craft;2,0;3,3;]
+local crafting_fs = "image[5,1;1,1;gui_furnace_arrow_bg.png^[transformR270]"
+	.."button[0,0;1.5,1;back;< "..FS("Back").."]"
+	..[[ list[current_player;craft;2,0;3,3;]
 	list[current_player;craftpreview;6,1;1,1;]
 	listring[current_player;main]
 	listring[current_player;craft]
 ]]
 
-local storage_fs = [[
-	list[context;storage;0,1;8,2;]
-	button[0,0;1.5,1;back;< Back]
-	listring[context;storage]
+local storage_fs = "list[context;storage;0,1;8,2;]"
+	.."button[0,0;1.5,1;back;< "..FS("Back").."]"
+	..[[listring[context;storage]
 	listring[current_player;main]
 ]]
 
@@ -143,7 +142,7 @@ function workbench.construct(pos)
 	inv:set_size("forms", 4*3)
 	inv:set_size("storage", 8*2)
 
-	meta:set_string("infotext", "Work Bench")
+	meta:set_string("infotext", S("Work Bench"))
 	workbench:set_formspec(meta, 1)
 end
 
@@ -254,7 +253,7 @@ function workbench.on_take(pos, listname, index, stack, player)
 end
 
 xdecor.register("workbench", {
-	description = "Work Bench",
+	description = S("Work Bench"),
 	groups = {cracky = 2, choppy = 2, oddly_breakable_by_hand = 1},
 	sounds = default.node_sound_wood_defaults(),
 	tiles = {
@@ -302,6 +301,7 @@ for i = 1, #nodes do
 			tiles = {def.tile_images[1]}
 		end
 
+		--TODO: Translation support for Stairs/Slab
 		if not registered_nodes["stairs:slab_" .. item_name] then
 			stairs.register_stair_and_slab(item_name, node,
 				groups, tiles, def.description .. " Stair",
@@ -309,6 +309,7 @@ for i = 1, #nodes do
 		end
 
 		minetest.register_node(":" .. node .. "_" .. d[1], {
+			--TODO: Translation support
 			description = def.description .. " " .. d[1]:gsub("^%l", string.upper),
 			paramtype = "light",
 			paramtype2 = "facedir",
@@ -338,7 +339,7 @@ end
 -- Craft items
 
 minetest.register_tool("xdecor:hammer", {
-	description = "Hammer",
+	description = S("Hammer"),
 	inventory_image = "xdecor_hammer.png",
 	wield_image = "xdecor_hammer.png",
 	on_use = function() do

@@ -1,5 +1,7 @@
 local mailbox = {}
 screwdriver = screwdriver or {}
+local S = minetest.get_translator("xdecor")
+local FS = function(...) return minetest.formspec_escape(S(...)) end
 
 local function get_img(img)
 	if not img then return end
@@ -61,10 +63,10 @@ function mailbox:formspec(pos, owner, is_owner)
 			end
 		end
 
-		return [[ size[9.5,9]
-			label[0,0;Mailbox]
-			label[6,0;Last donators]
-			box[6,0.72;3.3,3.5;#555555]
+		return "size[9.5,9]"
+			.."label[0,0;"..FS("Mailbox").."]"
+			.."label[6,0;"..FS("Last donators").."]"
+			..[[ box[6,0.72;3.3,3.5;#555555]
 			listring[current_player;main]
 			list[current_player;main;0.75,5.25;8,4;]
 			tableoptions[background=#00000000;highlight=#00000000;border=false] ]] ..
@@ -77,9 +79,9 @@ function mailbox:formspec(pos, owner, is_owner)
 
 	return  "size[8,5]" ..
 		"list[current_player;main;0,1.25;8,4;]" ..
-		"label[0,0;Send your goods to\n" ..
+		"label[0,0;"..FS("Send your goods to\n@1",
 		(minetest.colorize and
-			minetest.colorize("#FFFF00", owner) or owner) .. "]" ..
+			minetest.colorize("#FFFF00", owner) or owner)) .. "]" ..
 		"list[nodemeta:" .. spos .. ";drop;3.5,0;1,1;]" ..
 		xbg .. default.get_hotbar_bg(0, 1.25)
 end
@@ -98,7 +100,7 @@ function mailbox.after_place_node(pos, placer)
 	local player_name = placer:get_player_name()
 
 	meta:set_string("owner", player_name)
-	meta:set_string("infotext", player_name .. "'s Mailbox")
+	meta:set_string("infotext", S("@1's Mailbox", player_name))
 
 	local inv = meta:get_inventory()
 	inv:set_size("mailbox", 6 * 4)
@@ -123,7 +125,7 @@ function mailbox.put(pos, listname, _, stack, player)
 			return -1
 		else
 			minetest.chat_send_player(player:get_player_name(),
-				"The mailbox is full")
+				S("The mailbox is full."))
 		end
 	end
 
@@ -163,7 +165,7 @@ function mailbox.allow_move(pos)
 end
 
 xdecor.register("mailbox", {
-	description = "Mailbox",
+	description = S("Mailbox"),
 	tiles = {"xdecor_mailbox_top.png", "xdecor_mailbox_bottom.png",
 		 "xdecor_mailbox_side.png", "xdecor_mailbox_side.png",
 		 "xdecor_mailbox.png", "xdecor_mailbox.png"},

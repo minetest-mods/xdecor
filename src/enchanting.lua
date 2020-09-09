@@ -1,4 +1,6 @@
 screwdriver = screwdriver or {}
+local S = minetest.get_translator("xdecor")
+local FS = function(...) return minetest.formspec_escape(S(...)) end
 local ceil, abs, random = math.ceil, math.abs, math.random
 local reg_tools = minetest.registered_tools
 
@@ -12,8 +14,8 @@ local enchanting = {
 	damages  = 1,    -- Sharpness
 }
 
-local function cap(S) return
-	S:gsub("^%l", string.upper)
+local function cap(str) return
+	str:gsub("^%l", string.upper)
 end
 
 local function to_percent(orig_value, final_value)
@@ -44,15 +46,21 @@ function enchanting:get_tooltip(enchant, orig_caps, fleshy)
 		sharp   = {"#ffff00", " (+" .. bonus.damages .. "%)"},
 	}
 
+	local enchant_loc = {
+		fast = S("Efficiency"),
+		durable = S("Durability"),
+		sharp = S("Sharpness"),
+	}
+
 	return minetest.colorize and minetest.colorize(specs[enchant][1],
-			"\n" .. cap(enchant) .. specs[enchant][2]) or
-			"\n" .. cap(enchant) .. specs[enchant][2]
+			"\n" .. enchant_loc[enchant] .. specs[enchant][2]) or
+			"\n" .. enchant_loc[enchant] .. specs[enchant][2]
 end
 
 local enchant_buttons = {
-	"image_button[3.9,0.85;4,0.92;bg_btn.png;fast;Efficiency]" ..
-	"image_button[3.9,1.77;4,1.12;bg_btn.png;durable;Durability]",
-	"image_button[3.9,2.9;4,0.92;bg_btn.png;sharp;Sharpness]",
+	"image_button[3.9,0.85;4,0.92;bg_btn.png;fast;"..FS("Efficiency").."]" ..
+	"image_button[3.9,1.77;4,1.12;bg_btn.png;durable;"..FS("Durability").."]",
+	"image_button[3.9,2.9;4,0.92;bg_btn.png;sharp;"..FS("Sharpness").."]",
 }
 
 function enchanting.formspec(pos, num)
@@ -68,10 +76,11 @@ function enchanting.formspec(pos, num)
 			listring[current_player;main]
 			listring[context;mese]
 			image[2,2.9;1,1;mese_layout.png]
-			tooltip[sharp;Your weapon inflicts more damages]
-			tooltip[durable;Your tool last longer]
-			tooltip[fast;Your tool digs faster] ]] ..
-			default.gui_slots .. default.get_hotbar_bg(0.5,4.5)
+			]]
+			.."tooltip[sharp;"..FS("Your weapon inflicts more damages").."]"
+			.."tooltip[durable;"..FS("Your tool last longer").."]"
+			.."tooltip[fast;"..FS("Your tool digs faster").."]"
+			..default.gui_slots .. default.get_hotbar_bg(0.5,4.5)
 
 	formspec = formspec .. (enchant_buttons[num] or "")
 	meta:set_string("formspec", formspec)
@@ -150,7 +159,7 @@ end
 
 function enchanting.construct(pos)
 	local meta = minetest.get_meta(pos)
-	meta:set_string("infotext", "Enchantment Table")
+	meta:set_string("infotext", S("Enchantment Table"))
 	enchanting.formspec(pos)
 
 	local inv = meta:get_inventory()
@@ -207,7 +216,7 @@ function enchanting.timer(pos)
 end
 
 xdecor.register("enchantment_table", {
-	description = "Enchantment Table",
+	description = S("Enchantment Table"),
 	tiles = {
 		"xdecor_enchantment_top.png",  "xdecor_enchantment_bottom.png",
 		"xdecor_enchantment_side.png", "xdecor_enchantment_side.png",
@@ -275,8 +284,9 @@ function enchanting:register_tools(mod, def)
 			end
 
 			minetest.register_tool(":" .. mod .. ":enchanted_" .. tool .. "_" .. material .. "_" .. enchant, {
-				description = "Enchanted " .. cap(material) .. " " .. cap(tool) ..
-					self:get_tooltip(enchant, original_groupcaps[group], fleshy),
+				description = S("Enchanted @1 @2 @3",
+					def.material_desc[material] or cap(material), def.tools[tool].desc or cap(tool),
+					self:get_tooltip(enchant, original_groupcaps[group], fleshy)),
 				inventory_image = original_tool.inventory_image .. "^[colorize:violet:50",
 				wield_image = original_tool.wield_image,
 				groups = {not_in_creative_inventory = 1},
@@ -294,12 +304,13 @@ end
 
 enchanting:register_tools("default", {
 	materials = "steel, bronze, mese, diamond",
+	material_desc = {steel = S("Steel"), bronze = S("Bronze"), mese = S("Mese"), diamond = S("Diamond")},
 	tools = {
-		axe    = {enchants = "durable, fast"},
-		pick   = {enchants = "durable, fast"},
-		shovel = {enchants = "durable, fast"},
-		sword  = {enchants = "sharp"}
-	}
+		axe    = {enchants = "durable, fast", desc = S("Axe")},
+		pick   = {enchants = "durable, fast", desc = S("Pickaxe")},
+		shovel = {enchants = "durable, fast", desc = S("Shovel")},
+		sword  = {enchants = "sharp", desc = S("Sword")}
+	},
 })
 
 -- Recipes
