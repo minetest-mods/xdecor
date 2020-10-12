@@ -6,6 +6,23 @@ local registered_nodes = minetest.registered_nodes
 local S = minetest.get_translator("xdecor")
 local FS = function(...) return minetest.formspec_escape(S(...)) end
 
+-- User modifiable Settings
+local repairable_tools = minetest.settings:get("xdecor_workbench_RepairableObjects")
+if repairable_tools == nil then
+	repairable_tools = "pick, axe, shovel, sword, hoe, armor, shield"
+end
+repairable_tools = repairable_tools:gsub("%s+", "")
+
+local tool_wear = minetest.settings:get("xdecor_workbench_ToolRepairAmount")
+if tool_wear == nil then
+	tool_wear = 500
+end
+
+local hammer_malus = minetest.settings:get("xdecor_workbench_HammerWear")
+if hammer_malus == nil then
+	hammer_malus = 200
+end
+
 -- Nodes allowed to be cut
 -- Only the regular, solid blocks without metas or explosivity can be cut
 local nodes = {}
@@ -52,11 +69,9 @@ workbench.defs = {
 	{"stair_inner",	1,  nil			  }
 }
 
-local repairable_tools = {"pick", "axe", "shovel", "sword", "hoe", "armor", "shield"}
-
 -- Tools allowed to be repaired
 function workbench:repairable(stack)
-	for _, t in ipairs(repairable_tools) do
+	for t in (repairable_tools..","):gmatch("(.-)"..",") do
 		if stack:find(t) then
 			return true
 		end
@@ -174,8 +189,8 @@ function workbench.timer(pos)
 	end
 
 	-- Tool's wearing range: 0-65535; 0 = new condition
-	tool:add_wear(-500)
-	hammer:add_wear(700)
+	tool:add_wear(0 - tool_wear)
+	hammer:add_wear(tool_wear + hammer_malus)
 
 	inv:set_stack("tool", 1, tool)
 	inv:set_stack("hammer", 1, hammer)
