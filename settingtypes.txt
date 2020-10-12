@@ -9,3 +9,11 @@ enable_xdecor_mailbox 		(Enable Mailbox) 	bool true
 enable_xdecor_mechanisms 	(Enable Mechanisms) 	bool true
 enable_xdecor_rope 		(Enable Rope) 		bool true
 enable_xdecor_workbench 	(Enable Workbench) 	bool true
+
+# workbench specific:
+#  expand list of repairable tools to scythe, helmet,... (you name it)
+xdecor_workbench_RepairableObjects (List Tools to be repairable) string "pick", "axe", "shovel", "sword", "hoe", "armor", "shield"
+#  tool repair ammount, hamme wear ammount
+xdecor_workbench_ToolRepairAmount (units to repair your tools) int 500 100 1000
+#  how much more does the hammer wear out
+xdecor_workbench_HammerWear (ammount of extra wear for the hammer, so hammer looses 'tool_repair_ammount'+ hammer_wear) int 200 0 1000
