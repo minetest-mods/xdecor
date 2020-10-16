@@ -13,7 +13,7 @@ Chess=Schach
 Chess Board=Schachbrett
 Dumb AI=dumme KI
 Multiplayer=Mehrspieler
-New game=neuer Spiel
+New game=neues Spiel
 Select a mode:=Wähle einen Modus:
 Singleplayer=Einzelspieler
 Someone else plays black pieces!=Jemand anderes spielt Schwarz!
@@ -25,9 +25,9 @@ White Pawn=weißer Bauer
 White Queen=weiße Dame
 White Rook=weißer Turm
 
-You can't dig the chessboard, a game has been started. Reset it first if you're a current player, or dig it again in @1=Das Schachbrett ist während eines Schachspieles nicht abbaubar. Resetiere es zuerst, wenn du einer der Schachspieler bist, oder versuche es in @1 nochmal.
+You can't dig the chessboard, a game has been started. Reset it first if you're a current player, or dig it again in @1=Das Schachbrett ist während eines Schachspieles nicht abbaubar. Setze das Spiel zurück, falls du ein Mitspieler bist oder versuche es in @1 erneut.
 
-You can't reset the chessboard, a game has been started. If you aren't a current player, try again in @1=Das Schachbrett ist während eines Schachspieles nicht resetierbar. Wenn du keiner der Schachspieler bist, versuche es in @1 nochmal.
+You can't reset the chessboard, a game has been started. If you aren't a current player, try again in @1=Das Schachbrett ist während eines Schachspieles nicht resetierbar. Versuche es in @1 erneut, falls du kein Mitspieler bist.
 
 check=Schach
 
@@ -40,8 +40,8 @@ Cauldron (active) - Drop foods inside to make a soup=Kessel (aktiv) - Nahrungsmi
 Cauldron (active) - Use a bowl to eat the soup=Kessel (aktiv) - Benutze eine Schüssel, um die Suppe zu essen
 Cauldron (empty)=Kessel (leer)
 Cauldron (idle)=Kessel (untätig)
-No room in your inventory to add a bowl of soup.=Kein Platz im Inventar für eine Schüssel voll Suppe.
-No room in your inventory to add a bucket of water.=Kein Platz im Inventar für einen Eimer Wasser.
+No room in your inventory to add a bowl of soup.=Zu wenig Platz im Inventar für eine Schüssel voll Suppe.
+No room in your inventory to add a bucket of water.=Zu wenig Platz im Inventar für einen Eimer Wasser.
 
 ### enchanting.lua ###
 
