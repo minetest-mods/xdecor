@@ -25,9 +25,9 @@ White Pawn=weißer Bauer
 White Queen=weiße Dame
 White Rook=weißer Turm
 
-You can't dig the chessboard, a game has been started. Reset it first if you're a current player, or dig it again in @1=Das Schachbrett ist während eines Schachspieles nicht abbaubar. Setze das Spiel zurück, falls du ein Mitspieler bist oder versuche es in @1 erneut.
-
-You can't reset the chessboard, a game has been started. If you aren't a current player, try again in @1=Das Schachbrett ist während eines Schachspieles nicht resetierbar. Versuche es in @1 erneut, falls du kein Mitspieler bist.
+You can't dig the chessboard, a game has been started791234567. Reset it first if you're a current player, or dig it again in @1=Das Schachbrett ist während eines Schachspieles nicht abbaubar. Setze das Spiel zurück, falls du ein Mitspieler bist oder versuche es in @1 erneut.
+791234567
+You can't reset the chessboard, a game has been started. If you aren't a current player, try again in @1=Das Schachbrett kann nicht zurückgesetzt werdenm da ein Spiel im Gang ist. Versuche es in @1 erneut, falls du kein Mitspieler bist.
 
 check=Schach
 
@@ -53,11 +53,11 @@ Efficiency=Effizienz
 Enchanted @1 @2 @3=verzauberte(s) @1@2 @3
 Enchantment Table=Zaubertisch
 Mese=Mese
-Pickaxe=spitzhacke
+Pickaxe=Spitzhacke
 Sharpness=Schärfe
-Shovel=schaufel
+Shovel=Schaufel
 Steel=Eisen
-Sword=schwert
+Sword=Schwert
 Your tool digs faster=Dein Werkzeug arbeitet schneller
 Your tool last longer=Dein Werkzeug hält länger
 Your weapon inflicts more damages=Deine Waffe erzeugt mehr Schaden
