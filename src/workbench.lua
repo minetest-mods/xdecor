@@ -102,7 +102,7 @@ local main_fs = "label[0.9,1.23;"..FS("Cut").."]"
 ]]
 
 local crafting_fs = "image[5,1;1,1;gui_furnace_arrow_bg.png^[transformR270]"
-	.."button[0,0;1.5,1;back;"..FS("Back").."]"
+	.."button[0,0;1.5,1;back;"..FS("< Back").."]"
 	..[[ list[current_player;craft;2,0;3,3;]
 	list[current_player;craftpreview;6,1;1,1;]
 	listring[current_player;main]
@@ -110,7 +110,7 @@ local crafting_fs = "image[5,1;1,1;gui_furnace_arrow_bg.png^[transformR270]"
 ]]
 
 local storage_fs = "list[context;storage;0,1;8,2;]"
-	.."button[0,0;1.5,1;back;"..FS("Back").."]"
+	.."button[0,0;1.5,1;back;"..FS("< Back").."]"
 	..[[listring[context;storage]
 	listring[current_player;main]
 ]]
