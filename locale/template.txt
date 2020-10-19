@@ -145,7 +145,7 @@ Rope=
 
 ### workbench.lua ###
 
-Back=
+< Back=
 Crafting=
 Cut=
 Hammer=
