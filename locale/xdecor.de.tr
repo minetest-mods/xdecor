@@ -1,0 +1,154 @@
+# textdomain: xdecor
+
+
+### chess.lua ###
+
+Black Bishop=schwarzer Läufer
+Black King=schwarter König
+Black Knight=schwarzes Pferd
+Black Pawn=schwarzer Bauer
+Black Queen=schwarze Dame
+Black Rook=schwarzer Turm
+Chess=Schach
+Chess Board=Schachbrett
+Dumb AI=dumme KI
+Multiplayer=Mehrspieler
+New game=neues Spiel
+Select a mode:=Wähle einen Modus:
+Singleplayer=Einzelspieler
+Someone else plays black pieces!=Jemand anderes spielt Schwarz!
+Someone else plays white pieces!=Jemand anderes spielt Weiß!
+White Bishop=weißer Läufer
+White King=weißer König
+White Knight=weißes Pferd
+White Pawn=weißer Bauer
+White Queen=weiße Dame
+White Rook=weißer Turm
+
+You can't dig the chessboard, a game has been started791234567. Reset it first if you're a current player, or dig it again in @1=Das Schachbrett ist während eines Schachspieles nicht abbaubar. Setze das Spiel zurück, falls du ein Mitspieler bist oder versuche es in @1 erneut.
+791234567
+You can't reset the chessboard, a game has been started. If you aren't a current player, try again in @1=Das Schachbrett kann nicht zurückgesetzt werdenm da ein Spiel im Gang ist. Versuche es in @1 erneut, falls du kein Mitspieler bist.
+
+check=Schach
+
+### cooking.lua ###
+
+Bowl=Schüssel
+Bowl of soup=Suppenschüssel
+Cauldron=Kessel
+Cauldron (active) - Drop foods inside to make a soup=Kessel (aktiv) - Nahrungsmittel einwerfen, um Suppe zu machen.
+Cauldron (active) - Use a bowl to eat the soup=Kessel (aktiv) - Benutze eine Schüssel, um die Suppe zu essen
+Cauldron (empty)=Kessel (leer)
+Cauldron (idle)=Kessel (untätig)
+No room in your inventory to add a bowl of soup.=Zu wenig Platz im Inventar für eine Schüssel voll Suppe.
+No room in your inventory to add a bucket of water.=Zu wenig Platz im Inventar für einen Eimer Wasser.
+
+### enchanting.lua ###
+
+Axe=axt
+Bronze=Bronze
+Diamond=Diamant
+Durability=Haltbarkeit
+Efficiency=Effizienz
+Enchanted @1 @2 @3=verzauberte(s) @1@2 @3
+Enchantment Table=Zaubertisch
+Mese=Mese
+Pickaxe=Spitzhacke
+Sharpness=Schärfe
+Shovel=Schaufel
+Steel=Eisen
+Sword=Schwert
+Your tool digs faster=Dein Werkzeug arbeitet schneller
+Your tool last longer=Dein Werkzeug hält länger
+Your weapon inflicts more damages=Deine Waffe erzeugt mehr Schaden
+
+### hive.lua ###
+
+Artificial Hive=künstlicher Bienenstock
+Bees are busy making honey…=Bienen sind beschäftigt, Honig herzustellen.
+Honey=Honig
+
+### itemframe.lua ###
+
+@1 (owned by @2)=@1 (gehört @2)
+Item Frame=Objektrahmen
+
+### mailbox.lua ###
+
+@1's Mailbox=Briefkasten von @1
+Last donators=letzte Spender
+Mailbox=Briefkasten
+Send your goods to@n@1=Sende deine Waren an@n@1
+The mailbox is full.=Der Briefkasten ist voll.
+
+### mechanisms.lua ###
+
+Lever=Schalthebel
+Stone Pressure Plate=steinerne Druckplatte
+Wooden Pressure Plate=hölzerne Druckplatte
+
+### nodes.lua ###
+
+Bamboo Frame=Bambusgerüst
+Baricade=Barrikade
+Barrel=Fass
+Cactus Brick=Kaktusstein
+Candle=Kerze
+Chainlink=Kettenvorhang
+Chair=einfacher Stuhl
+Coal Stone Tile=Kohle-Stein-Block
+Cobweb=Spinnenwebe
+Cushion=Sitzkissen
+Cushion Block=Sitzkissenblock
+Desert Stone Tile=Wüstensteinblock
+Empty Shelf=leeres Regal
+Ender Chest=Endertruhe
+Garden Stone Path=Steingartenweg
+Half Wooden Cabinet=halber Holzschrank
+Hardened Clay=gehärteter Ton
+Iron Light Box=eiseneingefasster Lichtblock
+Ivy=Efeu
+Japanese Door=japanische Tür
+Lantern=Laterne
+Moon Brick=Naturziegelwand
+Multi Shelf=Mehrzweckregal
+Packed Ice=Packeis
+Painting=Gemälde
+Potted Geranium=Geranien im Topf
+Potted Rose=Rosen im Topf
+Potted Tulip=Tulpen im Topf
+Potted Viola=Veilchen im Topf
+Potted White Dandelion=weiße Löwenzahn im Topf
+Potted Yellow Dandelion=gelbe Löwenzahn im Topf
+Prison Door=Verliestür
+Red Curtain=roter Vorhang
+Runestone=Runensteinblock
+Rusty Iron Bars=rostige Eisenstäbe
+Rusty Prison Door=rostige Verliestür
+Screen Door=französische Glastür
+Slide Door=Schiebetür
+Stone Tile=steinerner Block
+Table=einfacher Tisch
+Tatami=Tatamimatte
+Television=Fernseher
+Trampoline=Trampolin
+Wood Frame=hölzerner Zierrahmen
+Wood Framed Glass=holzeingefasstes Glas
+Wooden Cabinet=Holzschrank
+Wooden Light Box=holzeingefasster Lichtblock
+Wooden Tile=hölzerner Dekorblock
+Woodglass Door=Tür mit Lichtausschnitt
+
+### rope.lua ###
+
+Rope=Seil
+
+### workbench.lua ###
+
+Back=Zurück
+Crafting=Fertigung
+Cut=Zuschnitt
+Hammer=Hämmerchen
+Repair=Reparatur
+Storage=Aufbewahrung
+Work Bench=Werkbank
