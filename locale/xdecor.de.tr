@@ -24,10 +24,8 @@ White Knight=weißes Pferd
 White Pawn=weißer Bauer
 White Queen=weiße Dame
 White Rook=weißer Turm
-
-You can't dig the chessboard, a game has been started791234567. Reset it first if you're a current player, or dig it again in @1=Das Schachbrett ist während eines Schachspieles nicht abbaubar. Setze das Spiel zurück, falls du ein Mitspieler bist oder versuche es in @1 erneut.
-791234567
-You can't reset the chessboard, a game has been started. If you aren't a current player, try again in @1=Das Schachbrett kann nicht zurückgesetzt werdenm da ein Spiel im Gang ist. Versuche es in @1 erneut, falls du kein Mitspieler bist.
+You can't dig the chessboard, a game has been started. Reset it first if you're a current player, or dig it again in @1=Das Schachbrett ist während eines Schachspieles nicht abbaubar. Setze das Spiel zurück, falls du ein Mitspieler bist oder versuche es in @1 erneut.
+You can't reset the chessboard, a game has been started. If you aren't a current player, try again in @1=Das Schachbrett kann nicht zurückgesetzt werden, da ein Spiel im Gang ist. Versuche es in @1 erneut, falls du kein Mitspieler bist.
 
 check=Schach
 
@@ -118,8 +116,8 @@ Potted Geranium=Geranien im Topf
 Potted Rose=Rosen im Topf
 Potted Tulip=Tulpen im Topf
 Potted Viola=Veilchen im Topf
-Potted White Dandelion=weiße Löwenzahn im Topf
-Potted Yellow Dandelion=gelbe Löwenzahn im Topf
+Potted White Dandelion=weißer Löwenzahn im Topf
+Potted Yellow Dandelion=gelber Löwenzahn im Topf
 Prison Door=Verliestür
 Red Curtain=roter Vorhang
 Runestone=Runensteinblock
