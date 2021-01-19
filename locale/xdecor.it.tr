@@ -71,7 +71,7 @@ Honey=Miele
 ### itemframe.lua ###
 
 @1 (owned by @2)=@1 (proprietà di @2)
-Item Frame=Quadro
+Item Frame=Teca
 
 ### mailbox.lua ###
 
