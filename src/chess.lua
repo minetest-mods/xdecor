@@ -1015,18 +1015,16 @@ function realchess.move(pos, from_list, from_index, to_list, to_index, _, player
 			if from_y < to_y then
 				-- Goes down
 				-- Ensure that no piece disturbs the way
-				for i = 1, dx - 1 do
-					if inv:get_stack(
-						from_list, xy_to_index(from_x, from_y + i)):get_name() ~= "" then
+				for i = from_y + 1, to_y - 1 do
+					if inv:get_stack(from_list, xy_to_index(from_x, i)):get_name() ~= "" then
 						return 0
 					end
 				end
 			else
 				-- Goes up
 				-- Ensure that no piece disturbs the way
-				for i = 1, dx - 1 do
-					if inv:get_stack(
-						from_list, xy_to_index(from_x, from_y - i)):get_name() ~= "" then
+				for i = to_y + 1, from_y - 1 do
+					if inv:get_stack(from_list, xy_to_index(from_x, i)):get_name() ~= "" then
 						return 0
 					end
 				end
@@ -1035,9 +1033,8 @@ function realchess.move(pos, from_list, from_index, to_list, to_index, _, player
 			if from_y == to_y then
 				-- Goes right
 				-- Ensure that no piece disturbs the way
-				for i = 1, dx - 1 do
-					if inv:get_stack(
-						from_list, xy_to_index(from_x + i, from_y)):get_name() ~= "" then
+				for i = from_x + 1, to_x - 1 do
+					if inv:get_stack(from_list, xy_to_index(i, from_y)):get_name() ~= "" then
 						return 0
 					end
 				end
@@ -1064,9 +1061,8 @@ function realchess.move(pos, from_list, from_index, to_list, to_index, _, player
 			if from_y == to_y then
 				-- Goes left
 				-- Ensure that no piece disturbs the way and destination cell does
-				for i = 1, dx - 1 do
-					if inv:get_stack(
-						from_list, xy_to_index(from_x - i, from_y)):get_name() ~= "" then
+				for i = to_x + 1, from_x - 1 do
+					if inv:get_stack(from_list, xy_to_index(i, from_y)):get_name() ~= "" then
 						return 0
 					end
 				end

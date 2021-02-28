@@ -83,7 +83,7 @@ local main_fs = "label[0.9,1.23;"..FS("Cut").."]"
 	box[-0.05,2;2.05,0.9;#555555] ]]
 	.."button[0,0;2,1;craft;"..FS("Crafting").."]"
 	.."button[2,0;2,1;storage;"..FS("Storage").."]"
-	..[[ image[3,1;1,1;gui_furnace_arrow_bg.png^[transformR270]
+	..[[ image[3,1;1,1;gui_arrow.png]
 	image[0,1;1,1;worktable_saw.png]
 	image[0,2;1,1;worktable_anvil.png]
 	image[3,2;1,1;hammer_layout.png]
@@ -274,67 +274,69 @@ xdecor.register("workbench", {
 	allow_metadata_inventory_move = workbench.allow_move
 })
 
-for _, d in ipairs(workbench.defs) do
-for i = 1, #nodes do
-	local node = nodes[i]
-	local mod_name, item_name = node:match("^(.-):(.*)")
-	local def = registered_nodes[node]
+minetest.register_on_mods_loaded(function()
+	for _, d in ipairs(workbench.defs) do
+	for i = 1, #nodes do
+		local node = nodes[i]
+		local mod_name, item_name = node:match("^(.-):(.*)")
+		local def = registered_nodes[node]
 
-	if item_name and d[3] then
-		local groups = {}
-		local tiles
-		groups.not_in_creative_inventory = 1
+		if item_name and d[3] then
+			local groups = {}
+			local tiles
+			groups.not_in_creative_inventory = 1
 
-		for k, v in pairs(def.groups) do
-			if k ~= "wood" and k ~= "stone" and k ~= "level" then
-				groups[k] = v
+			for k, v in pairs(def.groups) do
+				if k ~= "wood" and k ~= "stone" and k ~= "level" then
+					groups[k] = v
+				end
 			end
-		end
 
-		if def.tiles then
-			if #def.tiles > 1 and (def.drawtype:sub(1,5) ~= "glass") then
-				tiles = def.tiles
+			if def.tiles then
+				if #def.tiles > 1 and (def.drawtype:sub(1,5) ~= "glass") then
+					tiles = def.tiles
+				else
+					tiles = {def.tiles[1]}
+				end
 			else
-				tiles = {def.tiles[1]}
+				tiles = {def.tile_images[1]}
 			end
-		else
-			tiles = {def.tile_images[1]}
+
+			--TODO: Translation support for Stairs/Slab
+			if not registered_nodes["stairs:slab_" .. item_name] then
+				stairs.register_stair_and_slab(item_name, node,
+					groups, tiles, def.description .. " Stair",
+					def.description .. " Slab", def.sounds)
+			end
+
+			minetest.register_node(":" .. node .. "_" .. d[1], {
+				--TODO: Translation support
+				description = def.description .. " " .. d[1]:gsub("^%l", string.upper),
+				paramtype = "light",
+				paramtype2 = "facedir",
+				drawtype = "nodebox",
+				sounds = def.sounds,
+				tiles = tiles,
+				groups = groups,
+				-- `unpack` has been changed to `table.unpack` in newest Lua versions
+				node_box = xdecor.pixelbox(16, {unpack(d, 3)}),
+				sunlight_propagates = true,
+				on_place = minetest.rotate_node
+			})
+
+		elseif item_name and mod_name then
+			minetest.register_alias_force(
+				("%s:%s_innerstair"):format(mod_name, item_name),
+				("stairs:stair_inner_%s"):format(item_name)
+			)
+			minetest.register_alias_force(
+				("%s:%s_outerstair"):format(mod_name, item_name),
+				("stairs:stair_outer_%s"):format(item_name)
+			)
 		end
-
-		--TODO: Translation support for Stairs/Slab
-		if not registered_nodes["stairs:slab_" .. item_name] then
-			stairs.register_stair_and_slab(item_name, node,
-				groups, tiles, def.description .. " Stair",
-				def.description .. " Slab", def.sounds)
-		end
-
-		minetest.register_node(":" .. node .. "_" .. d[1], {
-			--TODO: Translation support
-			description = def.description .. " " .. d[1]:gsub("^%l", string.upper),
-			paramtype = "light",
-			paramtype2 = "facedir",
-			drawtype = "nodebox",
-			sounds = def.sounds,
-			tiles = tiles,
-			groups = groups,
-			-- `unpack` has been changed to `table.unpack` in newest Lua versions
-			node_box = xdecor.pixelbox(16, {unpack(d, 3)}),
-			sunlight_propagates = true,
-			on_place = minetest.rotate_node
-		})
-
-	elseif item_name and mod_name then
-		minetest.register_alias_force(
-			("%s:%s_innerstair"):format(mod_name, item_name),
-			("stairs:stair_inner_%s"):format(item_name)
-		)
-		minetest.register_alias_force(
-			("%s:%s_outerstair"):format(mod_name, item_name),
-			("stairs:stair_outer_%s"):format(item_name)
-		)
 	end
-end
-end
+	end
+end)
 
 -- Craft items
 
