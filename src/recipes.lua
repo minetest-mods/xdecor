@@ -181,6 +181,30 @@ minetest.register_craft({
 })
 
 minetest.register_craft({
+	output = "xdecor:radio",
+	type = "shapeless",
+	recipe = {"xdecor:speaker", "xdecor:speaker"}
+})
+
+minetest.register_craft({
+	output = "xdecor:rooster",
+	recipe = {
+		{"default:gold_ingot", "", "default:gold_ingot"},
+		{"", "default:gold_ingot", ""},
+		{"default:gold_ingot", "", "default:gold_ingot"}
+	}
+})
+
+minetest.register_craft({
+	output = "xdecor:speaker",
+	recipe = {
+		{"default:gold_ingot", "default:copper_ingot", "default:gold_ingot"},
+		{"default:copper_ingot", "", "default:copper_ingot"},
+		{"default:gold_ingot", "default:copper_ingot", "default:gold_ingot"}
+	}
+})
+
+minetest.register_craft({
 	output = "xdecor:stone_tile 2",
 	recipe = {
 		{"default:cobble", "default:cobble"},
@@ -265,5 +289,11 @@ minetest.register_craft({
 		{"group:stick", "default:glass", "group:stick"},
 		{"group:stick", "default:torch", "group:stick"}
 	}
+})
+
+minetest.register_craft({
+	output = "xdecor:wooden2_lightbox",
+	type = "shapeless",
+	recipe = {"xdecor:wooden_lightbox"},
 })
 

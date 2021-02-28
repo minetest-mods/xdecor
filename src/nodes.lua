@@ -143,7 +143,7 @@ xdecor.register("candle", {
 			animation = {type="vertical_frames", length = 1.5}
 		},
 		{
-			name = "xdecor_candle_floor.png",
+			name = "xdecor_candle_hanging.png",
 			animation = {type="vertical_frames", length = 1.5}
 		},
 		{
@@ -397,6 +397,15 @@ xdecor.register("ivy", {
 	sounds = default.node_sound_leaves_defaults()
 })
 
+xdecor.register("rooster", {
+	description = S("Rooster"),
+	drawtype = "torchlike",
+	inventory_image = "xdecor_rooster.png",
+	walkable = false,
+	groups = {snappy = 3, attached_node = 1},
+	tiles = {"xdecor_rooster.png"},
+})
+
 xdecor.register("lantern", {
 	description = S("Lantern"),
 	light_source = 13,
@@ -418,6 +427,7 @@ xdecor.register("lantern", {
 local xdecor_lightbox = {
 	iron = S("Iron Light Box"),
 	wooden = S("Wooden Light Box"),
+	wooden2 = S("Wooden Light Box 2"),
 }
 
 for l, desc in pairs(xdecor_lightbox) do
@@ -609,3 +619,19 @@ xdecor.register("woodframed_glass", {
 	groups = {cracky = 2, oddly_breakable_by_hand = 1},
 	sounds = default.node_sound_glass_defaults()
 })
+
+for _, v in ipairs({"radio", "speaker"}) do
+	xdecor.register(v, {
+		description = v:gsub("^%l", string.upper),
+		on_rotate = screwdriver.rotate_simple,
+		tiles = {
+			"xdecor_" .. v .. "_top.png",
+			"xdecor_" .. v .. "_side.png",
+			"xdecor_" .. v .. "_side.png",
+			"xdecor_" .. v .. "_side.png",
+			"xdecor_" .. v .. "_back.png",
+			"xdecor_" .. v .. "_front.png",
+		},
+		groups = {cracky = 2, not_cuttable = 1},
+	})
+end

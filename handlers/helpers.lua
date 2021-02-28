@@ -52,7 +52,7 @@ function xdecor.stairs_valid_def(def)
 		not (def.groups.not_cuttable == 1) and
 		not def.groups.wool and
 		(def.tiles and type(def.tiles[1]) == "string" and not
-		def.tiles[1]:find("default_mineral")) and
+		 def.tiles[1]:find("default_mineral")) and
 		not def.mesecons and
 		def.description and
 		def.description ~= "" and
