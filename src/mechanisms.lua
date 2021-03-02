@@ -1,6 +1,6 @@
 -- Thanks to sofar for helping with that code.
 
-minetest.setting_set("nodetimer_interval", 0.1)
+minetest.settings:set("nodetimer_interval", 0.1)
 
 local plate = {}
 screwdriver = screwdriver or {}
