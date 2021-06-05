@@ -36,8 +36,15 @@ workbench.defs = {
 
 local repairable_tools = {"pick", "axe", "shovel", "sword", "hoe", "armor", "shield"}
 
+local custom_repairable = {}
+function xdecor:register_repairable(item)
+	custom_repairable[item] = true
+end
+
 -- Tools allowed to be repaired
 function workbench:repairable(stack)
+	if custom_repairable[stack] then return true end
+
 	for _, t in ipairs(repairable_tools) do
 		if stack:find(t) then
 			return true
