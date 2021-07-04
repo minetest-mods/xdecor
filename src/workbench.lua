@@ -52,6 +52,11 @@ function workbench:repairable(stack)
 	end
 end
 
+-- method to allow other mods to check if an item is repairable
+function xdecor:is_repairable(stack)
+	return workbench:repairable(stack)
+end
+
 function workbench:get_output(inv, input, name)
 	local output = {}
 	for i = 1, #self.defs do
