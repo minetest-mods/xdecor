@@ -41,12 +41,12 @@ local function img_col(stack)
 	return ""
 end
 
-function mailbox:formspec(pos, owner, is_owner)
+function mailbox:formspec(pos, owner, is_owner, is_admin)
 	local spos = pos.x .. "," .. pos.y .. "," .. pos.z
 	local meta = minetest.get_meta(pos)
 	local giver, img = "", ""
 
-	if is_owner then
+	if is_owner or is_admin then
 		for i = 1, 7 do
 			local giving = meta:get_string("giver" .. i)
 			if giving ~= "" then
@@ -113,7 +113,8 @@ function mailbox.rightclick(pos, node, clicker, itemstack, pointed_thing)
 	local owner = meta:get_string("owner")
 
 	minetest.show_formspec(player, "xdecor:mailbox",
-		mailbox:formspec(pos, owner, (player == owner)))
+		mailbox:formspec(pos, owner, (player == owner),
+			minetest.check_player_privs(player, { protection_bypass = true }) and clicker:get_player_control().aux1))
 
 	return itemstack
 end
@@ -127,6 +128,8 @@ function mailbox.put(pos, listname, _, stack, player)
 			minetest.chat_send_player(player:get_player_name(),
 				S("The mailbox is full."))
 		end
+	elseif minetest.check_player_privs(player:get_player_name(), { protection_bypass = true }) then
+		return stack:get_count()
 	end
 
 	return 0
@@ -153,7 +156,7 @@ end
 function mailbox.allow_take(pos, listname, index, stack, player)
 	local meta = minetest.get_meta(pos)
 
-	if player:get_player_name() ~= meta:get_string("owner") then
+	if player:get_player_name() ~= meta:get_string("owner") and not minetest.check_player_privs(player:get_player_name(), { protection_bypass = true }) then
 		return 0
 	end
 
