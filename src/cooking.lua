@@ -173,6 +173,7 @@ xdecor.register("cauldron_empty", {
 })
 
 xdecor.register("cauldron_idle", {
+	description = S("Cauldron (idle)"),
 	groups = {cracky=2, oddly_breakable_by_hand=1, not_in_creative_inventory=1},
 	on_rotate = screwdriver.rotate_simple,
 	tiles = {"xdecor_cauldron_top_idle.png", "xdecor_cauldron_sides.png"},
@@ -185,6 +186,7 @@ xdecor.register("cauldron_idle", {
 })
 
 xdecor.register("cauldron_boiling", {
+	description = S("Cauldron (active)"),
 	groups = {cracky=2, oddly_breakable_by_hand=1, not_in_creative_inventory=1},
 	on_rotate = screwdriver.rotate_simple,
 	drop = "xdecor:cauldron_empty",
@@ -207,6 +209,7 @@ xdecor.register("cauldron_boiling", {
 })
 
 xdecor.register("cauldron_soup", {
+	description = S("Cauldron (active)"),
 	groups = {cracky = 2, oddly_breakable_by_hand = 1, not_in_creative_inventory = 1},
 	on_rotate = screwdriver.rotate_simple,
 	drop = "xdecor:cauldron_empty",

@@ -36,6 +36,7 @@ check=
 Bowl=
 Bowl of soup=
 Cauldron=
+Cauldron (active)=
 Cauldron (active) - Drop foods inside to make a soup=
 Cauldron (active) - Use a bowl to eat the soup=
 Cauldron (empty)=
