@@ -310,6 +310,7 @@ for i = 1, #nodes do
 			drawtype = "nodebox",
 			sounds = def.sounds,
 			tiles = tiles,
+			use_texture_alpha = def.use_texture_alpha,
 			groups = groups,
 			-- `unpack` has been changed to `table.unpack` in newest Lua versions
 			node_box = xdecor.pixelbox(16, {unpack(d, 3)}),

@@ -1,5 +1,7 @@
 screwdriver = screwdriver or {}
 local S = minetest.get_translator("xdecor")
+local ALPHA_CLIP = minetest.features.use_texture_alpha_string_modes and "clip" or true
+local ALPHA_OPAQUE = minetest.features.use_texture_alpha_string_modes and "opaque" or false
 
 local function register_pane(name, desc, def)
 	xpanes.register_pane(name, {
@@ -80,6 +82,7 @@ local function register_storage(name, desc, def)
 		inventory = {size = def.inv_size or 24},
 		infotext = desc,
 		tiles = def.tiles,
+		use_texture_alpha = ALPHA_OPAQUE,
 		node_box = def.node_box,
 		on_rotate = def.on_rotate,
 		on_place = def.on_place,
@@ -480,6 +483,7 @@ local painting_box = {
 xdecor.register("painting_1", {
 	description = S("Painting"),
 	tiles = {"xdecor_painting_1.png"},
+	use_texture_alpha = ALPHA_OPAQUE,
 	inventory_image = "xdecor_painting_empty.png",
 	wield_image = "xdecor_painting_empty.png",
 	paramtype2 = "wallmounted",
@@ -505,6 +509,7 @@ xdecor.register("painting_1", {
 for i = 2, 4 do
 	xdecor.register("painting_" .. i, {
 		tiles = {"xdecor_painting_" .. i .. ".png"},
+		use_texture_alpha = ALPHA_OPAQUE,
 		paramtype2 = "wallmounted",
 		drop = "xdecor:painting_1",
 		sunlight_propagates = true,
@@ -584,6 +589,7 @@ xdecor.register("tatami", {
 xdecor.register("trampoline", {
 	description = S("Trampoline"),
 	tiles = {"xdecor_trampoline.png", "mailbox_blank16.png", "xdecor_trampoline_sides.png"},
+	use_texture_alpha = ALPHA_CLIP,
 	groups = {cracky = 3, oddly_breakable_by_hand = 1, fall_damage_add_percent = -80, bouncy = 90},
 	node_box = xdecor.nodebox.slab_y(0.5),
 	sounds = {
@@ -616,6 +622,7 @@ xdecor.register("woodframed_glass", {
 	drawtype = "glasslike_framed",
 	sunlight_propagates = true,
 	tiles = {"xdecor_woodframed_glass.png", "xdecor_woodframed_glass_detail.png"},
+	use_texture_alpha = ALPHA_CLIP,
 	groups = {cracky = 2, oddly_breakable_by_hand = 1},
 	sounds = default.node_sound_glass_defaults()
 })

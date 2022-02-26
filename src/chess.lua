@@ -1,6 +1,7 @@
 local realchess = {}
 local S = minetest.get_translator("xdecor")
 local FS = function(...) return minetest.formspec_escape(S(...)) end
+local ALPHA_OPAQUE = minetest.features.use_texture_alpha_string_modes and "opaque" or false
 screwdriver = screwdriver or {}
 
 local function index_to_xy(idx)
@@ -1429,6 +1430,7 @@ minetest.register_node(":realchess:chessboard", {
 	inventory_image = "chessboard_top.png",
 	wield_image = "chessboard_top.png",
 	tiles = {"chessboard_top.png", "chessboard_top.png", "chessboard_sides.png"},
+	use_texture_alpha = ALPHA_OPAQUE,
 	groups = {choppy=3, oddly_breakable_by_hand=2, flammable=3},
 	sounds = default.node_sound_wood_defaults(),
 	node_box = {type = "fixed", fixed = {-.375, -.5, -.375, .375, -.4375, .375}},

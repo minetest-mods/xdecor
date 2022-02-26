@@ -6,6 +6,7 @@ local plate = {}
 screwdriver = screwdriver or {}
 
 local S = minetest.get_translator("xdecor")
+local ALPHA_OPAQUE = minetest.features.use_texture_alpha_string_modes and "opaque" or false
 
 local function door_toggle(pos_actuator, pos_door, player)
 	local player_name = player:get_player_name()
@@ -59,6 +60,7 @@ function plate.register(material, desc, def)
 	xdecor.register("pressure_" .. material .. "_off", {
 		description = def.description or (desc .. " Pressure Plate"),
 		tiles = {"xdecor_pressure_" .. material .. ".png"},
+		use_texture_alpha = ALPHA_OPAQUE,
 		drawtype = "nodebox",
 		node_box = xdecor.pixelbox(16, {{1, 0, 1, 14, 1, 14}}),
 		groups = def.groups,
@@ -70,6 +72,7 @@ function plate.register(material, desc, def)
 	})
 	xdecor.register("pressure_" .. material .. "_on", {
 		tiles = {"xdecor_pressure_" .. material .. ".png"},
+		use_texture_alpha = ALPHA_OPAQUE,
 		drawtype = "nodebox",
 		node_box = xdecor.pixelbox(16, {{1, 0, 1, 14, 0.4, 14}}),
 		groups = def.groups,
@@ -95,6 +98,7 @@ plate.register("stone", "Stone", {
 xdecor.register("lever_off", {
 	description = S("Lever"),
 	tiles = {"xdecor_lever_off.png"},
+	use_texture_alpha = ALPHA_OPAQUE,
 	drawtype = "nodebox",
 	node_box = xdecor.pixelbox(16, {{2, 1, 15, 12, 14, 1}}),
 	groups = {cracky = 3, oddly_breakable_by_hand = 2},
@@ -118,6 +122,7 @@ xdecor.register("lever_off", {
 
 xdecor.register("lever_on", {
 	tiles = {"xdecor_lever_on.png"},
+	use_texture_alpha = ALPHA_OPAQUE,
 	drawtype = "nodebox",
 	node_box = xdecor.pixelbox(16, {{2, 1, 15, 12, 14, 1}}),
 	groups = {cracky = 3, oddly_breakable_by_hand = 2, not_in_creative_inventory = 1},
