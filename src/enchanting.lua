@@ -249,7 +249,7 @@ minetest.register_entity("xdecor:book_open", {
 
 minetest.register_lbm({
 	label = "recreate book entity",
-	name = "enchanting:create_book_entity",
+	name = "xdecor:create_book_entity",
 	nodenames = {"xdecor:enchantment_table"},
 	run_at_every_load = true,
 	action = function(pos, node)
