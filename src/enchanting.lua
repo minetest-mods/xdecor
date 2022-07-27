@@ -186,11 +186,6 @@ function enchanting.destruct(pos)
 end
 
 function enchanting.timer(pos)
-	local num = #minetest.get_objects_inside_radius(pos, 0.9)
-	if num == 0 then
-		minetest.add_entity({x = pos.x, y = pos.y + 0.85, z = pos.z}, "xdecor:book_open")
-	end
-
 	local minp = {x = pos.x - 2, y = pos.y,     z = pos.z - 2}
 	local maxp = {x = pos.x + 2, y = pos.y + 1, z = pos.z + 2}
 
@@ -249,14 +244,26 @@ minetest.register_entity("xdecor:book_open", {
 	collisionbox = {0},
 	physical = false,
 	textures = {"xdecor_book_open.png"},
-	on_activate = function(self)
-		local pos = self.object:get_pos()
-		local pos_under = {x = pos.x, y = pos.y - 1, z = pos.z}
+	static_save = false,
+})
 
-		if minetest.get_node(pos_under).name ~= "xdecor:enchantment_table" then
-			self.object:remove()
+minetest.register_lbm({
+	label = "recreate book entity",
+	name = "xdecor:create_book_entity",
+	nodenames = {"xdecor:enchantment_table"},
+	run_at_every_load = true,
+	action = function(pos, node)
+		local objs = minetest.get_objects_inside_radius(pos, 0.9)
+
+		for _, obj in ipairs(objs) do
+			local e = obj:get_luaentity()
+			if e and e.name == "xdecor:book_open" then
+				return
+			end
 		end
-	end
+
+		minetest.add_entity({x = pos.x, y = pos.y + 0.85, z = pos.z}, "xdecor:book_open")
+	end,
 })
 
 function enchanting:register_tools(mod, def)
