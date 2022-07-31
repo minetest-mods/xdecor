@@ -7,7 +7,7 @@ function xdecor.sit(pos, node, clicker, pointed_thing)
 	if not top_face(pointed_thing) then return end
 	local player_name = clicker:get_player_name()
 	local objs = minetest.get_objects_inside_radius(pos, 0.1)
-	local vel = clicker:get_player_velocity()
+	local vel = clicker:get_velocity()
 	local ctrl = clicker:get_player_control()
 
 	for _, obj in pairs(objs) do
@@ -34,13 +34,13 @@ function xdecor.sit(pos, node, clicker, pointed_thing)
 		default.player_set_animation(clicker, "sit", 30)
 
 		if node.param2 == 0 then
-			clicker:set_look_yaw(3.15)
+			clicker:set_look_horizontal(3.15)
 		elseif node.param2 == 1 then
-			clicker:set_look_yaw(7.9)
+			clicker:set_look_horizontal(7.9)
 		elseif node.param2 == 2 then
-			clicker:set_look_yaw(6.28)
+			clicker:set_look_horizontal(6.28)
 		elseif node.param2 == 3 then
-			clicker:set_look_yaw(4.75)
+			clicker:set_look_horizontal(4.75)
 		end
 	end
 end
