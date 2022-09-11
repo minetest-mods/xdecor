@@ -7,7 +7,7 @@ It adds a bunch of cute cubes, various mechanisms and stuff for [cutting](https:
 This mod is a lightweight alternative to HomeDecor and MoreBlocks.
 
 ### Requirements ###
-This mod requires at least version 5.1 of Minetest.
+This mod requires at least version 5.4 of Minetest.
 
 ### Credits ###
 
