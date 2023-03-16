@@ -1,4 +1,4 @@
-## X-Decor ##
+## X(treem)Decor ##
 
 [![ContentDB](https://content.minetest.net/packages/jp/xdecor/shields/downloads/)](https://content.minetest.net/packages/jp/xdecor/)
 
